@@ -1,0 +1,68 @@
+﻿@using FrontendAccountCreation.Web.Constants
+
+@{
+    ViewData["Title"] = Localizer["CannotCreateAccount.Title"];
+    var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                    @Localizer["CannotCreateAccount.Header"]
+                </h1>
+
+                <p class="govuk-body">@Localizer["CannotCreateAccount.AuthorisedPersonToAddMembers"]</p>
+
+                <h2 class="govuk-heading-m govuk-!-margin-top-2">
+                    <label for="create-account-field">
+                        @Localizer["CannotCreateAccount.SomeoneElseToCreateAccount"]
+                    </label>
+                </h2>
+
+                <p class="govuk-body">@Localizer["CannotCreateAccount.LinkShareDescription"]</p>
+
+                <div class="govuk-form-group" id="parentContainer">
+                    <input readonly class="govuk-input govuk-!-margin-bottom-4" type="text"
+                           value="@ViewBag.CreateAccountToReportPackagingData" id="create-account-field">
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@section Scripts
+{
+    <script nonce="@scriptNonce">
+        document.addEventListener('DOMContentLoaded', createCopyLinkButton);
+        document.addEventListener('DOMContentLoaded', WireUpEvents);
+    
+        function WireUpEvents() {
+            let copyLink = document.getElementById('copyLinkButton');
+            copyLink.addEventListener('click', copyLinkUrl);
+        }
+
+        function copyLinkUrl() {
+            const copyText = document.getElementById("create-account-field").value;
+            try {
+                navigator.clipboard.writeText(copyText);
+            }
+            catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+
+        function createCopyLinkButton() {
+            if (document.body.className.endsWith("js-enabled"))
+            {
+                let parent = document.getElementById('parentContainer');
+                let button = document.createElement("button");
+                button.innerText = '@Localizer["CannotCreateAccount.CopyLink"]';
+                button.className = "govuk-button govuk-button--secondary";
+                button.id = "copyLinkButton";
+                parent.appendChild(button);
+            }
+        }
+    </script>
+}

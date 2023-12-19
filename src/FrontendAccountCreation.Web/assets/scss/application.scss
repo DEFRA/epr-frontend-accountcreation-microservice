@@ -1,0 +1,115 @@
+$govuk-assets-path: '/create-account/';
+@import 'node_modules/govuk-frontend/govuk/all';
+
+// Components
+@import './components/language_toggle';
+@import './components/ordered_list';
+
+.govuk-panel {
+    &--blue {
+        background-color: govuk-colour('blue');
+        color: govuk-colour('white');
+    }
+
+    &--darkblue {
+        @extend .govuk-panel;
+        text-align: left;
+        padding: 15px 40px;
+        color: govuk-colour('white');
+        background-color: govuk-colour('dark-blue');
+
+        .govuk-button {
+            color: govuk-colour('black');
+            background-color: govuk-colour('light-grey');
+        }
+
+        > p:first-of-type {
+            @extend .govuk-\!-margin-top-7
+        }
+
+        > p:last-of-type {
+            @extend .govuk-\!-margin-bottom-6
+        }
+    }
+
+    .govuk-heading-l {
+        color: inherit;
+    }
+}
+
+.epr-header.epr-header--with-additional-navigation {
+    .epr-sign-out-nav {
+        float: right;
+    }
+    .epr-sign-out-nav__link {
+        color: #fff;
+        font-weight: 700;
+        line-height: 1.8em;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &:focus {
+            color: #0b0c0c;
+        }
+    }
+}
+.epr-header__service-name {
+    float:left;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    font-family: GDS Transport, arial, sans-serif;
+    font-size: 18px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.11111;
+    margin-bottom: 10px;
+}
+.epr-header__service-name--linked {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: GDS Transport, arial, sans-serif;
+    text-decoration: none;
+    &:link {
+        color: #fff;
+    }
+    &:visited {
+        color: #fff;
+    }
+    &:active {
+        color: hsla(0, 0%, 100%, .99);
+    }
+    &:hover {
+        color: hsla(0, 0%, 100%, .99);
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+        text-underline-offset: .1em;
+    }
+    &:focus {
+        background-color: #fd0;
+        box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+        color: #0b0c0c;
+        outline: 3px solid transparent;
+        text-decoration: none;
+    }
+}
+@media print {
+    .epr-header__service-name {
+        font-family: sans-serif;
+        font-size: 18pt;
+        line-height: 1.15;
+    }
+    .epr-header__service-name--linked {
+        font-family: sans-serif;
+    }
+}
+@media (min-width: 40.0625em) {
+    .epr-header__service-name {
+        font-size: 24px;
+        font-size: 1.5rem;
+        line-height: 1.25;
+    }
+}

@@ -1,0 +1,115 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+      <UserSecretsId>8c277499-f889-42f1-b2d9-569b72dd51ae</UserSecretsId>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- SonarCloud does not recognise file-scoped namespaces in current version. -->
+    <NoWarn>S3903</NoWarn>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'FrontendAccountCreation' " />
+  
+  <Target Name="NpmInstall" Inputs="package.json" Outputs="node_modules/.install-stamp">
+    <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" />
+
+    <!-- Write the stamp file, so incremental builds work -->
+    <Touch Files="node_modules/.install-stamp" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="NpmRunBuildFrontend" DependsOnTargets="NpmInstall" BeforeTargets="BeforeBuild">
+    <Exec Command="npm run build-frontend" />
+  </Target>
+
+    <ItemGroup>
+      <Folder Include="assets\js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+      <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="7.0.10" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.10" />
+      <PackageReference Include="Microsoft.FeatureManagement" Version="2.6.1" />
+      <PackageReference Include="Microsoft.Identity.Web" Version="2.13.3" />
+      <PackageReference Update="SonarAnalyzer.CSharp" Version="8.55.0.65544" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FrontendAccountCreation.Core\FrontendAccountCreation.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Views\Account\TypeOfOrganisation.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>TypeOfOrganisation.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\Account\TypeOfOrganisation.cy.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>TypeOfOrganisation.cy.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\AccountCreation\TradingName.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>TradingName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\AccountCreation\FullName.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\AccountCreation\FullName.cy.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\AccountCreation\TelephoneNumber.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\AccountCreation\TelephoneNumber.cy.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="ResourcesRegulator\Views\AccountCreation\FullName.cy.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="ResourcesRegulator\Views\AccountCreation\FullName.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="ResourcesRegulator\Views\AccountCreation\TelephoneNumber.cy.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="ResourcesRegulator\Views\AccountCreation\TelephoneNumber.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="ResourcesRegulator\Views\AccountCreation\TradingName.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>TradingName.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Resources\Views\AccountCreation\TradingName.en.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <SonarQubeSetting Include="sonar.coverage.exclusions">
+        <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs</Value>
+      </SonarQubeSetting>
+	</ItemGroup>
+  
+     <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">
+       <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
+      <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="../.." />
+  </Target>
+</Project>

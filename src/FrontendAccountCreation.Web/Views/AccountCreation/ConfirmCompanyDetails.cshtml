@@ -1,0 +1,88 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+
+@model ConfirmCompanyDetailsViewModel
+
+@{
+    ViewData["Title"] = Localizer["ConfirmCompanyDetails.Title"];
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <form asp-controller="AccountCreation" asp-action="ConfirmDetailsOfTheCompany" method="post">
+                    <div class="govuk-form-group">
+                        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                            @Localizer["ConfirmCompanyDetails.Header"]
+                        </h1>
+
+                        <div class="govuk-inset-text">
+                            <h2 class="govuk-heading-m">@Model.CompanyName</h2>
+
+                            <div class="govuk-body">
+                                <div class="govuk-!-margin-bottom-1">
+                                    @Localizer["ConfirmCompanyDetails.CompaiesHouseNumber"]:
+                                </div>
+                                <div>
+                                    @Model.CompaniesHouseNumber
+                                </div>
+                            </div>
+
+                            <div class="govuk-body">
+                                <div class="govuk-!-margin-bottom-1">
+                                    @Localizer["ConfirmCompanyDetails.Address"]:
+                                </div>
+                                <div>
+                                    @{ RenderAddressParts(Model.BusinessAddress?.AddressFields!); }
+                                </div>
+                            </div>
+                        </div>
+
+                        <details class="govuk-details" data-module="govuk-details">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">
+                                    @Localizer["ConfirmCompanyDetails.IncorrectDetails.Summary"]
+                                </span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">
+                                    @Localizer["ConfirmCompanyDetails.IncorrectDetails.Paragraph"]
+                                </p>
+                                <ul>
+                                    <li>
+                                        @Localizer["ConfirmCompanyDetails.IncorrectDetails.ListItem1"]
+                                        <a asp-controller="AccountCreation" asp-action="CompaniesHouseNumber" class="govuk-link">
+                                            @Localizer["ConfirmCompanyDetails.IncorrectDetails.Link1Description"]
+                                        </a>
+                                    <li>
+                                        @Localizer["ConfirmCompanyDetails.IncorrectDetails.ListItem2"]
+                                        <a href="@ViewBag.MakeChangesToYourLimitedCompanyLink" class="govuk-link" target="_blank">
+                                            @Localizer["ConfirmCompanyDetails.IncorrectDetails.Link2Description"]
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+@{
+    void RenderAddressParts(string?[] addressParts)
+    {
+        foreach (string part in addressParts)
+        {
+            if (!string.IsNullOrWhiteSpace(part))
+            {
+                <div>@part</div>
+            }
+        }
+    }
+}
