@@ -52,7 +52,8 @@ public abstract class AccountCreationTestBase
             {
                 FindAndUpdateCompanyInformation = "dummy url",
                 ReportDataRedirectUrl = "/report-data",
-                ReportDataLandingRedirectUrl = "/report-data/landing"
+                ReportDataLandingRedirectUrl = "/report-data/landing",
+                ReportDataNewApprovedUser = "/report-data/approved-person-created?notification=created_new_approved_person"
             });
         
         _httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>

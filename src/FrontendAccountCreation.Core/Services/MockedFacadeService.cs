@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 
@@ -106,5 +107,24 @@ public class MockedFacadeService : IFacadeService
             AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
         };
         return company;
+    }
+    public async Task<InviteApprovedUserModel> GetServiceRoleIdAsync(string token)
+    {
+        return await Task.FromResult(new InviteApprovedUserModel()
+        {
+            ServiceRoleId = "7",
+            CompanyHouseNumber = "0000001",
+            Email = "adas@sdad.com"
+        });
+    }
+    
+    public async Task<ApprovedPersonOrganisationModel> GetOrganisationNameByInviteTokenAsync(string token)
+    {
+        return await Task.FromResult(new ApprovedPersonOrganisationModel());
+    }
+
+    public Task PostApprovedUserAccountDetailsAsync(AccountModel account)
+    {
+        return Task.CompletedTask;
     }
 }

@@ -42,6 +42,8 @@ public class ExternalUrlsOptions
     
     public string ReportDataLandingRedirectUrl { get; set; }
     
+    public string ReportDataNewApprovedUser { get; set; }
+    
     public string PrivacyLink { get; set; }
     
     public string CookiesLink { get; set; }

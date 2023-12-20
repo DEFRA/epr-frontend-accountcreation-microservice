@@ -1,3 +1,5 @@
+using FrontendAccountCreation.Core.Sessions;
+
 namespace FrontendAccountCreation.Core.UnitTests;
 
 using System.Net;
@@ -461,8 +463,7 @@ public class FacadeServiceTests
         // Assert
         Assert.AreEqual(expected: true, actual: response);
         httpTestHandler.Dispose();
-    }
-    
+    }   
     [TestMethod]
     public async Task GetUserAccount_WhenStatusCodeIsOk_ReturnsUserAccountModel()
     {
@@ -539,5 +540,226 @@ public class FacadeServiceTests
         await _facadeService.Invoking(x => x.GetUserAccount())
             .Should()
             .ThrowAsync<HttpRequestException>();
+    }
+   
+    [TestMethod]
+    public async Task GetServiceRoleIdAsync_ReturnsInviteApprovedUserModel()
+    {
+        // Arrange
+        var ServiceRoleId = "1";
+        var expectedResponse = new InviteApprovedUserModel
+        {
+            Email = "",
+            CompanyHouseNumber = "",
+            ServiceRoleId = "1"
+        };
+
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent(JsonSerializer.Serialize(expectedResponse))
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        var response = await _facadeService.GetServiceRoleIdAsync(It.IsAny<string>());
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.AreEqual(expected: expectedResponse.ServiceRoleId, actual: response.ServiceRoleId);
+        httpTestHandler.Dispose();
+    }
+    
+    [TestMethod]
+    public async Task GetOrganisationNameByInviteTokenAsync_Returns_ApprovedPersonOrganisationModel()
+    {
+        // Arrange
+        var token = "asdasd";
+        var expectedResponse = new ApprovedPersonOrganisationModel
+        {
+            SubBuildingName = "",
+            BuildingName = "",
+            BuildingNumber = "",
+            Street = "",
+            Town = "",
+            County = "",
+            Postcode = "",
+            Locality = "",
+            DependentLocality = "",
+            Country = "United Kingdom",
+            IsUkAddress = true,
+            OrganisationName = "testOrganisation",
+            ApprovedUserEmail = "adas@sdad.com"
+        };
+
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent(JsonSerializer.Serialize(expectedResponse))
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        var response = await _facadeService.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>());
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.AreEqual(expected: expectedResponse.Country, actual: response.Country);
+        httpTestHandler.Dispose();
+    }
+    
+    [TestMethod]
+    public async Task PostApprovedUserAccountDetailsAsync_WithValidData_ReturnsSuccess()
+    {
+        // Arrange
+        var approvedUser = new AccountModel()
+        {
+            Connection = new ConnectionModel()
+            {
+                JobTitle = "",
+                ServiceRole = ""
+            },
+            Organisation = new OrganisationModel()
+            {
+                Address = new AddressModel()
+                {
+                    SubBuildingName = "",
+                    BuildingName = "",
+                    BuildingNumber = "",
+                    Street = "",
+                    Town = "",
+                    County = "",
+                    Postcode = "",
+                    Locality = "",
+                    DependentLocality = "",
+                    Country = "United Kingdom",
+                },
+                CompaniesHouseNumber = "",
+                IsComplianceScheme = true,
+                Name = "",
+                Nation = Nation.England,
+                OrganisationType = OrganisationType.CompaniesHouseCompany,
+                ProducerType = ProducerType.Other,
+                ValidatedWithCompaniesHouse = true
+            },
+            Person = new PersonModel()
+            {
+                FirstName = "sdsda",
+                ContactEmail = "asdas@asdaf.com",
+                LastName = "asdad",
+                TelephoneNumber = "76208-79620"
+            }
+        };
+
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.Created
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        await _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser);
+
+        // Assert
+        _mockHandler.Protected().Verify(
+            "SendAsync",
+            Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(req =>
+                req.RequestUri != null &&
+                req.Method == HttpMethod.Post
+            ),
+            ItExpr.IsAny<CancellationToken>()
+        );
+
+        httpTestHandler.Dispose();
+    }
+    
+    [TestMethod]
+    [ExpectedException(typeof(ProblemResponseException))]
+    public async Task PostApprovedUserAccountDetailsAsync_WithValidData_ReturnsUnsuccessful()
+    {
+        // Arrange
+        var approvedUser = new AccountModel()
+        {
+            Connection = new ConnectionModel()
+            {
+                JobTitle = "",
+                ServiceRole = ""
+            },
+            Organisation = new OrganisationModel()
+            {
+                Address = new AddressModel()
+                {
+                    SubBuildingName = "",
+                    BuildingName = "",
+                    BuildingNumber = "",
+                    Street = "",
+                    Town = "",
+                    County = "",
+                    Postcode = "",
+                    Locality = "",
+                    DependentLocality = "",
+                    Country = "United Kingdom",
+                },
+                CompaniesHouseNumber = "",
+                IsComplianceScheme = true,
+                Name = "",
+                Nation = Nation.England,
+                OrganisationType = OrganisationType.CompaniesHouseCompany,
+                ProducerType = ProducerType.Other,
+                ValidatedWithCompaniesHouse = true
+            },
+            Person = new PersonModel()
+            {
+                FirstName = "sdsda",
+                ContactEmail = "asdas@asdaf.com",
+                LastName = "asdad",
+                TelephoneNumber = "76208-79620"
+            }
+        };
+
+        var problemDetails = new ProblemDetails
+        {
+            Status = 404,
+            Detail = "Unit Test"
+        };
+
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NotFound,
+            Content = new StringContent(JsonSerializer.Serialize(problemDetails))
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        await _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser);
+        
+        // Assert
+        Assert.IsTrue(true);
+        httpTestHandler.Dispose();
     }
 }

@@ -23,4 +23,6 @@ public class AccountCreationSession
     public bool IsManualInputFlow => OrganisationType == Sessions.OrganisationType.NonCompaniesHouseCompany;
 
     public bool IsUserChangingDetails { get; set; }
+    
+    public bool IsApprovedUser { get; set; }
 }

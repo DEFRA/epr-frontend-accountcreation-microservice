@@ -93,8 +93,15 @@ public class InvitationTests : AccountCreationTestBase
         // Arrange
         var inviteToken = "an-invite-token";
         var mockTempData = new Mock<ITempDataDictionary>();
+        
         _systemUnderTest.TempData = mockTempData.Object;
-
+        _facadeServiceMock.Setup(x => x.GetServiceRoleIdAsync(inviteToken)).ReturnsAsync(new InviteApprovedUserModel()
+        {
+            ServiceRoleId = "7",
+            CompanyHouseNumber = "0000001",
+            Email = "adas@sdad.com"
+        });
+            
         // Act
         var result = await _systemUnderTest.Invitation(inviteToken);
         
@@ -153,7 +160,7 @@ public class InvitationTests : AccountCreationTestBase
         result.Should().BeOfType<ViewResult>();
         ((ViewResult)result).ViewName.Should().Be("FullName");
     }
-    
+   
     [TestMethod]
     [DataRow(EnrolmentStatus.Enrolled)]
     [DataRow(EnrolmentStatus.NotSet)]
@@ -189,5 +196,82 @@ public class InvitationTests : AccountCreationTestBase
         
         // Assert
         result.Should().NotBeOfType<RedirectResult>();
+    }
+   
+    [TestMethod]
+    public async Task GivenInviteTokenForApprovedPerson_WhenRegisteredViaCompanyHouse_ThenRedirectsToRoleInOrganisation()
+    {
+        // Arrange
+        var inviteToken = "an-invite-token";
+        var mockTempData = new Mock<ITempDataDictionary>();
+        _systemUnderTest.TempData = mockTempData.Object;
+        _facadeServiceMock.Setup(x => x.GetServiceRoleIdAsync(inviteToken)).ReturnsAsync(new InviteApprovedUserModel()
+        {
+            ServiceRoleId = "1",
+            CompanyHouseNumber = "0000001",
+            Email = "adas@sdad.com"
+        });
+        _facadeServiceMock.Setup(x => x.GetOrganisationNameByInviteTokenAsync(inviteToken)).ReturnsAsync(new ApprovedPersonOrganisationModel()
+        {
+            SubBuildingName = "",
+            BuildingName = "",
+            BuildingNumber = "",
+            Street = "",
+            Town = "",
+            County = "",
+            Postcode = "",
+            Locality = "",
+            DependentLocality = "",
+            Country = "United Kingdom",
+            IsUkAddress = true,
+            OrganisationName = "testOrganisation",
+            ApprovedUserEmail = "adas@sdad.com"
+        });
+        
+        
+        // Act
+        var result = await _systemUnderTest.Invitation(inviteToken);
+        
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        result.ActionName.Should().Be("RoleInOrganisation");
+    }
+    
+    [TestMethod]
+    public async Task GivenInviteTokenForApprovedPerson_WhenNotRegisteredViaCompanyHouse_ThenRedirectsToRoleInOrganisation()
+    {
+        // Arrange
+        var inviteToken = "an-invite-token";
+        var mockTempData = new Mock<ITempDataDictionary>();
+        _systemUnderTest.TempData = mockTempData.Object;
+        _facadeServiceMock.Setup(x => x.GetServiceRoleIdAsync(inviteToken)).ReturnsAsync(new InviteApprovedUserModel()
+        {
+            ServiceRoleId = "1",
+            CompanyHouseNumber = "",
+            Email = "adas@sdad.com"
+        });
+        _facadeServiceMock.Setup(x => x.GetOrganisationNameByInviteTokenAsync(inviteToken)).ReturnsAsync(new ApprovedPersonOrganisationModel()
+        {
+            SubBuildingName = "",
+            BuildingName = "",
+            BuildingNumber = "",
+            Street = "",
+            Town = "",
+            County = "",
+            Postcode = "",
+            Locality = "",
+            DependentLocality = "",
+            Country = "United Kingdom",
+            IsUkAddress = true,
+            OrganisationName = "testOrganisation",
+            ApprovedUserEmail = "adas@sdad.com"
+        });
+
+        // Act
+        var result = await _systemUnderTest.Invitation(inviteToken);
+        
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        result.ActionName.Should().Be("ManualInputRoleInOrganisation");
     }
 }

@@ -146,4 +146,57 @@ public class FacadeService : IFacadeService
         var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Bearer, accessToken);
     }
+    
+    public async Task<InviteApprovedUserModel> GetServiceRoleIdAsync(string token)
+    {
+        await PrepareAuthenticatedClient();
+        var response = await _httpClient.GetAsync($"/api/persons/person-by-invite-token?token={token}");
+ 
+        if (response.StatusCode == HttpStatusCode.NoContent)
+        {
+            return null;
+        }
+
+        response.EnsureSuccessStatusCode();
+        
+        var serviceRoleId = await response.Content.ReadFromJsonAsync<InviteApprovedUserModel>();
+
+        return serviceRoleId;
+    }
+    
+    public async Task<ApprovedPersonOrganisationModel> GetOrganisationNameByInviteTokenAsync(string token)
+    {
+        await PrepareAuthenticatedClient();
+
+        var response = await _httpClient.GetAsync($"/api/organisations/organisation-name?token={token}");
+
+        if (response.StatusCode == HttpStatusCode.NoContent)
+        {
+            return null;
+        }
+
+        response.EnsureSuccessStatusCode();
+        
+        var organisation = await response.Content.ReadFromJsonAsync<ApprovedPersonOrganisationModel>();
+
+        return organisation;
+    }
+    
+    public async Task PostApprovedUserAccountDetailsAsync(AccountModel account)
+    {
+        await PrepareAuthenticatedClient();
+        var response = await _httpClient.PostAsJsonAsync("/api/producer-accounts/ApprovedUser", account);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+            if (problemDetails != null)
+            {
+                throw new ProblemResponseException(problemDetails, response.StatusCode);
+            }
+        }
+
+        response.EnsureSuccessStatusCode();
+    }
 }

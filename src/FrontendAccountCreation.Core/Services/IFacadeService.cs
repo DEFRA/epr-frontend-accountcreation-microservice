@@ -1,4 +1,5 @@
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 
@@ -15,4 +16,7 @@ public interface IFacadeService
     Task PostAccountDetailsAsync(AccountModel account);
     Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser);
     Task<UserAccount?> GetUserAccount();
+    Task<InviteApprovedUserModel> GetServiceRoleIdAsync(string token);
+    Task<ApprovedPersonOrganisationModel> GetOrganisationNameByInviteTokenAsync(string token);
+    Task PostApprovedUserAccountDetailsAsync(AccountModel account);
 }

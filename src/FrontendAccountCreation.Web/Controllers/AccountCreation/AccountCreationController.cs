@@ -65,7 +65,7 @@ public class AccountCreationController : Controller
                 statusCode = (int) HttpStatusCode.Forbidden
             });
         }
-
+        
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
         {
@@ -81,7 +81,8 @@ public class AccountCreationController : Controller
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        YesNoAnswer? isTheOrganisationCharity = null;
+       
+       YesNoAnswer? isTheOrganisationCharity = null;
 
         if (session != null)
         {
@@ -92,6 +93,7 @@ public class AccountCreationController : Controller
                 SetBackLink(session, string.Empty);
             }
         }
+        
 
         return View(new RegisteredAsCharityRequestViewModel
         {
@@ -431,7 +433,12 @@ public class AccountCreationController : Controller
             return View(model);
         }
 
-        session.CompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.GetValueOrDefault();
+        if (session.CompaniesHouseSession == null)
+        {
+            CompaniesHouseSession companiesHouseSession = new CompaniesHouseSession();
+            session.CompaniesHouseSession = companiesHouseSession;
+        }
+        session.CompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
 
         if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
         {
@@ -448,7 +455,63 @@ public class AccountCreationController : Controller
     public async Task<RedirectToActionResult> Invitation(string inviteToken)
     {
         TempData["InviteToken"] = inviteToken;
-
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession()
+        {
+            Journey = new List<string> { PagePath.Invitation }
+        };
+        
+        session.InviteToken = inviteToken;
+        var isApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
+        
+        if (isApprovedUser.ServiceRoleId == "1")
+        {
+             session.IsApprovedUser = true;
+             if (isApprovedUser.CompanyHouseNumber != null &&  isApprovedUser.CompanyHouseNumber != String.Empty)
+             {
+                 var organisationData = await _facadeService.GetOrganisationNameByInviteTokenAsync(session.InviteToken);
+                 session.OrganisationType = OrganisationType.CompaniesHouseCompany;
+                 
+                 session.CompaniesHouseSession = new CompaniesHouseSession
+                 {
+                     IsComplianceScheme = true
+                 };
+                 
+                 session.CompaniesHouseSession.Company = new Company
+                 {
+                     Name = organisationData.OrganisationName,
+                     CompaniesHouseNumber = isApprovedUser.CompanyHouseNumber,
+                 };
+                 session.CompaniesHouseSession.Company.BusinessAddress = new Address
+                 {
+                     SubBuildingName = organisationData.SubBuildingName,
+                     BuildingName = organisationData.BuildingName,
+                     BuildingNumber = organisationData.BuildingNumber,
+                     Postcode = organisationData.Postcode,
+                     Town = organisationData.Town,
+                     County = organisationData.County,
+                     Country = organisationData.Country,
+                     Street = organisationData.Street
+                 };
+                 return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.Invitation, PagePath.RoleInOrganisation);
+             }
+             else
+             {
+                 session.ManualInputSession = new ManualInputSession();
+                 var organisationData = await _facadeService.GetOrganisationNameByInviteTokenAsync(session.InviteToken);
+                 session.ManualInputSession.TradingName = organisationData.OrganisationName;
+                 session.ManualInputSession.BusinessAddress = new Address();
+                 session.ManualInputSession.BusinessAddress.SubBuildingName = organisationData.SubBuildingName;
+                 session.ManualInputSession.BusinessAddress.BuildingName = organisationData.BuildingName;
+                 session.ManualInputSession.BusinessAddress.BuildingNumber = organisationData.BuildingNumber;
+                 session.ManualInputSession.BusinessAddress.Postcode = organisationData.Postcode;
+                 session.ManualInputSession.BusinessAddress.Town = organisationData.Town;
+                 session.ManualInputSession.BusinessAddress.County = organisationData.County;
+                 session.ManualInputSession.BusinessAddress.Country = organisationData.Country;
+                 session.ManualInputSession.BusinessAddress.Street = organisationData.Street;
+                 session.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+                 return await SaveSessionAndRedirect(session, nameof(ManualInputRoleInOrganisation), PagePath.Invitation, PagePath.ManualInputRoleInOrganisation); 
+             } 
+        }
         return RedirectToAction(nameof(InviteeFullName));
     }
 
@@ -945,10 +1008,19 @@ public class AccountCreationController : Controller
     public async Task<IActionResult> Declaration()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
         SetBackLink(session, PagePath.Declaration);
-
-        return View();
+   
+        if (session.IsApprovedUser)
+        {
+            ViewBag.OrganisationName = session.CompaniesHouseSession.Company.Name;
+            ViewBag.IsAdminUser = true;
+            return View();
+        }
+        else
+        {
+            ViewBag.IsAdminUser = false;
+            return View();
+        }
     }
 
     [HttpPost]
@@ -959,38 +1031,41 @@ public class AccountCreationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        string email = GetUserEmail();
-
-        AccountModel account = _accountMapper.CreateAccountModel(session, email);
-
         try
         {
-            await _facadeService.PostAccountDetailsAsync(account);
+            if (session.IsManualInputFlow || session.IsCompaniesHouseFlow)
+            {
+                ApprovedPersonOrganisationModel organisationData = await _facadeService
+                    .GetOrganisationNameByInviteTokenAsync(session.InviteToken);
+                AccountModel account = _accountMapper.CreateAccountModel(session, organisationData.ApprovedUserEmail);
+                account.Person.ContactEmail = organisationData.ApprovedUserEmail;
+                await _facadeService.PostApprovedUserAccountDetailsAsync(account);
+                _sessionManager.RemoveSession(HttpContext.Session);
+
+                return Redirect(_urlOptions.ReportDataNewApprovedUser);
+            }
+            else
+            {
+                string email = GetUserEmail();
+                AccountModel account = _accountMapper.CreateAccountModel(session, email);
+                await _facadeService.PostAccountDetailsAsync(account);
+                _sessionManager.RemoveSession(HttpContext.Session);
+
+                return Redirect(account.Organisation.IsComplianceScheme
+                    ? _urlOptions.ReportDataRedirectUrl
+                    : _urlOptions.ReportDataLandingRedirectUrl);
+            }
         }
         catch (ProblemResponseException ex)
         {
             switch (ex.ProblemDetails?.Type)
             {
-                case "create-account/user-exists":
-                {
-                    return RedirectToAction("UserAlreadyExists", "Home");
-                }
-                case "create-account/organisation-exists":
-                {
-                    session.CompaniesHouseSession.Company.AccountCreatedOn = DateTime.Now;
-                        
-                    return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails, PagePath.AccountAlreadyExists);
-                }
                 default:
                 {
                     throw;
                 }
             }
         }
-
-        _sessionManager.RemoveSession(HttpContext.Session);
-        
-        return Redirect(account.Organisation.IsComplianceScheme ? _urlOptions.ReportDataRedirectUrl : _urlOptions.ReportDataLandingRedirectUrl);
     }
 
     [HttpGet]
@@ -1087,4 +1162,5 @@ public class AccountCreationController : Controller
     private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??
                                       // Remove when we migrate all environments to custom policy
                                       User.Claims.FirstOrDefault(claim => claim.Type == "emails")?.Value;
+
 }

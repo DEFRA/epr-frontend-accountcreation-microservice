@@ -27,6 +27,18 @@
   <data name="Declaration.Paragraph2" xml:space="preserve">
     <value>Rydych chi hefyd yn cytuno yr hoffech i’r rheoleiddiwr gymeradwyo cyfrif ar gyfer eich sefydliad.</value>
   </data>
+  <data name="Declaration.Paragraph1.ApprovedUser" xml:space="preserve">
+    <value>WBy confirming your details, you agree that the information you’ve given is complete and correct, and that you:</value>
+  </data>
+  <data name="Declaration.Paragraph2.ApprovedUser" xml:space="preserve">
+    <value>Ware able to submit data to the environmental regulator for </value>
+  </data>
+  <data name="Declaration.Paragraph3.ApprovedUser" xml:space="preserve">
+    <value>Wunderstand the regulations</value>
+  </data>
+  <data name="Declaration.Paragraph4.ApprovedUser" xml:space="preserve">
+    <value>Whave access to the information you need to submit data correctly</value>
+  </data>
   <data name="Declaration.Title" xml:space="preserve">
     <value>Datganiad</value>
   </data>
