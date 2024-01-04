@@ -88,11 +88,13 @@ public class DeclarationTests : AccountCreationTestBase
         //Arrange
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(new AccountCreationSession()
         {
-            OrganisationType = OrganisationType.CompaniesHouseCompany
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            InviteToken = "token"
         });
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(new AccountCreationSession()
         {
-            OrganisationType = OrganisationType.CompaniesHouseCompany
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            InviteToken = "token"
         });
     
         _facadeServiceMock.Setup(x => x.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>())).ReturnsAsync(new ApprovedPersonOrganisationModel()

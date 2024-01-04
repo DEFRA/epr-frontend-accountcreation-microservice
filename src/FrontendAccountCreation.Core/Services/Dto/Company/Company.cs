@@ -24,6 +24,8 @@ public class Company
     public string Name { get; set; }
 
     public string CompaniesHouseNumber { get; set; }
+    
+    public string OrganisationId { get; set; }
 
     public Addresses.Address BusinessAddress { get; set; }
 

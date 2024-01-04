@@ -44,6 +44,8 @@ public abstract class AccountCreationTestBase
         _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
+        _facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
+            .ReturnsAsync(new ApprovedPersonOrganisationModel());
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
             .Returns(Task.FromResult<AccountCreationSession?>(new AccountCreationSession()));
 

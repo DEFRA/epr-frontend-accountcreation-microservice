@@ -11,9 +11,9 @@
                 </h1>
                 @if (ViewBag.IsAdminUser == true)
                 {
-                   <p class="govuk-body">@Localizer["Declaration.Paragraph1.ApprovedUser"] @ViewBag.OrganisationName</p>
+                   <p class="govuk-body">@Localizer["Declaration.Paragraph1.ApprovedUser"]</p>
                    <ul>
-                    <li><p class="govuk-body">@Localizer["Declaration.Paragraph2.ApprovedUser"]</p></li> 
+                    <li><p class="govuk-body">@Localizer["Declaration.Paragraph2.ApprovedUser"] @ViewBag.OrganisationName</p></li> 
                     <li><p class="govuk-body">@Localizer["Declaration.Paragraph3.ApprovedUser"]</p></li> 
                     <li><p class="govuk-body">@Localizer["Declaration.Paragraph4.ApprovedUser"]</p></li> 
                    </ul>

@@ -404,12 +404,49 @@ public class AccountCreationController : Controller
 
     [HttpGet]
     [Route(PagePath.RoleInOrganisation)]
-    [JourneyAccess(PagePath.RoleInOrganisation)]
     public async Task<IActionResult> RoleInOrganisation()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var inviteTokenTempData = TempData["InviteToken"] as string;
+        var invitedOrganisationIdTempData = TempData["InvitedOrganisationId"] as string;
+        var invitedCompanyHouseNumber = TempData["InvitedCompanyHouseNumber"] as string;
+        
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession();
+
+        if (!string.IsNullOrWhiteSpace(inviteTokenTempData))
+        {
+            TempData["InvitedOrganisationId"] = null;
+            session.IsApprovedUser = true;
+            session.InviteToken = inviteTokenTempData;
+
+            var organisationData = await _facadeService.GetOrganisationNameByInviteTokenAsync(inviteTokenTempData);
+            session.OrganisationType = OrganisationType.CompaniesHouseCompany;
+
+            session.CompaniesHouseSession = new CompaniesHouseSession
+            {
+                IsComplianceScheme = true
+            };
+
+            session.CompaniesHouseSession.Company = new Company
+            {
+                Name = organisationData.OrganisationName,
+                CompaniesHouseNumber = invitedCompanyHouseNumber,
+                OrganisationId = invitedOrganisationIdTempData
+            };
+            session.CompaniesHouseSession.Company.BusinessAddress = new Address
+            {
+                SubBuildingName = organisationData.SubBuildingName,
+                BuildingName = organisationData.BuildingName,
+                BuildingNumber = organisationData.BuildingNumber,
+                Postcode = organisationData.Postcode,
+                Town = organisationData.Town,
+                County = organisationData.County,
+                Country = organisationData.Country,
+                Street = organisationData.Street
+            };
+        }
 
         SetBackLink(session, PagePath.RoleInOrganisation);
+        _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
         var viewModel = new RoleInOrganisationViewModel()
         {
@@ -421,7 +458,7 @@ public class AccountCreationController : Controller
 
     [HttpPost]
     [Route(PagePath.RoleInOrganisation)]
-    [JourneyAccess(PagePath.RoleInOrganisation)]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     public async Task<IActionResult> RoleInOrganisation(RoleInOrganisationViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -455,63 +492,23 @@ public class AccountCreationController : Controller
     public async Task<RedirectToActionResult> Invitation(string inviteToken)
     {
         TempData["InviteToken"] = inviteToken;
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession()
-        {
-            Journey = new List<string> { PagePath.Invitation }
-        };
+
+        var invitedApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
         
-        session.InviteToken = inviteToken;
-        var isApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
-        
-        if (isApprovedUser.ServiceRoleId == "1")
+        if (invitedApprovedUser.ServiceRoleId == "1")
         {
-             session.IsApprovedUser = true;
-             if (isApprovedUser.CompanyHouseNumber != null &&  isApprovedUser.CompanyHouseNumber != String.Empty)
-             {
-                 var organisationData = await _facadeService.GetOrganisationNameByInviteTokenAsync(session.InviteToken);
-                 session.OrganisationType = OrganisationType.CompaniesHouseCompany;
-                 
-                 session.CompaniesHouseSession = new CompaniesHouseSession
-                 {
-                     IsComplianceScheme = true
-                 };
-                 
-                 session.CompaniesHouseSession.Company = new Company
-                 {
-                     Name = organisationData.OrganisationName,
-                     CompaniesHouseNumber = isApprovedUser.CompanyHouseNumber,
-                 };
-                 session.CompaniesHouseSession.Company.BusinessAddress = new Address
-                 {
-                     SubBuildingName = organisationData.SubBuildingName,
-                     BuildingName = organisationData.BuildingName,
-                     BuildingNumber = organisationData.BuildingNumber,
-                     Postcode = organisationData.Postcode,
-                     Town = organisationData.Town,
-                     County = organisationData.County,
-                     Country = organisationData.Country,
-                     Street = organisationData.Street
-                 };
-                 return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.Invitation, PagePath.RoleInOrganisation);
-             }
-             else
-             {
-                 session.ManualInputSession = new ManualInputSession();
-                 var organisationData = await _facadeService.GetOrganisationNameByInviteTokenAsync(session.InviteToken);
-                 session.ManualInputSession.TradingName = organisationData.OrganisationName;
-                 session.ManualInputSession.BusinessAddress = new Address();
-                 session.ManualInputSession.BusinessAddress.SubBuildingName = organisationData.SubBuildingName;
-                 session.ManualInputSession.BusinessAddress.BuildingName = organisationData.BuildingName;
-                 session.ManualInputSession.BusinessAddress.BuildingNumber = organisationData.BuildingNumber;
-                 session.ManualInputSession.BusinessAddress.Postcode = organisationData.Postcode;
-                 session.ManualInputSession.BusinessAddress.Town = organisationData.Town;
-                 session.ManualInputSession.BusinessAddress.County = organisationData.County;
-                 session.ManualInputSession.BusinessAddress.Country = organisationData.Country;
-                 session.ManualInputSession.BusinessAddress.Street = organisationData.Street;
-                 session.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-                 return await SaveSessionAndRedirect(session, nameof(ManualInputRoleInOrganisation), PagePath.Invitation, PagePath.ManualInputRoleInOrganisation); 
-             } 
+            TempData["InvitedOrganisationId"] = invitedApprovedUser.OrganisationId;
+            if (!string.IsNullOrEmpty(invitedApprovedUser.CompanyHouseNumber))
+            {
+                TempData["InvitedCompanyHouseNumber"] = invitedApprovedUser.CompanyHouseNumber;
+                return RedirectToAction(nameof(RoleInOrganisation));
+            }
+            else
+            {
+                return RedirectToAction(nameof(ManualInputRoleInOrganisation));
+            }
         }
+
         return RedirectToAction(nameof(InviteeFullName));
     }
 
@@ -582,13 +579,36 @@ public class AccountCreationController : Controller
 
     [HttpGet]
     [Route(PagePath.ManualInputRoleInOrganisation)]
-    [JourneyAccess(PagePath.ManualInputRoleInOrganisation)]
     public async Task<IActionResult> ManualInputRoleInOrganisation()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var inviteTokenTempData = TempData["InviteToken"] as string;
+        var invitedOrganisationIdTempData = TempData["InvitedOrganisationId"] as string;
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession();
+
+        if (!string.IsNullOrWhiteSpace(inviteTokenTempData))
+        {
+            TempData["InvitedOrganisationId"] = null;
+            session.IsApprovedUser = true;
+            session.InviteToken = inviteTokenTempData;
+            session.ManualInputSession = new ManualInputSession();
+            var organisationData = await _facadeService.GetOrganisationNameByInviteTokenAsync(inviteTokenTempData);
+            session.ManualInputSession.TradingName = organisationData.OrganisationName;
+            session.ManualInputSession.BusinessAddress = new Address();
+            session.ManualInputSession.BusinessAddress.SubBuildingName = organisationData.SubBuildingName;
+            session.ManualInputSession.BusinessAddress.BuildingName = organisationData.BuildingName;
+            session.ManualInputSession.BusinessAddress.BuildingNumber = organisationData.BuildingNumber;
+            session.ManualInputSession.BusinessAddress.Postcode = organisationData.Postcode;
+            session.ManualInputSession.BusinessAddress.Town = organisationData.Town;
+            session.ManualInputSession.BusinessAddress.County = organisationData.County;
+            session.ManualInputSession.BusinessAddress.Country = organisationData.Country;
+            session.ManualInputSession.BusinessAddress.Street = organisationData.Street;
+            session.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+            session.ManualInputSession.OrganisationId = invitedOrganisationIdTempData;
+        }
 
         SetBackLink(session, PagePath.ManualInputRoleInOrganisation);
-
+        _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        
         var viewModel = new ManualInputRoleInOrganisationViewModel()
         {
             RoleInOrganisation = session.ManualInputSession?.RoleInOrganisation
@@ -599,7 +619,7 @@ public class AccountCreationController : Controller
 
     [HttpPost]
     [Route(PagePath.ManualInputRoleInOrganisation)]
-    [JourneyAccess(PagePath.ManualInputRoleInOrganisation)]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     public async Task<IActionResult> ManualInputRoleInOrganisation(ManualInputRoleInOrganisationViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -1012,15 +1032,13 @@ public class AccountCreationController : Controller
    
         if (session.IsApprovedUser)
         {
-            ViewBag.OrganisationName = session.CompaniesHouseSession.Company.Name;
+            ViewBag.OrganisationName = session.CompaniesHouseSession?.Company.Name ?? session.ManualInputSession.TradingName;
             ViewBag.IsAdminUser = true;
             return View();
         }
-        else
-        {
-            ViewBag.IsAdminUser = false;
-            return View();
-        }
+        
+        ViewBag.IsAdminUser = false;
+        return View();
     }
 
     [HttpPost]
@@ -1033,11 +1051,11 @@ public class AccountCreationController : Controller
 
         try
         {
-            if (session.IsManualInputFlow || session.IsCompaniesHouseFlow)
+            if (!string.IsNullOrEmpty(session.InviteToken) && (session.IsManualInputFlow || session.IsCompaniesHouseFlow))
             {
-                ApprovedPersonOrganisationModel organisationData = await _facadeService
+                var organisationData = await _facadeService
                     .GetOrganisationNameByInviteTokenAsync(session.InviteToken);
-                AccountModel account = _accountMapper.CreateAccountModel(session, organisationData.ApprovedUserEmail);
+                var account = _accountMapper.CreateAccountModel(session, organisationData.ApprovedUserEmail);
                 account.Person.ContactEmail = organisationData.ApprovedUserEmail;
                 await _facadeService.PostApprovedUserAccountDetailsAsync(account);
                 _sessionManager.RemoveSession(HttpContext.Session);
@@ -1047,7 +1065,7 @@ public class AccountCreationController : Controller
             else
             {
                 string email = GetUserEmail();
-                AccountModel account = _accountMapper.CreateAccountModel(session, email);
+                var account = _accountMapper.CreateAccountModel(session, email);
                 await _facadeService.PostAccountDetailsAsync(account);
                 _sessionManager.RemoveSession(HttpContext.Session);
 

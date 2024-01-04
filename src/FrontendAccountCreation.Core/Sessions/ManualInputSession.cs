@@ -8,6 +8,8 @@ public class ManualInputSession
 
     public string RoleInOrganisation { get; set; } = default!;
 
+    public string OrganisationId { get; set; }
+    
     public ProducerType? ProducerType { get; set; }
 
     public Address? BusinessAddress { get; set; }

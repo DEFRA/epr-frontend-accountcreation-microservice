@@ -142,7 +142,7 @@ public class FacadeService : IFacadeService
 
     private async Task PrepareAuthenticatedClient()
     {
-        _httpClient.BaseAddress = new Uri(_baseAddress);
+        _httpClient.BaseAddress ??= new Uri(_baseAddress);
         var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Bearer, accessToken);
     }
@@ -159,9 +159,9 @@ public class FacadeService : IFacadeService
 
         response.EnsureSuccessStatusCode();
         
-        var serviceRoleId = await response.Content.ReadFromJsonAsync<InviteApprovedUserModel>();
+        var inviteApprovedUser = await response.Content.ReadFromJsonAsync<InviteApprovedUserModel>();
 
-        return serviceRoleId;
+        return inviteApprovedUser;
     }
     
     public async Task<ApprovedPersonOrganisationModel> GetOrganisationNameByInviteTokenAsync(string token)

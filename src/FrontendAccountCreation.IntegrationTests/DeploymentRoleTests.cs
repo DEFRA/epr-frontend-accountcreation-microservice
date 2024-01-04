@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using FrontendAccountCreation.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ namespace FrontendAccountCreation.IntegrationTests;
 public class DeploymentRoleTests
 {
     [TestMethod]
-    [DataRow("Regulator", "pEPR : Regulators� Service")]
+    [DataRow("Regulator", "pEPR : Regulators’ Service")]
     [DataRow("Producer", "Report packaging data")]
     [DataRow(null, "Report packaging data")]
     [DataRow("Anything except Regulator", "Report packaging data")]
