@@ -25,4 +25,6 @@ public class AccountCreationSession
     public bool IsUserChangingDetails { get; set; }
     
     public bool IsApprovedUser { get; set; }
+    
+    public string OrganisationId { get; set; }
 }

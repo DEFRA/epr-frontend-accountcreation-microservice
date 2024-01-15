@@ -21,4 +21,6 @@ public class OrganisationModel
     public bool IsComplianceScheme { get; set; }
 
     public Nation? Nation { get; set; }
+    
+    public string OrganisationId { get; set; }
 }

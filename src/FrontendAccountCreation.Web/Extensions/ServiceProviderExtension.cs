@@ -154,6 +154,7 @@ public static class ServiceProviderExtension
 
                     return Task.CompletedTask;
                 };
+                options.ClaimActions.Add(new CorrelationClaimAction());
             }, options =>
             {
                 options.Cookie.Name = configuration.GetValue<string>("CookieOptions:AuthenticationCookieName");

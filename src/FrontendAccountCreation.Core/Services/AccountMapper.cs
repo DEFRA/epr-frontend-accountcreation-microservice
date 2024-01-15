@@ -14,6 +14,7 @@ public class AccountMapper : IAccountMapper
         bool validatedWithCompaniesHouse;
         string name;
         string? jobTitle;
+        string organisationId;
         ProducerType? producerType;
 
         if (session.IsCompaniesHouseFlow)
@@ -24,6 +25,7 @@ public class AccountMapper : IAccountMapper
             validatedWithCompaniesHouse = true;
             jobTitle = session.CompaniesHouseSession.RoleInOrganisation.ToString();
             producerType = null;
+            organisationId = session.CompaniesHouseSession.Company.OrganisationId;
         }
         else
         {
@@ -33,6 +35,7 @@ public class AccountMapper : IAccountMapper
             validatedWithCompaniesHouse = false;
             jobTitle = session.ManualInputSession.RoleInOrganisation;
             producerType = session.ManualInputSession.ProducerType;
+            organisationId = session.ManualInputSession.OrganisationId;
         }
 
         var person = new PersonModel()
@@ -52,7 +55,8 @@ public class AccountMapper : IAccountMapper
             Address = GetCompanyAddress(session),
             ValidatedWithCompaniesHouse = validatedWithCompaniesHouse,
             IsComplianceScheme = isComplianceScheme,
-            Nation = session.UkNation ?? Nation.NotSet
+            Nation = session.UkNation ?? Nation.NotSet,
+            OrganisationId = organisationId
         };
 
         var account = new AccountModel()
