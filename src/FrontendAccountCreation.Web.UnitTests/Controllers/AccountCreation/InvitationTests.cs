@@ -183,7 +183,29 @@ public class InvitationTests : AccountCreationTestBase
         result.Should().BeOfType<RedirectResult>();
         result.As<RedirectResult>().Url.Should().Be("/report-data");
     }
-    
+
+    [TestMethod]
+    public async Task GetInviteeFullName_GivenFirstNameAndLastNameAreNotNull_WhenInviteeFullNameGet_ThenRedirectsToReportData()
+    {
+        // Arrange
+        var userAccountModel = CreateUserAccountModel(EnrolmentStatus.Enrolled);
+        userAccountModel.User.FirstName = "firstName";
+        userAccountModel.User.LastName = "lastName";
+        _facadeServiceMock.Setup(x => x.GetUserAccount()).ReturnsAsync(userAccountModel);
+
+        var inviteToken = "an-invite-token";
+        var mockTempData = new Mock<ITempDataDictionary>();
+        mockTempData.Setup(x => x["InviteToken"]).Returns(inviteToken);
+        _systemUnderTest.TempData = mockTempData.Object;
+
+        // Act
+        var result = await _systemUnderTest.InviteeFullName();
+
+        // Assert
+        result.Should().BeOfType<RedirectResult>();
+        result.As<RedirectResult>().Url.Should().Be("/report-data");
+    }
+
     [TestMethod]
     public async Task GetInviteeFullName_GivenUserEnrolmentStatusIsInvited_ThenDoesNotRedirectToReportDataUrl()
     {
