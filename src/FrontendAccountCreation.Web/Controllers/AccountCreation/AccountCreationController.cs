@@ -529,6 +529,13 @@ public class AccountCreationController : Controller
         
         if (userAccount?.User != null && userAccount.User is { FirstName: { }, LastName: { } })
         {
+            var inviteeDetails = new EnrolInvitedUserModel
+            {
+                InviteToken = session?.InviteToken,
+                FirstName = userAccount.User.FirstName,
+                LastName = userAccount.User.LastName
+            };
+            await _facadeService.PostEnrolInvitedUserAsync(inviteeDetails);
             return Redirect(_urlOptions.ReportDataRedirectUrl);
         }
         

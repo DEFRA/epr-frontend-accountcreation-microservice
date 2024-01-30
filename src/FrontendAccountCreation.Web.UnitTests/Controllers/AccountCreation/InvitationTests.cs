@@ -191,9 +191,15 @@ public class InvitationTests : AccountCreationTestBase
         var userAccountModel = CreateUserAccountModel(EnrolmentStatus.Enrolled);
         userAccountModel.User.FirstName = "firstName";
         userAccountModel.User.LastName = "lastName";
+        var inviteToken = "an-invite-token";
+        var inviteeDetails = new EnrolInvitedUserModel
+        {
+            InviteToken = inviteToken,
+            FirstName = userAccountModel.User.FirstName,
+            LastName = userAccountModel.User.LastName
+        };
         _facadeServiceMock.Setup(x => x.GetUserAccount()).ReturnsAsync(userAccountModel);
 
-        var inviteToken = "an-invite-token";
         var mockTempData = new Mock<ITempDataDictionary>();
         mockTempData.Setup(x => x["InviteToken"]).Returns(inviteToken);
         _systemUnderTest.TempData = mockTempData.Object;
@@ -204,6 +210,7 @@ public class InvitationTests : AccountCreationTestBase
         // Assert
         result.Should().BeOfType<RedirectResult>();
         result.As<RedirectResult>().Url.Should().Be("/report-data");
+        _facadeServiceMock.Verify(x => x.PostEnrolInvitedUserAsync(It.IsAny<EnrolInvitedUserModel>()), Times.Once);
     }
 
     [TestMethod]
