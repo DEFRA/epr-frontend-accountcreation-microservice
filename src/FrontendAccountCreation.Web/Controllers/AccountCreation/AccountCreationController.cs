@@ -527,18 +527,6 @@ public class AccountCreationController : Controller
         
         var userAccount = await _facadeService.GetUserAccount();
         
-        if (userAccount?.User != null && userAccount.User is { FirstName: { }, LastName: { } })
-        {
-            var inviteeDetails = new EnrolInvitedUserModel
-            {
-                InviteToken = session?.InviteToken,
-                FirstName = userAccount.User.FirstName,
-                LastName = userAccount.User.LastName
-            };
-            await _facadeService.PostEnrolInvitedUserAsync(inviteeDetails);
-            return Redirect(_urlOptions.ReportDataRedirectUrl);
-        }
-        
         if (userAccount is not null && userAccount.User.EnrolmentStatus != EnrolmentStatus.Invited)
         {
             _logger.LogInformation("User with ID {UserId} does not have an enrolment status of \"Invited\".", User.GetObjectId());
