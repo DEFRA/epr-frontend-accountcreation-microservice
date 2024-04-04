@@ -59,7 +59,8 @@ variables:
 
 resources:
   repositories:
-    - name: defra/epr-webapps-code-deploy-templates
+    - repository: CommonTemplates
+      name: defra/epr-webapps-code-deploy-templates
       type: github
       endpoint: defra
       ref: main
