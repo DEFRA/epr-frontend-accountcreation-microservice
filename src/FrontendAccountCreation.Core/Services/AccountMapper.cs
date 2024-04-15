@@ -69,7 +69,13 @@ public class AccountMapper : IAccountMapper
                 JobTitle = jobTitle,
             }
         };
-        
+
+        if (session.IsApprovedUser)
+        {
+            account.DeclarationTimeStamp = session.DeclarationTimestamp;
+            account.DeclarationFullName = session.DeclarationFullName;
+        }
+
         return account;
     }
 

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
+using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Core.Services.Dto.Company;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.AccountCreation;
 
@@ -17,7 +19,7 @@ public class DeclarationTests : AccountCreationTestBase
     private const string ReportDataLandingRedirectUrl = "/report-data/landing";
     private const string ReportDataRedirectUrl = "/report-data";
     private const string ReportDataNewApprovedUser = "/report-data/approved-person-created?notification=created_new_approved_person";
-    
+
     [TestInitialize]
     public void Setup()
     {
@@ -37,6 +39,32 @@ public class DeclarationTests : AccountCreationTestBase
     }
 
     [TestMethod]
+    public async Task Declaration_WhenCalled_ShouldReturnView()
+    {
+        var result = await _systemUnderTest.Declaration();
+        result.Should().BeOfType<ViewResult>();
+        Assert.IsFalse(_systemUnderTest.ViewBag.IsAdminUser);
+    }
+
+    [TestMethod]
+    public async Task DeclarationWithFullName_WhenCalled_ShouldReturnView()
+    {
+        var expectedOrgName = "expectedName";
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(new AccountCreationSession()
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            CompaniesHouseSession = new CompaniesHouseSession { Company = new Company { Name = expectedOrgName } }
+        });
+
+        var result = await _systemUnderTest.DeclarationWithFullName();
+
+        result.Should().BeOfType<ViewResult>();
+        Assert.IsTrue(_systemUnderTest.ViewBag.IsAdminUser);
+        Assert.IsTrue(_systemUnderTest.ViewBag.OrganisationName == expectedOrgName);
+    }
+
+    [TestMethod]
     [DataRow(false, ReportDataLandingRedirectUrl)]
     [DataRow(true, ReportDataRedirectUrl)]
     public async Task Confirm_WhenCalled_ThenRedirectsToReportPackagingDataUrlWhenOrganisationIsComplianceScheme(bool isComplianceScheme, string expectedRedirectUrl)
@@ -53,26 +81,12 @@ public class DeclarationTests : AccountCreationTestBase
     }
 
     [TestMethod]
-    public async Task Declaration_WhenCalled_ThenDeclarationPageReturnedWithCheckYourDetailsAsTheBackLink()
-    {
-        var result = await _systemUnderTest.Declaration();
-
-        result.Should().BeOfType<ViewResult>();
-
-        var viewResult = (ViewResult)result;
-
-        viewResult.Model.Should().BeNull();
-
-        AssertBackLink(viewResult, PagePath.CheckYourDetails);
-    }
-
-    [TestMethod]
     public async Task Confirm_WhenCalled_PostToAccountCreationEndpointInFacade()
     {
         _accountServiceMock
             .Setup(x => x.CreateAccountModel(It.IsAny<AccountCreationSession>(), It.IsAny<string>()))
             .Returns(new AccountModel { Organisation = new OrganisationModel { IsComplianceScheme = true } });
-        
+
         var result = await _systemUnderTest.Confirm();
 
         result.Should().BeOfType<RedirectResult>();
@@ -81,11 +95,12 @@ public class DeclarationTests : AccountCreationTestBase
 
         _facadeServiceMock.Verify(x => x.PostAccountDetailsAsync(It.IsAny<AccountModel>()), Times.Once);
     }
-    
+
     [TestMethod]
     public async Task Confirm_WhenCalledForApprovedPerson_PostToAccountCreationEndpointInFacade()
     {
         //Arrange
+        var expectedUsername = "User fullname";
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(new AccountCreationSession()
         {
             OrganisationType = OrganisationType.CompaniesHouseCompany,
@@ -96,7 +111,7 @@ public class DeclarationTests : AccountCreationTestBase
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             InviteToken = "token"
         });
-    
+
         _facadeServiceMock.Setup(x => x.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>())).ReturnsAsync(new ApprovedPersonOrganisationModel()
         {
             SubBuildingName = "",
@@ -114,7 +129,7 @@ public class DeclarationTests : AccountCreationTestBase
             ApprovedUserEmail = "adas@sdad.com"
         });
 
-        _accountServiceMock.Setup(x => 
+        _accountServiceMock.Setup(x =>
                 x.CreateAccountModel(It.IsAny<AccountCreationSession>(), It.IsAny<string>()))
             .Returns(new AccountModel()
             {
@@ -152,13 +167,15 @@ public class DeclarationTests : AccountCreationTestBase
                     ContactEmail = "asdas@asdaf.com",
                     LastName = "asdad",
                     TelephoneNumber = "76208-79620"
-                }
+                },
+                DeclarationFullName = expectedUsername,
+                DeclarationTimeStamp = new DateTime(2024, 01, 01)
             });
-        
+
         _facadeServiceMock.Setup(x => x.PostAccountDetailsAsync(It.IsAny<AccountModel>())).Returns(Task.CompletedTask);
-        
+
         //Act
-        var result = await _systemUnderTest.Confirm();
+        var result = await _systemUnderTest.ConfirmWithFullName(new DeclarationViewModelWithFullName { FullName = expectedUsername });
 
         //Assert
         result.Should().BeOfType<RedirectResult>();

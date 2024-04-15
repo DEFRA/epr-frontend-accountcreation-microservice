@@ -4,6 +4,7 @@ using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
+using Moq;
 
 namespace FrontendAccountCreation.Core.UnitTests;
 
@@ -158,5 +159,42 @@ public class AccountMapperTests
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
+    }
+
+    [TestMethod]
+    public void testCreateAccountModel_DeclarationProperties_ShouldReturnSetValues()
+    {
+        var accountMapper = new AccountMapper();
+        var declarationName = "my name";
+        var declarationTime = new DateTime(2024, 01, 01);
+        var mockSession = new Mock<AccountCreationSession>();
+        mockSession.Object.IsApprovedUser = true;
+        mockSession.Object.OrganisationType = OrganisationType.CompaniesHouseCompany;
+
+        mockSession.Object.CompaniesHouseSession =
+            new CompaniesHouseSession()
+            {
+                Company = new Company
+                {
+                    AccountCreatedOn = DateTime.Now,
+                    BusinessAddress = new Addresses.Address { BuildingName = "building name" },
+                    CompaniesHouseNumber = "123",
+                    Name = "unit test name",
+                    OrganisationId = "123"
+                },
+                IsComplianceScheme = false,
+                RoleInOrganisation = RoleInOrganisation.Partner
+            };
+
+        mockSession.Object.Contact = new Contact() { FirstName = "Firstname", LastName = "Lastname", TelephoneNumber = "0133 256 7845" };
+
+        mockSession.Object.DeclarationFullName = declarationName;
+        mockSession.Object.DeclarationTimestamp = declarationTime;
+
+        var result = accountMapper.CreateAccountModel(mockSession.Object, "test@email.com");
+
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.DeclarationFullName.Equals(declarationName));
+        Assert.IsTrue(result.DeclarationTimeStamp.Equals(declarationTime));
     }
 }
