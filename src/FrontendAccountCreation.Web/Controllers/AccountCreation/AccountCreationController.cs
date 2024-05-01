@@ -62,10 +62,10 @@ public class AccountCreationController : Controller
         {
             return RedirectToAction(PagePath.Error, nameof(ErrorController.Error), new
             {
-                statusCode = (int) HttpStatusCode.Forbidden
+                statusCode = (int)HttpStatusCode.Forbidden
             });
         }
-        
+
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
         {
@@ -81,8 +81,8 @@ public class AccountCreationController : Controller
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-       
-       YesNoAnswer? isTheOrganisationCharity = null;
+
+        YesNoAnswer? isTheOrganisationCharity = null;
 
         if (session != null)
         {
@@ -93,7 +93,7 @@ public class AccountCreationController : Controller
                 SetBackLink(session, string.Empty);
             }
         }
-        
+
 
         return View(new RegisteredAsCharityRequestViewModel
         {
@@ -362,7 +362,7 @@ public class AccountCreationController : Controller
 
         ProducerType? producerType = null;
 
-        if (session.IsManualInputFlow && session.ManualInputSession.ProducerType is {})
+        if (session.IsManualInputFlow && session.ManualInputSession.ProducerType is { })
         {
             producerType = session.ManualInputSession.ProducerType.Value;
         }
@@ -409,7 +409,7 @@ public class AccountCreationController : Controller
         var inviteTokenTempData = TempData["InviteToken"] as string;
         var invitedOrganisationIdTempData = TempData["InvitedOrganisationId"] as string;
         var invitedCompanyHouseNumber = TempData["InvitedCompanyHouseNumber"] as string;
-        
+
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession();
 
         if (!string.IsNullOrWhiteSpace(inviteTokenTempData))
@@ -494,7 +494,7 @@ public class AccountCreationController : Controller
         TempData["InviteToken"] = inviteToken;
 
         var invitedApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
-        
+
         if (invitedApprovedUser.ServiceRoleId == "1")
         {
             TempData["InvitedOrganisationId"] = invitedApprovedUser.OrganisationId;
@@ -524,9 +524,9 @@ public class AccountCreationController : Controller
             session.InviteToken = inviteTokenTempData;
             _sessionManager.SaveSessionAsync(HttpContext.Session, session);
         }
-        
+
         var userAccount = await _facadeService.GetUserAccount();
-        
+
         if (userAccount is not null && userAccount.User.EnrolmentStatus != EnrolmentStatus.Invited)
         {
             _logger.LogInformation("User with ID {UserId} does not have an enrolment status of \"Invited\".", User.GetObjectId());
@@ -608,7 +608,7 @@ public class AccountCreationController : Controller
 
         SetBackLink(session, PagePath.ManualInputRoleInOrganisation);
         _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-        
+
         var viewModel = new ManualInputRoleInOrganisationViewModel()
         {
             RoleInOrganisation = session.ManualInputSession?.RoleInOrganisation
@@ -1018,6 +1018,12 @@ public class AccountCreationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
+        if (session.IsApprovedUser)
+        {
+            return await SaveSessionAndRedirect(session, nameof(DeclarationWithFullName), PagePath.CheckYourDetails,
+                PagePath.DeclarationWithFullName);
+        }
+
         return await SaveSessionAndRedirect(session, nameof(Declaration), PagePath.CheckYourDetails,
             PagePath.Declaration);
     }
@@ -1029,16 +1035,21 @@ public class AccountCreationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.Declaration);
-   
-        if (session.IsApprovedUser)
-        {
-            ViewBag.OrganisationName = session.CompaniesHouseSession?.Company.Name ?? session.ManualInputSession.TradingName;
-            ViewBag.IsAdminUser = true;
-            return View();
-        }
-        
         ViewBag.IsAdminUser = false;
         return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.DeclarationWithFullName)]
+    [JourneyAccess(PagePath.DeclarationWithFullName)]
+    public async Task<IActionResult> DeclarationWithFullName()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var model = new DeclarationViewModelWithFullName();
+        SetBackLink(session, PagePath.DeclarationWithFullName);
+        ViewBag.OrganisationName = session.CompaniesHouseSession?.Company.Name ?? session.ManualInputSession.TradingName;
+        ViewBag.IsAdminUser = true;
+        return View(model);
     }
 
     [HttpPost]
@@ -1051,37 +1062,62 @@ public class AccountCreationController : Controller
 
         try
         {
-            if (!string.IsNullOrEmpty(session.InviteToken) && (session.IsManualInputFlow || session.IsCompaniesHouseFlow))
-            {
-                var organisationData = await _facadeService
-                    .GetOrganisationNameByInviteTokenAsync(session.InviteToken);
-                var account = _accountMapper.CreateAccountModel(session, organisationData.ApprovedUserEmail);
-                account.Person.ContactEmail = organisationData.ApprovedUserEmail;
-                await _facadeService.PostApprovedUserAccountDetailsAsync(account);
-                _sessionManager.RemoveSession(HttpContext.Session);
+            string email = GetUserEmail();
+            var account = _accountMapper.CreateAccountModel(session, email);
+            await _facadeService.PostAccountDetailsAsync(account);
+            _sessionManager.RemoveSession(HttpContext.Session);
 
-                return Redirect(_urlOptions.ReportDataNewApprovedUser);
-            }
-            else
-            {
-                string email = GetUserEmail();
-                var account = _accountMapper.CreateAccountModel(session, email);
-                await _facadeService.PostAccountDetailsAsync(account);
-                _sessionManager.RemoveSession(HttpContext.Session);
-
-                return Redirect(account.Organisation.IsComplianceScheme
-                    ? _urlOptions.ReportDataRedirectUrl
-                    : _urlOptions.ReportDataLandingRedirectUrl);
-            }
+            return Redirect(account.Organisation.IsComplianceScheme
+                ? _urlOptions.ReportDataRedirectUrl
+                : _urlOptions.ReportDataLandingRedirectUrl);
         }
         catch (ProblemResponseException ex)
         {
             switch (ex.ProblemDetails?.Type)
             {
                 default:
-                {
-                    throw;
-                }
+                    {
+                        throw;
+                    }
+            }
+        }
+    }
+
+    [HttpPost]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    [Route(PagePath.DeclarationWithFullName)]
+    [JourneyAccess(PagePath.DeclarationWithFullName)]
+    public async Task<IActionResult> ConfirmWithFullName(DeclarationViewModelWithFullName model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.DeclarationWithFullName);
+            return View(model);
+        }
+
+        session.DeclarationFullName = model.FullName;
+        session.DeclarationTimestamp = DateTime.Now;
+
+        try
+        {
+            var organisationData = await _facadeService.GetOrganisationNameByInviteTokenAsync(session.InviteToken);
+            var account = _accountMapper.CreateAccountModel(session, organisationData.ApprovedUserEmail);
+            account.Person.ContactEmail = organisationData.ApprovedUserEmail;
+            await _facadeService.PostApprovedUserAccountDetailsAsync(account);
+            _sessionManager.RemoveSession(HttpContext.Session);
+
+            return Redirect(_urlOptions.ReportDataNewApprovedUser);
+        }
+        catch (ProblemResponseException ex)
+        {
+            switch (ex.ProblemDetails?.Type)
+            {
+                default:
+                    {
+                        throw;
+                    }
             }
         }
     }
@@ -1102,7 +1138,7 @@ public class AccountCreationController : Controller
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         SetBackLink(session, PagePath.AccountAlreadyExists);
-        
+
         return View(new AccountAlreadyExistsViewModel
         {
             DateCreated = session.CompaniesHouseSession.Company.AccountCreatedOn.Value.Date
@@ -1167,7 +1203,7 @@ public class AccountCreationController : Controller
 
     private void SetBackLink(AccountCreationSession session, string currentPagePath)
     {
-        if(session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
         {
             ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
         }

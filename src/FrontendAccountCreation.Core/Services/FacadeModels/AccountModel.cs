@@ -7,4 +7,9 @@ public class AccountModel
     public OrganisationModel Organisation { get; set; }
 
     public ConnectionModel Connection { get; set; }
+
+    public string? DeclarationFullName { get; set; }
+
+    public DateTime? DeclarationTimeStamp { get; set; }
+
 }
