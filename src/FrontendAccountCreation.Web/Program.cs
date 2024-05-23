@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Middleware;
 
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Logging;
 
@@ -96,6 +97,13 @@ app.MapControllerRoute(
 app.MapHealthChecks(
     builder.Configuration.GetValue<string>("HealthCheckPath"),
     HealthCheckOptionBuilder.Build()).AllowAnonymous();
+app.MapHealthChecks("/admin/error", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status500InternalServerError
+    }
+}).AllowAnonymous();
 
 app.MapRazorPages();
 
