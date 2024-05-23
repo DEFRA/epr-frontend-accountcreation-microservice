@@ -16,7 +16,7 @@ public class ErrorController : Controller
     {
         var errorView = statusCode == (int?)HttpStatusCode.NotFound ? PagePath.PageNotFound : "Error";
 
-        Response.StatusCode = 200;
+        Response.StatusCode = statusCode ?? (int)HttpStatusCode.InternalServerError;
 
         return View(errorView);
     }
