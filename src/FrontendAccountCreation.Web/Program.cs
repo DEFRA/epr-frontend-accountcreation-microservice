@@ -28,8 +28,8 @@ builder.Services
         var deploymentRole = builder.Configuration
             .GetValue<string>(DeploymentRoleOptions.ConfigSection);
 
-        options.ResourcesPath = deploymentRole != DeploymentRoleOptions.RegulatorRoleValue 
-            ? "Resources" 
+        options.ResourcesPath = deploymentRole != DeploymentRoleOptions.RegulatorRoleValue
+            ? "Resources"
             : "ResourcesRegulator";
     })
     .AddDataAnnotationsLocalization();
@@ -97,13 +97,17 @@ app.MapControllerRoute(
 app.MapHealthChecks(
     builder.Configuration.GetValue<string>("HealthCheckPath"),
     HealthCheckOptionBuilder.Build()).AllowAnonymous();
-app.MapHealthChecks("/admin/error", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+
+if (builder.Configuration.GetValue<bool>("FeatureManagement:AllowAlertTestEndpoint"))
 {
-    ResultStatusCodes =
+    app.MapHealthChecks("/admin/error", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        ResultStatusCodes =
     {
         [HealthStatus.Healthy] = StatusCodes.Status500InternalServerError
     }
-}).AllowAnonymous();
+    }).AllowAnonymous();
+}
 
 app.MapRazorPages();
 
