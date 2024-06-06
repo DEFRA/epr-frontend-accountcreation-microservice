@@ -47,4 +47,6 @@ public class ExternalUrlsOptions
     public string PrivacyLink { get; set; }
     
     public string CookiesLink { get; set; }
+
+    public string AccessibilityLink { get; set; }
 }

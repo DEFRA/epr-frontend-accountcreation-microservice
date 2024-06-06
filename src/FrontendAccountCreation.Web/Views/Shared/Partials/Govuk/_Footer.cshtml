@@ -2,8 +2,20 @@
 @model FrontendAccountCreation.Web.Configs.ExternalUrlsOptions
 
 @{
-    string privacyLink = $"{Model.PrivacyLink}?returnurl={Url.CurrentPath()}";
     string cookiesLink = $"{Model.CookiesLink}?returnurl={Url.CurrentPath()}";
+
+    string DecorateUrl(string url)
+    {
+        var cultureCode = this.Output.FormatProvider.ToString() switch
+        {
+            "en" => string.Empty,
+            _ => $".{this.Output.FormatProvider.ToString()}",
+        };
+
+        return $"{url}" +
+        $"{cultureCode}" +
+        $"?returnurl={Url.CurrentPath()}";
+    }
 }
 <footer class="govuk-footer" role="contentinfo">
     <div class="govuk-width-container ">
@@ -17,12 +29,12 @@
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="@privacyLink">
+                        <a class="govuk-footer__link" href="@DecorateUrl(Model.PrivacyLink)">
                             @Localizer["Footer.Privacy"]
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" asp-controller="Accessibility" asp-action="Detail" asp-route-returnurl="@Url.CurrentPath()">
+                        <a class="govuk-footer__link" href="@DecorateUrl(Model.AccessibilityLink)">
                             @Localizer["Footer.Accessibility"]
                         </a>
                     </li>
