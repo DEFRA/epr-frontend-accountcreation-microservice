@@ -12,9 +12,7 @@
             _ => $".{this.Output.FormatProvider.ToString()}",
         };
 
-        return $"{url}" +
-        $"{cultureCode}" +
-        $"?returnurl={Url.CurrentPath()}";
+        return $"{url}{cultureCode}";
     }
 }
 <footer class="govuk-footer" role="contentinfo">
@@ -29,12 +27,12 @@
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="@DecorateUrl(Model.PrivacyLink)">
+                        <a class="govuk-footer__link" href="@DecorateUrl(Model.PrivacyLink)" target="_blank">
                             @Localizer["Footer.Privacy"]
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="@DecorateUrl(Model.AccessibilityLink)">
+                        <a class="govuk-footer__link" href="@DecorateUrl(Model.AccessibilityLink)" target="_blank">
                             @Localizer["Footer.Accessibility"]
                         </a>
                     </li>
