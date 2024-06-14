@@ -118,30 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Footer.Privacy" xml:space="preserve">
-    <value>WPrivacy</value>
+    <value>Preifatrwydd</value>
   </data>
   <data name="Footer.Cookies" xml:space="preserve">
-    <value>WCookies</value>
+    <value>Cwcis</value>
   </data>
   <data name="Footer.AllContent" xml:space="preserve">
-    <value>WAll content is available under the</value>
+    <value>Mae’r holl gynnwys ar gael dan y</value>
   </data>
   <data name="Footer.CrownCopyright" xml:space="preserve">
-    <value>© WCrown copyright</value>
+    <value>Hawlfraint y Goron</value>
   </data>
   <data name="Footer.ExceptWhere" xml:space="preserve">
-    <value>, wexcept where otherwise stated</value>
+    <value>oni nodir yn wahanol</value>
   </data>
   <data name="Footer.OpenGovernment" xml:space="preserve">
-    <value>WOpen Government Licence v3.0</value>
+    <value>Drwydded Llywodraeth Agored, fersiwn 3.0</value>
   </data>
   <data name="Footer.Accessibility" xml:space="preserve">
-    <value>WAccessibility statement</value>
+    <value>Datganiad hygyrchedd</value>
   </data>
   <data name="Footer.SupportLinks" xml:space="preserve">
-    <value>wSupport Links</value>
+    <value>Dolenni cymorth</value>
   </data>
   <data name="Footer.CustomerServiceTimes" xml:space="preserve">
-    <value>Translated opening times go here.</value>
+    <value>Dydd Llun i ddydd Gwener, 8:30am i 4:30pm</value>
+  </data>
+  <data name="Footer.Email" xml:space="preserve">
+    <value>Ebost</value>
+  </data>
+  <data name="Footer.GetHelp" xml:space="preserve">
+    <value>Cael Help</value>
+  </data>
+  <data name="Footer.Phone" xml:space="preserve">
+    <value>Ffôn</value>
   </data>
 </root>
