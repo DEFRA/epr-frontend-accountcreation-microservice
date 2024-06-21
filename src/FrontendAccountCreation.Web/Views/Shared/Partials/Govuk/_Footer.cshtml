@@ -2,14 +2,33 @@
 @model FrontendAccountCreation.Web.Configs.ExternalUrlsOptions
 
 @{
-    string privacyLink = $"{Model.PrivacyLink}?returnurl={Url.CurrentPath()}";
     string cookiesLink = $"{Model.CookiesLink}?returnurl={Url.CurrentPath()}";
+
+    string DecorateUrl(string url)
+    {
+        var cultureCode = this.Output.FormatProvider.ToString() switch
+        {
+            "en" => string.Empty,
+            _ => $".{this.Output.FormatProvider.ToString()}",
+        };
+
+        return $"{url}{cultureCode}";
+    }
 }
 <footer class="govuk-footer" role="contentinfo">
     <div class="govuk-width-container ">
+        
         <div class="govuk-footer__meta">
-            <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-                    <h2 class="govuk-visually-hidden">@Localizer["Footer.SupportLinks"]</h2>
+            <div class="govuk-footer__meta-item govuk-footer__meta-item--grow ">
+
+                <h2 class="govuk-!-margin-top-3">@Localizer["Footer.GetHelp"]</h2>
+                <ul class="govuk-list govuk-list--spaced govuk-!-margin-bottom-7">
+                    <li>@Localizer["Footer.Email"]: <a href="mailto: @this.Model.CustomerServiceEmail">@this.Model.CustomerServiceEmail</a></li>
+                    <li>@Localizer["Footer.Phone"]: @this.Model.CustomerServicePhone</li>
+                    <li>@Localizer["Footer.CustomerServiceTimes"]</li>
+                </ul>
+
+                <h2 class="govuk-visually-hidden">@Localizer["Footer.SupportLinks"]</h2>
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
                         <a class="govuk-footer__link" href="@cookiesLink">
@@ -17,12 +36,12 @@
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" href="@privacyLink">
+                        <a class="govuk-footer__link" href="@DecorateUrl(Model.PrivacyLink)" target="_blank">
                             @Localizer["Footer.Privacy"]
                         </a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
-                        <a class="govuk-footer__link" asp-controller="Accessibility" asp-action="Detail" asp-route-returnurl="@Url.CurrentPath()">
+                        <a class="govuk-footer__link" href="@DecorateUrl(Model.AccessibilityLink)" target="_blank">
                             @Localizer["Footer.Accessibility"]
                         </a>
                     </li>
@@ -32,11 +51,11 @@
                 </svg>
                 <span class="govuk-footer__licence-description">
                     @Localizer["Footer.AllContent"] 
-                    <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">@Localizer["Footer.OpenGovernment"]</a>@Localizer["Footer.ExceptWhere"]
+                    <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">@Localizer["Footer.OpenGovernment"]</a>, @Localizer["Footer.ExceptWhere"]
                 </span>
             </div>
             <div class="govuk-footer__meta-item">
-                <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">@Localizer["Footer.CrownCopyright"]</a>
+                <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">&copy @Localizer["Footer.CrownCopyright"]</a>
             </div>
         </div>
     </div>
