@@ -182,4 +182,22 @@ public class DeclarationTests : AccountCreationTestBase
         ((RedirectResult)result).Url.Should().Be(ReportDataNewApprovedUser);
 
     }
+
+    [TestMethod]
+    public async Task ConfirmWithFullName_ModelStateInvalid_RedirectsToCorrectView()
+    {
+        var model = new DeclarationViewModelWithFullName();
+               
+        _systemUnderTest.ModelState.AddModelError("Error", "Error Message");
+                
+        // Act
+        var result = await _systemUnderTest.ConfirmWithFullName(model);
+
+        // Assert
+        Assert.IsInstanceOfType(result, typeof(ViewResult));
+        var viewResult = result as ViewResult;
+        Assert.IsNotNull(viewResult);
+        Assert.AreEqual("DeclarationWithFullName", viewResult.ViewName);
+        Assert.AreEqual(model, viewResult.Model);
+    }
 }
