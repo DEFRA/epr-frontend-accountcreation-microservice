@@ -127,7 +127,7 @@
     <value>WEnter your full name</value>
   </data>
   <data name="DeclarationWithFullName.LengthErrorMessage" xml:space="preserve">
-    <value>WFull name must be less than 200 characters long</value>
+    <value>WFull name must be less than 70 characters long</value>
   </data>
   <data name="DeclarationWithFullName.Paragraph11" xml:space="preserve">
     <value>WBy entering your details, you're agreeing that the information you’ve given is complete and correct, and that you:</value>

@@ -4,7 +4,7 @@ namespace FrontendAccountCreation.Web.ViewModels.AccountCreation;
 
 public class DeclarationViewModelWithFullName
 {
-    [MaxLength(200, ErrorMessage = "DeclarationWithFullName.LengthErrorMessage")]
-    [Required(ErrorMessage = "DeclarationWithFullName.ErrorMessage")]
+    [MaxLength(70, ErrorMessage = "Declaration.LengthErrorMessage")]
+    [Required(ErrorMessage = "Declaration.ErrorMessage")]
     public string? FullName { get; set; }
 }

@@ -142,6 +142,6 @@
     <value>You must enter your full name</value>
   </data>
   <data name="DeclarationWithFullName.LengthErrorMessage" xml:space="preserve">
-    <value>Full name must be less than 200 characters long</value>
+    <value>Full name must be less than 70 characters long</value>
   </data>
 </root>
