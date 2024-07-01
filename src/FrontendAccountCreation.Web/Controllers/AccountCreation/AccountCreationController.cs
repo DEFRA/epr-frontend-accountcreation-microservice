@@ -1094,7 +1094,7 @@ public class AccountCreationController : Controller
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.DeclarationWithFullName);
-            return View(nameof(DeclarationWithFullName), model);
+            return View(model);
         }
 
         session.DeclarationFullName = model.FullName;
