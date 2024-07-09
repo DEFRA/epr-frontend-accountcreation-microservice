@@ -3,8 +3,10 @@ using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Cookies;
 using FrontendAccountCreation.Web.Cookies;
+using FrontendAccountCreation.Web.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -185,5 +187,48 @@ namespace FrontendAccountCreation.IntegrationTests.Controllers
                 ), Times.Once);
             }
         }
+
+        // Add tests for AcknowledgeAcceptance method on the controller
+        [TestMethod]
+        public async Task CookiesController_AcknowledgeAcceptance_ReturnsCorrectUrlRedirectResult()
+        {
+            string returnUrl = "TestReturnUrl";
+
+            // Arrange
+            var urlHelperMock = new Mock<IUrlHelper>(MockBehavior.Strict);
+            urlHelperMock.Setup(x => x.IsLocalUrl(returnUrl)).Returns(true);
+            urlHelperMock.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns("/");
+
+            controller.Url = urlHelperMock.Object;
+
+            // Act
+            var result = controller.AcknowledgeAcceptance(returnUrl);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("LocalRedirectResult", result.GetType().Name);
+            Assert.AreEqual(returnUrl, result.Url);
+        }
+
+        [TestMethod]
+        public async Task CookiesController_AcknowledgeAcceptance_WhenReturnUrlIsNotLocalUrl_ReturnsHomePath()
+        {
+            string returnUrl = "http://www.google.com";
+
+            // Arrange
+            var urlHelperMock = new Mock<IUrlHelper>(MockBehavior.Strict);
+            urlHelperMock.Setup(x => x.IsLocalUrl(returnUrl)).Returns(false);
+            urlHelperMock.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns("/");
+            controller.Url = urlHelperMock.Object;
+
+            // Act
+            var result = controller.AcknowledgeAcceptance(returnUrl);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("LocalRedirectResult", result.GetType().Name);
+            Assert.AreEqual("/", result.Url);
+        }
+
     }
 }
