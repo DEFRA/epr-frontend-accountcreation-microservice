@@ -20,6 +20,13 @@ public class HomeController : Controller
         return View();
     }
 
+    [AllowAnonymous]
+    public IActionResult SignedOutInvalidToken()
+    {
+        HttpContext.Session.Clear();
+        return View("InvalidToken");
+    }
+
     [HttpGet]
     [Route(PagePath.UserAlreadyExists)]
     public IActionResult UserAlreadyExists()

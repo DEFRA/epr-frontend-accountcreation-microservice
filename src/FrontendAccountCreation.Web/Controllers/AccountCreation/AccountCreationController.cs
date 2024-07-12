@@ -14,6 +14,9 @@ using Core.Services.Dto.Company;
 using Core.Services.FacadeModels;
 using Core.Sessions;
 using Errors;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
@@ -495,6 +498,12 @@ public class AccountCreationController : Controller
 
         var invitedApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
 
+        if (invitedApprovedUser.IsInvitationTokenInvalid) 
+        {
+            return RedirectToAction(nameof(InvalidToken));
+            
+        }
+
         if (invitedApprovedUser.ServiceRoleId == "1")
         {
             TempData["InvitedOrganisationId"] = invitedApprovedUser.OrganisationId;
@@ -511,6 +520,20 @@ public class AccountCreationController : Controller
 
         return RedirectToAction(nameof(InviteeFullName));
     }
+    
+    [HttpGet]
+    public IActionResult InvalidToken() {
+        var callbackUrl = Url.Action(action: "SignedOutInvalidToken", controller: "Home", values: null, protocol: Request.Scheme);
+        return SignOut(
+             new AuthenticationProperties()
+             {
+                 RedirectUri = callbackUrl
+             }
+             ,
+             CookieAuthenticationDefaults.AuthenticationScheme,
+             OpenIdConnectDefaults.AuthenticationScheme);
+    }
+
 
     [HttpGet]
     [Route(PagePath.InviteeFullName)]
