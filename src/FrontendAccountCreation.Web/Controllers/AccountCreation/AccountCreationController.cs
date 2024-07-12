@@ -501,7 +501,6 @@ public class AccountCreationController : Controller
         if (invitedApprovedUser.IsInvitationTokenInvalid) 
         {
             return RedirectToAction(nameof(InvalidToken));
-            
         }
 
         if (invitedApprovedUser.ServiceRoleId == "1")

@@ -274,4 +274,22 @@ public class InvitationTests : AccountCreationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         result.ActionName.Should().Be("ManualInputRoleInOrganisation");
     }
+
+    [TestMethod]
+    public async Task Invitation_ReturnsRedirectToInvalidToken_WhenTokenIsInvalid()
+    {
+        // Arrange
+        var inviteToken = "invalid-token";
+        _facadeServiceMock.Setup(service => service.GetServiceRoleIdAsync(inviteToken))
+                          .ReturnsAsync(new InviteApprovedUserModel { IsInvitationTokenInvalid = true });
+
+        
+        
+        // Act
+        var result = await _systemUnderTest.Invitation(inviteToken);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        result.ActionName.Should().Be("InvalidToken");
+    }
 }
