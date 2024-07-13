@@ -6,6 +6,7 @@ using Core.Sessions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using Web.ViewModels.AccountCreation;
@@ -14,7 +15,7 @@ using Web.ViewModels.AccountCreation;
 public class InvitationTests : AccountCreationTestBase
 {
     private readonly AccountCreationSession _accountCreationSessionMock = new();
-    
+   
     [TestInitialize]
     public void Setup()
     {
@@ -282,14 +283,37 @@ public class InvitationTests : AccountCreationTestBase
         var inviteToken = "invalid-token";
         _facadeServiceMock.Setup(service => service.GetServiceRoleIdAsync(inviteToken))
                           .ReturnsAsync(new InviteApprovedUserModel { IsInvitationTokenInvalid = true });
-
-        
-        
+               
         // Act
         var result = await _systemUnderTest.Invitation(inviteToken);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         result.ActionName.Should().Be("InvalidToken");
+    }
+
+    [TestMethod]
+    public void InvalidToken_ReturnsSignOutResult()
+    {
+        //Arrange
+        var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+        mockUrlHelper
+            .Setup(
+                x => x.Action(
+                    It.IsAny<UrlActionContext>()
+                )
+            )
+        .Returns("callbackUrl")
+            .Verifiable();
+        _systemUnderTest.Url = mockUrlHelper.Object;
+        _systemUnderTest.ControllerContext.HttpContext = new DefaultHttpContext();
+
+
+        //Act
+        var result = _systemUnderTest.InvalidToken();
+
+        //Assert
+        Assert.IsNotNull(result);
+        result.Should().BeOfType(typeof(SignOutResult));
     }
 }
