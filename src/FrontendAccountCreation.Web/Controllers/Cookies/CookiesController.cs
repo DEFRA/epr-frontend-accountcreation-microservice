@@ -12,17 +12,11 @@ namespace FrontendAccountCreation.Web.Controllers.Cookies;
 public class CookiesController : Controller
 {
     private readonly ICookieService _cookieService;
-    private readonly EprCookieOptions _eprCookieOptions;
-    private readonly AnalyticsOptions _googleAnalyticsOptions;
 
     public CookiesController(
-        ICookieService cookieService,
-        IOptions<EprCookieOptions> eprCookieOptions,
-        IOptions<AnalyticsOptions> googleAnalyticsOptions)
+        ICookieService cookieService)
     {
         _cookieService = cookieService;
-        _eprCookieOptions = eprCookieOptions.Value;
-        _googleAnalyticsOptions = googleAnalyticsOptions.Value;
     }
 
     [HttpPost]
