@@ -52,7 +52,7 @@ namespace FrontendAccountCreation.IntegrationTests.Controllers
             });
 
             cookieService = new CookieService(mockLogger.Object, eprCookieOptions, googleAnalyticsOptions);
-            controller = new CookiesController(cookieService, eprCookieOptions, googleAnalyticsOptions);
+            controller = new CookiesController(cookieService);
 
             responseCookiesMock.Setup(r => r.Append(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CookieOptions>()));
             httpContextMock.SetupGet(c => c.Response.Cookies).Returns(responseCookiesMock.Object);
