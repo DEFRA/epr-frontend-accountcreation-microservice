@@ -7,8 +7,6 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.AccountCreation;
 [TestClass]
 public class ReportPackagingDataTests: AccountCreationTestBase
 {
-    private AccountCreationSession _accountCreationSessionMock = null!;
-
     [TestInitialize]
     public void Setup()
     {

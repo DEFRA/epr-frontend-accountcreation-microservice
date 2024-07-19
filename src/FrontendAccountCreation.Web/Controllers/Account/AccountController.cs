@@ -15,16 +15,14 @@ namespace FrontendAccountCreation.Web.Controllers.Account
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly IOptionsMonitor<MicrosoftIdentityOptions> _optionsMonitor;
-
         /// <summary>
         /// Constructor of <see cref="AccountController"/> from <see cref="MicrosoftIdentityOptions"/>
         /// This constructor is used by dependency injection.
         /// </summary>
         /// <param name="microsoftIdentityOptionsMonitor">Configuration options.</param>
-        public AccountController(IOptionsMonitor<MicrosoftIdentityOptions> microsoftIdentityOptionsMonitor)
+        public AccountController()
         {
-            _optionsMonitor = microsoftIdentityOptionsMonitor;
+
         }
 
         /// <summary>

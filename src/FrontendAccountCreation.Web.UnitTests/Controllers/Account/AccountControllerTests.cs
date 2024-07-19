@@ -28,7 +28,7 @@ public class AccountControllerTests
         _optionsMonitorMock.Setup(x => x.CurrentValue).Returns(options);
         _optionsMonitorMock.Setup(x => x.Get(It.IsAny<string>())).Returns(options);
         _httpContextMock.Setup(x => x.Request).Returns(_httpRequest.Object);
-        _accountController = new AccountController(_optionsMonitorMock.Object);
+        _accountController = new AccountController();
 
     }
     
