@@ -17,6 +17,8 @@ RUN dotnet restore "FrontendAccountCreation.Web/FrontendAccountCreation.Web.cspr
 COPY --chown=dotnet:dotnet FrontendAccountCreation.Web/. ./FrontendAccountCreation.Web/.
 COPY --chown=dotnet:dotnet FrontendAccountCreation.Core/. ./FrontendAccountCreation.Core/.
 
+RUN chmod -R 755 ./FrontendAccountCreation.Web/ ./FrontendAccountCreation.Core/
+
 WORKDIR "/src/FrontendAccountCreation.Web"
 RUN dotnet build "FrontendAccountCreation.Web.csproj" -c Release -o /app/build
 
