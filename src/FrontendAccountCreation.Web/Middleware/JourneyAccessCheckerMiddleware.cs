@@ -43,7 +43,7 @@ public class JourneyAccessCheckerMiddleware
             }
             else if (!sessionValue.Journey.Contains(attribute.PagePath) && !sessionValue.IsUserChangingDetails)
             {
-                pageToRedirect = sessionValue.Journey.Last();
+                pageToRedirect = sessionValue.Journey[sessionValue.Journey.Count - 1];
             }
 
             if (!string.IsNullOrEmpty(pageToRedirect))
