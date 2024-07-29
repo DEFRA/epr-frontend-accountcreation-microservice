@@ -4,6 +4,8 @@ using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 
+namespace FrontendAccountCreation.Web.UnitTests.ViewModels.AccountCreation;
+
 [TestClass]
 public class CheckYourDetailsViewModelTests
 {
