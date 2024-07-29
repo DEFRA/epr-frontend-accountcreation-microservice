@@ -13,9 +13,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.Distributed;
 using StackExchange.Redis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceProviderExtension
 {
 
