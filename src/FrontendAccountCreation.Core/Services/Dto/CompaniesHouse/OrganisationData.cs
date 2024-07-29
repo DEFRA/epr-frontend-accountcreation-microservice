@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
+
+[ExcludeFromCodeCoverage]
 public record OrganisationData
 {
     public DateTime? DateOfCreation { get; init; }

@@ -1,4 +1,6 @@
 using System.Text.Json;
+using FluentAssertions;
+using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -45,9 +47,9 @@ public class AccountMapperTests
 
         var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-        Assert.AreEqual("KAINOS SOFTWARE LIMITED",organisation.Organisation.Name);
-        Assert.AreEqual("BT7 1NT",organisation.Organisation.RegisteredOffice.Postcode);
-        Assert.AreEqual("GBR",organisation.Organisation.RegisteredOffice.Country.Iso);
+        Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
+        Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
+        Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
     }
 
@@ -90,7 +92,7 @@ public class AccountMapperTests
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
 
-        
+
         AccountCreationSession accountCreationSession = new AccountCreationSession();
         accountCreationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
         CompaniesHouseSession companiesHouseSession = new CompaniesHouseSession();
@@ -104,6 +106,20 @@ public class AccountMapperTests
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void Constructor_ShouldThrowArgumentNullException_WhenOrganisationIsNull()
+    {
+        // Arrange
+        CompaniesHouseCompany organisation = null;
+
+        // Act
+        new Company(organisation);
+
+        // Assert
+        // ExpectedException attribute will handle the assertion
     }
 
     [TestMethod]
@@ -159,6 +175,77 @@ public class AccountMapperTests
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
+    }
+
+    [TestMethod]
+    public void Separator_ShouldReturnSpace_WhenBuildingNumberIsNotEmpty()
+    {
+        // Arrange
+        var address = new Address
+        {
+            BuildingNumber = "123"
+        };
+
+        // Act
+        var separator = address.GetType().GetProperty("Separator", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(address, null);
+
+        // Assert
+        separator.Should().Be(" ");
+    }
+
+    [TestMethod]
+    public void Separator_ShouldReturnEmptyString_WhenBuildingNumberIsEmpty()
+    {
+        // Arrange
+        var address = new Address
+        {
+            BuildingNumber = ""
+        };
+
+        // Act
+        var separator = address.GetType().GetProperty("Separator", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(address, null);
+
+        // Assert
+        separator.Should().Be("");
+    }
+
+    [TestMethod]
+    public void BuildingNumberAndStreet_ShouldReturnFormattedString()
+    {
+        // Arrange
+        var address = new Address
+        {
+            BuildingNumber = "123",
+            Street = "Main St"
+        };
+
+        // Act
+        var buildingNumberAndStreet = address.GetType().GetProperty("BuildingNumberAndStreet", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(address, null);
+
+        // Assert
+        buildingNumberAndStreet.Should().Be("123 Main St");
+    }
+
+    [TestMethod]
+    public void AddressFields_ShouldReturnCorrectArray()
+    {
+        // Arrange
+        var address = new Address
+        {
+            SubBuildingName = "SubBuilding",
+            BuildingName = "Building",
+            BuildingNumber = "123",
+            Street = "Main St",
+            Town = "Town",
+            County = "County",
+            Postcode = "12345"
+        };
+
+        // Act
+        var addressFields = address.AddressFields;
+
+        // Assert
+        addressFields.Should().BeEquivalentTo(new[] { "SubBuilding", "Building", "123 Main St", "Town", "County", "12345" });
     }
 
     [TestMethod]

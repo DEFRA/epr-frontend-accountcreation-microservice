@@ -15,18 +15,6 @@ namespace FrontendAccountCreation.Web.Controllers.Account
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly IOptionsMonitor<MicrosoftIdentityOptions> _optionsMonitor;
-
-        /// <summary>
-        /// Constructor of <see cref="AccountController"/> from <see cref="MicrosoftIdentityOptions"/>
-        /// This constructor is used by dependency injection.
-        /// </summary>
-        /// <param name="microsoftIdentityOptionsMonitor">Configuration options.</param>
-        public AccountController(IOptionsMonitor<MicrosoftIdentityOptions> microsoftIdentityOptionsMonitor)
-        {
-            _optionsMonitor = microsoftIdentityOptionsMonitor;
-        }
-
         /// <summary>
         /// Handles user sign in.
         /// </summary>
@@ -65,11 +53,9 @@ namespace FrontendAccountCreation.Web.Controllers.Account
         {
             if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
             {
-                if (AppServicesAuthenticationInformation.LogoutUrl != null)
-                {
-                    return LocalRedirect(AppServicesAuthenticationInformation.LogoutUrl);
-                }
-                return Ok();
+                return AppServicesAuthenticationInformation.LogoutUrl != null
+                    ? LocalRedirect(AppServicesAuthenticationInformation.LogoutUrl)
+                    : Ok();
             }
 
             scheme ??= OpenIdConnectDefaults.AuthenticationScheme;

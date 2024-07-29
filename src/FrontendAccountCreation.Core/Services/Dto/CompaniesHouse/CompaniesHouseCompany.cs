@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 
+[ExcludeFromCodeCoverage]
 public record CompaniesHouseCompany
 {
     public Organisation? Organisation { get; init; }

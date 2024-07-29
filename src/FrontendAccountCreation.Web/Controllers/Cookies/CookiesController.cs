@@ -5,24 +5,20 @@ using FrontendAccountCreation.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.Cookies;
 
+[ExcludeFromCodeCoverage(Justification = "This controller is covered by integration tests.")]
 [AllowAnonymous]
 public class CookiesController : Controller
 {
     private readonly ICookieService _cookieService;
-    private readonly EprCookieOptions _eprCookieOptions;
-    private readonly AnalyticsOptions _googleAnalyticsOptions;
 
     public CookiesController(
-        ICookieService cookieService,
-        IOptions<EprCookieOptions> eprCookieOptions,
-        IOptions<AnalyticsOptions> googleAnalyticsOptions)
+        ICookieService cookieService)
     {
         _cookieService = cookieService;
-        _eprCookieOptions = eprCookieOptions.Value;
-        _googleAnalyticsOptions = googleAnalyticsOptions.Value;
     }
 
     [HttpPost]

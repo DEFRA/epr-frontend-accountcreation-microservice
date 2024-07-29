@@ -1,9 +1,11 @@
-using System.Net;
-using FluentAssertions;
-using FrontendAccountCreation.Web.Controllers.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using FluentAssertions;
+using System.Net;
+using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Errors;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.Error;
 
@@ -11,22 +13,42 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.Error;
 public class ErrorControllerTests
 {
     [TestMethod]
-    public void Error_ReturnsCorrectResult()
+    public void Error_ReturnsPageNotFound_WhenStatusCodeIsNotFound()
     {
-        //Arrange
-        var _httpContextMock= new Mock<HttpContext>();
-        var _httpResponse = new Mock<HttpResponse>();
+        // Arrange
+        var httpContextMock = new Mock<HttpContext>();
+        var httpResponseMock = new Mock<HttpResponse>();
         var errorController = new ErrorController();
-        _httpContextMock.Setup(x => x.Response).Returns(_httpResponse.Object);
-        errorController.ControllerContext.HttpContext = _httpContextMock.Object;
-        //Act
-        var result = errorController.Error((int)HttpStatusCode.NotFound);
-        
-        //Arrange
-        result.Should().BeOfType(typeof(ViewResult));
-        
-        
+        httpContextMock.Setup(x => x.Response).Returns(httpResponseMock.Object);
+        errorController.ControllerContext.HttpContext = httpContextMock.Object;
 
+        // Act
+        var result = errorController.Error((int)HttpStatusCode.NotFound);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().Be(PagePath.PageNotFound);
+        httpResponseMock.VerifySet(r => r.StatusCode = 200);
     }
-    
+
+    [TestMethod]
+    public void Error_ReturnsErrorView_WhenStatusCodeIsNotNotFound()
+    {
+        // Arrange
+        var httpContextMock = new Mock<HttpContext>();
+        var httpResponseMock = new Mock<HttpResponse>();
+        var errorController = new ErrorController();
+        httpContextMock.Setup(x => x.Response).Returns(httpResponseMock.Object);
+        errorController.ControllerContext.HttpContext = httpContextMock.Object;
+
+        // Act
+        var result = errorController.Error((int)HttpStatusCode.InternalServerError);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().Be("Error");
+        httpResponseMock.VerifySet(r => r.StatusCode = 200);
+    }
 }

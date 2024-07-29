@@ -9,7 +9,7 @@
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                     @Localizer["Declaration.Title"]
                 </h1>
-                @if (ViewBag.IsAdminUser == true)
+                @if (ViewBag.IsAdminUser)
                 {
                    <p class="govuk-body">@Localizer["Declaration.Paragraph1.ApprovedUser"]</p>
                    <ul>

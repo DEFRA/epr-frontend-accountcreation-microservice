@@ -3,9 +3,11 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Core.Extensions;
 
+[ExcludeFromCodeCoverage(Justification = "This is essentially a config file in code")]
 public static class ServiceProviderExtension
 {
     public static IServiceCollection RegisterCoreComponents(this IServiceCollection services, IConfiguration configuration)

@@ -555,7 +555,7 @@ public class AccountCreationController : Controller
             return Redirect(_urlOptions.ReportDataRedirectUrl);
         }
 
-        if (string.IsNullOrEmpty(session?.InviteToken))
+        if (string.IsNullOrEmpty(session.InviteToken))
         {
             return RedirectToAction("Error", "Error");
         }
@@ -840,10 +840,17 @@ public class AccountCreationController : Controller
 
         try
         {
-            addressList = await _facadeService.GetAddressListByPostcodeAsync(session.ManualInputSession.BusinessAddress.Postcode);
-            if (addressList == null)
+            if (session == null)
             {
                 addressLookupFailed = true;
+            }
+            else
+            {
+                addressList = await _facadeService.GetAddressListByPostcodeAsync(session.ManualInputSession.BusinessAddress.Postcode);
+                if (addressList == null)
+                {
+                    addressLookupFailed = true;
+                }
             }
         }
         catch (Exception exception)
@@ -858,7 +865,7 @@ public class AccountCreationController : Controller
             TempData[PostcodeLookupFailedKey] = true;
             return RedirectToAction(nameof(BusinessAddress));
         }
-        viewModel.SetAddressItems(addressList?.Addresses, viewModel.SelectedListIndex!);
+        viewModel.SetAddressItems(addressList.Addresses, viewModel.SelectedListIndex!);
         session.ManualInputSession?.AddressesForPostcode.Clear();
         session.ManualInputSession?.AddressesForPostcode.AddRange(addressList.Addresses);
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
@@ -882,7 +889,7 @@ public class AccountCreationController : Controller
             ModelState.AddModelError(nameof(model.SelectedListIndex), "SelectBusinessAddress.ErrorMessage");
         }
 
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || session == null)
         {
             SetBackLink(session, PagePath.SelectBusinessAddress);
             model.Postcode = session?.ManualInputSession?.BusinessAddress?.Postcode;
@@ -892,10 +899,17 @@ public class AccountCreationController : Controller
 
             try
             {
-                addressList = await _facadeService.GetAddressListByPostcodeAsync(session.ManualInputSession.BusinessAddress.Postcode);
-                if (addressList == null)
+                if (session == null)
                 {
                     addressLookupFailed = true;
+                }
+                else
+                {
+                    addressList = await _facadeService.GetAddressListByPostcodeAsync(session.ManualInputSession.BusinessAddress.Postcode);
+                    if (addressList == null)
+                    {
+                        addressLookupFailed = true;
+                    }
                 }
             }
             catch (Exception exception)
@@ -910,7 +924,7 @@ public class AccountCreationController : Controller
                 TempData[PostcodeLookupFailedKey] = true;
                 return RedirectToAction(nameof(BusinessAddress));
             }
-            model.SetAddressItems(addressList?.Addresses, model.SelectedListIndex);
+            model.SetAddressItems(addressList.Addresses, model.SelectedListIndex);
 
             return View(model);
         }
