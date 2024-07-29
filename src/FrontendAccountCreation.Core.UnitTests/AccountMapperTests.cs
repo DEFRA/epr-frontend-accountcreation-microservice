@@ -45,9 +45,9 @@ public class AccountMapperTests
 
         var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-        Assert.AreEqual("KAINOS SOFTWARE LIMITED",organisation.Organisation.Name);
-        Assert.AreEqual("BT7 1NT",organisation.Organisation.RegisteredOffice.Postcode);
-        Assert.AreEqual("GBR",organisation.Organisation.RegisteredOffice.Country.Iso);
+        Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
+        Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
+        Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
     }
 
@@ -90,7 +90,7 @@ public class AccountMapperTests
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
 
-        
+
         AccountCreationSession accountCreationSession = new AccountCreationSession();
         accountCreationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
         CompaniesHouseSession companiesHouseSession = new CompaniesHouseSession();
@@ -104,6 +104,20 @@ public class AccountMapperTests
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void Constructor_ShouldThrowArgumentNullException_WhenOrganisationIsNull()
+    {
+        // Arrange
+        CompaniesHouseCompany organisation = null;
+
+        // Act
+        new Company(organisation);
+
+        // Assert
+        // ExpectedException attribute will handle the assertion
     }
 
     [TestMethod]
