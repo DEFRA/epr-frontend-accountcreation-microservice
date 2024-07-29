@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Web.Configs;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Web.Configs;
+
+[ExcludeFromCodeCoverage]
 public class EmailAddressOptions
 {
     public const string ConfigSection = "EmailAddresses";
