@@ -867,7 +867,7 @@ public class AccountCreationController : Controller
             ModelState.AddModelError(nameof(model.SelectedListIndex), "SelectBusinessAddress.ErrorMessage");
         }
 
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || session == null)
         {
             SetBackLink(session, PagePath.SelectBusinessAddress);
             model.Postcode = session?.ManualInputSession?.BusinessAddress?.Postcode;
