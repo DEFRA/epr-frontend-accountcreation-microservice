@@ -62,4 +62,15 @@ public class HomeControllerTests
 
     }
 
+    [TestMethod]
+    public void HomeController_SignedOutInvalidToken_When_Called_Return_View() 
+    {
+        //Act
+        var result = _systemUnderTest.SignedOutInvalidToken();
+        //Assert
+        Assert.IsNotNull(result);
+        result.Should().BeOfType<ViewResult>();
+
+    }
+
 }
