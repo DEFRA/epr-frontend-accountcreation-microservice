@@ -21,6 +21,7 @@ namespace FrontendAccountCreation.Tests.Configs
 
             // Assert
             Assert.AreEqual(expectedPrefix, defaultCookieName);
+
         }
 
         [TestMethod]
