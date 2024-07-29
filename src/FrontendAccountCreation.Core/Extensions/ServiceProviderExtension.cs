@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Core.Extensions;
 
-[ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage(Justification = "This is essentially a config file in code")]
 public static class ServiceProviderExtension
 {
     public static IServiceCollection RegisterCoreComponents(this IServiceCollection services, IConfiguration configuration)

@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Extensions;
 
-[ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage(Justification = "This is essentially a config file in code")]
 public static class ServiceProviderExtension
 {
 
