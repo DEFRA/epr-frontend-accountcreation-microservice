@@ -1,4 +1,6 @@
 using System.Text.Json;
+using FluentAssertions;
+using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -173,6 +175,77 @@ public class AccountMapperTests
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
+    }
+
+    [TestMethod]
+    public void Separator_ShouldReturnSpace_WhenBuildingNumberIsNotEmpty()
+    {
+        // Arrange
+        var address = new Address
+        {
+            BuildingNumber = "123"
+        };
+
+        // Act
+        var separator = address.GetType().GetProperty("Separator", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(address, null);
+
+        // Assert
+        separator.Should().Be(" ");
+    }
+
+    [TestMethod]
+    public void Separator_ShouldReturnEmptyString_WhenBuildingNumberIsEmpty()
+    {
+        // Arrange
+        var address = new Address
+        {
+            BuildingNumber = ""
+        };
+
+        // Act
+        var separator = address.GetType().GetProperty("Separator", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(address, null);
+
+        // Assert
+        separator.Should().Be("");
+    }
+
+    [TestMethod]
+    public void BuildingNumberAndStreet_ShouldReturnFormattedString()
+    {
+        // Arrange
+        var address = new Address
+        {
+            BuildingNumber = "123",
+            Street = "Main St"
+        };
+
+        // Act
+        var buildingNumberAndStreet = address.GetType().GetProperty("BuildingNumberAndStreet", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(address, null);
+
+        // Assert
+        buildingNumberAndStreet.Should().Be("123 Main St");
+    }
+
+    [TestMethod]
+    public void AddressFields_ShouldReturnCorrectArray()
+    {
+        // Arrange
+        var address = new Address
+        {
+            SubBuildingName = "SubBuilding",
+            BuildingName = "Building",
+            BuildingNumber = "123",
+            Street = "Main St",
+            Town = "Town",
+            County = "County",
+            Postcode = "12345"
+        };
+
+        // Act
+        var addressFields = address.AddressFields;
+
+        // Assert
+        addressFields.Should().BeEquivalentTo(new[] { "SubBuilding", "Building", "123 Main St", "Town", "County", "12345" });
     }
 
     [TestMethod]

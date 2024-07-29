@@ -53,11 +53,9 @@ namespace FrontendAccountCreation.Web.Controllers.Account
         {
             if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
             {
-                if (AppServicesAuthenticationInformation.LogoutUrl != null)
-                {
-                    return LocalRedirect(AppServicesAuthenticationInformation.LogoutUrl);
-                }
-                return Ok();
+                return AppServicesAuthenticationInformation.LogoutUrl != null
+                    ? LocalRedirect(AppServicesAuthenticationInformation.LogoutUrl)
+                    : Ok();
             }
 
             scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
