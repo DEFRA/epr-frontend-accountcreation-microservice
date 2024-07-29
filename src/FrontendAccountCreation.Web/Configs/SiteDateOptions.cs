@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Web.Configs;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Web.Configs;
+
+[ExcludeFromCodeCoverage]
 public class SiteDateOptions
 {
     public const string ConfigSection = "SiteDates";
