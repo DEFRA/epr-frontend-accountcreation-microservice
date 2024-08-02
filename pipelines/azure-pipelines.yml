@@ -35,6 +35,8 @@ variables:
     value: frontend-accountcreation-microservice
   - name: runNugetTasks
     value: false
+  - name: dotNetVersion
+    value: dotNetVersion8
 
   - name: NUGET_PACKAGES
     value: $(Pipeline.Workspace)/.nuget/packages
@@ -63,3 +65,4 @@ extends:
     runNugetTasks: ${{ variables.runNugetTasks }}
     serviceName: $(serviceName)
     sonarqubeInstance: ${{ parameters.sonarqubeInstance }}
+    dotnetVersion: ${{ variables.dotnetVersion }}
