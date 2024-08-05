@@ -124,16 +124,16 @@
     <value>By entering your details, you're agreeing that the information you’ve given is complete and correct, and that you:</value>
   </data>
   <data name="DeclarationWithFullName.Title" xml:space="preserve">
-    <value>Confirm that you want to be an approved person</value>
+    <value>Confirm you want be an approved person</value>
   </data>
   <data name="DeclarationWithFullName.FullNameTextBox.Label" xml:space="preserve">
     <value>Enter your full name</value>
   </data>
   <data name="DeclarationWithFullName.Point1" xml:space="preserve">
-    <value>are able to submit packaging data to the environmental regulator for </value>
+    <value>can be an approved person</value>
   </data>
   <data name="DeclarationWithFullName.Point2" xml:space="preserve">
-    <value>understand the regulations</value>
+    <value>will be responsible for making sure the data your organisation submits to the regulator is as accurate as reasonably possible</value>
   </data>
   <data name="DeclarationWithFullName.Point3" xml:space="preserve">
     <value>have access to the information you need to submit data correctly</value>
@@ -143,5 +143,29 @@
   </data>
   <data name="DeclarationWithFullName.LengthErrorMessage" xml:space="preserve">
     <value>Full name must be less than 200 characters long</value>
+  </data>
+  <data name="DeclarationWithFullName.APMustBe" xml:space="preserve">
+    <value>An approved person must be:</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAP" xml:space="preserve">
+    <value>Who can be an approved person?</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption1" xml:space="preserve">
+    <value>the director or company secretary</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption2" xml:space="preserve">
+    <value>a partner</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption3" xml:space="preserve">
+    <value>a sole trader</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption4" xml:space="preserve">
+    <value>a member of a limited liability partnership.</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption5" xml:space="preserve">
+    <value>If you're not one of these,{0} must contact the regulator to nominate someone else to be the approved person.</value>
+  </data>
+  <data name="DeclarationWithFullName.YouAreAgreeingThat" xml:space="preserve">
+    <value>By entering your name and confirming,you agree that you:</value>
   </data>
 </root>

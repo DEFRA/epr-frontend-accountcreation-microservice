@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DeclarationWithFullName.APMustBe" xml:space="preserve">
+    <value>WAn approved person must be:</value>
+  </data>
   <data name="DeclarationWithFullName.ButtonText1" xml:space="preserve">
     <value>WConfirm</value>
   </data>
@@ -133,15 +136,36 @@
     <value>WBy entering your details, you're agreeing that the information you’ve given is complete and correct, and that you:</value>
   </data>
   <data name="DeclarationWithFullName.Point1" xml:space="preserve">
-    <value>Ware able to submit packaging data to the environmental regulator for </value>
+    <value>Wcan be an approved person</value>
   </data>
   <data name="DeclarationWithFullName.Point2" xml:space="preserve">
-    <value>Wunderstand the regulations</value>
+    <value>Wwill be responsible for making sure the data your organisation submits to the regulator is as accurate as reasonably possible</value>
   </data>
   <data name="DeclarationWithFullName.Point3" xml:space="preserve">
     <value>Whave access to the information you need to submit data correctly</value>
   </data>
-  <data name="DeclarationWithFullName.Title1" xml:space="preserve">
-    <value>WConfirm that you want to be an approved person</value>
+  <data name="DeclarationWithFullName.Title" xml:space="preserve">
+    <value>WConfirm you want be an approved person</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAP" xml:space="preserve">
+    <value>WWho can be an approved person?</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption1" xml:space="preserve">
+    <value>Wthe director or company secretary</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption2" xml:space="preserve">
+    <value>Wa partner</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption3" xml:space="preserve">
+    <value>Wa sole trader</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption4" xml:space="preserve">
+    <value>Wa member of a limited liability partnership.</value>
+  </data>
+  <data name="DeclarationWithFullName.WhoCanBeAPOption5" xml:space="preserve">
+    <value>WIf you're not one of these,{0} must contact the regulator to nominate someone else to be the approved person.</value>
+  </data>
+  <data name="DeclarationWithFullName.YouAreAgreeingThat" xml:space="preserve">
+    <value>WBy entering your name and confirming,you agree that you:</value>
   </data>
 </root>
