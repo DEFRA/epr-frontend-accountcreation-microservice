@@ -8,7 +8,9 @@
     ViewData["Title"] = Localizer["DeclarationWithFullName.Title"];
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
-
+@{
+    var organisationName = ViewBag.OrganisationName ?? string.Empty;
+}
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
         <div class="govuk-grid-row">
@@ -40,7 +42,7 @@
                                 @Localizer["DeclarationWithFullName.WhoCanBeAPOption4"]
                             </li>
                         </ul>
-                        <p>@Localizer["DeclarationWithFullName.WhoCanBeAPOption5","TST ORG"]</p>
+                        <p>@Localizer["DeclarationWithFullName.WhoCanBeAPOption5", organisationName]</p>
                     </div>
                 </details>
 
