@@ -51,5 +51,5 @@ public class Address
 
     private string BuildingNumberAndStreet => $"{BuildingNumber}{Separator}{Street}";
 
-    public string?[] AddressFields => new[] { SubBuildingName, BuildingName, BuildingNumberAndStreet, Town, County, Postcode };
+    public string?[] AddressFields => [SubBuildingName, BuildingName, BuildingNumberAndStreet, Town, County, Postcode];
 }

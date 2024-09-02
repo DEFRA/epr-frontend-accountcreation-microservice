@@ -77,11 +77,14 @@
 @{
     void RenderAddressParts(string?[] addressParts)
     {
-        foreach (string part in addressParts)
+        if (addressParts != null)
         {
-            if (!string.IsNullOrWhiteSpace(part))
+            foreach (string? part in addressParts)
             {
-                <div>@part</div>
+                if (!string.IsNullOrWhiteSpace(part))
+                {
+                    <div>@part</div>
+                }
             }
         }
     }

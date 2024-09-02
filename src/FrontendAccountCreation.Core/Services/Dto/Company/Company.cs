@@ -17,7 +17,7 @@ public class Company
 
         CompaniesHouseNumber = organisation.Organisation.RegistrationNumber ?? string.Empty;
         Name = organisation.Organisation.Name ?? string.Empty;
-        BusinessAddress = new Addresses.Address(organisation.Organisation.RegisteredOffice);
+        BusinessAddress = organisation.Organisation.RegisteredOffice != null ? new Addresses.Address(organisation.Organisation.RegisteredOffice) : null;
         AccountCreatedOn = organisation.AccountCreatedOn;
     }
 
@@ -27,7 +27,7 @@ public class Company
     
     public string OrganisationId { get; set; }
 
-    public Addresses.Address BusinessAddress { get; set; }
+    public Addresses.Address? BusinessAddress { get; set; }
 
     public bool AccountExists => AccountCreatedOn is not null;
 
