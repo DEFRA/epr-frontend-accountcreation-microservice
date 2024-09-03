@@ -18,6 +18,7 @@ public class AccountMapperTests
     [TestMethod]
     public void CreateAccountModel()
     {
+        // Arrange
         const string json = """
         {
             "organisation":{
@@ -48,8 +49,10 @@ public class AccountMapperTests
         }
         """;
 
+        // Act
         var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
 
+        // Assert
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
         Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
@@ -59,6 +62,7 @@ public class AccountMapperTests
     [TestMethod]
     public void CreateAccountModel_AsCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully()
     {
+        // Arrange
         const string json = """
         {
             "organisation":{
@@ -88,25 +92,31 @@ public class AccountMapperTests
             }
         }
         """;
-
+                
         var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
 
+        var accountCreationSession = new AccountCreationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany
+        };
+        var company = new Company(organisation);
+        var companiesHouseSession = new CompaniesHouseSession
+        {
+            Company = company,
+            RoleInOrganisation = RoleInOrganisation.Partner,
+            IsComplianceScheme = true
+        };
+        accountCreationSession.CompaniesHouseSession = companiesHouseSession;
+        AccountMapper accountMapper = new();
+
+        // Act
+        AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
+
+        // Assert
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
         Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
-
-
-        AccountCreationSession accountCreationSession = new AccountCreationSession();
-        accountCreationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
-        CompaniesHouseSession companiesHouseSession = new CompaniesHouseSession();
-        Company company = new Company(organisation);
-        companiesHouseSession.Company = company;
-        companiesHouseSession.RoleInOrganisation = RoleInOrganisation.Partner;
-        companiesHouseSession.IsComplianceScheme = true;
-        accountCreationSession.CompaniesHouseSession = companiesHouseSession;
-        AccountMapper accountMapper = new AccountMapper();
-        AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
@@ -115,6 +125,7 @@ public class AccountMapperTests
     [TestMethod]
     public void CreateAccountModel_AsCompaniesHouseCompany_When_AddressIsNull_ShouldReturnAccountModelSuccessfully()
     {
+        // Arrange
         const string json = """
         {
             "organisation":{
@@ -130,30 +141,33 @@ public class AccountMapperTests
         }
         """;
 
+        var expectedAddress = new AddressModel();
         var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
 
-        Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);        
-        Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
-        Assert.IsNull(organisation.Organisation.RegisteredOffice);
-
-
-        AccountCreationSession accountCreationSession = new()
+        var accountCreationSession = new AccountCreationSession()
         {
             OrganisationType = OrganisationType.CompaniesHouseCompany
         };
-        CompaniesHouseSession companiesHouseSession = new();
-        Company company = new(organisation);
-        companiesHouseSession.Company = company;
-        companiesHouseSession.RoleInOrganisation = RoleInOrganisation.Partner;
-        companiesHouseSession.IsComplianceScheme = true;
+        var company = new Company(organisation);
+        var companiesHouseSession = new CompaniesHouseSession
+        {
+            Company = company,
+            RoleInOrganisation = RoleInOrganisation.Partner,
+            IsComplianceScheme = true
+        };
         accountCreationSession.CompaniesHouseSession = companiesHouseSession;
         AccountMapper accountMapper = new();
+
+        // Act
         AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
+
+        // Assert
+        Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
+        Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
+        Assert.IsNull(organisation.Organisation.RegisteredOffice);
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
-
-        var expectedAddress = new AddressModel();
         accountModel.Organisation.Address.Should().BeEquivalentTo(expectedAddress);        
     }
 
@@ -174,54 +188,59 @@ public class AccountMapperTests
     [TestMethod]
     public void CreateAccountModel_AsNonCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully()
     {
-        const string json = @"
+        // Arrange
+        const string json = """
         {
-            ""organisation"":{
-                ""name"":""KAINOS SOFTWARE LIMITED"",
-                ""registrationNumber"":""NI019370"",
-                ""registeredOffice"":{
-                    ""subBuildingName"":null,
-                    ""buildingName"":""Kainos House"",
-                    ""buildingNumber"":""4-6"",
-                    ""street"":""Upper Crescent"",
-                    ""town"":""Belfast"",
-                    ""county"":null,
-                    ""postcode"":""BT7 1NT"",
-                    ""locality"":null,
-                    ""dependentLocality"":null,
-                    ""country"":{
-                        ""name"":null,
-                        ""iso"":""GBR""
+            "organisation":{
+                "name":"KAINOS SOFTWARE LIMITED",
+                "registrationNumber":"NI019370",
+                "registeredOffice":{
+                    "subBuildingName":null,
+                    "buildingName":"Kainos House",
+                    "buildingNumber":"4-6",
+                    "street":"Upper Crescent",
+                    "town":"Belfast",
+                    "county":null,
+                    "postcode":"BT7 1NT",
+                    "locality":null,
+                    "dependentLocality":null,
+                    "country":{
+                        "name":null,
+                        "iso":"GBR"
                     },
-                    ""isUkAddress"":true
+                    "isUkAddress":true
                 },
-                ""organisationData"":{
-                    ""dateOfCreation"":""2023-02-23T15:27:30.681749+00:00"",
-                    ""status"":""some-status"",
-                    ""type"":""some-type""
+                "organisationData":{
+                    "dateOfCreation":"2023-02-23T15:27:30.681749+00:00",
+                    "status":"some-status",
+                    "type":"some-type"
                 }
             }
-        }";
+        }
+        """;
 
         var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
+        var accountCreationSession = new AccountCreationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany
+        };
+        var manualInputSession = new ManualInputSession
+        {
+            BusinessAddress = new Address(),
+            RoleInOrganisation = RoleInOrganisation.Partner.ToString(),
+            TradingName = "KAINOS SOFTWARE LIMITED"
+        };
+
+        accountCreationSession.ManualInputSession = manualInputSession;
+        var accountMapper = new AccountMapper();
+
+        // Act
+        var accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
 
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
         Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
-
-
-        AccountCreationSession accountCreationSession = new AccountCreationSession();
-        accountCreationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-        ManualInputSession manualInputSession = new ManualInputSession();
-        manualInputSession.BusinessAddress = new Addresses.Address();
-        manualInputSession.RoleInOrganisation = RoleInOrganisation.Partner.ToString();
-        manualInputSession.TradingName = "KAINOS SOFTWARE LIMITED";
-
-        accountCreationSession.ManualInputSession = manualInputSession;
-        AccountMapper accountMapper = new AccountMapper();
-        AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
-
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
     }
@@ -300,6 +319,7 @@ public class AccountMapperTests
     [TestMethod]
     public void CreateAccountModel_DeclarationProperties_ShouldReturnSetValues()
     {
+        // Arrange
         var accountMapper = new AccountMapper();
         var declarationName = "my name";
         var declarationTime = new DateTime(2024, 01, 01);
@@ -313,7 +333,7 @@ public class AccountMapperTests
                 Company = new Company
                 {
                     AccountCreatedOn = DateTime.Now,
-                    BusinessAddress = new Addresses.Address { BuildingName = "building name" },
+                    BusinessAddress = new Address { BuildingName = "building name" },
                     CompaniesHouseNumber = "123",
                     Name = "unit test name",
                     OrganisationId = "123"
@@ -327,8 +347,10 @@ public class AccountMapperTests
         mockSession.Object.DeclarationFullName = declarationName;
         mockSession.Object.DeclarationTimestamp = declarationTime;
 
+        // Act
         var result = accountMapper.CreateAccountModel(mockSession.Object, "test@email.com");
 
+        // Assert
         Assert.IsNotNull(result);
         Assert.IsTrue(result.DeclarationFullName.Equals(declarationName));
         Assert.IsTrue(result.DeclarationTimeStamp.Equals(declarationTime));
