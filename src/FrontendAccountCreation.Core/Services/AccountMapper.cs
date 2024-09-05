@@ -81,10 +81,15 @@ public class AccountMapper : IAccountMapper
 
     private static AddressModel GetCompanyAddress(AccountCreationSession session)
     {
-        AddressModel address = new AddressModel();
+        var address = new AddressModel();
         
         if (session.IsCompaniesHouseFlow)
         {
+            if (session.CompaniesHouseSession.Company.BusinessAddress is null)
+            {
+                return address;
+            }
+
             address.SubBuildingName = session.CompaniesHouseSession.Company.BusinessAddress.SubBuildingName;
             address.BuildingName = session.CompaniesHouseSession.Company.BusinessAddress.BuildingName;
             address.BuildingNumber = session.CompaniesHouseSession.Company.BusinessAddress.BuildingNumber;

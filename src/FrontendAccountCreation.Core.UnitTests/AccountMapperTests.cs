@@ -13,40 +13,46 @@ namespace FrontendAccountCreation.Core.UnitTests;
 [TestClass]
 public class AccountMapperTests
 {
+    private readonly JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web);
+
     [TestMethod]
-    public void testCreateAccountModel()
+    public void CreateAccountModel()
     {
-        const string json = @"
+        // Arrange
+        const string json = """
         {
-            ""organisation"":{
-                ""name"":""KAINOS SOFTWARE LIMITED"",
-                ""registrationNumber"":""NI019370"",
-                ""registeredOffice"":{
-                    ""subBuildingName"":null,
-                    ""buildingName"":""Kainos House"",
-                    ""buildingNumber"":""4-6"",
-                    ""street"":""Upper Crescent"",
-                    ""town"":""Belfast"",
-                    ""county"":null,
-                    ""postcode"":""BT7 1NT"",
-                    ""locality"":null,
-                    ""dependentLocality"":null,
-                    ""country"":{
-                        ""name"":null,
-                        ""iso"":""GBR""
+            "organisation":{
+                "name":"KAINOS SOFTWARE LIMITED",
+                "registrationNumber":"NI019370",
+                "registeredOffice":{
+                    "subBuildingName":null,
+                    "buildingName":"Kainos House",
+                    "buildingNumber":"4-6",
+                    "street":"Upper Crescent",
+                    "town":"Belfast",
+                    "county":null,
+                    "postcode":"BT7 1NT",
+                    "locality":null,
+                    "dependentLocality":null,
+                    "country":{
+                        "name":null,
+                        "iso":"GBR"
                     },
-                    ""isUkAddress"":true
+                    "isUkAddress":true
                 },
-                ""organisationData"":{
-                    ""dateOfCreation"":""2023-02-23T15:27:30.681749+00:00"",
-                    ""status"":""some-status"",
-                    ""type"":""some-type""
+                "organisationData":{
+                    "dateOfCreation":"2023-02-23T15:27:30.681749+00:00",
+                    "status":"some-status",
+                    "type":"some-type"
                 }
             }
-        }";
+        }
+        """;
 
-        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        // Act
+        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
 
+        // Assert
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
         Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
@@ -54,58 +60,115 @@ public class AccountMapperTests
     }
 
     [TestMethod]
-    public void testCreateAccountModel_AsCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully()
+    public void CreateAccountModel_AsCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully()
     {
-        const string json = @"
+        // Arrange
+        const string json = """
         {
-            ""organisation"":{
-                ""name"":""KAINOS SOFTWARE LIMITED"",
-                ""registrationNumber"":""NI019370"",
-                ""registeredOffice"":{
-                    ""subBuildingName"":null,
-                    ""buildingName"":""Kainos House"",
-                    ""buildingNumber"":""4-6"",
-                    ""street"":""Upper Crescent"",
-                    ""town"":""Belfast"",
-                    ""county"":null,
-                    ""postcode"":""BT7 1NT"",
-                    ""locality"":null,
-                    ""dependentLocality"":null,
-                    ""country"":{
-                        ""name"":null,
-                        ""iso"":""GBR""
+            "organisation":{
+                "name":"KAINOS SOFTWARE LIMITED",
+                "registrationNumber":"NI019370",
+                "registeredOffice":{
+                    "subBuildingName":null,
+                    "buildingName":"Kainos House",
+                    "buildingNumber":"4-6",
+                    "street":"Upper Crescent",
+                    "town":"Belfast",
+                    "county":null,
+                    "postcode":"BT7 1NT",
+                    "locality":null,
+                    "dependentLocality":null,
+                    "country":{
+                        "name":null,
+                        "iso":"GBR"
                     },
-                    ""isUkAddress"":true
+                    "isUkAddress":true
                 },
-                ""organisationData"":{
-                    ""dateOfCreation"":""2023-02-23T15:27:30.681749+00:00"",
-                    ""status"":""some-status"",
-                    ""type"":""some-type""
+                "organisationData":{
+                    "dateOfCreation":"2023-02-23T15:27:30.681749+00:00",
+                    "status":"some-status",
+                    "type":"some-type"
                 }
             }
-        }";
+        }
+        """;
+                
+        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
 
-        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var accountCreationSession = new AccountCreationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany
+        };
+        var company = new Company(organisation);
+        var companiesHouseSession = new CompaniesHouseSession
+        {
+            Company = company,
+            RoleInOrganisation = RoleInOrganisation.Partner,
+            IsComplianceScheme = true
+        };
+        accountCreationSession.CompaniesHouseSession = companiesHouseSession;
+        AccountMapper accountMapper = new();
 
+        // Act
+        AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
+
+        // Assert
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
         Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
 
+        Assert.IsNotNull(accountModel);
+        Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
+    }
 
-        AccountCreationSession accountCreationSession = new AccountCreationSession();
-        accountCreationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
-        CompaniesHouseSession companiesHouseSession = new CompaniesHouseSession();
-        Company company = new Company(organisation);
-        companiesHouseSession.Company = company;
-        companiesHouseSession.RoleInOrganisation = RoleInOrganisation.Partner;
-        companiesHouseSession.IsComplianceScheme = true;
+    [TestMethod]
+    public void CreateAccountModel_AsCompaniesHouseCompany_When_AddressIsNull_ShouldReturnAccountModelSuccessfully()
+    {
+        // Arrange
+        const string json = """
+        {
+            "organisation":{
+                "name":"KAINOS SOFTWARE LIMITED",
+                "registrationNumber":"NI019370",
+                "registeredOffice":null,
+                "organisationData":{
+                    "dateOfCreation":"2023-02-23T15:27:30.681749+00:00",
+                    "status":"some-status",
+                    "type":"some-type"
+                }
+            }
+        }
+        """;
+
+        var expectedAddress = new AddressModel();
+        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
+
+        var accountCreationSession = new AccountCreationSession()
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany
+        };
+        var company = new Company(organisation);
+        var companiesHouseSession = new CompaniesHouseSession
+        {
+            Company = company,
+            RoleInOrganisation = RoleInOrganisation.Partner,
+            IsComplianceScheme = true
+        };
         accountCreationSession.CompaniesHouseSession = companiesHouseSession;
-        AccountMapper accountMapper = new AccountMapper();
+        AccountMapper accountMapper = new();
+
+        // Act
         AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
+
+        // Assert
+        Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
+        Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
+        Assert.IsNull(organisation.Organisation.RegisteredOffice);
 
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
+        accountModel.Organisation.Address.Should().BeEquivalentTo(expectedAddress);        
     }
 
     [TestMethod]
@@ -123,56 +186,61 @@ public class AccountMapperTests
     }
 
     [TestMethod]
-    public void testCreateAccountModel_AsNonCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully()
+    public void CreateAccountModel_AsNonCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully()
     {
-        const string json = @"
+        // Arrange
+        const string json = """
         {
-            ""organisation"":{
-                ""name"":""KAINOS SOFTWARE LIMITED"",
-                ""registrationNumber"":""NI019370"",
-                ""registeredOffice"":{
-                    ""subBuildingName"":null,
-                    ""buildingName"":""Kainos House"",
-                    ""buildingNumber"":""4-6"",
-                    ""street"":""Upper Crescent"",
-                    ""town"":""Belfast"",
-                    ""county"":null,
-                    ""postcode"":""BT7 1NT"",
-                    ""locality"":null,
-                    ""dependentLocality"":null,
-                    ""country"":{
-                        ""name"":null,
-                        ""iso"":""GBR""
+            "organisation":{
+                "name":"KAINOS SOFTWARE LIMITED",
+                "registrationNumber":"NI019370",
+                "registeredOffice":{
+                    "subBuildingName":null,
+                    "buildingName":"Kainos House",
+                    "buildingNumber":"4-6",
+                    "street":"Upper Crescent",
+                    "town":"Belfast",
+                    "county":null,
+                    "postcode":"BT7 1NT",
+                    "locality":null,
+                    "dependentLocality":null,
+                    "country":{
+                        "name":null,
+                        "iso":"GBR"
                     },
-                    ""isUkAddress"":true
+                    "isUkAddress":true
                 },
-                ""organisationData"":{
-                    ""dateOfCreation"":""2023-02-23T15:27:30.681749+00:00"",
-                    ""status"":""some-status"",
-                    ""type"":""some-type""
+                "organisationData":{
+                    "dateOfCreation":"2023-02-23T15:27:30.681749+00:00",
+                    "status":"some-status",
+                    "type":"some-type"
                 }
             }
-        }";
+        }
+        """;
 
-        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
+        var accountCreationSession = new AccountCreationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany
+        };
+        var manualInputSession = new ManualInputSession
+        {
+            BusinessAddress = new Address(),
+            RoleInOrganisation = RoleInOrganisation.Partner.ToString(),
+            TradingName = "KAINOS SOFTWARE LIMITED"
+        };
+
+        accountCreationSession.ManualInputSession = manualInputSession;
+        var accountMapper = new AccountMapper();
+
+        // Act
+        var accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
 
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", organisation.Organisation.Name);
         Assert.AreEqual("BT7 1NT", organisation.Organisation.RegisteredOffice.Postcode);
         Assert.AreEqual("GBR", organisation.Organisation.RegisteredOffice.Country.Iso);
         Assert.AreEqual(2023, organisation.Organisation.OrganisationData.DateOfCreation?.Year);
-
-
-        AccountCreationSession accountCreationSession = new AccountCreationSession();
-        accountCreationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-        ManualInputSession manualInputSession = new ManualInputSession();
-        manualInputSession.BusinessAddress = new Addresses.Address();
-        manualInputSession.RoleInOrganisation = RoleInOrganisation.Partner.ToString();
-        manualInputSession.TradingName = "KAINOS SOFTWARE LIMITED";
-
-        accountCreationSession.ManualInputSession = manualInputSession;
-        AccountMapper accountMapper = new AccountMapper();
-        AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
-
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
     }
@@ -245,12 +313,13 @@ public class AccountMapperTests
         var addressFields = address.AddressFields;
 
         // Assert
-        addressFields.Should().BeEquivalentTo(new[] { "SubBuilding", "Building", "123 Main St", "Town", "County", "12345" });
+        addressFields.Should().BeEquivalentTo(["SubBuilding", "Building", "123 Main St", "Town", "County", "12345"]);
     }
 
     [TestMethod]
-    public void testCreateAccountModel_DeclarationProperties_ShouldReturnSetValues()
+    public void CreateAccountModel_DeclarationProperties_ShouldReturnSetValues()
     {
+        // Arrange
         var accountMapper = new AccountMapper();
         var declarationName = "my name";
         var declarationTime = new DateTime(2024, 01, 01);
@@ -264,7 +333,7 @@ public class AccountMapperTests
                 Company = new Company
                 {
                     AccountCreatedOn = DateTime.Now,
-                    BusinessAddress = new Addresses.Address { BuildingName = "building name" },
+                    BusinessAddress = new Address { BuildingName = "building name" },
                     CompaniesHouseNumber = "123",
                     Name = "unit test name",
                     OrganisationId = "123"
@@ -278,8 +347,10 @@ public class AccountMapperTests
         mockSession.Object.DeclarationFullName = declarationName;
         mockSession.Object.DeclarationTimestamp = declarationTime;
 
+        // Act
         var result = accountMapper.CreateAccountModel(mockSession.Object, "test@email.com");
 
+        // Assert
         Assert.IsNotNull(result);
         Assert.IsTrue(result.DeclarationFullName.Equals(declarationName));
         Assert.IsTrue(result.DeclarationTimeStamp.Equals(declarationTime));
