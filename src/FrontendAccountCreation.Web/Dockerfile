@@ -3,7 +3,7 @@ USER root
 ENV ASPNETCORE_URLS=http://*:8080
 EXPOSE 8080
 
-RUN apk update && apk --no-cache add icu-libs icu-data-full libintl
+RUN apk update && apk --no-cache add icu-libs icu-data-full libintl tzdata
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
 
 FROM defradigital/dotnetcore-development:dotnet8.0 AS build

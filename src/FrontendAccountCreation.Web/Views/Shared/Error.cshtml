@@ -10,7 +10,7 @@
                     @Localizer["Error.Title"]
                 </h1>
                 <p class="govuk-body">@Localizer["Error.TryAgainLater"]</p>
-                <p class="govuk-body">@Localizer["Error.WeHaveNotSaved"]</p>
+                <p><b>@Html.Raw(Model.Timestamp)</b></p>
             </div>
         </div>
     </main>
