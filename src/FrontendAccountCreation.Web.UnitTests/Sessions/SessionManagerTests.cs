@@ -18,7 +18,7 @@ public class SessionManagerTests
     private byte[] _sessionBytes = null!;
 
     private Mock<ISession> _sessionMock = null!;
-    private ISessionManager<AccountCreationSession> _sessionManager = null!;
+    private AccountCreationSessionManager _sessionManager = null!;
 
 
     [TestInitialize]
