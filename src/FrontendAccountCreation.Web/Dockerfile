@@ -14,8 +14,8 @@ COPY ["FrontendAccountCreation.Web/FrontendAccountCreation.Web.csproj", "Fronten
 COPY ["FrontendAccountCreation.Core/FrontendAccountCreation.Core.csproj", "FrontendAccountCreation.Core/"]
 RUN dotnet restore "FrontendAccountCreation.Web/FrontendAccountCreation.Web.csproj"
 
-COPY --chown=dotnet:dotnet FrontendAccountCreation.Web/. ./FrontendAccountCreation.Web/.
-COPY --chown=dotnet:dotnet FrontendAccountCreation.Core/. ./FrontendAccountCreation.Core/.
+COPY FrontendAccountCreation.Web/. ./FrontendAccountCreation.Web/.
+COPY FrontendAccountCreation.Core/. ./FrontendAccountCreation.Core/.
 
 RUN chmod -R 755 ./FrontendAccountCreation.Web/ ./FrontendAccountCreation.Core/
 
