@@ -1,0 +1,6 @@
+variables:
+  azureSubscription: 'AZD-RWD-DEV12'
+  docker.imageName: 'frontendaccountcreationregistry'
+  acr.azureContainerRegistryName: 'devrwdinfac1401'
+  acr.repositoryName: 'frontendaccountcreationregistry'
+  serviceName: 'devrwdwebwac402'
