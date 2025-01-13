@@ -120,7 +120,7 @@
   <data name="DeclarationWithFullName.ButtonText" xml:space="preserve">
     <value>Confirm</value>
   </data>
-  <data name="DeclarationWithFullName.Paragraph1" xml:space="preserve">
+  <data name="DeclarationWithFullName.Paragraph" xml:space="preserve">
     <value>By entering your details, you're agreeing that the information you’ve given is complete and correct, and that you:</value>
   </data>
   <data name="DeclarationWithFullName.Title" xml:space="preserve">
