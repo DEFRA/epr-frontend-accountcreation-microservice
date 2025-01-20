@@ -23,6 +23,8 @@ using Microsoft.Identity.Web;
 using Sessions;
 using ViewModels;
 using ViewModels.AccountCreation;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 
 public class AccountCreationController : Controller
 {
@@ -239,6 +241,12 @@ public class AccountCreationController : Controller
             CompaniesHouseNumber = session.CompaniesHouseSession?.Company?.CompaniesHouseNumber,
         };
 
+        if (TempData["ModelState"] is not null)
+        {
+            ModelState.Merge(DeserializeModelState(TempData["ModelState"].ToString()));
+            viewModel.CompaniesHouseNumber = TempData["CompaniesHouseNumber"].ToString();
+        }
+
         return View(viewModel);
     }
 
@@ -284,8 +292,10 @@ public class AccountCreationController : Controller
             SetBackLink(session, PagePath.CompaniesHouseNumber);
 
             ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
+            TempData["ModelState"] = SerializeModelState(ModelState);
+            TempData["CompaniesHouseNumber"] = model.CompaniesHouseNumber;
 
-            return View(model);
+            return RedirectToAction(nameof(CompaniesHouseNumber));
         }
 
         session.CompaniesHouseSession.Company = company;
@@ -1253,4 +1263,29 @@ public class AccountCreationController : Controller
                                       // Remove when we migrate all environments to custom policy
                                       User.Claims.FirstOrDefault(claim => claim.Type == "emails")?.Value;
 
+    private static string SerializeModelState(ModelStateDictionary modelState)
+    {
+        var errorList = modelState.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+        );
+
+        return JsonConvert.SerializeObject(errorList);
+    }
+
+    private static ModelStateDictionary DeserializeModelState(string serializedModelState)
+    {
+        var errorList = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(serializedModelState);
+        var modelState = new ModelStateDictionary();
+
+        foreach (var kvp in errorList)
+        {
+            foreach (var error in kvp.Value)
+            {
+                modelState.AddModelError(kvp.Key, error);
+            }
+        }
+
+        return modelState;
+    }
 }
