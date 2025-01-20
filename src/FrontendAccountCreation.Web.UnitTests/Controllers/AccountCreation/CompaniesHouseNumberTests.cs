@@ -106,7 +106,7 @@ public class CompaniesHouseNumberTests : AccountCreationTestBase
     }
 
     [TestMethod]
-    public async Task CompaniesHouseNumber_NoCompanyInformationWasFound_ReturnsViewWithErrorAndBackLinkIsRegisteredWithCompaniesHouse()
+    public async Task CompaniesHouseNumber_NoCompanyInformationWasFound_ReturnsCorrectRedirectToActionResult()
     {
         // Arrange
         _facadeServiceMock
@@ -117,17 +117,9 @@ public class CompaniesHouseNumberTests : AccountCreationTestBase
         var result = await _systemUnderTest.CompaniesHouseNumber(new CompaniesHouseNumberViewModel());
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
-
-        var viewResult = (ViewResult)result;
-
-        viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
-        viewResult.ViewData.ModelState.Count.Should().Be(1);
-        viewResult.ViewData.ModelState.Should().ContainKey(nameof(CompaniesHouseNumberViewModel.CompaniesHouseNumber));
-
-        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<AccountCreationSession>>()), Times.Never);
-
-        AssertBackLink(viewResult, PagePath.RegisteredWithCompaniesHouse);
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectToActionResult = (RedirectToActionResult)result;
+        redirectToActionResult.ActionName.Should().Be("CompaniesHouseNumber");
     }
 
     [TestMethod]
