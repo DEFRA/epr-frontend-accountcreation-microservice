@@ -24,7 +24,7 @@ using Sessions;
 using ViewModels;
 using ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 public class AccountCreationController : Controller
 {
@@ -1270,12 +1270,12 @@ public class AccountCreationController : Controller
             kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
         );
 
-        return JsonConvert.SerializeObject(errorList);
+        return JsonSerializer.Serialize(errorList);
     }
 
     private static ModelStateDictionary DeserializeModelState(string serializedModelState)
     {
-        var errorList = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(serializedModelState);
+        var errorList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(serializedModelState);
         var modelState = new ModelStateDictionary();
 
         foreach (var kvp in errorList)
