@@ -106,7 +106,7 @@ public class CompaniesHouseNumberTests : AccountCreationTestBase
     }
 
     [TestMethod]
-    public async Task CompaniesHouseNumber_NoCompanyInformationWasFound_ReturnsViewWithErrorAndBackLinkIsRegisteredWithCompaniesHouse()
+    public async Task CompaniesHouseNumber_NoCompanyInformationWasFound_RedirectsToCompaniesHouseNumberPage()
     {
         // Arrange
         _facadeServiceMock
@@ -117,17 +117,10 @@ public class CompaniesHouseNumberTests : AccountCreationTestBase
         var result = await _systemUnderTest.CompaniesHouseNumber(new CompaniesHouseNumberViewModel());
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
+        result.Should().BeOfType<RedirectToActionResult>();
 
-        var viewResult = (ViewResult)result;
-
-        viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
-        viewResult.ViewData.ModelState.Count.Should().Be(1);
-        viewResult.ViewData.ModelState.Should().ContainKey(nameof(CompaniesHouseNumberViewModel.CompaniesHouseNumber));
-
-        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<AccountCreationSession>>()), Times.Never);
-
-        AssertBackLink(viewResult, PagePath.RegisteredWithCompaniesHouse);
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.CompaniesHouseNumber));
+        _facadeServiceMock.Verify(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>()), Times.Once);
     }
 
     [TestMethod]
@@ -170,5 +163,24 @@ public class CompaniesHouseNumberTests : AccountCreationTestBase
         viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
         AssertBackLink(viewResult, PagePath.CheckYourDetails);
 
+    }
+
+    [TestMethod]
+    public async Task CompaniesHouseNumber_CompaniesHouseNumberPage_HasBeenRedirectedToBecauseOfValidationError()
+    {
+        //Arrange
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["ModelState"]).Returns("{\"Errors\":[\"one\",\"two\"]}");
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["CompaniesHouseNumber"]).Returns("123456");
+        _systemUnderTest.TempData = _tempDataDictionaryMock.Object;
+
+        //Act
+        var result = await _systemUnderTest.CompaniesHouseNumber();
+
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
+        var viewModel = (CompaniesHouseNumberViewModel)viewResult.Model;
+        viewModel.CompaniesHouseNumber.Should().Be("123456");
     }
 }
