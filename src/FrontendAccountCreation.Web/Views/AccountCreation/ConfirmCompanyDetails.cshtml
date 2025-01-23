@@ -1,9 +1,12 @@
 ﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.Constants
 
 @model ConfirmCompanyDetailsViewModel
 
 @{
     ViewData["Title"] = Localizer["ConfirmCompanyDetails.Title"];
+    var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
+
 }
 
 <div class="govuk-width-container">
@@ -88,4 +91,18 @@
             }
         }
     }
+}
+
+@section Scripts
+{
+    <script nonce="@scriptNonce">
+        document.addEventListener("DOMContentLoaded", function () {
+            var spinner = document.getElementById('global-spinner');
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+
+        });
+    </script>
+
 }

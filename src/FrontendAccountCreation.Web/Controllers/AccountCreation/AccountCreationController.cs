@@ -256,6 +256,8 @@ public class AccountCreationController : Controller
 
             ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
 
+            ViewBag.HideSpinner = true;
+
             return View(model);
         }
 
@@ -268,11 +270,14 @@ public class AccountCreationController : Controller
 
         try
         {
+            await Task.Delay(5000);
             company = await _facadeService.GetCompanyByCompaniesHouseNumberAsync(model.CompaniesHouseNumber);
         }
         catch (Exception exception)
         {
             _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}", model.CompaniesHouseNumber);
+
+            TempData["HideSpinner"] = true;
 
             return await SaveSessionAndRedirect(session, nameof(CannotVerifyOrganisation), PagePath.CompaniesHouseNumber, PagePath.CannotVerifyOrganisation);
         }
@@ -285,8 +290,12 @@ public class AccountCreationController : Controller
 
             ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
 
+            ViewBag.HideSpinner = true;
+
             return View(model);
         }
+
+        TempData["HideSpinner"] = true;
 
         session.CompaniesHouseSession.Company = company;
 

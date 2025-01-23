@@ -1,5 +1,8 @@
-﻿@{
+﻿@using FrontendAccountCreation.Web.Constants
+
+@{
     ViewData["Title"] = Localizer["CannotVerifyOrganisation.Title"];
+    var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
 }
 
 <div class="govuk-width-container">
@@ -15,3 +18,17 @@
         </div>
     </main>
 </div>
+
+@section Scripts 
+{
+    <script nonce="@scriptNonce">
+            document.addEventListener("DOMContentLoaded", function () {
+                var spinner = document.getElementById('global-spinner');
+                if (spinner) {
+                    spinner.style.display = 'none'; 
+                }
+                
+            });
+    </script>
+
+}
