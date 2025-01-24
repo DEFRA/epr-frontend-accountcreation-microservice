@@ -121,13 +121,13 @@
     <value>Cadarnhau</value>
   </data>
   <data name="DeclarationWithFullName.ErrorMessage" xml:space="preserve">
-    <value>WYou must enter your full name</value>
+    <value>Rhaid ichi roi'ch enw llawn</value>
   </data>
   <data name="DeclarationWithFullName.FullNameTextBox.Label" xml:space="preserve">
     <value>Rhowch eich enw llawn</value>
   </data>
   <data name="DeclarationWithFullName.LengthErrorMessage" xml:space="preserve">
-    <value>WFull name must be less than 200 characters long</value>
+    <value>Rhaid i'r enw llawn fod yn llai na 200 o gymeriadau</value>
   </data>
   <data name="DeclarationWithFullName.Paragraph" xml:space="preserve">
     <value>Drwy roi'ch manylion, rydych chi'n cytuno bod yr wybodaeth rydych chi wedi'i rhoi yn gyflawn ac yn gywir a'ch bod chi:</value>
