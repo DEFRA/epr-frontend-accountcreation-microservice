@@ -48,8 +48,11 @@
                         @SharedLocalizer["Continue"]
                     </button>
                 </form>
+
+                
             </div>
         </div>
+        @await Html.PartialAsync("_SpinnerPartial")
     </main>
 </div>
 
@@ -57,22 +60,25 @@
 @section Scripts
 {
     <script nonce="@scriptNonce">
-    document.addEventListener("DOMContentLoaded", function () {
-        debugger;
-        var spinner = document.getElementById('global-spinner');
-        if (spinner) {
-            spinner.style.display = 'none'; 
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            var spinner = document.getElementById('global-spinner');
+            var form = document.getElementById('companiesHouseForm');
 
-        var form = document.getElementById('companiesHouseForm');
-        if (form) {
-            form.addEventListener("submit", function () {
-                debugger;
-                if (spinner) {
-                    spinner.style.display = 'flex';
-                }
-            });
-        }
-    });
-</script>
+            if (spinner) {
+                spinner.style.display = 'none'; 
+            }
+
+            if (form) {
+                form.addEventListener("submit", function () {
+                    if (spinner) {
+                        spinner.style.display = 'flex';
+                    }
+
+                    if (form) {
+                        form.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 }
