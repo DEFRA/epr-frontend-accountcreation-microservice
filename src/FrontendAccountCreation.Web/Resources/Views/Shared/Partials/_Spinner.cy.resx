@@ -117,22 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SpinnerAltText" xml:space="preserve">
-    <value />
+  <data name="SpinnerHeader" xml:space="preserve">
+    <value>Wrthi'n prosesu eich cais</value>
   </data>
   <data name="SpinnerJsParagraph1" xml:space="preserve">
-    <value />
+    <value>Gall hyn gymryd ychydig eiliadau. Aroswch wrth i ni brosesu eich cais.</value>
   </data>
   <data name="SpinnerJsParagraph2" xml:space="preserve">
-    <value />
+    <value>Peidiwch â chau nac adnewyddu'r dudalen.</value>
   </data>
   <data name="SpinnerNoscriptLinkText" xml:space="preserve">
-    <value />
+    <value>ail-lwythwch y dudalen hon</value>
+  </data>
+  <data name="SpinnerNoscriptParagraph1" xml:space="preserve">
+    <value>Gall hyn gymryd ychydig eiliadau.</value>
   </data>
   <data name="SpinnerNoscriptParagraph2" xml:space="preserve">
-    <value />
+    <value>Os nad yw'r broses yn cwblhau,</value>
   </data>
   <data name="SpinnerNoscriptParagraph3" xml:space="preserve">
-    <value />
+    <value>Peidiwch â chau nac agor tudalen arall o'r dudalen hon.</value>
   </data>
 </root>

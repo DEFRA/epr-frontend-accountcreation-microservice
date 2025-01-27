@@ -14,7 +14,7 @@
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-two-thirds" id="companiesHouseForm-wrapper">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
                 <form asp-controller="AccountCreation" asp-action="CompaniesHouseNumber" method="post" id="companiesHouseForm">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        @await Html.PartialAsync("Spinner", "/create-account/companies-house-number")
+        @await Html.PartialAsync("Partials/_Spinner", "/create-account/companies-house-number")
     </main>
 </div>
 
@@ -61,26 +61,30 @@
         document.addEventListener("DOMContentLoaded", function () {
             const spinner = document.getElementById('global-spinner');
             const form = document.getElementById('companiesHouseForm');
+            const formWrapper = document.getElementById('companiesHouseForm-wrapper');
+            let spinnerTimeout;
 
-            function hideSpinnerWithDelay() {
-                if (spinner) {
-                    setTimeout(() => {
-                        spinner.style.display = 'none';
-                    }, 1000); 
-                }
+           if (spinner) {
+              spinner.style.display = 'none';
             }
 
-            hideSpinnerWithDelay();
-
-            if (form) {
-                form.addEventListener("submit", function () {
+            function showSpinnerAndHideFormWithDelay() {
+                spinnerTimeout = setTimeout(() => {
                     if (spinner) {
                         spinner.style.display = 'flex'; 
                     }
-                    if (form) {
-                        form.style.display = 'none'; 
+                    if (formWrapper) {
+                        formWrapper.style.display = 'none';
                     }
-                });
+                }, 500); 
+            }
+            if(formWrapper){
+                if (form) {
+                    form.addEventListener("submit", function (event) {
+                        clearTimeout(spinnerTimeout);
+                        showSpinnerAndHideFormWithDelay();
+                    });
+                }
             }
         });
     </script>

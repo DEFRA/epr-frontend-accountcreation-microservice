@@ -117,22 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SpinnerAltText" xml:space="preserve">
-    <value>Wrthi’n llwytho...</value>
+  <data name="SpinnerHeader" xml:space="preserve">
+    <value>Processing your request</value>
   </data>
   <data name="SpinnerJsParagraph1" xml:space="preserve">
-    <value>Gall hyn gymryd ychydig eiliadau. Aroswch wrth i ni brosesu eich cais.</value>
+    <value>This may take a few seconds. Please wait while we process your request.</value>
   </data>
   <data name="SpinnerJsParagraph2" xml:space="preserve">
-    <value>Peidiwch â chau nac adnewyddu'r dudalen.</value>
+    <value>Do not close or refresh the page.</value>
   </data>
   <data name="SpinnerNoscriptLinkText" xml:space="preserve">
-    <value>ail-lwythwch y dudalen hon</value>
+    <value>refresh this page</value>
+  </data>
+  <data name="SpinnerNoscriptParagraph1" xml:space="preserve">
+    <value>This may take a few seconds.</value>
   </data>
   <data name="SpinnerNoscriptParagraph2" xml:space="preserve">
-    <value>Os nad yw'r broses yn cwblhau,</value>
+    <value>If the process does not complete,</value>
   </data>
   <data name="SpinnerNoscriptParagraph3" xml:space="preserve">
-    <value>Peidiwch â chau nac agor tudalen arall o'r dudalen hon.</value>
+    <value>Do not close or navigate away from this page.</value>
   </data>
 </root>
