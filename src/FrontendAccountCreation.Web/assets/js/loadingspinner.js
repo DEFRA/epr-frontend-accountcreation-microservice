@@ -6,6 +6,7 @@
     if (spinner) {
         spinner.style.display = 'none';
     }
+
     function showSpinnerAndHideFormWithDelay() {
         spinnerTimeout = setTimeout(() => {
             if (spinner) {
