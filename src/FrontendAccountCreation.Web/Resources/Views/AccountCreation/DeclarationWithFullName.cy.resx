@@ -117,31 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DeclarationWithFullName.ButtonText1" xml:space="preserve">
-    <value>WConfirm</value>
+  <data name="DeclarationWithFullName.ButtonText" xml:space="preserve">
+    <value>Cadarnhau</value>
   </data>
   <data name="DeclarationWithFullName.ErrorMessage" xml:space="preserve">
-    <value>WYou must enter your full name</value>
+    <value>Rhaid ichi roi'ch enw llawn</value>
   </data>
   <data name="DeclarationWithFullName.FullNameTextBox.Label" xml:space="preserve">
-    <value>WEnter your full name</value>
+    <value>Rhowch eich enw llawn</value>
   </data>
   <data name="DeclarationWithFullName.LengthErrorMessage" xml:space="preserve">
-    <value>WFull name must be less than 200 characters long</value>
+    <value>Rhaid i'r enw llawn fod yn llai na 200 o gymeriadau</value>
   </data>
-  <data name="DeclarationWithFullName.Paragraph11" xml:space="preserve">
-    <value>WBy entering your details, you're agreeing that the information you’ve given is complete and correct, and that you:</value>
+  <data name="DeclarationWithFullName.Paragraph" xml:space="preserve">
+    <value>Drwy roi'ch manylion, rydych chi'n cytuno bod yr wybodaeth rydych chi wedi'i rhoi yn gyflawn ac yn gywir a'ch bod chi:</value>
   </data>
   <data name="DeclarationWithFullName.Point1" xml:space="preserve">
-    <value>Ware able to submit packaging data to the environmental regulator for </value>
+    <value>yn gallu cyflwyno'r data pecynwaith i'r rheoleiddiwr amgylcheddol ar gyfer</value>
   </data>
   <data name="DeclarationWithFullName.Point2" xml:space="preserve">
-    <value>Wunderstand the regulations</value>
+    <value>yn deall y rheoliadau</value>
   </data>
   <data name="DeclarationWithFullName.Point3" xml:space="preserve">
-    <value>Whave access to the information you need to submit data correctly</value>
+    <value>yn gallu cael gafael ar yr holl wybodaeth angenrheidiol i gyflwyno data yn gywir</value>
   </data>
-  <data name="DeclarationWithFullName.Title1" xml:space="preserve">
-    <value>WConfirm that you want to be an approved person</value>
+  <data name="DeclarationWithFullName.Title" xml:space="preserve">
+    <value>Rhowch gadarnhad yr hoffech chi fod yn berson a gymeradwywyd</value>
   </data>
 </root>
