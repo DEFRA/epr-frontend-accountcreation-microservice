@@ -57,35 +57,8 @@
 
 @section Scripts
 {
+    <script src="~/js/spinner.js"></script>
     <script nonce="@scriptNonce">
-        document.addEventListener("DOMContentLoaded", function () {
-            const spinner = document.getElementById('global-spinner');
-            const form = document.getElementById('companiesHouseForm');
-            const formWrapper = document.getElementById('companiesHouseForm-wrapper');
-            let spinnerTimeout;
-
-           if (spinner) {
-              spinner.style.display = 'none';
-            }
-
-            function showSpinnerAndHideFormWithDelay() {
-                spinnerTimeout = setTimeout(() => {
-                    if (spinner) {
-                        spinner.style.display = 'flex'; 
-                    }
-                    if (formWrapper) {
-                        formWrapper.style.display = 'none';
-                    }
-                }, 500); 
-            }
-            if(formWrapper){
-                if (form) {
-                    form.addEventListener("submit", function (event) {
-                        clearTimeout(spinnerTimeout);
-                        showSpinnerAndHideFormWithDelay();
-                    });
-                }
-            }
-        });
+        document.addEventListener("DOMContentLoaded", InitSpinner("companiesHouseForm-wrapper", "companiesHouseForm"));
     </script>
 }

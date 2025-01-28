@@ -27,10 +27,6 @@
   </Target>
 
     <ItemGroup>
-      <Folder Include="assets\js" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     </ItemGroup>
 
