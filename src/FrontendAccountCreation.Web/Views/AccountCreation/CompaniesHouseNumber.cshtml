@@ -1,21 +1,23 @@
-﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+﻿﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.Constants
 
 @model CompaniesHouseNumberViewModel
 
 @{
     ViewData["Title"] = Localizer["CompaniesHouseNumber.Title"];
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+    var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
 }
 
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-two-thirds" id="companiesHouseForm-wrapper">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="AccountCreation" asp-action="CompaniesHouseNumber" method="post">
+                <form asp-controller="AccountCreation" asp-action="CompaniesHouseNumber" method="post" id="companiesHouseForm">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                             <label for="CompaniesHouseNumber">
@@ -47,5 +49,16 @@
                 </form>
             </div>
         </div>
+
+        @await Html.PartialAsync("Partials/_Spinner", "/create-account/companies-house-number")
     </main>
 </div>
+
+
+@section Scripts
+{
+    <script src="~/js/loadingspinner.js"></script>
+    <script nonce="@scriptNonce">
+        document.addEventListener("DOMContentLoaded", InitSpinner("companiesHouseForm-wrapper", "companiesHouseForm"));
+    </script>
+}

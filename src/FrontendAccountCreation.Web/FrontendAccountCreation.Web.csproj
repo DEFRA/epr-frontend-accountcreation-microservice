@@ -27,10 +27,6 @@
   </Target>
 
     <ItemGroup>
-      <Folder Include="assets\js" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     </ItemGroup>
 
@@ -105,7 +101,7 @@
 
     <ItemGroup>
       <SonarQubeSetting Include="sonar.coverage.exclusions">
-        <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs</Value>
+        <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs,**/loadingspinner.js</Value>
       </SonarQubeSetting>
 	</ItemGroup>
   
