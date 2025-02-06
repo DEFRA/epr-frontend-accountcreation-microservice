@@ -1,4 +1,5 @@
-﻿@using FrontendAccountCreation.Web.Extensions
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.AccountCreation
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 
@@ -7,11 +8,14 @@
 @{
     ViewData["Title"] = Localizer["DeclarationWithFullName.Title"];
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+   
+    var currentPage = Url.Action(PagePath.DeclarationWithFullName, "AccountCreation");
+    var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
 }
 
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row" id="declarationwithfullname-wrapper">
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                     @Localizer["DeclarationWithFullName.Title"]
@@ -27,7 +31,7 @@
                     @Localizer["DeclarationWithFullName.FullNameTextBox.Label"]
                 </h1>
 
-                <form asp-controller="AccountCreation" asp-action="ConfirmWithFullName" method="post">
+                <form asp-controller="AccountCreation" asp-action="ConfirmWithFullName" method="post" id="declarationwithfullnameform">
 
                     @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
@@ -46,5 +50,16 @@
                 </form>
             </div>
         </div>
+
+        @await Html.PartialAsync("Partials/_Spinner", currentPage)
     </main>
 </div>
+
+
+@section Scripts
+{
+    <script src="~/js/loadingspinner.js"></script>
+    <script nonce="@scriptNonce">
+        document.addEventListener("DOMContentLoaded", InitSpinner("declarationwithfullname-wrapper", "declarationwithfullnameform"));
+    </script>
+}

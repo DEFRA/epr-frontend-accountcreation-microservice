@@ -1,10 +1,14 @@
-﻿@{
+﻿@using FrontendAccountCreation.Web.Constants
+@{
     ViewData["Title"] = Localizer["Declaration.Title"];
+    
+    var currentPage = Url.Action(PagePath.Declaration, "AccountCreation");
+    var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
 }
 
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row" id="declarationform-wrapper">
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                     @Localizer["Declaration.Title"]
@@ -33,12 +37,22 @@
                     </strong>
                 </div>
 
-                <form asp-controller="AccountCreation" asp-action="Confirm" method="post">
+                <form asp-controller="AccountCreation" asp-action="Confirm" method="post" id="declarationform">
                     <button class="govuk-button" data-module="govuk-button">
                         @Localizer["Declaration.ButtonText"]
                     </button>
                 </form>
             </div>
         </div>
+        @await Html.PartialAsync("Partials/_Spinner", currentPage)
     </main>
 </div>
+
+
+@section Scripts
+{
+    <script src="~/js/loadingspinner.js"></script>
+    <script nonce="@scriptNonce">
+        document.addEventListener("DOMContentLoaded", InitSpinner("declarationform-wrapper", "declarationform"));
+    </script>
+}
