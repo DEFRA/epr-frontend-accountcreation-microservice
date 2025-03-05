@@ -1,6 +1,8 @@
 ﻿namespace FrontendAccountCreation.Web.UnitTests.Extensions;
 
+using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -29,5 +31,29 @@ public class ServiceProviderExtensionTests
         // Assert
         mockServiceProvider.Verify(m => m.Add(It.IsAny<ServiceDescriptor>()), Times.AtLeastOnce);
         Assert.IsTrue(descriptors.Any(d => d.ServiceType == typeof(IConfigureOptions<MsalDistributedTokenCacheAdapterOptions>)));
+    }
+
+    [TestMethod]
+    public void ConfigureSession_Should_Set_CookieSecurePolicy_To_Always()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+        {
+            { "UseLocalSession", "true" },
+            { "CookieOptions:SessionCookieName", "TestSession" },
+            { "SessionIdleTimeOutMinutes", "30" }
+        }).Build();
+
+        services.Configure<EprCookieOptions>(configuration.GetSection("CookieOptions"));
+
+        // Act
+        services.RegisterWebComponents(configuration);
+        var serviceProvider = services.BuildServiceProvider();
+
+        var sessionOptions = serviceProvider.GetRequiredService<IOptions<Microsoft.AspNetCore.Builder.SessionOptions>>().Value;
+
+        // Assert
+        Assert.AreEqual(CookieSecurePolicy.Always, sessionOptions.Cookie.SecurePolicy);
     }
 }
