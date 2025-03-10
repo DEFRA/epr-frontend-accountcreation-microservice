@@ -20,7 +20,11 @@ builder.Services
     .ConfigureMsalDistributedTokenOptions(builder.Configuration);
 
 builder.Services
-    .AddAntiforgery(options => options.Cookie.Name = builder.Configuration.GetValue<string>("CookieOptions:AntiForgeryCookieName"))
+    .AddAntiforgery(options => {
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.Name = builder.Configuration.GetValue<string>("CookieOptions:AntiForgeryCookieName");
+    })
     .AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
     .AddViewLocalization(options =>
     {
@@ -56,6 +60,18 @@ builder.Services.AddHsts(options =>
 {
     options.IncludeSubDomains = true;
     options.MaxAge = TimeSpan.FromDays(365);
+});
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.HttpOnly =  Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
+    options.Secure = CookieSecurePolicy.Always;
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
