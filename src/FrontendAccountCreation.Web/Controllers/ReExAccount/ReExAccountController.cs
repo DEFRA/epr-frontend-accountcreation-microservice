@@ -17,7 +17,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
     /// </summary>
     public class ReExAccountController : Controller
     {
-        private readonly ISessionManager<AccountCreationSession> _sessionManager;
+        private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
         private readonly IFacadeService _facadeService;
         private readonly IAccountMapper _accountMapper;
         private readonly ILogger<ReExAccountController> _logger;
@@ -25,7 +25,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
         private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
         public ReExAccountController(
-        ISessionManager<AccountCreationSession> sessionManager,
+        ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IAccountMapper accountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
@@ -88,16 +88,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
                 PagePath.TelephoneNumber);
         }
 
-        private async Task<RedirectToActionResult> SaveSessionAndRedirect(AccountCreationSession session,
+        private async Task<RedirectToActionResult> SaveSessionAndRedirect(ReExAccountCreationSession session,
         string actionName, string currentPagePath, string? nextPagePath)
         {
-            session.IsUserChangingDetails = false;
             await SaveSession(session, currentPagePath, nextPagePath);
 
             return RedirectToAction(actionName);
         }
 
-        private async Task SaveSession(AccountCreationSession session, string currentPagePath, string? nextPagePath)
+        private async Task SaveSession(ReExAccountCreationSession session, string currentPagePath, string? nextPagePath)
         {
             ClearRestOfJourney(session, currentPagePath);
 
@@ -106,7 +105,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
         }
 
-        private static void ClearRestOfJourney(AccountCreationSession session, string currentPagePath)
+        private static void ClearRestOfJourney(ReExAccountCreationSession session, string currentPagePath)
         {
             var index = session.Journey.IndexOf(currentPagePath);
 
@@ -114,9 +113,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
             session.Journey = session.Journey.Take(index + 1).ToList();
         }
 
-        private void SetBackLink(AccountCreationSession session, string currentPagePath)
+        private void SetBackLink(ReExAccountCreationSession session, string currentPagePath)
         {
-            if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+            if (currentPagePath != PagePath.CheckYourDetails)
             {
                 ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
             }
