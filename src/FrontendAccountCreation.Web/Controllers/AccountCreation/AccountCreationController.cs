@@ -1129,6 +1129,40 @@ public class AccountCreationController : Controller
         }
     }
 
+    //todo: this will move into ReExAccountController
+    [HttpPost]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    [Route(PagePath.CreateReExAccount)]
+    [JourneyAccess(PagePath.CreateReExAccount)]
+    public async Task<IActionResult> CreateReExAccount()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        try
+        {
+            string? email = GetUserEmail();
+            //todo: handle null email
+            //var account = _accountMapper.CreateAccountModel(session, email);
+            var person = _accountMapper.CreateReExAccountModel(session, email);
+            await _facadeService.PostAccountDetailsAsync(account);
+            _sessionManager.RemoveSession(HttpContext.Session);
+
+            //todo: where do we send them? does current account creation have a success page?
+            //return Redirect(_urlOptions.RedirectUrl);
+            return Redirect(_urlOptions.ReportDataRedirectUrl);
+        }
+        catch (ProblemResponseException ex)
+        {
+            switch (ex.ProblemDetails?.Type)
+            {
+                default:
+                {
+                    throw;
+                }
+            }
+        }
+    }
+
     [HttpPost]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.DeclarationWithFullName)]
