@@ -138,6 +138,28 @@ public class FacadeService : IFacadeService
         response.EnsureSuccessStatusCode();
     }
 
+    //todo: could have a generic method to do the heavy lifting
+    public async Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account)
+    {
+        await PrepareAuthenticatedClient();
+
+        var response = await _httpClient.PostAsJsonAsync("/api/reprocessor-exporter-accounts", account);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+            if (problemDetails != null)
+            {
+                throw new ProblemResponseException(problemDetails, response.StatusCode);
+            }
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        //response.EnsureSuccessStatusCode();
+    }
+
     public async Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser)
     {
         await PrepareAuthenticatedClient();
