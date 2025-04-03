@@ -74,6 +74,7 @@ public static class ServiceProviderExtension
     {
         services.AddSingleton<ICookieService, CookieService>();
         services.AddScoped<ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
+        services.AddScoped<ISessionManager<ReExAccountCreationSession>, ReExAccountCreationSessionManager>();
     }
 
     private static void SetTempDataCookieOptions(IServiceCollection services, IConfiguration configuration)

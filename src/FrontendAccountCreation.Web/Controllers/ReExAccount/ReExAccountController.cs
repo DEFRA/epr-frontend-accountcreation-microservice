@@ -17,6 +17,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
     /// <summary>
     /// Reprocessor & Exporter Account creation controller.
     /// </summary>
+    [Route("reex")]
     public class ReExAccountController : Controller
     {
         private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
@@ -42,14 +43,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         [Route(PagePath.ReExAccountFullName)]
-        [JourneyAccess(PagePath.ReExAccountFullName)]
+        [ReprocessorExporterJourneyAccess(PagePath.ReExAccountFullName)]
         public async Task<IActionResult> ReExAccountFullName()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -67,8 +63,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
         }
 
         [HttpPost]
+        [Route("")]
         [Route(PagePath.ReExAccountFullName)]
-        [JourneyAccess(PagePath.ReExAccountFullName)]
+        [ReprocessorExporterJourneyAccess(PagePath.ReExAccountFullName)]
         public async Task<IActionResult> ReExAccountFullName(ReExAccountFullNameViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -93,7 +90,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
         [HttpGet]
         [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
         [Route(PagePath.Success)]
-        [JourneyAccess(PagePath.Success)]
+        [ReprocessorExporterJourneyAccess(PagePath.Success)]
         public async Task<IActionResult> Success()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -116,7 +113,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
             };
 
             return View(viewModel);
-
         }
 
         //todo: move this (these?) somewhere common?
