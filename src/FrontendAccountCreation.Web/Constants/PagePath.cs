@@ -40,4 +40,7 @@ public static class PagePath
     public const string PageNotFound = "PageNotFound";
     public const string AcknowledgeCookieAcceptance = "acknowledge-cookie-acceptance";
     public const string UpdateCookieAcceptance = "update-cookie-acceptance";
+
+    // Journey paths for ReExAccounts
+    public const string ReExAccountFullName = "re-ex-account-full-name";
 }

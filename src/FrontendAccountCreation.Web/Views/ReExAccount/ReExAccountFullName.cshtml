@@ -1,0 +1,71 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.Configs
+@using Microsoft.Extensions.Options
+
+@model ReExAccountFullNameViewModel
+
+@inject IOptions<DeploymentRoleOptions> DeploymentRoleOption
+
+@{
+    ViewData["Title"] = Localizer["FullName.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, 
+        nameof(ReExAccountFullNameViewModel.FirstName), nameof(ReExAccountFullNameViewModel.LastName));
+
+    const string errorClass = "govuk-input--error";
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+                
+                <form asp-controller="ReExAccount" asp-action="@Model.PostAction" method="post">
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                                    @Localizer["ReExAccountFullName.Question"]
+                                </h1>
+                            </legend>
+
+                            <div class="govuk-form-group govuk-!-margin-bottom-4@(errorsViewModel.HasErrorKey(nameof(ReExAccountFullNameViewModel.FirstName)) ? " govuk-form-group--error" : "")">
+                                <label class="govuk-label" gov-for="FirstName">
+                                    @Localizer["ReExAccountFullName.FirstName"]
+                                </label>
+
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(ReExAccountFullNameViewModel.FirstName)])
+
+                                <input class="govuk-input govuk-!-width-one-half @Html.Raw(errorsViewModel.HasErrorKey(nameof(ReExAccountFullNameViewModel.FirstName)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="FirstName"
+                                       gov-value="@Model.FirstName">
+                            </div>
+
+                            <div class="govuk-form-group govuk-!-margin-top-0@(errorsViewModel.HasErrorKey(nameof(ReExAccountFullNameViewModel.LastName)) ? " govuk-form-group--error" : "")">
+                                <label class="govuk-label" gov-for="LastName">
+                                    @Localizer["ReExAccountFullName.LastName"]
+                                </label>
+
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(ReExAccountFullNameViewModel.LastName)])
+
+                                <input class="govuk-input govuk-!-width-one-half @Html.Raw(errorsViewModel.HasErrorKey(nameof(ReExAccountFullNameViewModel.LastName)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="LastName"
+                                       gov-value="@Model.LastName">
+                            </div>
+
+                            @Html.HiddenFor(m => m.PostAction)
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button govuk-!-margin-top-4" data-module="govuk-button">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
