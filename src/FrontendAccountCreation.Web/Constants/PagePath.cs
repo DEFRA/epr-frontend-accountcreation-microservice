@@ -41,7 +41,6 @@ public static class PagePath
 
     // Journey paths for ReExAccounts
     public const string ReExAccountFullName = "re-ex-account-full-name";
-    //todo: match prototype?
-    public const string CreateReExAccount = "create-re-ex-account";
+    public const string Success = "success";
 
 }

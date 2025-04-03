@@ -99,6 +99,21 @@ public class AccountMapper : IAccountMapper
         };
     }
 
+    public ReprocessorExporterAccountModel CreateReExAccountModel(ReExAccountCreationSession session, string email)
+    {
+        return new ReprocessorExporterAccountModel
+        {
+            //todo: session.Contact can be null
+            Person = new PersonModel
+            {
+                FirstName = session.Contact.FirstName,
+                LastName = session.Contact.LastName,
+                ContactEmail = email,
+                TelephoneNumber = session.Contact.TelephoneNumber
+            }
+        };
+    }
+
     private static AddressModel GetCompanyAddress(AccountCreationSession session)
     {
         var address = new AddressModel();

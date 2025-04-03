@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using System.Security.Claims;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Configs;
@@ -9,6 +10,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 
 namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
 {
@@ -88,6 +90,40 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
                 PagePath.TelephoneNumber);
         }
 
+        [HttpGet]
+        [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+        [Route(PagePath.Success)]
+        [JourneyAccess(PagePath.Success)]
+        public async Task<IActionResult> Success()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            //todo: person and user email always the same, so only need to pass userid down the stack and pick email from person
+            // unless we send down an user just in case they could ever end up being different
+
+            string? email = GetUserEmail();
+            //todo: handle null email
+            var account = _accountMapper.CreateReExAccountModel(session, email);
+            await _facadeService.PostReprocessorExporterAccountAsync(account);
+            _sessionManager.RemoveSession(HttpContext.Session);
+
+            SetBackLink(session, PagePath.Success);
+
+            var viewModel = new SuccessViewModel
+            {
+                //todo: could just add contact to viewmodel
+                UserName = $"{session.Contact.FirstName} {session.Contact.LastName}"
+            };
+
+            return View(viewModel);
+
+        }
+
+        //todo: move this (these?) somewhere common?
+        private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??
+                                          // Remove when we migrate all environments to custom policy
+                                          User.Claims.FirstOrDefault(claim => claim.Type == "emails")?.Value;
+
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(ReExAccountCreationSession session,
         string actionName, string currentPagePath, string? nextPagePath)
         {
@@ -115,14 +151,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
 
         private void SetBackLink(ReExAccountCreationSession session, string currentPagePath)
         {
-            if (currentPagePath != PagePath.CheckYourDetails)
-            {
-                ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
-            }
-            else
-            {
+            //todo: there's no CheckYourDetails in our journey
+            //if (currentPagePath != PagePath.CheckYourDetails)
+            //{
+            //    ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+            //}
+            //else
+            //{
                 ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-            }
+            //}
         }
     }
 }
