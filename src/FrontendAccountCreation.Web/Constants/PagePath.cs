@@ -22,8 +22,6 @@ public static class PagePath
     public const string CheckYourDetails = "check-your-details";
     public const string Declaration = "declaration";
     public const string DeclarationWithFullName = "declarationWithFullName";
-    //todo: match prototype?
-    public const string CreateReExAccount = "create-re-ex-account";
     public const string ReportPackagingData = "report-packaging-data";
     public const string NotAffected = "not-affected";
     public const string AccountAlreadyExists = "account-already-exists";
@@ -43,4 +41,7 @@ public static class PagePath
 
     // Journey paths for ReExAccounts
     public const string ReExAccountFullName = "re-ex-account-full-name";
+    //todo: match prototype?
+    public const string CreateReExAccount = "create-re-ex-account";
+
 }
