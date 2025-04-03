@@ -4,6 +4,8 @@
 @using FrontendAccountCreation.Web.Configs
 @using Microsoft.Extensions.Options
 
+@* todo: generate css so don't have to use class="govuk-body" *@
+
 @* todo: why not picking up using *@
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.SuccessViewModel
 
@@ -44,29 +46,30 @@
                 <h3 class="govuk-notification-banner__heading">
                     @Localizer["Success.WhatYouCanDoNow.Heading"]
                 </h3>
-                <p>
+                <p class="govuk-body govuk-!-margin-bottom-7">
                     @Localizer["Success.WhatYouCanDoNow.Paragraph.1"]
                 </p>
-                <br>
+                @* todo: replace br's with govuk margin bottom*@
+@*                 <br> *@
 
                 @* todo: this content is going to change, so leave it and localization for now *@
                 <h3 class="govuk-notification-banner__heading">
                     What you must do after adding an organisation
                 </h3>
-                <p>To comply with the law:</p>
+                <p class="govuk-body">To comply with the law:</p>
 
-                <ul class="govuk-list govuk-list--bullet">
+                <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
                     <li>reprocessors must apply to register each packaging waste material for each
                         UK reprocessing site</li>
 
                     <li>exporters must apply to register each UK-derived packaging waste material
                         they will export overseas for reprocessing outside the UK</li>
                 </ul>
-                <br>
+@*                 <br> *@
 
-                <p>Reprocessors and exporters can choose to apply for accreditation.</p>
-                <p>You can add organisations from the dashboard.</p>
-                <br>
+                <p class="govuk-body">Reprocessors and exporters can choose to apply for accreditation.</p>
+                <p class="govuk-body govuk-!-margin-bottom-7">You can add organisations from the dashboard.</p>
+@*                 <br> *@
 
                 <button class="govuk-button" data-module="govuk-button">
                     Continue to dashboard
