@@ -1,22 +1,11 @@
 ﻿﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
-@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
-@using FrontendAccountCreation.Web.Extensions
-@using FrontendAccountCreation.Web.Configs
-@using Microsoft.Extensions.Options
 
 @* todo: generate css so don't have to use class="govuk-body" *@
 
-@* todo: why not picking up using *@
-@model FrontendAccountCreation.Web.ViewModels.ReExAccount.SuccessViewModel
-
-@* @inject IOptions<DeploymentRoleOptions> DeploymentRoleOption *@
+@model SuccessViewModel
 
 @{
     ViewData["Title"] = Localizer["Success.Title"];
-    // var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, 
-    //     nameof(ReExAccountFullNameViewModel.FirstName), nameof(ReExAccountFullNameViewModel.LastName));
-
-    //const string errorClass = "govuk-input--error";
 }
 
 @* todo: do we need to duplicate the resource files in resources and resourcesregulator? delete new files from resourcesregulator? *@
@@ -49,8 +38,6 @@
                 <p class="govuk-body govuk-!-margin-bottom-7">
                     @Localizer["Success.WhatYouCanDoNow.Paragraph.1"]
                 </p>
-                @* todo: replace br's with govuk margin bottom*@
-@*                 <br> *@
 
                 @* todo: this content is going to change, so leave it and localization for now *@
                 <h3 class="govuk-notification-banner__heading">
@@ -65,12 +52,11 @@
                     <li>exporters must apply to register each UK-derived packaging waste material
                         they will export overseas for reprocessing outside the UK</li>
                 </ul>
-@*                 <br> *@
 
                 <p class="govuk-body">Reprocessors and exporters can choose to apply for accreditation.</p>
                 <p class="govuk-body govuk-!-margin-bottom-7">You can add organisations from the dashboard.</p>
-@*                 <br> *@
 
+                @* todo: need to know where this link will go, then get rid of the form *@
                 <button class="govuk-button" data-module="govuk-button">
                     Continue to dashboard
                 </button>
