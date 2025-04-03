@@ -1,0 +1,79 @@
+﻿﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.Configs
+@using Microsoft.Extensions.Options
+
+@* todo: why not picking up using *@
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.SuccessViewModel
+
+@* @inject IOptions<DeploymentRoleOptions> DeploymentRoleOption *@
+
+@{
+    ViewData["Title"] = Localizer["Success.Title"];
+    // var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, 
+    //     nameof(ReExAccountFullNameViewModel.FirstName), nameof(ReExAccountFullNameViewModel.LastName));
+
+    //const string errorClass = "govuk-input--error";
+}
+
+@* todo: do we need to duplicate the resource files in resources and resourcesregulator? *@
+
+<div class="govuk-width-container ">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+    
+            @* todo: don't think need the form - button can be a link *@
+            <form action="account" method="post">
+                @* todo: is there a component/partial for this? *@
+                <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                    <div class="govuk-notification-banner__header">
+                        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                            @Localizer["Success.Success"]
+                        </h2>
+                    </div>
+                    <div class="govuk-notification-banner__content">
+                        <h3 class="govuk-notification-banner__heading">
+                            @Localizer["Success.CreatedAccountFor"] @Model.UserName
+                        </h3>
+                    </div>
+                </div>
+
+                <h3 class="govuk-notification-banner__heading">
+                    @Localizer["Success.WhatYouCanDoNow.Heading"]
+                </h3>
+                <p>
+                    @Localizer["Success.WhatYouCanDoNow.Paragraph.1"]
+                </p>
+                <br>
+
+                @* todo: this content is going to change, so leave it and localization for now *@
+                <h3 class="govuk-notification-banner__heading">
+                    What you must do after adding an organisation
+                </h3>
+                <p>To comply with the law:</p>
+
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>reprocessors must apply to register each packaging waste material for each
+                        UK reprocessing site</li>
+
+                    <li>exporters must apply to register each UK-derived packaging waste material
+                        they will export overseas for reprocessing outside the UK</li>
+                </ul>
+                <br>
+
+                <p>Reprocessors and exporters can choose to apply for accreditation.</p>
+                <p>You can add organisations from the dashboard.</p>
+                <br>
+
+                <button class="govuk-button" data-module="govuk-button">
+                    Continue to dashboard
+                </button>
+
+            </form>
+        </div>
+    </div>
+    </main>
+</div>
