@@ -44,13 +44,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
         }
 
         [HttpGet]
-        [Route(PagePath.ReExAccountFullName)]
-        [ReprocessorExporterJourneyAccess(PagePath.ReExAccountFullName)]
+        [Route(ReExPagePath.ReExAccountFullName)]
+        [ReprocessorExporterJourneyAccess(ReExPagePath.ReExAccountFullName)]
         public async Task<IActionResult> ReExAccountFullName()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-            SetBackLink(session, PagePath.ReExAccountFullName);
+            SetBackLink(session, ReExPagePath.ReExAccountFullName);
 
             var viewModel = new ReExAccountFullNameViewModel()
             {
@@ -64,15 +64,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
 
         [HttpPost]
         [Route("")]
-        [Route(PagePath.ReExAccountFullName)]
-        [ReprocessorExporterJourneyAccess(PagePath.ReExAccountFullName)]
+        [Route(ReExPagePath.ReExAccountFullName)]
+        [ReprocessorExporterJourneyAccess(ReExPagePath.ReExAccountFullName)]
         public async Task<IActionResult> ReExAccountFullName(ReExAccountFullNameViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.ReExAccountFullName);
+                SetBackLink(session, ReExPagePath.ReExAccountFullName);
 
                 return View(model);
             }
@@ -80,17 +80,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
             session.Contact.FirstName = model.FirstName;
             session.Contact.LastName = model.LastName;
 
-            //return await SaveSessionAndRedirect(session, nameof(TelephoneNumber), PagePath.FullName,
+            //return await SaveSessionAndRedirect(session, nameof(TelephoneNumber), ReExPagePath.FullName,
             //    PagePath.TelephoneNumber);
 
-            return await SaveSessionAndRedirect(session, "TelephoneNumber", PagePath.ReExAccountFullName,
+            return await SaveSessionAndRedirect(session, "TelephoneNumber", ReExPagePath.ReExAccountFullName,
                 PagePath.TelephoneNumber);
         }
 
         [HttpGet]
         [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-        [Route(PagePath.Success)]
-        [ReprocessorExporterJourneyAccess(PagePath.Success)]
+        [Route(ReExPagePath.Success)]
+        [ReprocessorExporterJourneyAccess(ReExPagePath.Success)]
         public async Task<IActionResult> Success()
         {
             //todo: will do this once earlier stories are done
@@ -104,7 +104,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
                     LastName = "smith",
                     TelephoneNumber = "01234567890"
                 },
-                Journey = [PagePath.ReExAccountFullName]
+                Journey = [ReExPagePath.ReExAccountFullName]
             };
 
 
@@ -117,7 +117,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
             await _facadeService.PostReprocessorExporterAccountAsync(account);
             _sessionManager.RemoveSession(HttpContext.Session);
 
-            SetBackLink(session, PagePath.Success);
+            SetBackLink(session, ReExPagePath.Success);
 
             var viewModel = new SuccessViewModel
             {

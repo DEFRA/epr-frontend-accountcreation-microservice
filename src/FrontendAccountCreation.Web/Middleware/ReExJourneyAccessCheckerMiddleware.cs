@@ -24,7 +24,7 @@ public class ReExJourneyAccessCheckerMiddleware(RequestDelegate next)
 
             if (sessionValue == null)
             {
-                pageToRedirect = PagePath.ReExAccountFullName;
+                pageToRedirect = ReExPagePath.ReExAccountFullName;
             }
             else if (sessionValue.Journey.Count == 0)
             {

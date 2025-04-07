@@ -1133,8 +1133,8 @@ public class AccountCreationController : Controller
     //todo: this will move into ReExAccountController - revert this controller
     [HttpPost]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route(PagePath.Success)]
-    [JourneyAccess(PagePath.Success)]
+    [Route(ReExPagePath.Success)]
+    [JourneyAccess(ReExPagePath.Success)]
     public async Task<IActionResult> CreateReExAccount()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
