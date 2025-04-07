@@ -5,6 +5,7 @@ using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -81,11 +82,48 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
             session.Contact.FirstName = model.FirstName;
             session.Contact.LastName = model.LastName;
 
-            //return await SaveSessionAndRedirect(session, nameof(TelephoneNumber), PagePath.FullName,
-            //    PagePath.TelephoneNumber);
+            return await SaveSessionAndRedirect(session, nameof(ReExAccountTelephoneNumber), PagePath.ReExAccountFullName,
+            PagePath.ReExAccountTelephoneNumber);
+        }
 
-            return await SaveSessionAndRedirect(session, "TelephoneNumber", PagePath.ReExAccountFullName,
-                PagePath.TelephoneNumber);
+        [HttpGet]
+        [Route(PagePath.ReExAccountTelephoneNumber)]
+        [JourneyAccess(PagePath.ReExAccountTelephoneNumber)]
+        public async Task<IActionResult> ReExAccountTelephoneNumber()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            SetBackLink(session, PagePath.ReExAccountTelephoneNumber);
+
+            return View(new ReExAccountTelephoneNumberViewModel()
+            {
+                TelephoneNumber = session.Contact.TelephoneNumber,
+            });
+        }
+
+        [HttpPost]
+        [Route(PagePath.ReExAccountTelephoneNumber)]
+        [JourneyAccess(PagePath.ReExAccountTelephoneNumber)]
+        public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            SetBackLink(session, PagePath.ReExAccountTelephoneNumber);
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            session.Contact.TelephoneNumber = model.TelephoneNumber;
+
+            //return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TelephoneNumber,
+            //    PagePath.CheckYourDetails);
+
+            return await SaveSessionAndRedirect(session, "CheckYourDetails", PagePath.ReExAccountTelephoneNumber,
+                PagePath.CheckYourDetails); //TODO : Change Check your Details to Success Page
         }
 
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(ReExAccountCreationSession session,

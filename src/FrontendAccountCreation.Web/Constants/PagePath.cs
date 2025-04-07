@@ -41,4 +41,5 @@ public static class PagePath
 
     // Journey paths for ReExAccounts
     public const string ReExAccountFullName = "re-ex-account-full-name";
+    public const string ReExAccountTelephoneNumber = "re-ex-account-telephone-number";
 }
