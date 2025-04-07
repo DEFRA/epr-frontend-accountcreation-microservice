@@ -16,7 +16,7 @@ using FrontendAccountCreation.Web.Controllers.Attributes;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter.ReExAccountCreation;
 
-[Route("[controller]/{action=Index}")]
+[Route("re-ex")]
 public class ReExAccountCreationController : Controller
 {
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
@@ -50,7 +50,6 @@ public class ReExAccountCreationController : Controller
 
     [HttpGet]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route("/re-ex")]
     [Route(ReExPagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity()
     {
@@ -98,7 +97,7 @@ public class ReExAccountCreationController : Controller
     }
 
     [HttpPost]
-    [Route(PagePath.RegisteredAsCharity)]
+    [Route(ReExPagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)
     {
         if (!ModelState.IsValid)
@@ -124,8 +123,8 @@ public class ReExAccountCreationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.RegisteredWithCompaniesHouse)]
-    [JourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
+    [Route(ReExPagePath.RegisteredWithCompaniesHouse)]
+    [JourneyAccess(ReExPagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -146,13 +145,13 @@ public class ReExAccountCreationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.NotAffected)]
-    [JourneyAccess(PagePath.NotAffected)]
+    [Route(ReExPagePath.NotAffected)]
+    [JourneyAccess(ReExPagePath.NotAffected)]
     public async Task<IActionResult> NotAffected()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession();
 
-        SetBackLink(session, PagePath.NotAffected);
+        SetBackLink(session, ReExPagePath.NotAffected);
 
         return View();
     }
@@ -168,7 +167,7 @@ public class ReExAccountCreationController : Controller
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
         {
-            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+            ViewBag.BackLinkToDisplay = ReExPagePath.CheckYourDetails;
         }
         else
         {

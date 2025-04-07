@@ -1,5 +1,6 @@
 ﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExAccountCreation;
 
+using System.Net;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Configs;
@@ -8,14 +9,12 @@ using FrontendAccountCreation.Web.Controllers.AccountCreation;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Controllers.Home;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter.ReExAccountCreation;
-using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExAccountCreation;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
-using System.Net;
 
 [TestClass]
 public class RegisteredAsCharityTests : ReExAccountCreationTestBase
@@ -74,7 +73,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.RegisteredWithCompaniesHouse));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ReExAccountCreationController.RegisteredWithCompaniesHouse));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
     }
@@ -91,7 +90,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.NotAffected));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ReExAccountCreationController.NotAffected));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
     }
@@ -162,7 +161,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
 
         //Arrange
         result.Should().BeOfType<RedirectToActionResult>();
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.RegisteredAsCharity));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ReExAccountCreationController.RegisteredAsCharity));
     }
 
     [TestMethod]
@@ -173,9 +172,9 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         {
             Journey = new List<string>
             {
-                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
-                PagePath.ConfirmCompanyDetails, PagePath.RoleInOrganisation, PagePath.FullName, PagePath.TelephoneNumber,
-                PagePath.CheckYourDetails
+                ReExPagePath.RegisteredAsCharity, ReExPagePath.RegisteredWithCompaniesHouse, ReExPagePath.CompaniesHouseNumber,
+                ReExPagePath.ConfirmCompanyDetails, ReExPagePath.RoleInOrganisation, ReExPagePath.FullName, ReExPagePath.TelephoneNumber,
+                ReExPagePath.CheckYourDetails
             },
             IsUserChangingDetails = true,
         };
