@@ -42,6 +42,8 @@ public class ReExAccountController : Controller
         _logger = logger;
     }
 
+    //todo: we'll have to handle user already exists. probably best to handle it at the start of the journey
+
     [HttpGet]
     [Route(ReExPagePath.ReExAccountFullName)]
     [ReprocessorExporterJourneyAccess(ReExPagePath.ReExAccountFullName)]
