@@ -1,8 +1,10 @@
-﻿namespace FrontendAccountCreation.Web.Constants
+﻿namespace FrontendAccountCreation.Web.Constants;
+
+public static class ReExPagePath
 {
-    public static class ReExPagePath
-    {
-        // Journey paths
-        public const string RegisteredAsCharity = "registered-as-charity";
-    }
+    public const string ReExAccountFullName = "re-ex-account-full-name";
+    public const string ReExAccountTelephoneNumber = "re-ex-account-telephone-number";
+    public const string Success = "success";
+
+    public const string RegisteredAsCharity = "registered-as-charity";
 }
