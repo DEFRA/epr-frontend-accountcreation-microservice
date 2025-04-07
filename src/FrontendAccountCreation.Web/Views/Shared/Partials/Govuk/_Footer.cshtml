@@ -1,4 +1,8 @@
-@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.Extensions@using Microsoft.FeatureManagement
+@using FrontendAccountCreation.Web.Constants;
+@using Microsoft.FeatureManagement
+
+@inject IFeatureManager _featureManager
 @model FrontendAccountCreation.Web.Configs.ExternalUrlsOptions
 
 @{
@@ -18,8 +22,8 @@
 <footer class="govuk-footer" role="contentinfo">
     <div class="govuk-width-container ">
         
-        <div class="govuk-footer__meta">
-            <div class="govuk-footer__meta-item govuk-footer__meta-item--grow ">
+        <div class="govuk-footer__navigation">
+            <div class="govuk-footer__section govuk-grid-column-two-thirds ">
 
                 <h2 class="govuk-!-margin-top-3">@Localizer["Footer.GetHelp"]</h2>
                 <ul class="govuk-list govuk-list--spaced govuk-!-margin-bottom-7">
@@ -54,6 +58,16 @@
                     <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">@Localizer["Footer.OpenGovernment"]</a>, @Localizer["Footer.ExceptWhere"]
                 </span>
             </div>
+            <feature name="@FeatureFlags.ShowYourFeedbackFooter">
+                <div class="govuk-footer__section govuk-grid-column-one-thirds govuk-!-margin-top-3">
+                    <p class="govuk-body">
+                        <a class="govuk-footer__link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_e5HK8ijKACZGi1M" rel="noreferrer noopener" target="_blank">@Localizer["Footer.GiveFeedback"]</a>
+                    </p>
+                    <p class="govuk-body">
+                        <a class="govuk-footer__link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_a2Bm7vw3cht5B6C" rel="noreferrer noopener" target="_blank">@Localizer["Footer.ReportAProblem"]</a>
+                    </p>
+                </div>
+            </feature>
             <div class="govuk-footer__meta-item">
                 <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">&copy @Localizer["Footer.CrownCopyright"]</a>
             </div>
