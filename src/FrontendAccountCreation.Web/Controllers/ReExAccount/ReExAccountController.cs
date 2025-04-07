@@ -88,6 +88,46 @@ namespace FrontendAccountCreation.Web.Controllers.ReExAccounts
         }
 
         [HttpGet]
+        [Route(ReExPagePath.ReExAccountTelephoneNumber)]
+        [JourneyAccess(ReExPagePath.ReExAccountTelephoneNumber)]
+        public async Task<IActionResult> ReExAccountTelephoneNumber()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            SetBackLink(session, ReExPagePath.ReExAccountTelephoneNumber);
+
+            return View(new ReExAccountTelephoneNumberViewModel()
+            {
+                TelephoneNumber = session.Contact.TelephoneNumber,
+            });
+        }
+
+        [HttpPost]
+        [Route(ReExPagePath.ReExAccountTelephoneNumber)]
+        [JourneyAccess(ReExPagePath.ReExAccountTelephoneNumber)]
+        public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            SetBackLink(session, ReExPagePath.ReExAccountTelephoneNumber);
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            session.Contact.TelephoneNumber = model.TelephoneNumber;
+
+            //return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TelephoneNumber,
+            //    PagePath.CheckYourDetails);
+
+            return await SaveSessionAndRedirect(session, "CheckYourDetails", ReExPagePath.ReExAccountTelephoneNumber,
+                PagePath.CheckYourDetails); //TODO : Change Check your Details to Success Page
+        }
+
+        [HttpGet]
         [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
         [Route(ReExPagePath.Success)]
         [ReprocessorExporterJourneyAccess(ReExPagePath.Success)]

@@ -45,6 +45,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Update="ResourcesReEx\SharedResources.en.resx">
+        <SubType>Designer</SubType>
+      </EmbeddedResource>
+      <EmbeddedResource Update="ResourcesReEx\Views\Shared\Partials\Govuk\_Header.en.resx">
+        <SubType>Designer</SubType>
+      </EmbeddedResource>
       <EmbeddedResource Update="Resources\Views\Account\TypeOfOrganisation.en.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>TypeOfOrganisation.en.Designer.cs</LastGenOutput>
