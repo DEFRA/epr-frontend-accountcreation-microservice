@@ -199,14 +199,6 @@ public class ReExAccountController : Controller
 
     private void SetBackLink(ReExAccountCreationSession session, string currentPagePath)
     {
-        //todo: there's no CheckYourDetails in our journey
-        //if (currentPagePath != PagePath.CheckYourDetails)
-        //{
-        //    ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
-        //}
-        //else
-        //{
         ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-        //}
     }
 }
