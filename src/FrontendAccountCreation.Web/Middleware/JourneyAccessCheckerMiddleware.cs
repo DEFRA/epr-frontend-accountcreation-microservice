@@ -8,7 +8,6 @@ using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext
 
 namespace FrontendAccountCreation.Web.Middleware;
 
-//todo: we'll probably need our own version of this
 public class JourneyAccessCheckerMiddleware
 {
     private readonly RequestDelegate _next;
