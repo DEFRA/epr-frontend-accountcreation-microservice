@@ -21,7 +21,7 @@ public class ReExAccountController : Controller
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
-    private readonly IAccountMapper _accountMapper;
+    private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<ReExAccountController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
@@ -29,14 +29,14 @@ public class ReExAccountController : Controller
     public ReExAccountController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
-        IAccountMapper accountMapper,
+        IReExAccountMapper reExAccountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
         IOptions<DeploymentRoleOptions> deploymentRoleOptions,
         ILogger<ReExAccountController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
-        _accountMapper = accountMapper;
+        _reExAccountMapper = reExAccountMapper;
         _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
         _logger = logger;
@@ -148,13 +148,12 @@ public class ReExAccountController : Controller
             Journey = [ReExPagePath.ReExAccountFullName]
         };
 
-
         //todo: person and user email always the same, so only need to pass userid down the stack and pick email from person
         // unless we send down an user just in case they could ever end up being different
 
         string? email = GetUserEmail();
         //todo: handle null email
-        var account = _accountMapper.CreateReExAccountModel(session, email);
+        var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
         await _facadeService.PostReprocessorExporterAccountAsync(account);
         _sessionManager.RemoveSession(HttpContext.Session);
 

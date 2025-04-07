@@ -79,41 +79,6 @@ public class AccountMapper : IAccountMapper
         return account;
     }
 
-    //todo: is it appropriate to say we're creating an account, or do we just want to create a person/user?
-    //public AccountModel CreateReExAccountModel(AccountCreationSession session, string email)
-    // if keep with person, move out of account mapper (create a person mapper and have above delegate to it)
-    // https://eaflood.atlassian.net/wiki/spaces/MWR/pages/5595594864/ADR-122+RE+EX+Account+Creation+and+Enrolment
-    // ^ that shows a post /api/v1/reprocessors-exporter-accounts accepting what looks like a full account with presumably blank (null) strings and notset enums, which doesn't seem right
-    public ReprocessorExporterAccountModel CreateReExAccountModel(AccountCreationSession session, string email)
-    {
-        return new ReprocessorExporterAccountModel
-        {
-            //todo: session.Contact can be null
-            Person = new PersonModel
-            {
-                FirstName = session.Contact.FirstName,
-                LastName = session.Contact.LastName,
-                ContactEmail = email,
-                TelephoneNumber = session.Contact.TelephoneNumber
-            }
-        };
-    }
-
-    public ReprocessorExporterAccountModel CreateReExAccountModel(ReExAccountCreationSession session, string email)
-    {
-        return new ReprocessorExporterAccountModel
-        {
-            //todo: session.Contact can be null
-            Person = new PersonModel
-            {
-                FirstName = session.Contact.FirstName,
-                LastName = session.Contact.LastName,
-                ContactEmail = email,
-                TelephoneNumber = session.Contact.TelephoneNumber
-            }
-        };
-    }
-
     private static AddressModel GetCompanyAddress(AccountCreationSession session)
     {
         var address = new AddressModel();
