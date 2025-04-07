@@ -143,7 +143,7 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
 
-        var response = await _httpClient.PostAsJsonAsync("/api/reprocessor-exporter-accounts", account);
+        var response = await _httpClient.PostAsJsonAsync("/api/v1/reprocessor-exporter-accounts", account);
 
         if (!response.IsSuccessStatusCode)
         {
