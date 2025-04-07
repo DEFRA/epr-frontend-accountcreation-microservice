@@ -51,55 +51,43 @@ public class FacadeService : IFacadeService
 
     public async Task<Company?> GetCompanyByCompaniesHouseNumberAsync(string companiesHouseNumber)
     {
+        //phil: use this instead if can't connect to companies house
+        //return GetDummyCompany("01234567");
+
         await PrepareAuthenticatedClient();
 
-        //phil: companies house api is returning 500 - ssl connection could not be established
-        // do we want to randomise the return?
-        return GetDummyCompany("01234567");
-        //return new Company
-        //{
-        //    AccountCreatedOn = DateTime.UtcNow,
-        //    BusinessAddress = new Address
-        //    {
+        var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
 
-        //    },
-        //    CompaniesHouseNumber = "04985133",
-        //    Name = "Cool Un Ltd",
-        //    OrganisationId = "C6F4A4E0-3747-44C1-B69B-D39DD4311685"
-        //};
-
-        //var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
-
-        //if (response.StatusCode == HttpStatusCode.NoContent)
-        //{
-        //    return null;
-        //}
-
-        //response.EnsureSuccessStatusCode();
-
-        //var company = await response.Content.ReadFromJsonAsync<CompaniesHouseCompany>();
-
-        //return new Company(company);
-    }
-
-    private static Company GetDummyCompany(string companiesHouseNumber)
-    {
-        var company = new Company
+        if (response.StatusCode == HttpStatusCode.NoContent)
         {
-            CompaniesHouseNumber = companiesHouseNumber, //"01234567",
-            Name = "Dummy Company",
-            BusinessAddress = new Address
-            {
-                BuildingNumber = "10",
-                BuildingName = "Dummy Place",
-                Street = "Dummy Street",
-                Town = "Nowhere",
-                Postcode = "AB1 0CD"
-            },
-            AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
-        };
-        return company;
+            return null;
+        }
+
+        response.EnsureSuccessStatusCode();
+
+        var company = await response.Content.ReadFromJsonAsync<CompaniesHouseCompany>();
+
+        return new Company(company);
     }
+
+    //private static Company GetDummyCompany(string companiesHouseNumber)
+    //{
+    //    var company = new Company
+    //    {
+    //        CompaniesHouseNumber = companiesHouseNumber, //"01234567",
+    //        Name = "Dummy Company",
+    //        BusinessAddress = new Address
+    //        {
+    //            BuildingNumber = "10",
+    //            BuildingName = "Dummy Place",
+    //            Street = "Dummy Street",
+    //            Town = "Nowhere",
+    //            Postcode = "AB1 0CD"
+    //        },
+    //        AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
+    //    };
+    //    return company;
+    //}
 
     public async Task<AddressList?> GetAddressListByPostcodeAsync(string postcode)
     {
