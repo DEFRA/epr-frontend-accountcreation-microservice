@@ -132,4 +132,25 @@
   <data name="Success.WhatYouCanDoNow.Paragraph.1" xml:space="preserve">
     <value>WReprocessors and exporters can add organisations ahead of registration.</value>
   </data>
+  <data name="Success.AfterAddingOrganisation.Heading" xml:space="preserve">
+    <value>WWhat you must do after adding an organisation</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.1.List.LeadIn" xml:space="preserve">
+    <value>WTo comply with the law:</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.1.List.Item1" xml:space="preserve">
+    <value>Wreprocessors must apply to register each packaging waste material for each UK reprocessing site</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.1.List.Item2" xml:space="preserve">
+    <value>Wexporters must apply to register each UK-derived packaging waste material they will export overseas for reprocessing outside the UK</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.2.Paragraph" xml:space="preserve">
+    <value>WReprocessors and exporters can choose to apply for accreditation.</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.3.Paragraph" xml:space="preserve">
+    <value>WYou can add organisations from the account home.</value>
+  </data>
+  <data name="Success.Continue" xml:space="preserve">
+    <value>Continue to account home</value>
+  </data>
 </root>

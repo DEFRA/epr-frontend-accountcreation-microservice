@@ -41,24 +41,21 @@
 
                 @* todo: this content is going to change, so leave it and localization for now *@
                 <h3 class="govuk-notification-banner__heading">
-                    What you must do after adding an organisation
+                    @Localizer["Success.AfterAddingOrganisation.Heading"]
                 </h3>
-                <p class="govuk-body">To comply with the law:</p>
+                <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.1.List.LeadIn"]</p>
 
                 <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
-                    <li>reprocessors must apply to register each packaging waste material for each
-                        UK reprocessing site</li>
-
-                    <li>exporters must apply to register each UK-derived packaging waste material
-                        they will export overseas for reprocessing outside the UK</li>
+                    <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item1"]</li>
+                    <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item2"]</li>
                 </ul>
 
-                <p class="govuk-body">Reprocessors and exporters can choose to apply for accreditation.</p>
-                <p class="govuk-body govuk-!-margin-bottom-7">You can add organisations from the dashboard.</p>
+                <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.2.Paragraph"]</p>
+                <p class="govuk-body govuk-!-margin-bottom-7">@Localizer["Success.AfterAddingOrganisation.3.Paragraph"]</p>
 
                 @* todo: need to know where this link will go, then get rid of the form *@
                 <button class="govuk-button" data-module="govuk-button">
-                    Continue to dashboard
+                    @Localizer["Success.Continue"]
                 </button>
 
             </form>
