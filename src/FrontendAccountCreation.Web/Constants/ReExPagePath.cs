@@ -16,15 +16,5 @@ public static class ReExPagePath
     public const string RoleInOrganisation = "role-in-organisation";
     
     public const string FullName = "full-name";
-    public const string TelephoneNumber = "telephone-number";
-
-    // Non journey paths
-    public const string Accessibility = "accessibility";
-    public const string SignedOut = "signed-out";
-    public const string Error = "error";
-    public const string AError = "auth-error";
-    public const string Culture = "culture";
-    public const string PageNotFound = "PageNotFound";
-    public const string AcknowledgeCookieAcceptance = "acknowledge-cookie-acceptance";
-    public const string UpdateCookieAcceptance = "update-cookie-acceptance";
+    public const string TelephoneNumber = "telephone-number";    
 }

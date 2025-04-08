@@ -6,7 +6,7 @@ using Core.Services.Dto.User;
 using Core.Services.FacadeModels;
 using Core.Sessions;
 using FluentAssertions;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter.ReExAccountCreation;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Web.Configs;
-using Web.Controllers.ReprocessorExporter.ReExAccountCreation;
+using Web.Controllers.ReprocessorExporter;
 using Web.Sessions;
 
 public abstract class ReExAccountCreationTestBase

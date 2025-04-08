@@ -1,24 +1,26 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Sessions;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels;
+using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
-using System;
-using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Web.Controllers.Attributes;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Text.Json;
 
-namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter.ReExAccountCreation;
+namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-[Route("re-ex/organisation/")]
+[Route("re-ex/organisation")]
 public class OrganisationController : Controller
 {
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";

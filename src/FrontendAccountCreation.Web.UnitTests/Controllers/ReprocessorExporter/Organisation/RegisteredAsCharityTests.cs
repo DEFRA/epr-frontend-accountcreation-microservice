@@ -1,14 +1,13 @@
-﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExAccountCreation;
+﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
 using System.Net;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.AccountCreation;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Controllers.Home;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter.ReExAccountCreation;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
@@ -172,9 +171,9 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         {
             Journey = new List<string>
             {
-                ReExPagePath.RegisteredAsCharity, ReExPagePath.RegisteredWithCompaniesHouse, ReExPagePath.CompaniesHouseNumber,
-                ReExPagePath.ConfirmCompanyDetails, ReExPagePath.RoleInOrganisation, ReExPagePath.FullName, ReExPagePath.TelephoneNumber,
-                ReExPagePath.CheckYourDetails
+                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
+                PagePath.ConfirmCompanyDetails, PagePath.RoleInOrganisation, PagePath.FullName, PagePath.TelephoneNumber,
+                    PagePath.CheckYourDetails
             },
             IsUserChangingDetails = true,
         };
