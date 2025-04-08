@@ -118,7 +118,7 @@ public class UserController : Controller
         session.Contact.TelephoneNumber = model.TelephoneNumber;
 
         return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
-            ReExPagePath.Success);
+            PagePath.Success);
 
     }
 
