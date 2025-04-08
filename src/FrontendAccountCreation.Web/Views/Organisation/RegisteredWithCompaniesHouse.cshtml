@@ -15,7 +15,7 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="ReExAccountCreation" asp-action="RegisteredWithCompaniesHouse" method="post">
+                <form asp-controller="Organisation" asp-action="RegisteredWithCompaniesHouse" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">

@@ -16,7 +16,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 
 [TestClass]
-public class RegisteredAsCharityTests : ReExAccountCreationTestBase
+public class RegisteredAsCharityTests : OrganisationTestBase
 {
     [TestInitialize]
     public void Setup()
