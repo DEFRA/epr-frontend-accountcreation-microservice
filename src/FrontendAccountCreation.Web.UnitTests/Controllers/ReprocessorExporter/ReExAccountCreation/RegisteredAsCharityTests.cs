@@ -73,7 +73,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ReExAccountCreationController.RegisteredWithCompaniesHouse));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.RegisteredWithCompaniesHouse));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
     }
@@ -90,7 +90,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ReExAccountCreationController.NotAffected));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotAffected));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
     }
@@ -142,7 +142,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
         urlsOptionMock.Setup(x => x.Value)
             .Returns(externalUrl);
-        var systemUnderTest = new ReExAccountCreationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
+        var systemUnderTest = new OrganisationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
             _accountServiceMock.Object, urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
 
         // Act
@@ -161,7 +161,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
 
         //Arrange
         result.Should().BeOfType<RedirectToActionResult>();
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ReExAccountCreationController.RegisteredAsCharity));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.RegisteredAsCharity));
     }
 
     [TestMethod]

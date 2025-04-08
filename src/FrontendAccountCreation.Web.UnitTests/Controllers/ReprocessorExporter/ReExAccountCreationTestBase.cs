@@ -28,11 +28,11 @@ public abstract class ReExAccountCreationTestBase
     protected Mock<ICompanyService> _companyServiceMock = null!;
     protected Mock<IAccountMapper> _accountServiceMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
-    protected Mock<ILogger<ReExAccountCreationController>> _loggerMock = null!;
+    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
 
-    protected ReExAccountCreationController _systemUnderTest = null!;
+    protected OrganisationController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)
     {
@@ -70,10 +70,10 @@ public abstract class ReExAccountCreationTestBase
                 DeploymentRole = deploymentRole
             });
 
-        _loggerMock = new Mock<ILogger<ReExAccountCreationController>>();
+        _loggerMock = new Mock<ILogger<OrganisationController>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        _systemUnderTest = new ReExAccountCreationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
+        _systemUnderTest = new OrganisationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
            _accountServiceMock.Object, _urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;

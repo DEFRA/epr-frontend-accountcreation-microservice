@@ -13,11 +13,13 @@ using Microsoft.Identity.Web;
 using System;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter.ReExAccountCreation;
 
-[Route("re-ex")]
-public class ReExAccountCreationController : Controller
+[Route("re-ex/organisation/")]
+public class OrganisationController : Controller
 {
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
@@ -26,18 +28,18 @@ public class ReExAccountCreationController : Controller
     private readonly IFacadeService _facadeService;
     private readonly ICompanyService _companyService;
     private readonly IAccountMapper _accountMapper;
-    private readonly ILogger<ReExAccountCreationController> _logger;
+    private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
-    public ReExAccountCreationController(
+    public OrganisationController(
          ISessionManager<AccountCreationSession> sessionManager,
          IFacadeService facadeService,
          ICompanyService companyService,
          IAccountMapper accountMapper,
          IOptions<ExternalUrlsOptions> urlOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-         ILogger<ReExAccountCreationController> logger)
+         ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
@@ -50,7 +52,7 @@ public class ReExAccountCreationController : Controller
 
     [HttpGet]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route(ReExPagePath.RegisteredAsCharity)]
+    [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity()
     {
         if (_deploymentRoleOptions.IsRegulator())
@@ -97,7 +99,7 @@ public class ReExAccountCreationController : Controller
     }
 
     [HttpPost]
-    [Route(ReExPagePath.RegisteredAsCharity)]
+    [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)
     {
         if (!ModelState.IsValid)
@@ -123,8 +125,8 @@ public class ReExAccountCreationController : Controller
     }
 
     [HttpGet]
-    [Route(ReExPagePath.RegisteredWithCompaniesHouse)]
-    [JourneyAccess(ReExPagePath.RegisteredWithCompaniesHouse)]
+    [Route(PagePath.RegisteredWithCompaniesHouse)]
+    [JourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -144,14 +146,89 @@ public class ReExAccountCreationController : Controller
         });
     }
 
+    [HttpPost]
+    [Route(PagePath.RegisteredWithCompaniesHouse)]
+    [JourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
+    public async Task<IActionResult> RegisteredWithCompaniesHouse(RegisteredWithCompaniesHouseViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession()
+        {
+            Journey = new List<string> { PagePath.RegisteredWithCompaniesHouse }
+        };
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.RegisteredWithCompaniesHouse);
+            return View(model);
+        }
+
+        session.OrganisationType = model.IsTheOrganisationRegistered switch
+        {
+            YesNoAnswer.Yes => OrganisationType.CompaniesHouseCompany,
+            YesNoAnswer.No => OrganisationType.NonCompaniesHouseCompany,
+            _ => session.OrganisationType
+        };
+
+        if (model.IsTheOrganisationRegistered == YesNoAnswer.Yes)
+        {
+            return await SaveSessionAndRedirect(session, nameof(CompaniesHouseNumber), PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation);
+        }
+    }
+
     [HttpGet]
-    [Route(ReExPagePath.NotAffected)]
-    [JourneyAccess(ReExPagePath.NotAffected)]
+    [Route(PagePath.TypeOfOrganisation)]
+    [JourneyAccess(PagePath.TypeOfOrganisation)]
+    public async Task<IActionResult> TypeOfOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TypeOfOrganisation);
+
+        var viewModel = new TypeOfOrganisationViewModel()
+        {
+            ProducerType = session.ManualInputSession?.ProducerType
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpGet]
+    [Route(PagePath.CompaniesHouseNumber)]
+    [JourneyAccess(PagePath.CompaniesHouseNumber)]
+    public async Task<IActionResult> CompaniesHouseNumber()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.CompaniesHouseNumber);
+
+        ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
+
+        var viewModel = new CompaniesHouseNumberViewModel
+        {
+            CompaniesHouseNumber = session.CompaniesHouseSession?.Company?.CompaniesHouseNumber,
+        };
+
+        if (TempData["ModelState"] is not null)
+        {
+            ModelState.Merge(DeserializeModelState(TempData["ModelState"].ToString()));
+            viewModel.CompaniesHouseNumber = TempData["CompaniesHouseNumber"].ToString();
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NotAffected)]
+    [JourneyAccess(PagePath.NotAffected)]
     public async Task<IActionResult> NotAffected()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession();
 
-        SetBackLink(session, ReExPagePath.NotAffected);
+        SetBackLink(session, PagePath.NotAffected);
 
         return View();
     }
@@ -167,7 +244,7 @@ public class ReExAccountCreationController : Controller
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
         {
-            ViewBag.BackLinkToDisplay = ReExPagePath.CheckYourDetails;
+            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
         }
         else
         {
@@ -198,6 +275,22 @@ public class ReExAccountCreationController : Controller
 
         // this also cover if current page not found (index = -1) then it clears all pages
         session.Journey = session.Journey.Take(index + 1).ToList();
+    }
+
+    private static ModelStateDictionary DeserializeModelState(string serializedModelState)
+    {
+        var errorList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(serializedModelState);
+        var modelState = new ModelStateDictionary();
+
+        foreach (var kvp in errorList)
+        {
+            foreach (var error in kvp.Value)
+            {
+                modelState.AddModelError(kvp.Key, error);
+            }
+        }
+
+        return modelState;
     }
 
     #endregion
