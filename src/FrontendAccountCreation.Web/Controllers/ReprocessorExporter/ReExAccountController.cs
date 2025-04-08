@@ -129,8 +129,8 @@ public class ReExAccountController : Controller
 
     [HttpGet]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route(ReExPagePath.Success)]
-    [ReprocessorExporterJourneyAccess(ReExPagePath.Success)]
+    [Route(PagePath.Success)]
+    [ReprocessorExporterJourneyAccess(PagePath.Success)]
     public async Task<IActionResult> Success()
     {
         //todo: will do this once earlier stories are done
@@ -156,7 +156,7 @@ public class ReExAccountController : Controller
         await _facadeService.PostReprocessorExporterAccountAsync(account);
         _sessionManager.RemoveSession(HttpContext.Session);
 
-        SetBackLink(session, ReExPagePath.Success);
+        SetBackLink(session, PagePath.Success);
 
         var viewModel = new SuccessViewModel
         {
