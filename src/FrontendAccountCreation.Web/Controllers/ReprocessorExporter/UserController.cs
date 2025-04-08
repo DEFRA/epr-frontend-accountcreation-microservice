@@ -16,23 +16,23 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// <summary>
 /// Reprocessor & Exporter Account creation controller.
 /// </summary>
-[Route("reprocessorexporter")]
-public class ReExAccountController : Controller
+[Route("re-ex/user")]
+public class UserController : Controller
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
-    private readonly ILogger<ReExAccountController> _logger;
+    private readonly ILogger<UserController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
-    public ReExAccountController(
+    public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IReExAccountMapper reExAccountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
         IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-        ILogger<ReExAccountController> logger)
+        ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
@@ -45,12 +45,12 @@ public class ReExAccountController : Controller
     //todo: we'll have to handle user already exists. probably best to handle it at the start of the journey
 
     [HttpGet]
-    [Route(ReExPagePath.ReExAccountFullName)]
+    [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        SetBackLink(session, ReExPagePath.ReExAccountFullName);
+        SetBackLink(session, PagePath.FullName);
 
         var viewModel = new ReExAccountFullNameViewModel()
         {
@@ -64,15 +64,15 @@ public class ReExAccountController : Controller
 
     [HttpPost]
     [Route("")]
-    [Route(ReExPagePath.ReExAccountFullName)]
-    [ReprocessorExporterJourneyAccess(ReExPagePath.ReExAccountFullName)]
+    [Route(PagePath.FullName)]
+    [ReprocessorExporterJourneyAccess(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName(ReExAccountFullNameViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, ReExPagePath.ReExAccountFullName);
+            SetBackLink(session, PagePath.FullName);
 
             return View(model);
         }
@@ -80,23 +80,20 @@ public class ReExAccountController : Controller
         session.Contact.FirstName = model.FirstName;
         session.Contact.LastName = model.LastName;
 
-        //return await SaveSessionAndRedirect(session, nameof(TelephoneNumber), ReExPagePath.FullName,
-        //    PagePath.TelephoneNumber);
-
-        return await SaveSessionAndRedirect(session, "TelephoneNumber", ReExPagePath.ReExAccountFullName,
+        return await SaveSessionAndRedirect(session, nameof(ReExAccountTelephoneNumber), PagePath.FullName,
             PagePath.TelephoneNumber);
     }
 
     [HttpGet]
-    [Route(ReExPagePath.ReExAccountTelephoneNumber)]
-    [JourneyAccess(ReExPagePath.ReExAccountTelephoneNumber)]
+    [Route(PagePath.TelephoneNumber)]
+    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-        SetBackLink(session, ReExPagePath.ReExAccountTelephoneNumber);
+        SetBackLink(session, PagePath.TelephoneNumber);
 
         return View(new ReExAccountTelephoneNumberViewModel()
         {
@@ -105,13 +102,13 @@ public class ReExAccountController : Controller
     }
 
     [HttpPost]
-    [Route(ReExPagePath.ReExAccountTelephoneNumber)]
-    [JourneyAccess(ReExPagePath.ReExAccountTelephoneNumber)]
+    [Route(PagePath.TelephoneNumber)]
+    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        SetBackLink(session, ReExPagePath.ReExAccountTelephoneNumber);
+        SetBackLink(session, PagePath.TelephoneNumber);
 
         if (!ModelState.IsValid)
         {
@@ -120,11 +117,9 @@ public class ReExAccountController : Controller
 
         session.Contact.TelephoneNumber = model.TelephoneNumber;
 
-        //return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TelephoneNumber,
-        //    PagePath.CheckYourDetails);
+        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
+            ReExPagePath.Success);
 
-        return await SaveSessionAndRedirect(session, "CheckYourDetails", ReExPagePath.ReExAccountTelephoneNumber,
-            PagePath.CheckYourDetails); //TODO : Change Check your Details to Success Page
     }
 
     [HttpGet]
@@ -144,7 +139,7 @@ public class ReExAccountController : Controller
                 LastName = "smith",
                 TelephoneNumber = "01234567890"
             },
-            Journey = [ReExPagePath.ReExAccountFullName]
+            Journey = [PagePath.FullName]
         };
 
         //todo: person and user email always the same, so only need to pass userid down the stack and pick email from person
