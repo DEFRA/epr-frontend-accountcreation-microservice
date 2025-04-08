@@ -17,7 +17,10 @@ using Web.Configs;
 using Web.Controllers.ReprocessorExporter;
 using Web.Sessions;
 
-public abstract class ReExAccountCreationTestBase
+/// <summary>
+/// Being used for Reprocessor and Export.
+/// </summary>
+public abstract class OrganisationTestBase
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
     protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 [TestClass]
-public class NotAffectedTests : ReExAccountCreationTestBase
+public class NotAffectedTests : OrganisationTestBase
 {
     [TestInitialize]
     public void Setup()

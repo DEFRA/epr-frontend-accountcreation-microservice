@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
 using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
@@ -15,6 +16,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
@@ -148,6 +150,81 @@ public class OrganisationController : Controller
         });
     }
 
+    [HttpPost]
+    [Route(PagePath.RegisteredWithCompaniesHouse)]
+    [JourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
+    public async Task<IActionResult> RegisteredWithCompaniesHouse(RegisteredWithCompaniesHouseViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession()
+        {
+            Journey = new List<string> { PagePath.RegisteredWithCompaniesHouse }
+        };
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.RegisteredWithCompaniesHouse);
+            return View(model);
+        }
+
+        session.OrganisationType = model.IsTheOrganisationRegistered switch
+        {
+            YesNoAnswer.Yes => OrganisationType.CompaniesHouseCompany,
+            YesNoAnswer.No => OrganisationType.NonCompaniesHouseCompany,
+            _ => session.OrganisationType
+        };
+
+        if (model.IsTheOrganisationRegistered == YesNoAnswer.Yes)
+        {
+            return await SaveSessionAndRedirect(session, nameof(CompaniesHouseNumber), PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation);
+        }
+    }
+
+    [HttpGet]
+    [Route(PagePath.TypeOfOrganisation)]
+    [JourneyAccess(PagePath.TypeOfOrganisation)]
+    public async Task<IActionResult> TypeOfOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TypeOfOrganisation);
+
+        var viewModel = new TypeOfOrganisationViewModel()
+        {
+            ProducerType = session.ManualInputSession?.ProducerType
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpGet]
+    [Route(PagePath.CompaniesHouseNumber)]
+    [JourneyAccess(PagePath.CompaniesHouseNumber)]
+    public async Task<IActionResult> CompaniesHouseNumber()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.CompaniesHouseNumber);
+
+        ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
+
+        var viewModel = new CompaniesHouseNumberViewModel
+        {
+            CompaniesHouseNumber = session.CompaniesHouseSession?.Company?.CompaniesHouseNumber,
+        };
+
+        if (TempData["ModelState"] is not null)
+        {
+            ModelState.Merge(DeserializeModelState(TempData["ModelState"].ToString()));
+            viewModel.CompaniesHouseNumber = TempData["CompaniesHouseNumber"].ToString();
+        }
+
+        return View(viewModel);
+    }
+
     [HttpGet]
     [Route(PagePath.NotAffected)]
     [JourneyAccess(PagePath.NotAffected)]
@@ -202,6 +279,22 @@ public class OrganisationController : Controller
 
         // this also cover if current page not found (index = -1) then it clears all pages
         session.Journey = session.Journey.Take(index + 1).ToList();
+    }
+
+    private static ModelStateDictionary DeserializeModelState(string serializedModelState)
+    {
+        var errorList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(serializedModelState);
+        var modelState = new ModelStateDictionary();
+
+        foreach (var kvp in errorList)
+        {
+            foreach (var error in kvp.Value)
+            {
+                modelState.AddModelError(kvp.Key, error);
+            }
+        }
+
+        return modelState;
     }
 
     #endregion
