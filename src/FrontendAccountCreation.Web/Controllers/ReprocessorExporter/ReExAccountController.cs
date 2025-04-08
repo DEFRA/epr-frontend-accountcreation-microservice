@@ -46,7 +46,6 @@ public class ReExAccountController : Controller
 
     [HttpGet]
     [Route(ReExPagePath.ReExAccountFullName)]
-    [ReprocessorExporterJourneyAccess(ReExPagePath.ReExAccountFullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
