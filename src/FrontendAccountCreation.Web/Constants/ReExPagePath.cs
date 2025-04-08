@@ -8,6 +8,7 @@ public static class ReExPagePath
     public const string RegisteredAsCharity = "registered-as-charity";
     public const string RegisteredWithCompaniesHouse = "registered-with-companies-house";
     public const string CompaniesHouseNumber = "companies-house-number";
+    public const string TypeOfOrganisation = "type-of-organisation";
     public const string CheckYourDetails = "check-your-details";
     public const string NotAffected = "not-affected";
     public const string ConfirmCompanyDetails = "confirm-company-details";
