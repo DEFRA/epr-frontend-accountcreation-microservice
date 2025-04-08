@@ -1,23 +1,27 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Sessions;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels;
+using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
-using System;
-using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Web.Controllers.Attributes;
 
-namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter.ReExAccountCreation;
+namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-[Route("[controller]/{action=Index}")]
-public class ReExAccountCreationController : Controller
+[Route("re-ex/organisation")]
+public class OrganisationController : Controller
 {
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
@@ -26,18 +30,18 @@ public class ReExAccountCreationController : Controller
     private readonly IFacadeService _facadeService;
     private readonly ICompanyService _companyService;
     private readonly IAccountMapper _accountMapper;
-    private readonly ILogger<ReExAccountCreationController> _logger;
+    private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
-    public ReExAccountCreationController(
+    public OrganisationController(
          ISessionManager<AccountCreationSession> sessionManager,
          IFacadeService facadeService,
          ICompanyService companyService,
          IAccountMapper accountMapper,
          IOptions<ExternalUrlsOptions> urlOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-         ILogger<ReExAccountCreationController> logger)
+         ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
@@ -50,8 +54,7 @@ public class ReExAccountCreationController : Controller
 
     [HttpGet]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route("/re-ex")]
-    [Route(ReExPagePath.RegisteredAsCharity)]
+    [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity()
     {
         if (_deploymentRoleOptions.IsRegulator())
