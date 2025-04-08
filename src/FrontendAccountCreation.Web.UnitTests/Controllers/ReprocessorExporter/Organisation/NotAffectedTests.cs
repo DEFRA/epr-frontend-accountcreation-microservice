@@ -1,4 +1,4 @@
-﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExAccountCreation;
+﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
@@ -23,7 +23,7 @@ public class NotAffectedTests : ReExAccountCreationTestBase
         var accountCreationSessionMock = new AccountCreationSession
         {
             Journey = new List<string>
-                { ReExPagePath.RegisteredAsCharity, ReExPagePath.RegisteredWithCompaniesHouse, PagePath.NotAffected },
+                { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.NotAffected },
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
             IsTheOrganisationCharity = true,
         };
@@ -39,7 +39,7 @@ public class NotAffectedTests : ReExAccountCreationTestBase
 
         var viewResult = (ViewResult)result;
 
-        AssertBackLink(viewResult, ReExPagePath.RegisteredWithCompaniesHouse);
+        AssertBackLink(viewResult, PagePath.RegisteredWithCompaniesHouse);
     }
 }
 
