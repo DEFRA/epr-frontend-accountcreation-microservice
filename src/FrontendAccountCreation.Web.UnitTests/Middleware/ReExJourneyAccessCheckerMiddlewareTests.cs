@@ -44,7 +44,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
     {
         // Arrange
         var session = new ReExAccountCreationSession { Journey = visitedUrls.ToList() };
-        var expectedURL = expectedPage;
+        var expectedUrl = expectedPage;
 
         SetupEndpointMock(new ReprocessorExporterJourneyAccessAttribute(pageUrl));
 
@@ -54,7 +54,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
 
         // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
+        _httpResponseMock.Verify(x => x.Redirect(expectedUrl), Times.Once);
     }
 
     [TestMethod]
@@ -114,8 +114,8 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         (string pageUrl, string expectedPage, params string[] visitedUrls)
     {
         // Arrange
-        var session = new ReExAccountCreationSession { Journey = visitedUrls.ToList(), IsUserChangingDetails = false };
-        var expectedURL = expectedPage;
+        var session = new ReExAccountCreationSession { Journey = visitedUrls.ToList() };
+        var expectedUrl = expectedPage;
 
         SetupEndpointMock(new ReprocessorExporterJourneyAccessAttribute(pageUrl));
 
@@ -125,14 +125,14 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
 
         // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
+        _httpResponseMock.Verify(x => x.Redirect(expectedUrl), Times.Once);
     }
 
     [TestMethod]
     public async Task GivenBusinessAddressPage_WhenInvokeCalled_ThenNoRedirectionOccurs()
     {
         // Arrange
-        var session = new ReExAccountCreationSession { Journey = { PagePath.SelectBusinessAddress }, IsUserChangingDetails = false };
+        var session = new ReExAccountCreationSession { Journey = { PagePath.SelectBusinessAddress } };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
 
         SetupEndpointMock(new ReprocessorExporterJourneyAccessAttribute(PagePath.BusinessAddress));
