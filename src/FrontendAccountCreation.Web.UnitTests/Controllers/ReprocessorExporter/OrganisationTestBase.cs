@@ -30,7 +30,7 @@ public abstract class OrganisationTestBase
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
     protected Mock<ICompanyService> _companyServiceMock = null!;
-    protected Mock<IAccountMapper> _accountServiceMock = null!;
+    protected Mock<IOrganisationMapper> _organisationServiceMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
     protected Mock<ILogger<OrganisationController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
@@ -44,7 +44,7 @@ public abstract class OrganisationTestBase
         _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
         _companyServiceMock = new Mock<ICompanyService>();
-        _accountServiceMock = new Mock<IAccountMapper>();
+        _organisationServiceMock = new Mock<IOrganisationMapper>();
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
         _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
@@ -78,7 +78,7 @@ public abstract class OrganisationTestBase
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _systemUnderTest = new OrganisationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
-           _accountServiceMock.Object, _urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
+           _organisationServiceMock.Object, _urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;

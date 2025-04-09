@@ -33,7 +33,7 @@ public class OrganisationController : Controller
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly ICompanyService _companyService;
-    private readonly IAccountMapper _accountMapper;
+    private readonly IOrganisationMapper _organisationMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
@@ -42,7 +42,7 @@ public class OrganisationController : Controller
          ISessionManager<OrganisationSession> sessionManager,
          IFacadeService facadeService,
          ICompanyService companyService,
-         IAccountMapper accountMapper,
+         IOrganisationMapper organisationMapper,
          IOptions<ExternalUrlsOptions> urlOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
          ILogger<OrganisationController> logger)
@@ -50,7 +50,7 @@ public class OrganisationController : Controller
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _companyService = companyService;
-        _accountMapper = accountMapper;
+        _organisationMapper = organisationMapper;
         _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
         _logger = logger;
