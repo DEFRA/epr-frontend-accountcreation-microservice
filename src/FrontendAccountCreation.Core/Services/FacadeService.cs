@@ -10,12 +10,12 @@ using Microsoft.Identity.Web;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using static Microsoft.Identity.Web.Constants;
 
 namespace FrontendAccountCreation.Core.Services;
 
 using Dto.User;
-using System.Text.Json;
 
 public class FacadeService : IFacadeService
 {

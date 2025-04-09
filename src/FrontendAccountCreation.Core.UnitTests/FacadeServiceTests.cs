@@ -345,48 +345,11 @@ public class FacadeServiceTests
         httpTestHandler.Dispose();
     }
 
-
-
-
-
-
-
-
-#if wip
     [TestMethod]
-    public async Task PostReprocessorExporterAccountAsync_HappyPath_ReturnsSuccessByNotThrowing()
+    public async Task AddReprocessorExporterAccountAsync_HappyPath_ReturnsSuccessByNotThrowing()
     {
         // Arrange
-        var apiRequest = _fixture.Create<ReprocessorExporterAccountWithUserModel>();
-
-        _httpMessageHandlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>("SendAsync",
-                ItExpr.Is<HttpRequestMessage>(
-                    req => req.Method == HttpMethod.Post &&
-                           req.RequestUri != null &&
-                           req.RequestUri.ToString() == AddReprocessorExporterAccountPostUrl),
-                ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK
-            }).Verifiable();
-
-        var sut = GetAccountService();
-
-        Func<Task> act = async () => await sut.AddReprocessorExporterAccountAsync(apiRequest);
-
-        // Act & Assert
-        await act.Should().NotThrowAsync();
-    }
-#endif
-
-    [TestMethod]
-    public async Task AddReprocessorExporterAccountAsync_HappyPath_CreateReprocessorExporterAccountEndpointCalled()
-    {
-        // Arrange
-        var account = new ReprocessorExporterAccountModel()
-        {
-        };
+        var account = new ReprocessorExporterAccountModel();
 
         _mockHandler.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync",
@@ -398,6 +361,30 @@ public class FacadeServiceTests
             .ReturnsAsync(new HttpResponseMessage
             {
                 //todo: should we return created from the backend instead?
+                StatusCode = HttpStatusCode.OK
+            }).Verifiable();
+
+        Func<Task> act = async () => await _facadeService.PostReprocessorExporterAccountAsync(account);
+
+        // Act & Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task AddReprocessorExporterAccountAsync_HappyPath_CreateReprocessorExporterAccountEndpointCalled()
+    {
+        // Arrange
+        var account = new ReprocessorExporterAccountModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString() == "http://example/api/v1/reprocessor-exporter-accounts"),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
                 StatusCode = HttpStatusCode.OK
             }).Verifiable();
 
