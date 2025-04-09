@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
+using EPR.Common.Authorization.Sessions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
