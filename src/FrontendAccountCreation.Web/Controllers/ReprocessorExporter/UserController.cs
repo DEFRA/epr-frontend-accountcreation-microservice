@@ -117,49 +117,9 @@ public class UserController : Controller
 
         session.Contact.TelephoneNumber = model.TelephoneNumber;
 
-        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
+        return await SaveSessionAndRedirect(session, nameof(/*Success*/ReExAccountTelephoneNumber), PagePath.TelephoneNumber,
             PagePath.Success);
 
-    }
-
-    [HttpGet]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route(PagePath.Success)]
-    [ReprocessorExporterJourneyAccess(PagePath.Success)]
-    public async Task<IActionResult> Success()
-    {
-        //todo: will do this once earlier stories are done
-        //var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        var session = new ReExAccountCreationSession
-        {
-            Contact = new ReExContact
-            {
-                FirstName = "bob",
-                LastName = "smith",
-                TelephoneNumber = "01234567890"
-            },
-            Journey = [PagePath.FullName]
-        };
-
-        //todo: person and user email always the same, so only need to pass userid down the stack and pick email from person
-        // unless we send down an user just in case they could ever end up being different
-
-        string? email = GetUserEmail();
-        //todo: handle null email
-        var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
-        await _facadeService.PostReprocessorExporterAccountAsync(account);
-        _sessionManager.RemoveSession(HttpContext.Session);
-
-        SetBackLink(session, PagePath.Success);
-
-        var viewModel = new SuccessViewModel
-        {
-            //todo: could just add contact to viewmodel
-            UserName = $"{session.Contact.FirstName} {session.Contact.LastName}"
-        };
-
-        return View(viewModel);
     }
 
     //todo: move this (these?) somewhere common?
