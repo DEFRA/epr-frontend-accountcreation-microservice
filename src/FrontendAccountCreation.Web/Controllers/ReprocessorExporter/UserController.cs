@@ -24,21 +24,18 @@ public class UserController : Controller
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<UserController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
-    private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
     public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IReExAccountMapper reExAccountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
-        IOptions<DeploymentRoleOptions> deploymentRoleOptions,
         ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
         _urlOptions = urlOptions.Value;
-        _deploymentRoleOptions = deploymentRoleOptions.Value;
         _logger = logger;
     }
 
