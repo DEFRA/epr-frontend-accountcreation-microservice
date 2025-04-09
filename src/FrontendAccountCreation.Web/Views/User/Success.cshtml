@@ -16,49 +16,44 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
     
-            @* todo: don't think need the form - button can be a link *@
-            <form action="account" method="post">
-                @* todo: is there a component/partial for this? *@
-                <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-                    <div class="govuk-notification-banner__header">
-                        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                            @Localizer["Success.Success"]
-                        </h2>
-                    </div>
-                    <div class="govuk-notification-banner__content">
-                        <h3 class="govuk-notification-banner__heading">
-                            @Localizer["Success.CreatedAccountFor"] @Model.UserName
-                        </h3>
-                    </div>
+            @* todo: is there a component/partial for this? *@
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        @Localizer["Success.Success"]
+                    </h2>
                 </div>
+                <div class="govuk-notification-banner__content">
+                    <h3 class="govuk-notification-banner__heading">
+                        @Localizer["Success.CreatedAccountFor"] @Model.UserName
+                    </h3>
+                </div>
+            </div>
 
-                <h3 class="govuk-notification-banner__heading">
-                    @Localizer["Success.WhatYouCanDoNow.Heading"]
-                </h3>
-                <p class="govuk-body govuk-!-margin-bottom-7">
-                    @Localizer["Success.WhatYouCanDoNow.Paragraph.1"]
-                </p>
+            <h3 class="govuk-notification-banner__heading">
+                @Localizer["Success.WhatYouCanDoNow.Heading"]
+            </h3>
+            <p class="govuk-body govuk-!-margin-bottom-7">
+                @Localizer["Success.WhatYouCanDoNow.Paragraph.1"]
+            </p>
 
-                @* todo: this content is going to change, so leave it and localization for now *@
-                <h3 class="govuk-notification-banner__heading">
-                    @Localizer["Success.AfterAddingOrganisation.Heading"]
-                </h3>
-                <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.1.List.LeadIn"]</p>
+            <h3 class="govuk-notification-banner__heading">
+                @Localizer["Success.AfterAddingOrganisation.Heading"]
+            </h3>
+            <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.1.List.LeadIn"]</p>
 
-                <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
-                    <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item1"]</li>
-                    <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item2"]</li>
-                </ul>
+            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+                <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item1"]</li>
+                <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item2"]</li>
+            </ul>
 
-                <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.2.Paragraph"]</p>
-                <p class="govuk-body govuk-!-margin-bottom-7">@Localizer["Success.AfterAddingOrganisation.3.Paragraph"]</p>
+            <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.2.Paragraph"]</p>
+            <p class="govuk-body govuk-!-margin-bottom-7">@Localizer["Success.AfterAddingOrganisation.3.Paragraph"]</p>
 
-                @* todo: need to know where this link will go, then get rid of the form *@
-                <button class="govuk-button" data-module="govuk-button">
-                    @Localizer["Success.Continue"]
-                </button>
+            <a href="#" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                @Localizer["Success.Continue"]
+            </a>
 
-            </form>
         </div>
     </div>
     </main>
