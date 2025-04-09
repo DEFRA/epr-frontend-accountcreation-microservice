@@ -432,42 +432,29 @@ public class FacadeServiceTests
         Assert.AreEqual(apiResponse.Type, exception.ProblemDetails.Type);
     }
 
-    //[TestMethod]
-    //public async Task AddReprocessorExporterAccountAsync_CreateReprocessorExporterAccountReturnsNonConflictError_500HttpRequestExceptionExceptionThrown()
-    //{
-    //    // Arrange
-    //    var apiRequest = _fixture.Create<ReprocessorExporterAccountWithUserModel>();
+    [TestMethod]
+    public async Task AddReprocessorExporterAccountAsync_CreateReprocessorExporterAccountReturnsNonConflictError_500HttpRequestExceptionExceptionThrown()
+    {
+        // Arrange
+        var account = new ReprocessorExporterAccountModel();
 
-    //    _httpMessageHandlerMock.Protected()
-    //        .Setup<Task<HttpResponseMessage>>("SendAsync",
-    //            ItExpr.Is<HttpRequestMessage>(
-    //                req => req.Method == HttpMethod.Post &&
-    //                       req.RequestUri != null &&
-    //                       req.RequestUri.ToString() == AddReprocessorExporterAccountPostUrl),
-    //            ItExpr.IsAny<CancellationToken>())
-    //        .ReturnsAsync(new HttpResponseMessage
-    //        {
-    //            StatusCode = HttpStatusCode.InternalServerError,
-    //            Content = new StringContent("")
-    //        }).Verifiable();
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString() == "http://example/api/v1/reprocessor-exporter-accounts"),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Content = new StringContent("")
+            }).Verifiable();
 
-    //    var sut = GetAccountService();
-
-    //    // Act & Assert
-    //    var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await sut.AddReprocessorExporterAccountAsync(apiRequest));
-    //    Assert.AreEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    //}
-
-
-
-
-
-
-
-
-
-
-
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account));
+        Assert.AreEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+    }
 
     [TestMethod]
     public async Task PostReprocessorExporterAccountAsync_todo_todo()
