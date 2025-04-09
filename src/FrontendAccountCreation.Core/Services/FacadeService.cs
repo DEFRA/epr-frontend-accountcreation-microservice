@@ -51,6 +51,9 @@ public class FacadeService : IFacadeService
 
     public async Task<Company?> GetCompanyByCompaniesHouseNumberAsync(string companiesHouseNumber)
     {
+        //phil: use this instead if can't connect to companies house
+        //return GetDummyCompany("01234567");
+
         await PrepareAuthenticatedClient();
 
         var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
@@ -66,6 +69,25 @@ public class FacadeService : IFacadeService
 
         return new Company(company);
     }
+
+    //private static Company GetDummyCompany(string companiesHouseNumber)
+    //{
+    //    var company = new Company
+    //    {
+    //        CompaniesHouseNumber = companiesHouseNumber, //"01234567",
+    //        Name = "Dummy Company",
+    //        BusinessAddress = new Address
+    //        {
+    //            BuildingNumber = "10",
+    //            BuildingName = "Dummy Place",
+    //            Street = "Dummy Street",
+    //            Town = "Nowhere",
+    //            Postcode = "AB1 0CD"
+    //        },
+    //        AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
+    //    };
+    //    return company;
+    //}
 
     public async Task<AddressList?> GetAddressListByPostcodeAsync(string postcode)
     {
@@ -84,11 +106,11 @@ public class FacadeService : IFacadeService
 
         return new AddressList(addressResponse);
     }
-    
+
     public async Task PostAccountDetailsAsync(AccountModel account)
     {
         await PrepareAuthenticatedClient();
-        
+
         var response = await _httpClient.PostAsJsonAsync("/api/producer-accounts", account);
 
         if (!response.IsSuccessStatusCode)
@@ -129,7 +151,7 @@ public class FacadeService : IFacadeService
     public async Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser)
     {
         await PrepareAuthenticatedClient();
-        
+
         var response = await _httpClient.PostAsJsonAsync("/api/accounts-management/enrol-invited-user", enrolInvitedUser);
 
         response.EnsureSuccessStatusCode();
@@ -139,7 +161,7 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync($"/api/persons/current");
-        
+
         if (response.StatusCode == HttpStatusCode.NoContent)
         {
             return false;
@@ -147,17 +169,17 @@ public class FacadeService : IFacadeService
         response.EnsureSuccessStatusCode();
         return true;
     }
-    
+
     public async Task<UserAccount?> GetUserAccount()
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync("/api/user-accounts");
-        
+
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return default;
         }
-        
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<UserAccount>();
     }
@@ -168,24 +190,24 @@ public class FacadeService : IFacadeService
         var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Bearer, accessToken);
     }
-    
+
     public async Task<InviteApprovedUserModel> GetServiceRoleIdAsync(string token)
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync($"/api/persons/person-by-invite-token?token={token}");
- 
+
         if (response.StatusCode == HttpStatusCode.NoContent)
         {
             return null;
         }
 
         response.EnsureSuccessStatusCode();
-        
+
         var inviteApprovedUser = await response.Content.ReadFromJsonAsync<InviteApprovedUserModel>();
 
         return inviteApprovedUser;
     }
-    
+
     public async Task<ApprovedPersonOrganisationModel> GetOrganisationNameByInviteTokenAsync(string token)
     {
         await PrepareAuthenticatedClient();
@@ -198,17 +220,17 @@ public class FacadeService : IFacadeService
         }
 
         response.EnsureSuccessStatusCode();
-        
+
         var organisation = await response.Content.ReadFromJsonAsync<ApprovedPersonOrganisationModel>();
 
         return organisation;
     }
-    
+
     public async Task PostApprovedUserAccountDetailsAsync(AccountModel account)
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.PostAsJsonAsync("/api/producer-accounts/ApprovedUser", account);
-        
+
         if (!response.IsSuccessStatusCode)
         {
             var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
