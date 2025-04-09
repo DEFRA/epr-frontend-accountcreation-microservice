@@ -36,10 +36,9 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         _middleware = new ReExJourneyAccessCheckerMiddleware(_ => Task.CompletedTask);
     }
 
-#if check_if_needed
     [TestMethod]
-    [DataRow(PagePath.NotAffected, PagePath.PageNotFound)]
-    [DataRow(PagePath.NotAffected, PagePath.PageNotFound, PagePath.PageNotFound)]
+    [DataRow(PagePath.TelephoneNumber, PagePath.PageNotFound)]
+    [DataRow(PagePath.TelephoneNumber, PagePath.PageNotFound, PagePath.PageNotFound)]
     public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLs_WhenInvokeCalled_ThenRedirectedToExpectedPage
         (string pageUrl, string expectedPage, params string[] visitedUrls)
     {
@@ -57,7 +56,6 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         // Assert
         _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
     }
-#endif
 
     [TestMethod]
     [DataRow(PagePath.TelephoneNumber, PagePath.FullName, PagePath.TelephoneNumber)]
