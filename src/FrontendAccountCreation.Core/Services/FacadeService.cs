@@ -1,20 +1,21 @@
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Exceptions;
 using FrontendAccountCreation.Core.Services.Dto.Address;
 using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using FrontendAccountCreation.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using static Microsoft.Identity.Web.Constants;
 
 namespace FrontendAccountCreation.Core.Services;
 
 using Dto.User;
+using System.Text.Json;
 
 public class FacadeService : IFacadeService
 {
@@ -52,42 +53,42 @@ public class FacadeService : IFacadeService
     public async Task<Company?> GetCompanyByCompaniesHouseNumberAsync(string companiesHouseNumber)
     {
         //phil: use this instead if can't connect to companies house
-        //return GetDummyCompany("01234567");
+        return GetDummyCompany("01234567");
 
-        await PrepareAuthenticatedClient();
+        //await PrepareAuthenticatedClient();
 
-        var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
+        //var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
 
-        if (response.StatusCode == HttpStatusCode.NoContent)
-        {
-            return null;
-        }
+        //if (response.StatusCode == HttpStatusCode.NoContent)
+        //{
+        //    return null;
+        //}
 
-        response.EnsureSuccessStatusCode();
+        //response.EnsureSuccessStatusCode();
 
-        var company = await response.Content.ReadFromJsonAsync<CompaniesHouseCompany>();
+        //var company = await response.Content.ReadFromJsonAsync<CompaniesHouseCompany>();
 
-        return new Company(company);
+        //return new Company(company);
     }
 
-    //private static Company GetDummyCompany(string companiesHouseNumber)
-    //{
-    //    var company = new Company
-    //    {
-    //        CompaniesHouseNumber = companiesHouseNumber, //"01234567",
-    //        Name = "Dummy Company",
-    //        BusinessAddress = new Address
-    //        {
-    //            BuildingNumber = "10",
-    //            BuildingName = "Dummy Place",
-    //            Street = "Dummy Street",
-    //            Town = "Nowhere",
-    //            Postcode = "AB1 0CD"
-    //        },
-    //        AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
-    //    };
-    //    return company;
-    //}
+    private static Company GetDummyCompany(string companiesHouseNumber)
+    {
+        var company = new Company
+        {
+            CompaniesHouseNumber = companiesHouseNumber, //"01234567",
+            Name = "Dummy Company",
+            BusinessAddress = new Address
+            {
+                BuildingNumber = "10",
+                BuildingName = "Dummy Place",
+                Street = "Dummy Street",
+                Town = "Nowhere",
+                Postcode = "AB1 0CD"
+            },
+            AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
+        };
+        return company;
+    }
 
     public async Task<AddressList?> GetAddressListByPostcodeAsync(string postcode)
     {
@@ -135,7 +136,17 @@ public class FacadeService : IFacadeService
 
         if (!response.IsSuccessStatusCode)
         {
-            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            ProblemDetails? problemDetails = null;
+            try
+            {
+                problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            }
+            catch (JsonException e)
+            {
+                // if the response isn't a valid ProblemDetails, either this exception is thrown,
+                // or in some circumstances, null is returned.
+                // we handle both scenarios next
+            }
 
             if (problemDetails != null)
             {
@@ -144,8 +155,6 @@ public class FacadeService : IFacadeService
 
             response.EnsureSuccessStatusCode();
         }
-
-        //response.EnsureSuccessStatusCode();
     }
 
     public async Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser)
