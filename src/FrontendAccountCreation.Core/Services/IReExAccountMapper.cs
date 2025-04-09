@@ -5,7 +5,5 @@ namespace FrontendAccountCreation.Core.Services;
 
 public interface IReExAccountMapper
 {
-    ReprocessorExporterAccountModel CreateReprocessorExporterAccountModel(ReExAccountCreationSession session, string email);
-
     ReExAccountModel CreateReExAccountModel(ReExAccountCreationSession session, string email);
 }
