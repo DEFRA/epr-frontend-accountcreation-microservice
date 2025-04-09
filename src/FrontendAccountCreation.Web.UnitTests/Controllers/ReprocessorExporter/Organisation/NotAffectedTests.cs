@@ -2,6 +2,7 @@
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +21,13 @@ public class NotAffectedTests : OrganisationTestBase
     public async Task NotAffect_IsCharity_NotAffectedPageReturned()
     {
         //Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string>
                 { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.NotAffected },
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
             IsTheOrganisationCharity = true,
-        };
+        }; 
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(accountCreationSessionMock);
