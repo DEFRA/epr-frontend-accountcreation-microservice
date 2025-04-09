@@ -60,7 +60,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
 #endif
 
     [TestMethod]
-    [DataRow(PagePath.NotAffected, PagePath.RegisteredAsCharity, PagePath.NotAffected)]
+    [DataRow(PagePath.TelephoneNumber, PagePath.FullName, PagePath.TelephoneNumber)]
     public async Task GivenAccessRequiredPage_WhichIsPartOfTheVisitedURLs_WhenInvokeCalled_ThenNoRedirectionHappened
         (string pageUrl, params string[] visitedUrls)
     {
@@ -79,7 +79,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
     }
 
     [TestMethod]
-    [DataRow(PagePath.NotAffected)]
+    [DataRow(PagePath.TelephoneNumber)]
     public async Task GivenAccessRequiredPage_WithoutStoredSession_WhenInvokeCalled_ThenRedirectedToFirstPage(string pageUrl)
     {
         // Arrange
@@ -93,8 +93,9 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         _httpResponseMock.Verify(x => x.Redirect(firstPageUrl), Times.Once);
     }
 
+    //todo: what does it mean by 'no access'?
     [TestMethod]
-    [DataRow(PagePath.RegisteredAsCharity)]
+    [DataRow(PagePath.FullName)]
     public async Task GivenNoAccessRequiredPage_WhenInvokeCalled_ThenNoRedirectionHappened(string pageUrl)
     {
         // Arrange
