@@ -6,6 +6,7 @@ using Core.Services.Dto.User;
 using Core.Services.FacadeModels;
 using Core.Sessions;
 using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ using Web.Controllers.ReprocessorExporter;
 using Web.Sessions;
 
 /// <summary>
-/// Being used for Reprocessor and Export.
+/// Used for Reprocessor and Exporter.
 /// </summary>
 public abstract class OrganisationTestBase
 {
@@ -26,7 +27,7 @@ public abstract class OrganisationTestBase
     protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
 
     protected Mock<HttpContext> _httpContextMock = null!;
-    protected Mock<ISessionManager<AccountCreationSession>> _sessionManagerMock = null!;
+    protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
     protected Mock<ICompanyService> _companyServiceMock = null!;
     protected Mock<IAccountMapper> _accountServiceMock = null!;
@@ -40,7 +41,7 @@ public abstract class OrganisationTestBase
     protected void SetupBase(string? deploymentRole = null)
     {
         _httpContextMock = new Mock<HttpContext>();
-        _sessionManagerMock = new Mock<ISessionManager<AccountCreationSession>>();
+        _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
         _companyServiceMock = new Mock<ICompanyService>();
         _accountServiceMock = new Mock<IAccountMapper>();
@@ -51,7 +52,7 @@ public abstract class OrganisationTestBase
         _facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
             .ReturnsAsync(new ApprovedPersonOrganisationModel());
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
-            .Returns(Task.FromResult<AccountCreationSession?>(new AccountCreationSession()));
+            .Returns(Task.FromResult<OrganisationSession?>(new OrganisationSession()));
 
         _urlsOptionMock.Setup(x => x.Value)
             .Returns(new ExternalUrlsOptions

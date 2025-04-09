@@ -3,6 +3,7 @@
 using System.Net;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Errors;
@@ -74,7 +75,7 @@ public class RegisteredAsCharityTests : OrganisationTestBase
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.RegisteredWithCompaniesHouse));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -91,7 +92,7 @@ public class RegisteredAsCharityTests : OrganisationTestBase
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotAffected));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -110,7 +111,7 @@ public class RegisteredAsCharityTests : OrganisationTestBase
 
         viewResult.Model.Should().BeOfType<RegisteredAsCharityRequestViewModel>();
 
-        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<AccountCreationSession>>()), Times.Never);
+        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
 
     [TestMethod]
@@ -167,7 +168,7 @@ public class RegisteredAsCharityTests : OrganisationTestBase
     public async Task UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
     {
         //Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string>
             {
@@ -196,7 +197,7 @@ public class RegisteredAsCharityTests : OrganisationTestBase
     public async Task RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIsNull()
     {
         //Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
             IsUserChangingDetails = false,
         };
