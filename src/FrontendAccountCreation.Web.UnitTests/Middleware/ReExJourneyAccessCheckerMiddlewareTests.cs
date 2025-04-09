@@ -80,6 +80,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
 
     [TestMethod]
     [DataRow(PagePath.TelephoneNumber)]
+    [DataRow(PagePath.Success)]
     public async Task GivenAccessRequiredPage_WithoutStoredSession_WhenInvokeCalled_ThenRedirectedToFirstPage(string pageUrl)
     {
         // Arrange
