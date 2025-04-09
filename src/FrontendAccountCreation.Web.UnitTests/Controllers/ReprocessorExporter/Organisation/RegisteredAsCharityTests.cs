@@ -3,6 +3,7 @@
 using System.Net;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Errors;
@@ -16,7 +17,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 
 [TestClass]
-public class RegisteredAsCharityTests : ReExAccountCreationTestBase
+public class RegisteredAsCharityTests : OrganisationTestBase
 {
     [TestInitialize]
     public void Setup()
@@ -74,7 +75,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.RegisteredWithCompaniesHouse));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -91,7 +92,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotAffected));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -110,7 +111,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
 
         viewResult.Model.Should().BeOfType<RegisteredAsCharityRequestViewModel>();
 
-        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<AccountCreationSession>>()), Times.Never);
+        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
 
     [TestMethod]
@@ -142,7 +143,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
         urlsOptionMock.Setup(x => x.Value)
             .Returns(externalUrl);
         var systemUnderTest = new OrganisationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
-            _accountServiceMock.Object, urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
+            _organisationServiceMock.Object, urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
 
         // Act
         var result = await systemUnderTest.RegisteredAsCharity();
@@ -167,7 +168,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
     public async Task UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
     {
         //Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string>
             {
@@ -196,7 +197,7 @@ public class RegisteredAsCharityTests : ReExAccountCreationTestBase
     public async Task RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIsNull()
     {
         //Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
             IsUserChangingDetails = false,
         };
