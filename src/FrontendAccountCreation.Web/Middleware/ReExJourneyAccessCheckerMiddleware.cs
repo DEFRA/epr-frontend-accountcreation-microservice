@@ -1,7 +1,7 @@
-﻿using FrontendAccountCreation.Core.Sessions;
+﻿using EPR.Common.Authorization.Sessions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-using FrontendAccountCreation.Web.Sessions;
 
 using Microsoft.AspNetCore.Http.Features;
 
@@ -14,8 +14,6 @@ public class ReExJourneyAccessCheckerMiddleware(RequestDelegate next)
         var endpoint = httpContext.Features.Get<IEndpointFeature>()?.Endpoint;
         var attribute = endpoint?.Metadata.GetMetadata<ReprocessorExporterJourneyAccessAttribute>();
 
-        //todo: this just loops as there's no session created before the full name page is reached
-        // check where account creation session is created
         if (attribute != null)
         {
             var sessionValue = await sessionManager.GetSessionAsync(httpContext.Session);
