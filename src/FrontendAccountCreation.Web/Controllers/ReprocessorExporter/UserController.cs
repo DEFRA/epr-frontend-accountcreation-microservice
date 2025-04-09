@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
+using EPR.Common.Authorization.Sessions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -45,37 +45,34 @@ public class UserController : Controller
     //todo: we'll have to handle user already exists. probably best to handle it at the start of the journey
 
     [HttpGet]
+    [Route("")]
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        SetBackLink(session, PagePath.FullName);
-
-        var viewModel = new ReExAccountFullNameViewModel()
+        ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
+        if (session != null)
         {
-            PostAction = nameof(ReExAccountFullName),
-            FirstName = session.Contact.FirstName,
-            LastName = session.Contact.LastName
-        };
+            viewModel.PostAction = nameof(ReExAccountFullName);
+            viewModel.FirstName = session.Contact.FirstName;
+            viewModel.LastName = session.Contact.LastName;
+        }
 
         return View(viewModel);
     }
 
     [HttpPost]
-    [Route("")]
     [Route(PagePath.FullName)]
     [ReprocessorExporterJourneyAccess(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName(ReExAccountFullNameViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.FullName);
-
             return View(model);
         }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession();
 
         session.Contact.FirstName = model.FirstName;
         session.Contact.LastName = model.LastName;

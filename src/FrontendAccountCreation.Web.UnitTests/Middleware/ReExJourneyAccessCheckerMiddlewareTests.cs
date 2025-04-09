@@ -1,14 +1,19 @@
-﻿using FrontendAccountCreation.Core.Sessions;
+﻿using EPR.Common.Authorization.Sessions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Middleware;
-using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Middleware;
 
+/// <summary>
+/// Access means a page in the journey with the journey attribute.
+/// No Access means the first page in the journey without the journey attribute.
+/// Naming could be better, but we match JourneyAccessCheckerMiddlewareTests for consistency.
+/// </summary>
 [TestClass]
 public class ReExJourneyAccessCheckerMiddlewareTests
 {
@@ -44,7 +49,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
     {
         // Arrange
         var session = new ReExAccountCreationSession { Journey = visitedUrls.ToList() };
-        var expectedURL = expectedPage;
+        var expectedUrl = expectedPage;
 
         SetupEndpointMock(new ReprocessorExporterJourneyAccessAttribute(pageUrl));
 
@@ -54,7 +59,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
 
         // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
+        _httpResponseMock.Verify(x => x.Redirect(expectedUrl), Times.Once);
     }
 
     [TestMethod]
@@ -92,7 +97,6 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         _httpResponseMock.Verify(x => x.Redirect(firstPageUrl), Times.Once);
     }
 
-    //todo: what does it mean by 'no access'?
     [TestMethod]
     [DataRow(PagePath.FullName)]
     public async Task GivenNoAccessRequiredPage_WhenInvokeCalled_ThenNoRedirectionHappened(string pageUrl)
@@ -106,44 +110,6 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         // Assert
         _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
     }
-
-#if check_if_needed
-    [TestMethod]
-    [DataRow(PagePath.SelectBusinessAddress, PagePath.BusinessAddress, PagePath.BusinessAddress)]
-    public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLsAndIsNotComingFromUserDetails_WhenInvokeCalled_ThenRedirectedToExpectedPage
-        (string pageUrl, string expectedPage, params string[] visitedUrls)
-    {
-        // Arrange
-        var session = new ReExAccountCreationSession { Journey = visitedUrls.ToList(), IsUserChangingDetails = false };
-        var expectedURL = expectedPage;
-
-        SetupEndpointMock(new ReprocessorExporterJourneyAccessAttribute(pageUrl));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
-    }
-
-    [TestMethod]
-    public async Task GivenBusinessAddressPage_WhenInvokeCalled_ThenNoRedirectionOccurs()
-    {
-        // Arrange
-        var session = new ReExAccountCreationSession { Journey = { PagePath.SelectBusinessAddress }, IsUserChangingDetails = false };
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        SetupEndpointMock(new ReprocessorExporterJourneyAccessAttribute(PagePath.BusinessAddress));
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
-    }
-#endif
 
     private void SetupEndpointMock(params object[] attributes)
     {

@@ -51,9 +51,6 @@ public class FacadeService : IFacadeService
 
     public async Task<Company?> GetCompanyByCompaniesHouseNumberAsync(string companiesHouseNumber)
     {
-        //phil: use this instead if can't connect to companies house
-        //return GetDummyCompany("01234567");
-
         await PrepareAuthenticatedClient();
 
         var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
@@ -69,25 +66,6 @@ public class FacadeService : IFacadeService
 
         return new Company(company);
     }
-
-    //private static Company GetDummyCompany(string companiesHouseNumber)
-    //{
-    //    var company = new Company
-    //    {
-    //        CompaniesHouseNumber = companiesHouseNumber, //"01234567",
-    //        Name = "Dummy Company",
-    //        BusinessAddress = new Address
-    //        {
-    //            BuildingNumber = "10",
-    //            BuildingName = "Dummy Place",
-    //            Street = "Dummy Street",
-    //            Town = "Nowhere",
-    //            Postcode = "AB1 0CD"
-    //        },
-    //        AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
-    //    };
-    //    return company;
-    //}
 
     public async Task<AddressList?> GetAddressListByPostcodeAsync(string postcode)
     {
@@ -124,28 +102,6 @@ public class FacadeService : IFacadeService
         }
 
         response.EnsureSuccessStatusCode();
-    }
-
-    //todo: could have a generic method to do the heavy lifting
-    public async Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account)
-    {
-        await PrepareAuthenticatedClient();
-
-        var response = await _httpClient.PostAsJsonAsync("/api/v1/reprocessor-exporter-accounts", account);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-
-            if (problemDetails != null)
-            {
-                throw new ProblemResponseException(problemDetails, response.StatusCode);
-            }
-
-            response.EnsureSuccessStatusCode();
-        }
-
-        //response.EnsureSuccessStatusCode();
     }
 
     public async Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser)
