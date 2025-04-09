@@ -30,6 +30,10 @@ public class ReExJourneyAccessCheckerMiddleware(RequestDelegate next)
             {
                 pageToRedirect = PagePath.PageNotFound;
             }
+            else if (!sessionValue.Journey.Contains(attribute.PagePath))
+            {
+                pageToRedirect = sessionValue.Journey[^1];
+            }
 
             if (!string.IsNullOrEmpty(pageToRedirect))
             {
