@@ -92,7 +92,8 @@ public class ReExJourneyAccessCheckerMiddlewareTests
         _httpResponseMock.Verify(x => x.Redirect(firstPageUrl), Times.Once);
     }
 
-    //todo: what does it mean by 'no access'?
+    //todo: better name?
+    // no access means the first page in the journey (without the journey attribute)
     [TestMethod]
     [DataRow(PagePath.FullName)]
     public async Task GivenNoAccessRequiredPage_WhenInvokeCalled_ThenNoRedirectionHappened(string pageUrl)
@@ -108,26 +109,6 @@ public class ReExJourneyAccessCheckerMiddlewareTests
     }
 
 #if check_if_needed
-    [TestMethod]
-    [DataRow(PagePath.SelectBusinessAddress, PagePath.BusinessAddress, PagePath.BusinessAddress)]
-    public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLsAndIsNotComingFromUserDetails_WhenInvokeCalled_ThenRedirectedToExpectedPage
-        (string pageUrl, string expectedPage, params string[] visitedUrls)
-    {
-        // Arrange
-        var session = new ReExAccountCreationSession { Journey = visitedUrls.ToList() };
-        var expectedUrl = expectedPage;
-
-        SetupEndpointMock(new ReprocessorExporterJourneyAccessAttribute(pageUrl));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedUrl), Times.Once);
-    }
-
     [TestMethod]
     public async Task GivenBusinessAddressPage_WhenInvokeCalled_ThenNoRedirectionOccurs()
     {
