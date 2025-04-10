@@ -103,7 +103,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRequestLocalization();
 app.UseMiddleware<JourneyAccessCheckerMiddleware>();
-//todo: will need this, but will need to fix infinite loop
 app.UseMiddleware<ReExJourneyAccessCheckerMiddleware>();
 app.UseMiddleware<AnalyticsCookieMiddleware>();
 
