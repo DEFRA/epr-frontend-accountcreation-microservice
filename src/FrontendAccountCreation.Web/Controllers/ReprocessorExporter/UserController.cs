@@ -14,7 +14,6 @@ using Core.Services;
 using Core.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Sessions;
 using ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using FrontendAccountCreation.Web.Controllers.Attributes;
@@ -22,6 +21,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using EPR.Common.Authorization.Sessions;
 
 
 
@@ -33,6 +33,7 @@ public class UserController : Controller
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
+    private readonly ICompanyService _companyService;
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<UserController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
@@ -58,7 +59,6 @@ public class UserController : Controller
 
     [HttpGet]
     [Route("")]
-    [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
@@ -77,9 +77,9 @@ public class UserController : Controller
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
+        viewModel.PostAction = nameof(ReExAccountFullName);
         if (session != null)
         {
-            viewModel.PostAction = nameof(ReExAccountFullName);
             viewModel.FirstName = session.Contact.FirstName;
             viewModel.LastName = session.Contact.LastName;
         }
@@ -89,7 +89,6 @@ public class UserController : Controller
 
     [HttpPost]
     [Route(PagePath.FullName)]
-    [ReprocessorExporterJourneyAccess(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName(ReExAccountFullNameViewModel model)
     {
         if (!ModelState.IsValid)
@@ -108,7 +107,6 @@ public class UserController : Controller
 
     [HttpGet]
     [Route(PagePath.TelephoneNumber)]
-    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -125,7 +123,6 @@ public class UserController : Controller
 
     [HttpPost]
     [Route(PagePath.TelephoneNumber)]
-    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);

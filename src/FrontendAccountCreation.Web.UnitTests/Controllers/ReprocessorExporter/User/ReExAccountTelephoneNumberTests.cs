@@ -2,6 +2,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
+using EPR.Common.Authorization.Sessions;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Web.Configs;
 using Web.Controllers.ReprocessorExporter;
-using Web.Sessions;
+using EPR.Common.Authorization.Sessions;
 
 public abstract class UserTestBase
 {
