@@ -4,8 +4,6 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
 using System.Security.Claims;
 using Core.Services;
-using Core.Services.Dto.User;
-using Core.Services.FacadeModels;
 using Core.Sessions;
 using FluentAssertions;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;

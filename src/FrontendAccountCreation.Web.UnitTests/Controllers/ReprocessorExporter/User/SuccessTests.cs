@@ -111,9 +111,21 @@ public class SuccessTests : UserTestBase
             )), Times.Once);
     }
 
+    [TestMethod]
+    public async Task Success_HappyPath_SessionRemoved()
+    {
+        //Arrange
+        var session = CreateSession();
 
-    //todo:
-    // session removed
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        //Act
+        await _systemUnderTest.Success();
+
+        //Assert
+        _sessionManagerMock.Verify(sm => sm.RemoveSession(It.IsAny<ISession>()), Times.Once);
+    }
 
     private static ReExAccountCreationSession CreateSession()
     {
