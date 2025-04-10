@@ -16,7 +16,7 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
                 
-                <form asp-controller="AccountCreation" asp-action="TelephoneNumber" method="post">
+                <form asp-controller="User" asp-action="ReExAccountTelephoneNumber" method="post">
                     <div class="govuk-form-group">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                             @Localizer["TelephoneNumber.Question"]
