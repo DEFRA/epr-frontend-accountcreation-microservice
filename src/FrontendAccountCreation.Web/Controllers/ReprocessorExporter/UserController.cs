@@ -123,18 +123,18 @@ public class UserController : Controller
     public async Task<IActionResult> Success()
     {
         //todo: will do this once earlier stories are done
-        //var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        var session = new ReExAccountCreationSession
-        {
-            Contact = new ReExContact
-            {
-                FirstName = "bob",
-                LastName = "smith",
-                TelephoneNumber = "01234567890"
-            },
-            Journey = [PagePath.FullName]
-        };
+        //var session = new ReExAccountCreationSession
+        //{
+        //    Contact = new ReExContact
+        //    {
+        //        FirstName = "bob",
+        //        LastName = "smith",
+        //        TelephoneNumber = "01234567890"
+        //    },
+        //    Journey = [PagePath.FullName]
+        //};
 
         //todo: person and user email always the same, so only need to pass userid down the stack and pick email from person
         // unless we send down an user just in case they could ever end up being different

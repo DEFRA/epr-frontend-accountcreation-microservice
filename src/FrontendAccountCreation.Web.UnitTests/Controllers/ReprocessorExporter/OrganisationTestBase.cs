@@ -92,7 +92,7 @@ public abstract class OrganisationTestBase
 
     protected static UserAccount CreateUserAccountModel(string enrolmentStatus) => new()
     {
-        User = new User
+        User = new Core.Services.Dto.User.User
         {
             Id = Guid.NewGuid(),
             EnrolmentStatus = enrolmentStatus

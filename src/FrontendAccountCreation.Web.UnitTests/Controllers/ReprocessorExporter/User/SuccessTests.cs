@@ -1,0 +1,42 @@
+﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Web.Constants;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.User;
+
+[TestClass]
+public class SuccessTests : UserTestBase
+{
+    [TestInitialize]
+    public void Setup()
+    {
+        SetupBase();
+    }
+
+    [TestMethod]
+    public async Task Success_HappyPath_SuccessPageReturned()
+    {
+        //Arrange
+        var session = new ReExAccountCreationSession
+        {
+            Journey = [PagePath.FullName, PagePath.TelephoneNumber, PagePath.Success],
+            Contact = new ReExContact{ FirstName = "Chris", LastName = "Stapleton", TelephoneNumber = "01234567890" }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        //Act
+        var result = await _systemUnderTest.Success();
+
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+
+        //var viewResult = (ViewResult)result;
+
+        //AssertBackLink(viewResult, PagePath.TelephoneNumber);
+    }
+}

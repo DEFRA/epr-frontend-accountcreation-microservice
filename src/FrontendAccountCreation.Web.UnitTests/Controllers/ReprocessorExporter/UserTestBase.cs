@@ -56,7 +56,8 @@ public abstract class UserTestBase
 
         _httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>
         {
-            new("Oid", Guid.NewGuid().ToString())
+            new("Oid", Guid.NewGuid().ToString()),
+            new(ClaimTypes.Email, "email@example.com")
         });
 
         _loggerMock = new Mock<ILogger<UserController>>();
@@ -76,13 +77,13 @@ public abstract class UserTestBase
         (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
     }
 
-    protected static UserAccount CreateUserAccountModel(string enrolmentStatus) => new()
-    {
-        User = new User
-        {
-            Id = Guid.NewGuid(),
-            EnrolmentStatus = enrolmentStatus
-        }
-    };
+    //protected static UserAccount CreateUserAccountModel(string enrolmentStatus) => new()
+    //{
+    //    User = new Core.Services.Dto.User.User
+    //    {
+    //        Id = Guid.NewGuid(),
+    //        EnrolmentStatus = enrolmentStatus
+    //    }
+    //};
 }
 
