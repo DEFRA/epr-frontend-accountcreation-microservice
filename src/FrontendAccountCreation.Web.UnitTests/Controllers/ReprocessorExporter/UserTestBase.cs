@@ -24,7 +24,7 @@ public abstract class UserTestBase
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<ReExAccountCreationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
-    protected Mock<IReExAccountMapper> _accountServiceMock = null!;
+    protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
     protected Mock<ILogger<UserController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
@@ -36,7 +36,7 @@ public abstract class UserTestBase
         _httpContextMock = new Mock<HttpContext>();
         _sessionManagerMock = new Mock<ISessionManager<ReExAccountCreationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
-        _accountServiceMock = new Mock<IReExAccountMapper>();
+        _reExAccountMapperMock = new Mock<IReExAccountMapper>();
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
@@ -64,7 +64,7 @@ public abstract class UserTestBase
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
-           _accountServiceMock.Object, _urlsOptionMock.Object, _loggerMock.Object);
+           _reExAccountMapperMock.Object, _urlsOptionMock.Object, _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;

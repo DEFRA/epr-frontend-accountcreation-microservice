@@ -85,11 +85,30 @@ public class SuccessTests : UserTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(session);
 
+        _reExAccountMapperMock.Setup(m => m.CreateReprocessorExporterAccountModel(
+                It.IsAny<ReExAccountCreationSession>(), "email@example.com"))
+            .Returns(new ReprocessorExporterAccountModel
+            {
+                Person = new PersonModel
+                {
+                    FirstName = "Chris",
+                    LastName = "Stapleton",
+                    ContactEmail = "email@example.com",
+                    TelephoneNumber = "01234567890"
+                }
+            });
+
         //Act
         await _systemUnderTest.Success();
 
         //Assert
-        _facadeServiceMock.Verify(f => f.PostReprocessorExporterAccountAsync(It.IsAny<ReprocessorExporterAccountModel>()), Times.Once);
+        _facadeServiceMock.Verify(f => f.PostReprocessorExporterAccountAsync(
+            It.Is<ReprocessorExporterAccountModel>(m =>
+                m.Person.FirstName == "Chris"
+                && m.Person.LastName == "Stapleton"
+                && m.Person.TelephoneNumber == "01234567890"
+                && m.Person.ContactEmail == "email@example.com"
+            )), Times.Once);
     }
 
 
