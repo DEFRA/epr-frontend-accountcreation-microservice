@@ -4,7 +4,9 @@ using System.Text.Json;
 using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
+using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
@@ -28,19 +30,19 @@ public class OrganisationController : Controller
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
 
-    private readonly ISessionManager<AccountCreationSession> _sessionManager;
+    private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly ICompanyService _companyService;
-    private readonly IAccountMapper _accountMapper;
+    private readonly IOrganisationMapper _organisationMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
     public OrganisationController(
-         ISessionManager<AccountCreationSession> sessionManager,
+         ISessionManager<OrganisationSession> sessionManager,
          IFacadeService facadeService,
          ICompanyService companyService,
-         IAccountMapper accountMapper,
+         IOrganisationMapper organisationMapper,
          IOptions<ExternalUrlsOptions> urlOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
          ILogger<OrganisationController> logger)
@@ -48,7 +50,7 @@ public class OrganisationController : Controller
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _companyService = companyService;
-        _accountMapper = accountMapper;
+        _organisationMapper = organisationMapper;
         _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
         _logger = logger;
@@ -111,9 +113,9 @@ public class OrganisationController : Controller
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession()
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
         {
-            Journey = new List<string> { PagePath.RegisteredAsCharity }
+            Journey = [PagePath.RegisteredAsCharity]
         };
 
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
@@ -130,7 +132,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.RegisteredWithCompaniesHouse)]
-    [JourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
+    [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -152,12 +154,12 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.RegisteredWithCompaniesHouse)]
-    [JourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
+    [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse(RegisteredWithCompaniesHouseViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession()
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
         {
-            Journey = new List<string> { PagePath.RegisteredWithCompaniesHouse }
+            Journey = [PagePath.RegisteredWithCompaniesHouse]
         };
 
         if (!ModelState.IsValid)
@@ -185,7 +187,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.TypeOfOrganisation)]
-    [JourneyAccess(PagePath.TypeOfOrganisation)]
+    [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
     public async Task<IActionResult> TypeOfOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -200,9 +202,46 @@ public class OrganisationController : Controller
         return View(viewModel);
     }
 
+    [HttpPost]
+    [Route(PagePath.TypeOfOrganisation)]
+    [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
+    public async Task<IActionResult> TypeOfOrganisation(TypeOfOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.TypeOfOrganisation);
+            return View(model);
+        }
+
+        session.ManualInputSession ??= new ReExManualInputSession();
+        session.ManualInputSession.ProducerType = model.ProducerType;
+        session.CompaniesHouseSession = null;
+
+        return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.TypeOfOrganisation,
+            PagePath.TradingName);
+    }
+
+    [HttpGet]
+    [Route(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
+    public async Task<IActionResult> TradingName()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TradingName);
+
+        var viewModel = new TradingNameViewModel()
+        {
+            TradingName = session?.ManualInputSession?.TradingName,
+        };
+        return View(viewModel);
+    }
+
     [HttpGet]
     [Route(PagePath.CompaniesHouseNumber)]
-    [JourneyAccess(PagePath.CompaniesHouseNumber)]
+    [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber)]
     public async Task<IActionResult> CompaniesHouseNumber()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -225,12 +264,97 @@ public class OrganisationController : Controller
         return View(viewModel);
     }
 
+    [HttpPost]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    [Route(PagePath.CompaniesHouseNumber)]
+    [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber)]
+    public async Task<IActionResult> CompaniesHouseNumber(CompaniesHouseNumberViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.CompaniesHouseNumber);
+
+            ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
+
+            return View(model);
+        }
+
+        if (session.CompaniesHouseSession == null)
+        {
+            session.CompaniesHouseSession = new ReExCompaniesHouseSession();
+        }
+
+        Company? company;
+
+        try
+        {
+            company = await _facadeService.GetCompanyByCompaniesHouseNumberAsync(model.CompaniesHouseNumber);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}", model.CompaniesHouseNumber);
+
+            return await SaveSessionAndRedirect(session, nameof(CannotVerifyOrganisation), PagePath.CompaniesHouseNumber, PagePath.CannotVerifyOrganisation);
+        }
+
+        if (company == null)
+        {
+            ModelState.AddModelError(nameof(CompaniesHouseNumberViewModel.CompaniesHouseNumber), "CompaniesHouseNumber.NotFoundError");
+
+            SetBackLink(session, PagePath.CompaniesHouseNumber);
+
+            ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
+            TempData["ModelState"] = SerializeModelState(ModelState);
+            TempData["CompaniesHouseNumber"] = model.CompaniesHouseNumber;
+
+            return RedirectToAction(nameof(CompaniesHouseNumber));
+        }
+
+        session.CompaniesHouseSession.Company = company;
+
+        return await SaveSessionAndRedirect(session, nameof(ConfirmCompanyDetails), PagePath.CompaniesHouseNumber, PagePath.ConfirmCompanyDetails);
+    }
+
+    [HttpGet]
+    [Route(PagePath.CannotVerifyOrganisation)]
+    [OrganisationJourneyAccess(PagePath.CannotVerifyOrganisation)]
+    public async Task<IActionResult> CannotVerifyOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.CannotVerifyOrganisation);
+
+        return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.ConfirmCompanyDetails)]
+    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails)]
+    public async Task<IActionResult> ConfirmCompanyDetails()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.ConfirmCompanyDetails);
+        ViewBag.MakeChangesToYourLimitedCompanyLink = _urlOptions.MakeChangesToYourLimitedCompany;
+
+        var viewModel = new ConfirmCompanyDetailsViewModel
+        {
+            CompanyName = session.CompaniesHouseSession.Company.Name,
+            CompaniesHouseNumber = session.CompaniesHouseSession.Company.CompaniesHouseNumber,
+            BusinessAddress = session.CompaniesHouseSession.Company.BusinessAddress
+        };
+
+        return View(viewModel);
+    }
+
     [HttpGet]
     [Route(PagePath.NotAffected)]
-    [JourneyAccess(PagePath.NotAffected)]
+    [OrganisationJourneyAccess(PagePath.NotAffected)]
     public async Task<IActionResult> NotAffected()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
         SetBackLink(session, PagePath.NotAffected);
 
@@ -244,7 +368,7 @@ public class OrganisationController : Controller
 
     #region Private Methods 
 
-    private void SetBackLink(AccountCreationSession session, string currentPagePath)
+    private void SetBackLink(OrganisationSession session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
         {
@@ -256,7 +380,7 @@ public class OrganisationController : Controller
         }
     }
 
-    private async Task<RedirectToActionResult> SaveSessionAndRedirect(AccountCreationSession session,
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
         string actionName, string currentPagePath, string? nextPagePath)
     {
         session.IsUserChangingDetails = false;
@@ -265,7 +389,7 @@ public class OrganisationController : Controller
         return RedirectToAction(actionName);
     }
 
-    private async Task SaveSession(AccountCreationSession session, string currentPagePath, string? nextPagePath)
+    private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
     {
         ClearRestOfJourney(session, currentPagePath);
 
@@ -273,7 +397,7 @@ public class OrganisationController : Controller
 
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
-    private static void ClearRestOfJourney(AccountCreationSession session, string currentPagePath)
+    private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
     {
         var index = session.Journey.IndexOf(currentPagePath);
 
@@ -295,6 +419,16 @@ public class OrganisationController : Controller
         }
 
         return modelState;
+    }
+
+    private static string SerializeModelState(ModelStateDictionary modelState)
+    {
+        var errorList = modelState.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+        );
+
+        return JsonSerializer.Serialize(errorList);
     }
 
     #endregion

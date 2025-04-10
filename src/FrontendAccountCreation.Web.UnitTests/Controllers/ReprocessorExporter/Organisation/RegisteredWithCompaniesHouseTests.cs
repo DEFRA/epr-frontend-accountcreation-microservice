@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.AccountCreation;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
-
 
 [TestClass]
 public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
@@ -32,9 +32,9 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.CompaniesHouseNumber));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.CompaniesHouseNumber));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -49,9 +49,9 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.TypeOfOrganisation));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -70,14 +70,14 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
 
         viewResult.Model.Should().BeOfType<RegisteredWithCompaniesHouseViewModel>();
 
-        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<AccountCreationSession>>()), Times.Never);
+        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
 
     [TestMethod]
     public async Task RegisteredWithCompaniesHouse_OrganisationIsRegistered_RedirectsToViewResult()
     {
         // Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string> { PagePath.RegisteredWithCompaniesHouse }
         };
@@ -96,7 +96,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     public async Task RegisteredWithCompaniesHouse_RegisteredWithCompaniesHousePageIsExited_BackLinkIsRegisteredAsCharity()
     {
         //Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string>
             {
@@ -122,14 +122,14 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     public async Task UserNavigatesToRegisteredWithCompaniesHousePage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
     {
         //Arrange
-        var accountCreationSessionMock = new AccountCreationSession
+        var accountCreationSessionMock = new OrganisationSession
         {
-            Journey = new List<string>
-            {
+            Journey =
+            [
                 PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation,PagePath.TradingName,
                 PagePath.ConfirmCompanyDetails, PagePath.RoleInOrganisation, PagePath.FullName, PagePath.TelephoneNumber,
                 PagePath.CheckYourDetails
-            },
+            ],
             IsUserChangingDetails = true,
         };
 
