@@ -20,6 +20,7 @@ public class SuccessTests : UserTestBase
     [TestMethod]
     public async Task Success_HappyPath_SuccessPageReturned()
     {
+        //todo: helper on this class
         //Arrange
         var session = new ReExAccountCreationSession
         {
@@ -67,4 +68,27 @@ public class SuccessTests : UserTestBase
         viewModel.UserName.Should().Be("Chris Stapleton");
     }
 
+    [TestMethod]
+    public async Task Success_HappyPath_BackLinkShouldBeTelephonePage()
+    {
+        //Arrange
+        var session = new ReExAccountCreationSession
+        {
+            Journey = [PagePath.FullName, PagePath.TelephoneNumber, PagePath.Success],
+            Contact = new ReExContact { FirstName = "Chris", LastName = "Stapleton", TelephoneNumber = "01234567890" }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        //Act
+        var result = await _systemUnderTest.Success();
+
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+
+        AssertBackLink(viewResult, PagePath.TelephoneNumber);
+    }
 }
