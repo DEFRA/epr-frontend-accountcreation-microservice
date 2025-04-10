@@ -37,8 +37,6 @@ public abstract class UserTestBase
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        //_facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
-        //    .ReturnsAsync(new ApprovedPersonOrganisationModel());
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
             .Returns(Task.FromResult<ReExAccountCreationSession?>(new ReExAccountCreationSession()));
 
@@ -73,14 +71,5 @@ public abstract class UserTestBase
         hasBackLinkKey.Should().BeTrue();
         (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
     }
-
-    //protected static UserAccount CreateUserAccountModel(string enrolmentStatus) => new()
-    //{
-    //    User = new Core.Services.Dto.User.User
-    //    {
-    //        Id = Guid.NewGuid(),
-    //        EnrolmentStatus = enrolmentStatus
-    //    }
-    //};
 }
 

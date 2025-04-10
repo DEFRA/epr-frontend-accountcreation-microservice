@@ -9,7 +9,6 @@ public class ReExAccountMapper : IReExAccountMapper
     {
         return new ReprocessorExporterAccountModel
         {
-            //todo: session.Contact can be null
             Person = new PersonModel
             {
                 FirstName = session.Contact.FirstName,
