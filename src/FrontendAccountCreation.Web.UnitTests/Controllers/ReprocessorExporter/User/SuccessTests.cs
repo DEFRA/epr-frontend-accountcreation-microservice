@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -75,8 +76,24 @@ public class SuccessTests : UserTestBase
         AssertBackLink(viewResult, PagePath.TelephoneNumber);
     }
 
+    [TestMethod]
+    public async Task Success_HappyPath_PostReprocessorExporterAccountAsyncOnFacadeCalled()
+    {
+        //Arrange
+        var session = CreateSession();
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        //Act
+        await _systemUnderTest.Success();
+
+        //Assert
+        _facadeServiceMock.Verify(f => f.PostReprocessorExporterAccountAsync(It.IsAny<ReprocessorExporterAccountModel>()), Times.Once);
+    }
+
+
     //todo:
-    // PostReprocessorExporterAccountAsync called
     // session removed
 
     private static ReExAccountCreationSession CreateSession()
