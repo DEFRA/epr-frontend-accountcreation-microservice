@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 

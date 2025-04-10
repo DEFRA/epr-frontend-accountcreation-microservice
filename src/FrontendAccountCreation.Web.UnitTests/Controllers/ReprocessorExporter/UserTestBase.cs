@@ -1,12 +1,11 @@
-﻿using EPR.Common.Authorization.Sessions;
-
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
+﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
 using System.Security.Claims;
 using Core.Services;
 using Core.Sessions;
 using FluentAssertions;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
