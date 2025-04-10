@@ -20,13 +20,8 @@ public class SuccessTests : UserTestBase
     [TestMethod]
     public async Task Success_HappyPath_SuccessPageReturned()
     {
-        //todo: helper on this class
         //Arrange
-        var session = new ReExAccountCreationSession
-        {
-            Journey = [PagePath.FullName, PagePath.TelephoneNumber, PagePath.Success],
-            Contact = new ReExContact{ FirstName = "Chris", LastName = "Stapleton", TelephoneNumber = "01234567890" }
-        };
+        var session = CreateSession();
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(session);
@@ -36,21 +31,13 @@ public class SuccessTests : UserTestBase
 
         //Assert
         result.Should().BeOfType<ViewResult>();
-
-        //var viewResult = (ViewResult)result;
-
-        //AssertBackLink(viewResult, PagePath.TelephoneNumber);
     }
 
     [TestMethod]
     public async Task Success_HappyPath_ViewModelContainsUsersFullName()
     {
         //Arrange
-        var session = new ReExAccountCreationSession
-        {
-            Journey = [PagePath.FullName, PagePath.TelephoneNumber, PagePath.Success],
-            Contact = new ReExContact { FirstName = "Chris", LastName = "Stapleton", TelephoneNumber = "01234567890" }
-        };
+        var session = CreateSession();
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(session);
@@ -72,11 +59,7 @@ public class SuccessTests : UserTestBase
     public async Task Success_HappyPath_BackLinkShouldBeTelephonePage()
     {
         //Arrange
-        var session = new ReExAccountCreationSession
-        {
-            Journey = [PagePath.FullName, PagePath.TelephoneNumber, PagePath.Success],
-            Contact = new ReExContact { FirstName = "Chris", LastName = "Stapleton", TelephoneNumber = "01234567890" }
-        };
+        var session = CreateSession();
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(session);
@@ -90,5 +73,18 @@ public class SuccessTests : UserTestBase
         var viewResult = (ViewResult)result;
 
         AssertBackLink(viewResult, PagePath.TelephoneNumber);
+    }
+
+    //todo:
+    // PostReprocessorExporterAccountAsync called
+    // session removed
+
+    private static ReExAccountCreationSession CreateSession()
+    {
+        return new ReExAccountCreationSession
+        {
+            Journey = [PagePath.FullName, PagePath.TelephoneNumber, PagePath.Success],
+            Contact = new ReExContact { FirstName = "Chris", LastName = "Stapleton", TelephoneNumber = "01234567890" }
+        };
     }
 }
