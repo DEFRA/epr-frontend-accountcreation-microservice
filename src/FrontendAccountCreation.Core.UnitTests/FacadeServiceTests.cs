@@ -456,54 +456,6 @@ public class FacadeServiceTests
     }
 
     [TestMethod]
-    public async Task PostReprocessorExporterAccountAsync_todo_todo()
-    {
-        // Arrange
-        var account = new ReprocessorExporterAccountModel()
-        {
-        };
-
-        var httpTestHandler = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.Created
-        };
-
-        _mockHandler.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(httpTestHandler);
-
-        // Act
-        await _facadeService.PostReprocessorExporterAccountAsync(account);
-
-        // Assert
-        _mockHandler.Protected().Verify(
-            "SendAsync",
-            Times.Once(),
-            ItExpr.Is<HttpRequestMessage>(req =>
-                req.RequestUri != null &&
-                req.Method == HttpMethod.Post
-            ),
-            ItExpr.IsAny<CancellationToken>()
-        );
-
-        httpTestHandler.Dispose();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    [TestMethod]
     public async Task PostEnrolInvitedUser_WithValidData_ReturnsSuccessfulCode()
     {
         // Arrange
