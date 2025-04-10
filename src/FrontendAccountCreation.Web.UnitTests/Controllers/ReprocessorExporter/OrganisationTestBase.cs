@@ -2,9 +2,7 @@
 
 using System.Security.Claims;
 using Core.Services;
-using Core.Services.Dto.User;
 using Core.Services.FacadeModels;
-using Core.Sessions;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -90,14 +88,5 @@ public abstract class OrganisationTestBase
         hasBackLinkKey.Should().BeTrue();
         (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
     }
-
-    protected static UserAccount CreateUserAccountModel(string enrolmentStatus) => new()
-    {
-        User = new Core.Services.Dto.User.User
-        {
-            Id = Guid.NewGuid(),
-            EnrolmentStatus = enrolmentStatus
-        }
-    };
 }
 
