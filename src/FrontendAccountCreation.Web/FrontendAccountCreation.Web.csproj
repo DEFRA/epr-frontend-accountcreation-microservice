@@ -38,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="EPR.Common.Authorization" Version="1.0.17" />
+      <!--<PackageReference Include="EPR.Common.Authorization" Version="1.0.17" />-->
       <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.7" />
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
@@ -53,12 +53,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="ResourcesReEx\SharedResources.en.resx">
-        <SubType>Designer</SubType>
-      </EmbeddedResource>
-      <EmbeddedResource Update="ResourcesReEx\Views\Shared\Partials\Govuk\_Header.en.resx">
-        <SubType>Designer</SubType>
-      </EmbeddedResource>
       <EmbeddedResource Update="Resources\Views\Account\TypeOfOrganisation.en.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>TypeOfOrganisation.en.Designer.cs</LastGenOutput>
