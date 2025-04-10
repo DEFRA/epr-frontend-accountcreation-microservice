@@ -42,28 +42,5 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.Person.ContactEmail.Should().Be(email);
             result.Person.TelephoneNumber.Should().Be("123456789");
         }
-
-        //todo: check throws?
-        //[TestMethod]
-        //public void CreateReprocessorExporterAccountModel_ShouldHandleNullContact_WhenSessionContactIsNull()
-        //{
-        //    // Arrange
-        //    var session = new ReExAccountCreationSession
-        //    {
-        //        Contact = null
-        //    };
-        //    var email = "john.doe@example.com";
-
-        //    // Act
-        //    var result = _mapper!.CreateReprocessorExporterAccountModel(session, email);
-
-        //    // Assert
-        //    result.Should().NotBeNull();
-        //    result.Person.Should().NotBeNull();
-        //    result.Person.FirstName.Should().BeNull();
-        //    result.Person.LastName.Should().BeNull();
-        //    result.Person.ContactEmail.Should().Be(email);
-        //    result.Person.TelephoneNumber.Should().BeNull();
-        //}
     }
 }
