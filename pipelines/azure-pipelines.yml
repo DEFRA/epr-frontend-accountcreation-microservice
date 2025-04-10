@@ -38,7 +38,7 @@ variables:
   - name: sonarQubeProjectName
     value: frontend-accountcreation-microservice
   - name: runNugetTasks
-    value: true
+    value: false
   - name: dotNetVersion
     value: dotNetVersion8
 
