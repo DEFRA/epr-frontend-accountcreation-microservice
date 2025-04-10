@@ -136,27 +136,24 @@ public class UserController : Controller
         //    Journey = [PagePath.FullName]
         //};
 
-        //todo: person and user email always the same, so only need to pass userid down the stack and pick email from person
-        // unless we send down an user just in case they could ever end up being different
-
         string? email = GetUserEmail();
-        //todo: handle null email
+
         var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
+
         await _facadeService.PostReprocessorExporterAccountAsync(account);
+
         _sessionManager.RemoveSession(HttpContext.Session);
 
         SetBackLink(session, PagePath.Success);
 
         var viewModel = new SuccessViewModel
         {
-            //todo: could just add contact to viewmodel
             UserName = $"{session.Contact.FirstName} {session.Contact.LastName}"
         };
 
         return View(viewModel);
     }
 
-    //todo: move this (these?) somewhere common?
     private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??
                                       // Remove when we migrate all environments to custom policy
                                       User.Claims.FirstOrDefault(claim => claim.Type == "emails")?.Value;
