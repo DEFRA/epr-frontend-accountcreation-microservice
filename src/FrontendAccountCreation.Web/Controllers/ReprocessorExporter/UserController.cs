@@ -122,19 +122,7 @@ public class UserController : Controller
     [ReprocessorExporterJourneyAccess(PagePath.Success)]
     public async Task<IActionResult> Success()
     {
-        //todo: will do this once earlier stories are done
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        //var session = new ReExAccountCreationSession
-        //{
-        //    Contact = new ReExContact
-        //    {
-        //        FirstName = "bob",
-        //        LastName = "smith",
-        //        TelephoneNumber = "01234567890"
-        //    },
-        //    Journey = [PagePath.FullName]
-        //};
 
         string? email = GetUserEmail();
 
