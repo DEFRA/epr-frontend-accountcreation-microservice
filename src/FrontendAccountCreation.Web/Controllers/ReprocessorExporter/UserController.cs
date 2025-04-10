@@ -1,17 +1,23 @@
-﻿using System.Security.Claims;
-using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Core.Services;
-using EPR.Common.Authorization.Sessions;
-using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Web.Configs;
-using FrontendAccountCreation.Web.Constants;
+﻿namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+
+using System.Security.Claims;
+using Attributes;
+using Configs;
+using Constants;
+using Core.Extensions;
+using Core.Services;
+using Core.Sessions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Sessions;
+using ViewModels.ReExAccount;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
 
-namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+
 
 /// <summary>
 /// Reprocessor & Exporter Account creation controller.
@@ -27,16 +33,16 @@ public class UserController : Controller
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
     public UserController(
-        ISessionManager<ReExAccountCreationSession> sessionManager,
-        IFacadeService facadeService,
-        IReExAccountMapper reExAccountMapper,
-        IOptions<ExternalUrlsOptions> urlOptions,
-        IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-        ILogger<UserController> logger)
+         ISessionManager<ReExAccountCreationSession> sessionManager,
+         IFacadeService facadeService,
+         IReExAccountMapper accountMapper,
+         IOptions<ExternalUrlsOptions> urlOptions,
+         IOptions<DeploymentRoleOptions> deploymentRoleOptions,
+         ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
-        _reExAccountMapper = reExAccountMapper;
+        _reExAccountMapper = accountMapper;
         _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
         _logger = logger;
@@ -49,6 +55,19 @@ public class UserController : Controller
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
+        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        if (userExists)
+        {
+            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
+            {
+                return RedirectToAction("UserAlreadyExists", "Home");
+            }
+            else
+            {
+                return Redirect(_urlOptions.ExistingUserRedirectUrl);
+            }
+        }
+
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
