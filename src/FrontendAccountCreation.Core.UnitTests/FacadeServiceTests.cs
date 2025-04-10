@@ -360,10 +360,8 @@ public class FacadeServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
-                //todo: should we return created from the backend instead?
-                //todo: no need to be verifiable
                 StatusCode = HttpStatusCode.OK
-            }).Verifiable();
+            });
 
         Func<Task> act = async () => await _facadeService.PostReprocessorExporterAccountAsync(account);
 
