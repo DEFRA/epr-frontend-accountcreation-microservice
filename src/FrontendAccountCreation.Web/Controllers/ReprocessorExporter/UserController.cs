@@ -21,7 +21,6 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using EPR.Common.Authorization.Sessions;
 
 
 
@@ -77,7 +76,7 @@ public class UserController : Controller
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
-        viewModel.PostAction = nameof(ReExAccountFullName);
+
         if (session != null)
         {
             viewModel.FirstName = session.Contact.FirstName;

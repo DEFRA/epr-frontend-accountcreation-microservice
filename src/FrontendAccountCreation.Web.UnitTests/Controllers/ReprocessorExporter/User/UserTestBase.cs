@@ -6,6 +6,7 @@ using Core.Services.Dto.User;
 using Core.Services.FacadeModels;
 using Core.Sessions;
 using FluentAssertions;
+using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -14,7 +15,6 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Web.Configs;
 using Web.Controllers.ReprocessorExporter;
-using EPR.Common.Authorization.Sessions;
 
 public abstract class UserTestBase
 {
