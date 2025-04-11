@@ -30,7 +30,7 @@
 
         <div class="govuk-header__content">
             @* todo: what's our home page? *@
-            <a href="#" class="govuk-header__link govuk-header__service-name">
+            <a class="govuk-header__link govuk-header__service-name" asp-controller="User" asp-action="ReExAccountFullName">
                 @SharedLocalizer["ReExApplicationTitle"]
             </a>
 
@@ -40,7 +40,7 @@
                 <ul id="navigation" class="govuk-header__navigation-list">
                     <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
                         @* todo: what's our home page? *@
-                        <a class="govuk-header__link" href="#">
+                        <a class="govuk-header__link" asp-controller="User" asp-action="ReExAccountFullName">
                             @Localizer["Header.Home"]
                         </a>
                     </li>
