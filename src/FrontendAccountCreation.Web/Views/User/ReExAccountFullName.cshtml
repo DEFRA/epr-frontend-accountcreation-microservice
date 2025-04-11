@@ -10,6 +10,10 @@
 
 @{
     ViewData["Title"] = Localizer["FullName.Title"];
+    // todo: const
+    ViewData["ApplicationTitleOverride"] = "ReExApplicationTitle";
+    ViewData["HeaderOverride"] = "_ReExHeader";
+
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, 
         nameof(ReExAccountFullNameViewModel.FirstName), nameof(ReExAccountFullNameViewModel.LastName));
 
