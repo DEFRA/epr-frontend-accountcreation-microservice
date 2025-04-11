@@ -18,6 +18,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Extensions;
 
+public class TestSession
+{}
+
 [ExcludeFromCodeCoverage(Justification = "This is essentially a config file in code")]
 public static class ServiceProviderExtension
 {
@@ -77,6 +80,9 @@ public static class ServiceProviderExtension
         services.AddScoped<ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
         services.AddScoped<ISessionManager<ReExAccountCreationSession>, SessionManager<ReExAccountCreationSession>>();
         services.AddScoped<ISessionManager<OrganisationSession>, SessionManager<OrganisationSession>>();
+
+        // test build
+        services.AddScoped<EPR.Common.Authorization.Sessions.ISessionManager<TestSession>, EPR.Common.Authorization.Sessions.SessionManager<TestSession>>();
     }
 
     private static void SetTempDataCookieOptions(IServiceCollection services, IConfiguration configuration)
