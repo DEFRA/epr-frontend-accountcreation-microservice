@@ -156,4 +156,10 @@
   <data name="ReExApplicationTitle" xml:space="preserve">
     <value>Reprocessor and exporters service</value>
   </data>
+  <data name="Header.SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Header.SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
 </root>

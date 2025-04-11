@@ -22,11 +22,11 @@
           <nav class="epr-sign-out-nav">
               @if (User.Identity?.IsAuthenticated == true)
               {
-                  <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignOut">@Localizer["Header.SignOut"]</a>
+                  <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignOut">@SharedLocalizer["Header.SignOut"]</a>
               }
               else
               {
-                  <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignIn">@Localizer["Header.SignIn"]</a>
+                        <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignIn">@SharedLocalizer["Header.SignIn"]</a>
               }
           </nav>
       </div>
