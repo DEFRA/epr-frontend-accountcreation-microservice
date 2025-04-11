@@ -16,19 +16,19 @@
         </a>
       </div>
       <div class="govuk-header__content">
-        <a class="epr-header__service-name epr-header__service-name--linked" asp-controller="AccountCreation" asp-action="RegisteredAsCharity">
-          @SharedLocalizer["ApplicationTitle"]
-        </a>
-        <nav class="epr-sign-out-nav">
-          @if (User.Identity?.IsAuthenticated == true)
-          {
-            <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignOut">@Localizer["Header.SignOut"]</a>
-          }
-          else
-          {
-            <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignIn">@Localizer["Header.SignIn"]</a>
-          }
-        </nav>
+          <a class="epr-header__service-name epr-header__service-name--linked" asp-controller="AccountCreation" asp-action="RegisteredAsCharity">
+              @SharedLocalizer["ApplicationTitle"]
+          </a>
+          <nav class="epr-sign-out-nav">
+              @if (User.Identity?.IsAuthenticated == true)
+              {
+                  <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignOut">@Localizer["Header.SignOut"]</a>
+              }
+              else
+              {
+                  <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignIn">@Localizer["Header.SignIn"]</a>
+              }
+          </nav>
       </div>
     </div>
   </div>
