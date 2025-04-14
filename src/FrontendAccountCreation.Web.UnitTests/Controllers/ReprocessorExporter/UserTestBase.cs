@@ -16,7 +16,7 @@ using Web.Configs;
 
 public abstract class UserTestBase
 {
-    private const string BackLinkViewDataKey = "BackLinkToDisplay";
+    protected const string BackLinkViewDataKey = "BackLinkToDisplay";
 
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<ReExAccountCreationSession>> _sessionManagerMock = null!;

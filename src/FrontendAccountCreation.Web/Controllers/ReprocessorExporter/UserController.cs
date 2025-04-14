@@ -145,8 +145,6 @@ public class UserController : Controller
 
         _sessionManager.RemoveSession(HttpContext.Session);
 
-        SetBackLink(session, PagePath.Success);
-
         var viewModel = new SuccessViewModel
         {
             UserName = $"{session.Contact.FirstName} {session.Contact.LastName}"

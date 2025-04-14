@@ -57,7 +57,7 @@ public class SuccessTests : UserTestBase
     }
 
     [TestMethod]
-    public async Task Success_HappyPath_BackLinkShouldBeTelephonePage()
+    public async Task Success_HappyPath_ThereIsNoBackLink()
     {
         //Arrange
         var session = CreateSession();
@@ -73,7 +73,8 @@ public class SuccessTests : UserTestBase
 
         var viewResult = (ViewResult)result;
 
-        AssertBackLink(viewResult, PagePath.TelephoneNumber);
+        var hasBackLinkKey = viewResult.ViewData.TryGetValue(BackLinkViewDataKey, out var gotBackLinkObject);
+        hasBackLinkKey.Should().BeFalse();
     }
 
     [TestMethod]
