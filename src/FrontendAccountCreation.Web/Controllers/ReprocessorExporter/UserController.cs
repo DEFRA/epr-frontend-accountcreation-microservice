@@ -103,6 +103,7 @@ public class UserController : Controller
         return View(new ReExAccountTelephoneNumberViewModel()
         {
             TelephoneNumber = session.Contact.TelephoneNumber,
+            //todo:
             EmailAddress = session.Contact.Email,
         });
     }
@@ -124,9 +125,14 @@ public class UserController : Controller
         session.Contact.TelephoneNumber = model.TelephoneNumber;
         session.Contact.Email = model.EmailAddress;
 
+        string? email = GetUserEmail();
+
+        var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
+
+        await _facadeService.PostReprocessorExporterAccountAsync(account);
+
         return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
             PagePath.Success);
-
     }
 
     [HttpGet]
@@ -137,18 +143,12 @@ public class UserController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        string? email = GetUserEmail();
-
-        var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
-
-        await _facadeService.PostReprocessorExporterAccountAsync(account);
-
-        _sessionManager.RemoveSession(HttpContext.Session);
-
         var viewModel = new SuccessViewModel
         {
             UserName = $"{session.Contact.FirstName} {session.Contact.LastName}"
         };
+
+        _sessionManager.RemoveSession(HttpContext.Session);
 
         return View(viewModel);
     }
