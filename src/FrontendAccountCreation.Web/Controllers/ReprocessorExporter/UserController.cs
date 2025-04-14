@@ -48,12 +48,24 @@ public class UserController : Controller
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
+        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        if (userExists)
+        {
+            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
+            {
+                return RedirectToAction("UserAlreadyExists", "Home");
+            }
+            else
+            {
+                return Redirect(_urlOptions.ExistingUserRedirectUrl);
+            }
+        }
+
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
         if (session != null)
         {
-            viewModel.PostAction = nameof(ReExAccountFullName);
             viewModel.FirstName = session.Contact.FirstName;
             viewModel.LastName = session.Contact.LastName;
         }
@@ -63,7 +75,6 @@ public class UserController : Controller
 
     [HttpPost]
     [Route(PagePath.FullName)]
-    [ReprocessorExporterJourneyAccess(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName(ReExAccountFullNameViewModel model)
     {
         if (!ModelState.IsValid)
@@ -82,7 +93,6 @@ public class UserController : Controller
 
     [HttpGet]
     [Route(PagePath.TelephoneNumber)]
-    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -94,12 +104,12 @@ public class UserController : Controller
         return View(new ReExAccountTelephoneNumberViewModel()
         {
             TelephoneNumber = session.Contact.TelephoneNumber,
+            EmailAddress = session.Contact.Email,
         });
     }
 
     [HttpPost]
     [Route(PagePath.TelephoneNumber)]
-    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -112,6 +122,7 @@ public class UserController : Controller
         }
 
         session.Contact.TelephoneNumber = model.TelephoneNumber;
+        session.Contact.Email = model.EmailAddress;
 
         return await SaveSessionAndRedirect(session, nameof(/*Success*/ReExAccountTelephoneNumber), PagePath.TelephoneNumber,
             PagePath.Success);

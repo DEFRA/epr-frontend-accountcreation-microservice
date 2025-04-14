@@ -8,8 +8,7 @@ public class ReExAccountFullNameViewModel : IValidatableObject
     public string? FirstName { get; set; }
     
     public string? LastName { get; set; }
-    
-    public string PostAction { get; set; }
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
        // var deploymentRole = validationContext.GetService<IOptions<DeploymentRoleOptions>>();
