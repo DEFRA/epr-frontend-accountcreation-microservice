@@ -367,9 +367,26 @@ public class OrganisationController : Controller
         session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
         TempData.Remove(OrganisationMetaDataKey);
 
-        //todo:
-        return await SaveSessionAndRedirect(session, nameof(/*UkNation*/ConfirmCompanyDetails), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
+        return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
 
+    }
+
+    [HttpGet]
+    [Route(PagePath.UkNation)]
+    [OrganisationJourneyAccess(PagePath.UkNation)]
+    public async Task<IActionResult> UkNation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.UkNation);
+
+        var viewModel = new UkNationViewModel()
+        {
+            UkNation = session.UkNation,
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow,
+            IsManualInputFlow = session.IsManualInputFlow
+        };
+        return View(viewModel);
     }
 
     [HttpGet]
