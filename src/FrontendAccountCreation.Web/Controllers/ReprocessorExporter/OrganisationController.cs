@@ -349,6 +349,31 @@ public class OrganisationController : Controller
         return View(viewModel);
     }
 
+    [HttpPost]
+    [Route(PagePath.ConfirmCompanyDetails)]
+    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails)]
+    public async Task<IActionResult> ConfirmDetailsOfTheCompany()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        session.CompaniesHouseSession.IsComplianceScheme = _companyService.IsComplianceScheme(session.CompaniesHouseSession.Company.CompaniesHouseNumber);
+
+        if (!session.CompaniesHouseSession.Company.AccountExists)
+        {
+            session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
+            TempData.Remove(OrganisationMetaDataKey);
+
+            if (session.CompaniesHouseSession.IsComplianceScheme)
+            {
+                return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.ConfirmCompanyDetails, PagePath.RoleInOrganisation);
+            }
+            //todo:
+            return await SaveSessionAndRedirect(session, nameof(/*UkNation*/ConfirmCompanyDetails), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
+        }
+
+        //todo:
+        return await SaveSessionAndRedirect(session, nameof(/*AccountAlreadyExists*/ConfirmCompanyDetails), PagePath.ConfirmCompanyDetails, PagePath.AccountAlreadyExists);
+    }
+
     [HttpGet]
     [Route(PagePath.NotAffected)]
     [OrganisationJourneyAccess(PagePath.NotAffected)]
