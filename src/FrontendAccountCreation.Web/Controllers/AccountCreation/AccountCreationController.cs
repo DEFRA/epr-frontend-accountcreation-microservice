@@ -76,7 +76,8 @@ public class AccountCreationController : Controller
         {
             if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
             {
-                return RedirectToAction("UserAlreadyExists", "Home");
+                //return RedirectToAction("UserAlreadyExists", "Home");
+                return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }
             else
             {
@@ -1214,6 +1215,26 @@ public class AccountCreationController : Controller
         ViewBag.CreateAccountToReportPackagingData = _urlOptions.CreateAccountToReportPackagingData;
 
         return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.TeamMemberRoleInOrganisation)]
+    public async Task<IActionResult> TeamMemberRoleInOrganisation()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [Route(PagePath.TeamMemberRoleInOrganisation)]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        return RedirectToAction(PagePath.Declaration);
     }
 
     public IActionResult RedirectToStart()
