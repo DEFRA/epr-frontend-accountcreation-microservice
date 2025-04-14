@@ -20,7 +20,7 @@ public class SessionManagerTests
     private byte[] _sessionBytes;
 
     private Mock<ISession> _sessionMock;
-    private ISessionManager<TestSessionData> _sessionManager;
+    private SessionManager<TestSessionData> _sessionManager;
 
     [TestInitialize]
     public void Setup()

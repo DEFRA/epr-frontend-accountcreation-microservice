@@ -1,17 +1,10 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Web;
-using FrontendAccountCreation.Web.UnitTests;
-using FrontendAccountCreation.Web.UnitTests.Controllers;
-using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
-
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExUser;
+﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
 using System.Security.Claims;
 using Core.Services;
-using Core.Services.Dto.User;
-using Core.Services.FacadeModels;
 using Core.Sessions;
 using FluentAssertions;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,20 +13,18 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Web.Configs;
-using Web.Controllers.ReprocessorExporter;
 
 public abstract class UserTestBase
 {
-    private const string BackLinkViewDataKey = "BackLinkToDisplay";
+    protected const string BackLinkViewDataKey = "BackLinkToDisplay";
 
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<ReExAccountCreationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
-    protected Mock<IReExAccountMapper> _accountServiceMock = null!;
+    protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
     protected Mock<ILogger<UserController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
-    protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
 
     protected UserController _systemUnderTest = null!;
 
@@ -42,13 +33,10 @@ public abstract class UserTestBase
         _httpContextMock = new Mock<HttpContext>();
         _sessionManagerMock = new Mock<ISessionManager<ReExAccountCreationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
-        _accountServiceMock = new Mock<IReExAccountMapper>();
+        _reExAccountMapperMock = new Mock<IReExAccountMapper>();
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
-        _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        _facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
-            .ReturnsAsync(new ApprovedPersonOrganisationModel());
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
             .Returns(Task.FromResult<ReExAccountCreationSession?>(new ReExAccountCreationSession()));
 
@@ -56,27 +44,22 @@ public abstract class UserTestBase
             .Returns(new ExternalUrlsOptions
             {
                 FindAndUpdateCompanyInformation = "dummy url",
-                ReportDataRedirectUrl = "/report-data",
-                ReportDataLandingRedirectUrl = "/report-data/landing",
-                ReportDataNewApprovedUser = "/report-data/approved-person-created?notification=created_new_approved_person"
+                ReportDataRedirectUrl = "/re-ex",
+                ReportDataLandingRedirectUrl = "/re-ex/landing",
+                ReportDataNewApprovedUser = "/re-ex/approved-person-created?notification=created_new_approved_person"
             });
 
         _httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>
         {
-            new("Oid", Guid.NewGuid().ToString())
+            new("Oid", Guid.NewGuid().ToString()),
+            new(ClaimTypes.Email, "email@example.com")
         });
-
-        _deploymentRoleOptionMock.Setup(x => x.Value)
-            .Returns(new DeploymentRoleOptions
-            {
-                DeploymentRole = deploymentRole
-            });
 
         _loggerMock = new Mock<ILogger<UserController>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
-           _accountServiceMock.Object, _urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
+           _reExAccountMapperMock.Object, _urlsOptionMock.Object, _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;
@@ -88,13 +71,4 @@ public abstract class UserTestBase
         hasBackLinkKey.Should().BeTrue();
         (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
     }
-
-    protected static UserAccount CreateUserAccountModel(string enrolmentStatus) => new()
-    {
-        User = new User
-        {
-            Id = Guid.NewGuid(),
-            EnrolmentStatus = enrolmentStatus
-        }
-    };
 }

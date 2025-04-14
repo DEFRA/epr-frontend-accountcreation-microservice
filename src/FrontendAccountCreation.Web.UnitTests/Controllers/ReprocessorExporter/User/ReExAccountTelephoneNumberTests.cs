@@ -1,6 +1,7 @@
-﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExUser;
+﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.User;
 
 using FluentAssertions;
+using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -56,10 +57,48 @@ public class ReExAccountTelephoneNumberTests : UserTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(UserController.ReExAccountTelephoneNumber)); /*Success*/
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(UserController.Success)); /*Success*/
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<ReExAccountCreationSession>()),
             Times.Once);
+    }
+
+    [TestMethod]
+    public async Task TelephoneNumber_HappyPath_PostReprocessorExporterAccountAsyncOnFacadeCalled()
+    {
+        //Arrange
+        var request = new ReExAccountTelephoneNumberViewModel() { TelephoneNumber = "020 1234 5678" };
+
+        _reExAccountCreationSessionMock = new ReExAccountCreationSession
+        {
+            Journey = [PagePath.FullName, PagePath.TelephoneNumber],
+            Contact = new ReExContact { FirstName = "Chris", LastName = "Stapleton" }
+        };
+
+        _reExAccountMapperMock.Setup(m => m.CreateReprocessorExporterAccountModel(
+                It.IsAny<ReExAccountCreationSession>(), "email@example.com"))
+            .Returns(new ReprocessorExporterAccountModel
+            {
+                Person = new PersonModel
+                {
+                    FirstName = "Chris",
+                    LastName = "Stapleton",
+                    ContactEmail = "email@example.com",
+                    TelephoneNumber = "01234567890"
+                }
+            });
+
+        //Act
+        await _systemUnderTest.ReExAccountTelephoneNumber(request);
+
+        //Assert
+        _facadeServiceMock.Verify(f => f.PostReprocessorExporterAccountAsync(
+            It.Is<ReprocessorExporterAccountModel>(m =>
+                m.Person.FirstName == "Chris"
+                && m.Person.LastName == "Stapleton"
+                && m.Person.TelephoneNumber == "01234567890"
+                && m.Person.ContactEmail == "email@example.com"
+            )), Times.Once);
     }
 
     [TestMethod]

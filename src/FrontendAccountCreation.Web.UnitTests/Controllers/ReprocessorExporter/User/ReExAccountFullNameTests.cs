@@ -1,4 +1,4 @@
-﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExUser;
+﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.User;
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
@@ -60,7 +60,7 @@ public class ReExAccountFullNameTests : UserTestBase
         urlsOptionMock.Setup(x => x.Value)
             .Returns(externalUrl);
         var systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
-            _accountServiceMock.Object, urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
+            _reExAccountMapperMock.Object, urlsOptionMock.Object, _loggerMock.Object);
 
         // Act
         var result = await systemUnderTest.ReExAccountFullName();

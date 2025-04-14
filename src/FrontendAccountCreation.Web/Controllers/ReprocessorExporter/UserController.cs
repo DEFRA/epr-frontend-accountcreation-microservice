@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -23,25 +24,20 @@ public class UserController : Controller
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<UserController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
-    private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
     public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IReExAccountMapper reExAccountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
-        IOptions<DeploymentRoleOptions> deploymentRoleOptions,
         ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
         _urlOptions = urlOptions.Value;
-        _deploymentRoleOptions = deploymentRoleOptions.Value;
         _logger = logger;
     }
-
-    //todo: we'll have to handle user already exists. probably best to handle it at the start of the journey
 
     [HttpGet]
     [Route("")]
@@ -126,12 +122,34 @@ public class UserController : Controller
         session.Contact.TelephoneNumber = model.TelephoneNumber;
         session.Contact.Email = model.EmailAddress;
 
-        return await SaveSessionAndRedirect(session, nameof(/*Success*/ReExAccountTelephoneNumber), PagePath.TelephoneNumber,
-            PagePath.Success);
+        string? email = GetUserEmail();
 
+        var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
+
+        await _facadeService.PostReprocessorExporterAccountAsync(account);
+
+        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
+            PagePath.Success);
     }
 
-    //todo: move this (these?) somewhere common?
+    [HttpGet]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    [Route(PagePath.Success)]
+    [ReprocessorExporterJourneyAccess(PagePath.Success)]
+    public async Task<IActionResult> Success()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        var viewModel = new SuccessViewModel
+        {
+            UserName = $"{session.Contact.FirstName} {session.Contact.LastName}"
+        };
+
+        _sessionManager.RemoveSession(HttpContext.Session);
+
+        return View(viewModel);
+    }
+
     private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??
                                       // Remove when we migrate all environments to custom policy
                                       User.Claims.FirstOrDefault(claim => claim.Type == "emails")?.Value;
