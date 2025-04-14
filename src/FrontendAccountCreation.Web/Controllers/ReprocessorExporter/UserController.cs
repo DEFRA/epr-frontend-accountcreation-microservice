@@ -39,8 +39,6 @@ public class UserController : Controller
         _logger = logger;
     }
 
-    //todo: we'll have to handle user already exists. probably best to handle it at the start of the journey
-
     [HttpGet]
     [Route("")]
     [Route(PagePath.FullName)]
@@ -103,7 +101,6 @@ public class UserController : Controller
         return View(new ReExAccountTelephoneNumberViewModel()
         {
             TelephoneNumber = session.Contact.TelephoneNumber,
-            //todo:
             EmailAddress = session.Contact.Email,
         });
     }
