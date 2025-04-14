@@ -355,22 +355,19 @@ public class OrganisationController : Controller
     public async Task<IActionResult> ConfirmDetailsOfTheCompany()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        session.CompaniesHouseSession.IsComplianceScheme = _companyService.IsComplianceScheme(session.CompaniesHouseSession.Company.CompaniesHouseNumber);
 
-        if (!session.CompaniesHouseSession.Company.AccountExists)
+        if (session.CompaniesHouseSession.Company.AccountExists)
         {
-            session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
-            TempData.Remove(OrganisationMetaDataKey);
-
-            if (session.CompaniesHouseSession.IsComplianceScheme)
-            {
-                return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.ConfirmCompanyDetails, PagePath.RoleInOrganisation);
-            }
-            //todo:
-            return await SaveSessionAndRedirect(session, nameof(/*UkNation*/ConfirmCompanyDetails), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
+            return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails,
+                PagePath.AccountAlreadyExists);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails, PagePath.AccountAlreadyExists);
+        session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
+        TempData.Remove(OrganisationMetaDataKey);
+
+        //todo:
+        return await SaveSessionAndRedirect(session, nameof(/*UkNation*/ConfirmCompanyDetails), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
+
     }
 
     [HttpGet]
