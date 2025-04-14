@@ -56,7 +56,7 @@ public class ReExAccountTelephoneNumberTests : UserTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(UserController.ReExAccountTelephoneNumber)); /*Success*/
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(UserController.Success)); /*Success*/
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<ReExAccountCreationSession>()),
             Times.Once);
