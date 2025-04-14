@@ -370,8 +370,22 @@ public class OrganisationController : Controller
             return await SaveSessionAndRedirect(session, nameof(/*UkNation*/ConfirmCompanyDetails), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
         }
 
-        //todo:
-        return await SaveSessionAndRedirect(session, nameof(/*AccountAlreadyExists*/ConfirmCompanyDetails), PagePath.ConfirmCompanyDetails, PagePath.AccountAlreadyExists);
+        return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails, PagePath.AccountAlreadyExists);
+    }
+
+    [HttpGet]
+    [Route(PagePath.AccountAlreadyExists)]
+    [OrganisationJourneyAccess(PagePath.AccountAlreadyExists)]
+    public async Task<IActionResult> AccountAlreadyExists()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.AccountAlreadyExists);
+
+        return View(new AccountAlreadyExistsViewModel
+        {
+            DateCreated = session.CompaniesHouseSession.Company.AccountCreatedOn.Value.Date
+        });
     }
 
     [HttpGet]
