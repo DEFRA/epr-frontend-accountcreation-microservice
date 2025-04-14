@@ -93,6 +93,7 @@ public class UserController : Controller
 
     [HttpGet]
     [Route(PagePath.TelephoneNumber)]
+    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -110,6 +111,7 @@ public class UserController : Controller
 
     [HttpPost]
     [Route(PagePath.TelephoneNumber)]
+    [JourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
