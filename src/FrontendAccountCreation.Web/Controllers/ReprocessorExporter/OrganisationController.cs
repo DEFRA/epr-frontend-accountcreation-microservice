@@ -69,6 +69,7 @@ public class OrganisationController : Controller
             });
         }
 
+        //todo: the account will already exist, so I don't think this check is wanted
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
         {
