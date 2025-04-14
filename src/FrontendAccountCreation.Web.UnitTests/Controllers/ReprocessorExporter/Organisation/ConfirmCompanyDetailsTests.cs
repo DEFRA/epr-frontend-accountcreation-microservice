@@ -50,8 +50,6 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
         };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSessionMock);
         _facadeServiceMock.Setup(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>())).ReturnsAsync(_company);
-        //todo:
-        //_companyServiceMock.Setup(x => x.IsComplianceScheme(It.IsAny<string>())).Returns(true);
     }
 
     [TestMethod]
@@ -76,23 +74,8 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
         gotViewModel.BusinessAddress?.Postcode.Should().Be(_company.BusinessAddress.Postcode);
     }
 
-    //[TestMethod]
-    //public async Task GivenCompaniesHouseNumberAndComplianceScheme_WhenConfirmDetailsOfTheCompanyCalled_ThenRedirectToRoleInOrganisation_AndUpdateSession()
-    //{
-    //    // Act
-    //    var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();
-
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
-
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.RoleInOrganisation));
-
-    //    _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
-    //}
-
-    //todo: split into 2
     [TestMethod]
-    public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_ThenRedirectToUkNation_AndUpdateSession()
+    public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_ThenRedirectToUkNation()
     {
         // Arrange
         _companyServiceMock.Setup(x => x.IsComplianceScheme(It.IsAny<string>())).Returns(false);
@@ -104,6 +87,20 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.UkNation));
+    }
+
+    [TestMethod]
+    public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_ThenUpdateSession()
+    {
+        // Arrange
+        _companyServiceMock.Setup(x => x.IsComplianceScheme(It.IsAny<string>())).Returns(false);
+
+        // Act
+        var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
