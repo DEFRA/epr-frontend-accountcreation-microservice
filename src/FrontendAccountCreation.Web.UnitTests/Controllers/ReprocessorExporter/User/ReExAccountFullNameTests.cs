@@ -1,4 +1,4 @@
-﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ReExUser;
+﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.User;
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
