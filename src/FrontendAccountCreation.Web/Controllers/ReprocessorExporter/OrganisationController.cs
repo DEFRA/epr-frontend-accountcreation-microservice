@@ -1,19 +1,15 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
-using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
@@ -27,7 +23,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 [Route("re-ex/organisation")]
 public class OrganisationController : Controller
 {
-    private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
 
     private readonly ISessionManager<OrganisationSession> _sessionManager;
@@ -371,22 +366,14 @@ public class OrganisationController : Controller
 
     }
 
+    [ExcludeFromCodeCoverage]
     [HttpGet]
     [Route(PagePath.UkNation)]
     [OrganisationJourneyAccess(PagePath.UkNation)]
-    public async Task<IActionResult> UkNation()
+    public Task<IActionResult> UkNation()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        SetBackLink(session, PagePath.UkNation);
-
-        var viewModel = new UkNationViewModel()
-        {
-            UkNation = session.UkNation,
-            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow,
-            IsManualInputFlow = session.IsManualInputFlow
-        };
-        return View(viewModel);
+        throw new NotImplementedException(
+            "The nation page isn't implemented yet and will be implemented in a later story");
     }
 
     [HttpGet]
