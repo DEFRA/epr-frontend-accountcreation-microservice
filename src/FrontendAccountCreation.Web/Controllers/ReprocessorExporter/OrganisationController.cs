@@ -23,8 +23,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 [Route("re-ex/organisation")]
 public class OrganisationController : Controller
 {
-    private const string OrganisationMetaDataKey = "OrganisationMetaData";
-
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly ICompanyService _companyService;
@@ -360,10 +358,8 @@ public class OrganisationController : Controller
         }
 
         session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
-        TempData.Remove(OrganisationMetaDataKey);
 
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
-
     }
 
     [ExcludeFromCodeCoverage]
