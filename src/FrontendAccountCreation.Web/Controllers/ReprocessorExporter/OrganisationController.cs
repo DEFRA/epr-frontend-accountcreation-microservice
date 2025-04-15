@@ -1,19 +1,15 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
-using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
@@ -27,7 +23,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 [Route("re-ex/organisation")]
 public class OrganisationController : Controller
 {
-    private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
 
     private readonly ISessionManager<OrganisationSession> _sessionManager;
@@ -69,6 +64,8 @@ public class OrganisationController : Controller
             });
         }
 
+        //todo: the account will already exist, so I don't think this check is wanted
+        // in fact, we probably want to check that the account *does* already exist
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
         {
@@ -347,6 +344,51 @@ public class OrganisationController : Controller
         };
 
         return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.ConfirmCompanyDetails)]
+    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails)]
+    public async Task<IActionResult> ConfirmDetailsOfTheCompany()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (session.CompaniesHouseSession.Company.AccountExists)
+        {
+            return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails,
+                PagePath.AccountAlreadyExists);
+        }
+
+        session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
+        TempData.Remove(OrganisationMetaDataKey);
+
+        return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
+
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.UkNation)]
+    [OrganisationJourneyAccess(PagePath.UkNation)]
+    public Task<IActionResult> UkNation()
+    {
+        throw new NotImplementedException(
+            "The nation page isn't implemented yet and will be implemented in a later story");
+    }
+
+    [HttpGet]
+    [Route(PagePath.AccountAlreadyExists)]
+    [OrganisationJourneyAccess(PagePath.AccountAlreadyExists)]
+    public async Task<IActionResult> AccountAlreadyExists()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.AccountAlreadyExists);
+
+        return View(new AccountAlreadyExistsViewModel
+        {
+            DateCreated = session.CompaniesHouseSession.Company.AccountCreatedOn.Value.Date
+        });
     }
 
     [HttpGet]
