@@ -107,10 +107,7 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
     [TestMethod]
     public async Task GivenAccountAlreadyExists_WhenConfirmDetailsOfTheCompanyCalled_ThenRedirectsToAccountAlreadyExistsPage()
     {
-        if (_organisationSessionMock.CompaniesHouseSession != null)
-        {
-            _organisationSessionMock.CompaniesHouseSession.Company.AccountCreatedOn = DateTime.Now;
-        }
+        _organisationSessionMock.CompaniesHouseSession.Company.AccountCreatedOn = DateTime.Now;
 
         // Act
         var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();
