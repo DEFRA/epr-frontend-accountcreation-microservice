@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -13,10 +10,14 @@ using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -178,6 +179,20 @@ public class OrganisationController : Controller
         {
             return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation);
         }
+    }
+
+    [HttpGet]
+    [Route(PagePath.IsTradingNameDifferent)]
+    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
+    public async Task<IActionResult> IsTradingNameDifferent()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.IsTradingNameDifferent);
+
+        return View(new IsTradingNameDifferentViewModel
+        {
+            IsTradingNameDifferent = session.IsTradingNameDifferent ? YesNoAnswer.Yes : YesNoAnswer.No
+        });
     }
 
     [HttpGet]

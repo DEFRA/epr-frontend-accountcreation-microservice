@@ -29,6 +29,7 @@ public static class PagePath
     public const string Invitation = "invitation";
     public const string InviteeFullName = "invitee-full-name";
     public const string Success = "success";
+    public const string IsTradingNameDifferent = "is-trading-name-different";
 
     // Non journey paths
     public const string Accessibility = "accessibility";
