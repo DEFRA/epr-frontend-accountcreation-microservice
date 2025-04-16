@@ -2,10 +2,10 @@
 
 using System.Security.Claims;
 using Core.Services;
-using Core.Services.FacadeModels;
+using Core.Sessions;
 using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -13,44 +13,32 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Web.Configs;
-using Web.Controllers.ReprocessorExporter;
-using Web.Sessions;
 
-/// <summary>
-/// Used for Reprocessor and Exporter.
-/// </summary>
-public abstract class OrganisationTestBase
+public abstract class UserTestBase
 {
-    private const string BackLinkViewDataKey = "BackLinkToDisplay";
-    protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
+    protected const string BackLinkViewDataKey = "BackLinkToDisplay";
 
     protected Mock<HttpContext> _httpContextMock = null!;
-    protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
+    protected Mock<ISessionManager<ReExAccountCreationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
-    protected Mock<ICompanyService> _companyServiceMock = null!;
-    protected Mock<IOrganisationMapper> _organisationServiceMock = null!;
+    protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
-    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;
+    protected Mock<ILogger<UserController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
-    protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
 
-    protected OrganisationController _systemUnderTest = null!;
+    protected UserController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)
     {
         _httpContextMock = new Mock<HttpContext>();
-        _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
+        _sessionManagerMock = new Mock<ISessionManager<ReExAccountCreationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
-        _companyServiceMock = new Mock<ICompanyService>();
-        _organisationServiceMock = new Mock<IOrganisationMapper>();
+        _reExAccountMapperMock = new Mock<IReExAccountMapper>();
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
-        _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        _facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
-            .ReturnsAsync(new ApprovedPersonOrganisationModel());
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
-            .Returns(Task.FromResult<OrganisationSession?>(new OrganisationSession()));
+            .Returns(Task.FromResult<ReExAccountCreationSession?>(new ReExAccountCreationSession()));
 
         _urlsOptionMock.Setup(x => x.Value)
             .Returns(new ExternalUrlsOptions
@@ -63,20 +51,15 @@ public abstract class OrganisationTestBase
 
         _httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>
         {
-            new("Oid", Guid.NewGuid().ToString())
+            new("Oid", Guid.NewGuid().ToString()),
+            new(ClaimTypes.Email, "email@example.com")
         });
 
-        _deploymentRoleOptionMock.Setup(x => x.Value)
-            .Returns(new DeploymentRoleOptions
-            {
-                DeploymentRole = deploymentRole
-            });
-
-        _loggerMock = new Mock<ILogger<OrganisationController>>();
+        _loggerMock = new Mock<ILogger<UserController>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        _systemUnderTest = new OrganisationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
-           _organisationServiceMock.Object, _urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
+        _systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
+           _reExAccountMapperMock.Object, _urlsOptionMock.Object, _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;
@@ -89,4 +72,3 @@ public abstract class OrganisationTestBase
         (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
     }
 }
-

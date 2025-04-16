@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Cookies;
@@ -14,7 +15,6 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.Distributed;
 using StackExchange.Redis;
 using System.Diagnostics.CodeAnalysis;
-using EPR.Common.Authorization.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 
 namespace FrontendAccountCreation.Web.Extensions;
@@ -75,9 +75,9 @@ public static class ServiceProviderExtension
     private static void RegisterServices(IServiceCollection services)
     {
         services.AddSingleton<ICookieService, CookieService>();
-        services.AddScoped<Sessions.ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
-        services.AddScoped<EPR.Common.Authorization.Sessions.ISessionManager<ReExAccountCreationSession>, SessionManager<ReExAccountCreationSession>>();
-        services.AddScoped<EPR.Common.Authorization.Sessions.ISessionManager<OrganisationSession>, SessionManager<OrganisationSession>>();
+        services.AddScoped<ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
+        services.AddScoped<ISessionManager<ReExAccountCreationSession>, SessionManager<ReExAccountCreationSession>>();
+        services.AddScoped<ISessionManager<OrganisationSession>, SessionManager<OrganisationSession>>();
     }
 
     private static void SetTempDataCookieOptions(IServiceCollection services, IConfiguration configuration)

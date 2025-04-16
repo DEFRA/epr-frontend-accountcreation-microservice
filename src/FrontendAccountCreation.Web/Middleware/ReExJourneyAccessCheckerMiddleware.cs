@@ -1,8 +1,7 @@
-﻿using EPR.Common.Authorization.Sessions;
-using FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-
+using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace FrontendAccountCreation.Web.Middleware;

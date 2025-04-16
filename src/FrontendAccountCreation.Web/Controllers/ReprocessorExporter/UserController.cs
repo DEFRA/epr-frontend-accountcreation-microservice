@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
-using EPR.Common.Authorization.Sessions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -24,37 +24,44 @@ public class UserController : Controller
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<UserController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
-    private readonly DeploymentRoleOptions _deploymentRoleOptions;
 
     public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IReExAccountMapper reExAccountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
-        IOptions<DeploymentRoleOptions> deploymentRoleOptions,
         ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
         _urlOptions = urlOptions.Value;
-        _deploymentRoleOptions = deploymentRoleOptions.Value;
         _logger = logger;
     }
-
-    //todo: we'll have to handle user already exists. probably best to handle it at the start of the journey
 
     [HttpGet]
     [Route("")]
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
+        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        if (userExists)
+        {
+            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
+            {
+                return RedirectToAction("UserAlreadyExists", "Home");
+            }
+            else
+            {
+                return Redirect(_urlOptions.ExistingUserRedirectUrl);
+            }
+        }
+
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
         if (session != null)
         {
-            viewModel.PostAction = nameof(ReExAccountFullName);
             viewModel.FirstName = session.Contact.FirstName;
             viewModel.LastName = session.Contact.LastName;
         }
@@ -64,7 +71,6 @@ public class UserController : Controller
 
     [HttpPost]
     [Route(PagePath.FullName)]
-    [ReprocessorExporterJourneyAccess(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName(ReExAccountFullNameViewModel model)
     {
         if (!ModelState.IsValid)
@@ -83,7 +89,7 @@ public class UserController : Controller
 
     [HttpGet]
     [Route(PagePath.TelephoneNumber)]
-    [JourneyAccess(PagePath.TelephoneNumber)]
+    [ReprocessorExporterJourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -95,12 +101,13 @@ public class UserController : Controller
         return View(new ReExAccountTelephoneNumberViewModel()
         {
             TelephoneNumber = session.Contact.TelephoneNumber,
+            EmailAddress = session.Contact.Email,
         });
     }
 
     [HttpPost]
     [Route(PagePath.TelephoneNumber)]
-    [JourneyAccess(PagePath.TelephoneNumber)]
+    [ReprocessorExporterJourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -113,13 +120,36 @@ public class UserController : Controller
         }
 
         session.Contact.TelephoneNumber = model.TelephoneNumber;
+        session.Contact.Email = model.EmailAddress;
 
-        return await SaveSessionAndRedirect(session, nameof(/*Success*/ReExAccountTelephoneNumber), PagePath.TelephoneNumber,
+        string? email = GetUserEmail();
+
+        var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
+
+        await _facadeService.PostReprocessorExporterAccountAsync(account);
+
+        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
             PagePath.Success);
-
     }
 
-    //todo: move this (these?) somewhere common?
+    [HttpGet]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    [Route(PagePath.Success)]
+    [ReprocessorExporterJourneyAccess(PagePath.Success)]
+    public async Task<IActionResult> Success()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        var viewModel = new SuccessViewModel
+        {
+            UserName = $"{session.Contact.FirstName} {session.Contact.LastName}"
+        };
+
+        _sessionManager.RemoveSession(HttpContext.Session);
+
+        return View(viewModel);
+    }
+
     private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??
                                       // Remove when we migrate all environments to custom policy
                                       User.Claims.FirstOrDefault(claim => claim.Type == "emails")?.Value;
