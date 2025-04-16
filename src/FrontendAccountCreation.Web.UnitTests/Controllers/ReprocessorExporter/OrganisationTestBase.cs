@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Web.Configs;
-using Web.Controllers.ReprocessorExporter;
 using Web.Sessions;
 
 /// <summary>

@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -13,10 +10,14 @@ using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -181,6 +182,46 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
+    [Route(PagePath.IsTradingNameDifferent)]
+    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
+    public async Task<IActionResult> IsTradingNameDifferent()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.IsTradingNameDifferent);
+
+        YesNoAnswer? isTradingNameDifferent = null;
+        if (session.IsTradingNameDifferent != null)
+        {
+            isTradingNameDifferent = session.IsTradingNameDifferent.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(new IsTradingNameDifferentViewModel
+        {
+            IsTradingNameDifferent = isTradingNameDifferent
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsTradingNameDifferent)]
+    public async Task<IActionResult> IsTradingNameDifferent(IsTradingNameDifferentViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
+
+        if (session.IsTradingNameDifferent == true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
+        }
+        return await SaveSessionAndRedirect(session, nameof(IsPartnership), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+    }
+
+    [HttpGet]
     [Route(PagePath.TypeOfOrganisation)]
     [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
     public async Task<IActionResult> TypeOfOrganisation()
@@ -221,17 +262,20 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.TradingName)]
     [OrganisationJourneyAccess(PagePath.TradingName)]
-    public async Task<IActionResult> TradingName()
+    public Task<IActionResult> TradingName()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        throw new NotImplementedException(
+            "The trading name page hasn't been built. It will be built in a future story.");
+    }
 
-        SetBackLink(session, PagePath.TradingName);
-
-        var viewModel = new TradingNameViewModel()
-        {
-            TradingName = session?.ManualInputSession?.TradingName,
-        };
-        return View(viewModel);
+    [HttpGet]
+    [Route(PagePath.IsPartnership)]
+    [OrganisationJourneyAccess(PagePath.IsPartnership)]
+    [ExcludeFromCodeCoverage]
+    public Task<IActionResult> IsPartnership()
+    {
+        throw new NotImplementedException(
+            "The 'Is your organisation a partnership' page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
@@ -366,10 +410,12 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.UkNation)]
     [OrganisationJourneyAccess(PagePath.UkNation)]
-    public Task<IActionResult> UkNation()
+    public IActionResult UkNation()
     {
-        throw new NotImplementedException(
-            "The nation page isn't implemented yet and will be implemented in a later story");
+        return RedirectToAction(nameof(IsTradingNameDifferent));
+
+        //throw new NotImplementedException(
+        //    "The nation page isn't implemented yet and will be implemented in a later story");
     }
 
     [HttpGet]
