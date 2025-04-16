@@ -32,9 +32,6 @@
   <data name="TeamMemberRoleInOrganisation.CompanySecretary" xml:space="preserve">
     <value>Ysgrifennydd y cwmni</value>
   </data>
-  <data name="TeamMemberRoleInOrganisation.Partner" xml:space="preserve">
-    <value>[Welsh]Partner of the partnership as per the official records filed with Companies House</value>
-  </data>
   <data name="TeamMemberRoleInOrganisation.ContinueButton" xml:space="preserve">
     <value>[Welsh]Continue with invitation</value>
   </data>

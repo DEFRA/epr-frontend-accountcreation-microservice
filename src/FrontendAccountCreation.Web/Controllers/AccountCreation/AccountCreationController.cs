@@ -26,7 +26,7 @@ using ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text.Json;
 
-public class AccountCreationController : Controller
+public partial class AccountCreationController : Controller
 {
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
@@ -76,6 +76,8 @@ public class AccountCreationController : Controller
         {
             if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
             {
+                var mySession = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new AccountCreationSession();
+                SetBackLink(mySession, string.Empty);
                 //return RedirectToAction("UserAlreadyExists", "Home");
                 return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }
@@ -1217,25 +1219,7 @@ public class AccountCreationController : Controller
         return View();
     }
 
-    [HttpGet]
-    [Route(PagePath.TeamMemberRoleInOrganisation)]
-    public async Task<IActionResult> TeamMemberRoleInOrganisation()
-    {
-        return View();
-    }
 
-    [HttpPost]
-    [Route(PagePath.TeamMemberRoleInOrganisation)]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
-        return RedirectToAction(PagePath.Declaration);
-    }
 
     public IActionResult RedirectToStart()
     {
@@ -1255,6 +1239,7 @@ public class AccountCreationController : Controller
     {
         ClearRestOfJourney(session, currentPagePath);
 
+        session.Journey.AddIfNotExists(currentPagePath);
         session.Journey.AddIfNotExists(nextPagePath);
 
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);

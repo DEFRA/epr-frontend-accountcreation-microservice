@@ -9,4 +9,6 @@ public class CompaniesHouseSession
     public RoleInOrganisation? RoleInOrganisation { get; set; }
     
     public bool IsComplianceScheme { get; set; }
+
+    public TeamMemberRoleInOrganisation? TeamMemberRoleInOrganisation { get; set; }
 }
