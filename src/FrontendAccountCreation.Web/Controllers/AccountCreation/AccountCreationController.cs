@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace FrontendAccountCreation.Web.Controllers.AccountCreation;
 
 using System.Net;
@@ -1214,6 +1216,24 @@ public class AccountCreationController : Controller
         ViewBag.CreateAccountToReportPackagingData = _urlOptions.CreateAccountToReportPackagingData;
 
         return View();
+    }
+
+    [HttpPost]
+    public IActionResult TeamMembersDetails(TeamMemberViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        // Save to session
+        HttpContext.Session.SetString("TeamMemberDetails", JsonSerializer.Serialize(model));
+
+        return RedirectToAction("CheckInvitationDetails");
+    }
+
+    [HttpGet]
+    public IActionResult CheckInvitationDetails(TeamMemberViewModel model)
+    {
+        return Content("");
     }
 
     public IActionResult RedirectToStart()
