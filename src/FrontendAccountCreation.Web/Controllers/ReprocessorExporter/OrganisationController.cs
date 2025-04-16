@@ -189,10 +189,37 @@ public class OrganisationController : Controller
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.IsTradingNameDifferent);
 
+        YesNoAnswer? isTradingNameDifferent = null;
+        if (session.IsTradingNameDifferent != null)
+        {
+            isTradingNameDifferent = session.IsTradingNameDifferent.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
         return View(new IsTradingNameDifferentViewModel
         {
-            IsTradingNameDifferent = session.IsTradingNameDifferent ? YesNoAnswer.Yes : YesNoAnswer.No
+            IsTradingNameDifferent = isTradingNameDifferent
         });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsTradingNameDifferent)]
+    public async Task<IActionResult> IsTradingNameDifferent(IsTradingNameDifferentViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
+
+        //todo: pagepaths & put placeholder handlers in place
+        if (session.IsTradingNameDifferent == true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(/*TradingName*/IsTradingNameDifferent), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+        }
+        return await SaveSessionAndRedirect(session, nameof(/*PartnerOrganisation*/IsTradingNameDifferent), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
     }
 
     [HttpGet]

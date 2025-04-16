@@ -32,5 +32,5 @@ public class OrganisationSession
 
     public bool IsApprovedUser { get; set; }
 
-    public bool IsTradingNameDifferent { get; set; }
+    public bool? IsTradingNameDifferent { get; set; }
 }
