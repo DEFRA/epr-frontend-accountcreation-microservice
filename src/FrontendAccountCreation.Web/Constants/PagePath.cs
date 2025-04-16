@@ -32,6 +32,7 @@ public static class PagePath
     //note: has same title as TradingName, but is part of a different journey, so shouldn't cause an issue
     // the add organisation journey has the existing trading-name page's path as trading-name2
     public const string IsTradingNameDifferent = "trading-name";
+    public const string TradingName2 = "trading-name2";
     public const string IsPartnership = "is-partnership";
 
     // Non journey paths

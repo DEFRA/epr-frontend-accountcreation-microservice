@@ -214,10 +214,9 @@ public class OrganisationController : Controller
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
-        //todo: pagepaths & put placeholder handlers in place
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName2);
         }
         return await SaveSessionAndRedirect(session, nameof(IsPartnership), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
@@ -261,8 +260,8 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
+    [Route(PagePath.TradingName2)]
+    [OrganisationJourneyAccess(PagePath.TradingName2)]
     public async Task<IActionResult> TradingName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
