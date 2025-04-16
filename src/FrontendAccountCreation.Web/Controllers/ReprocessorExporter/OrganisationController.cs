@@ -216,7 +216,7 @@ public class OrganisationController : Controller
 
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName2);
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
         }
         return await SaveSessionAndRedirect(session, nameof(IsPartnership), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
@@ -260,19 +260,12 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.TradingName2)]
-    [OrganisationJourneyAccess(PagePath.TradingName2)]
-    public async Task<IActionResult> TradingName()
+    [Route(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
+    public Task<IActionResult> TradingName()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        SetBackLink(session, PagePath.TradingName);
-
-        var viewModel = new TradingNameViewModel()
-        {
-            TradingName = session?.ManualInputSession?.TradingName,
-        };
-        return View(viewModel);
+        throw new NotImplementedException(
+            "The trading name page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
