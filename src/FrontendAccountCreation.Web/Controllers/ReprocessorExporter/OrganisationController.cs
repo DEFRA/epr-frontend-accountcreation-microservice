@@ -217,9 +217,9 @@ public class OrganisationController : Controller
         //todo: pagepaths & put placeholder handlers in place
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(/*TradingName*/IsTradingNameDifferent), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
         }
-        return await SaveSessionAndRedirect(session, nameof(/*PartnerOrganisation*/IsTradingNameDifferent), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
+        return await SaveSessionAndRedirect(session, nameof(IsPartnership), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
 
     [HttpGet]
@@ -274,6 +274,16 @@ public class OrganisationController : Controller
             TradingName = session?.ManualInputSession?.TradingName,
         };
         return View(viewModel);
+    }
+
+    [HttpGet]
+    [Route(PagePath.IsPartnership)]
+    [OrganisationJourneyAccess(PagePath.IsPartnership)]
+    [ExcludeFromCodeCoverage]
+    public Task<IActionResult> IsPartnership()
+    {
+        throw new NotImplementedException(
+            "The 'Is your organisation a partnership' page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
@@ -408,10 +418,12 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.UkNation)]
     [OrganisationJourneyAccess(PagePath.UkNation)]
-    public Task<IActionResult> UkNation()
+    public IActionResult UkNation()
     {
-        throw new NotImplementedException(
-            "The nation page isn't implemented yet and will be implemented in a later story");
+        return RedirectToAction(nameof(IsTradingNameDifferent));
+
+        //throw new NotImplementedException(
+        //    "The nation page isn't implemented yet and will be implemented in a later story");
     }
 
     [HttpGet]

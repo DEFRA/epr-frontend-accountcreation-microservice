@@ -29,7 +29,10 @@ public static class PagePath
     public const string Invitation = "invitation";
     public const string InviteeFullName = "invitee-full-name";
     public const string Success = "success";
+    //note: has same title as TradingName, but is part of a different journey, so shouldn't cause an issue
+    // the add organisation journey has the existing trading-name page's path as trading-name2
     public const string IsTradingNameDifferent = "trading-name";
+    public const string IsPartnership = "is-partnership";
 
     // Non journey paths
     public const string Accessibility = "accessibility";

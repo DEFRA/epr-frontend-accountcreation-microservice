@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IsTradingNameDifferent.ErrorMessage" xml:space="preserve">
-    <value>todo</value>
+    <value>WSelect if your organisation's trading name is different to its Companies House name</value>
   </data>
   <data name="IsTradingNameDifferent.Question" xml:space="preserve">
     <value>WIs your organisation's trading name different to its Companies House name?</value>
   </data>
   <data name="IsTradingNameDifferent.Title" xml:space="preserve">
-    <value>todo</value>
+    <value>WTrading name different</value>
   </data>
 </root>
