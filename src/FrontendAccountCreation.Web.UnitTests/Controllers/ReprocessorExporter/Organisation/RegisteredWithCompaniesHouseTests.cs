@@ -38,9 +38,20 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task RegisteredWithCompaniesHouse_OrganisationIsNotRegistered_RedirectsToTypeOfOrganisationPage_AndUpdateSession()
+    [DataRow(OrganisationType.NonCompaniesHouseCompany)]
+    [DataRow(OrganisationType.CompaniesHouseCompany)]
+    public async Task RegisteredWithCompaniesHouse_OrganisationIsNotRegistered_RedirectsToTypeOfOrganisationPage_AndUpdateSession(OrganisationType orgType)
     {
         // Arrange
+
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.RegisteredWithCompaniesHouse],
+            OrganisationType = orgType
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(orgCreationSessionMock);
+
         var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = YesNoAnswer.No };
 
         // Act
@@ -77,12 +88,12 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     public async Task RegisteredWithCompaniesHouse_OrganisationIsRegistered_RedirectsToViewResult()
     {
         // Arrange
-        var accountCreationSessionMock = new OrganisationSession
+        var orgCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string> { PagePath.RegisteredWithCompaniesHouse }
         };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(accountCreationSessionMock);
+            .ReturnsAsync(orgCreationSessionMock);
 
 
         // Act
@@ -96,7 +107,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     public async Task RegisteredWithCompaniesHouse_RegisteredWithCompaniesHousePageIsExited_BackLinkIsRegisteredAsCharity()
     {
         //Arrange
-        var accountCreationSessionMock = new OrganisationSession
+        var orgCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string>
             {
@@ -105,7 +116,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
             IsUserChangingDetails = false,
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(accountCreationSessionMock);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSessionMock);
 
         //Act
         var result = await _systemUnderTest.RegisteredWithCompaniesHouse();
@@ -122,7 +133,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     public async Task UserNavigatesToRegisteredWithCompaniesHousePage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
     {
         //Arrange
-        var accountCreationSessionMock = new OrganisationSession
+        var orgCreationSessionMock = new OrganisationSession
         {
             Journey =
             [
@@ -133,7 +144,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
             IsUserChangingDetails = true,
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(accountCreationSessionMock);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSessionMock);
 
         //Act
         var result = await _systemUnderTest.RegisteredWithCompaniesHouse();
@@ -145,5 +156,102 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         viewResult.Model.Should().BeOfType<RegisteredWithCompaniesHouseViewModel>();
         AssertBackLink(viewResult, PagePath.CheckYourDetails);
 
+    }
+
+    [TestMethod]
+    [DataRow(OrganisationType.NotSet, null)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, YesNoAnswer.Yes)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, YesNoAnswer.No)]
+    public async Task RegisteredWithCompaniesHouse_RegisteredWithCompaniesHousePageIsExited_WithDifferent_OrganisationType(OrganisationType orgType, YesNoAnswer? expectedAnswer)
+    {
+        //Arrange
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = new List<string>
+            {
+                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse
+            },
+            IsUserChangingDetails = false,
+            OrganisationType = orgType
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSessionMock);
+
+        expectedAnswer = orgType == OrganisationType.NotSet ? null : expectedAnswer;
+
+        //Act
+        var result = await _systemUnderTest.RegisteredWithCompaniesHouse();
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<RegisteredWithCompaniesHouseViewModel>();
+        AssertBackLink(viewResult, PagePath.RegisteredAsCharity);
+        ((FrontendAccountCreation.Web.ViewModels.AccountCreation.RegisteredWithCompaniesHouseViewModel)((Microsoft.AspNetCore.Mvc.ViewResult)result).Model).IsTheOrganisationRegistered.Should().Be(expectedAnswer);
+    }
+
+    [TestMethod]
+    public async Task TypeOfOrganisation_Returns_View()
+    {
+        // Arrange
+
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.TypeOfOrganisation]
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(orgCreationSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.TypeOfOrganisation();
+        var viewResult = (ViewResult)result;
+
+        // Assert
+        viewResult.ViewData.Count.Should().Be(1);
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once());
+    }
+
+    [TestMethod]
+    public async Task CannotVerifyOrganisation_Returns_View()
+    {
+        // Arrange
+
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.CannotVerifyOrganisation]
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(orgCreationSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.CannotVerifyOrganisation();
+        var viewResult = (ViewResult)result;
+
+        // Assert
+        viewResult.ViewData.Count.Should().Be(1);
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once());
+    }
+
+    [TestMethod]
+    public async Task ConfirmCompanyDetails_Returns_View()
+    {
+        // Arrange
+
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.ConfirmCompanyDetails]
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(orgCreationSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.CannotVerifyOrganisation();
+        var viewResult = (ViewResult)result;
+
+        // Assert
+        viewResult.ViewData.Count.Should().Be(1);
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once());
     }
 }
