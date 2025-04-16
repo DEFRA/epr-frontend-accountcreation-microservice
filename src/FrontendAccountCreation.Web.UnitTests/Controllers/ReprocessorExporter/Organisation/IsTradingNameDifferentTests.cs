@@ -117,6 +117,28 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
         viewModel!.IsTradingNameDifferent.Should().Be(expectedIsTradingNameDifferentViewModel);
     }
 
+    //todo: have generic tests for checking yesno pages
+    [TestMethod]
+    [DataRow(YesNoAnswer.Yes, true)]
+    [DataRow(YesNoAnswer.No, false)]
+    public async Task POST_UserSelectsYesOrNo_SessionUpdatedCorrectly(YesNoAnswer userAnswer, bool expectedIsTradingNameDifferentInSession)
+    {
+        // Arrange
+        var request = new IsTradingNameDifferentViewModel { IsTradingNameDifferent = userAnswer };
+
+        // Act
+        await _systemUnderTest.IsTradingNameDifferent(request);
+
+        // Assert
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(os => os.IsTradingNameDifferent == expectedIsTradingNameDifferentInSession)),
+            Times.Once);
+    }
+
+    // POST_UserSelectsNothing_SessionNotUpdated()
+
+
+
     [TestMethod]
     public async Task RegisteredWithCompaniesHouse_OrganisationIsRegistered_RedirectsToCompaniesHouseNumberPage_AndUpdateSession()
     {
