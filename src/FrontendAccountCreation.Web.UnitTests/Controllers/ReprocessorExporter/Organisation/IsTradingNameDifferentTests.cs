@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -30,6 +31,7 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
      *
      * post:
      * updates session if answer
+     * doesn't update session if no answer
      * errors if no answer
      * redirects to x on yes
      * redirects to y on no
@@ -135,7 +137,40 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
             Times.Once);
     }
 
-    // POST_UserSelectsNothing_SessionNotUpdated()
+    [TestMethod]
+    public async Task POST_UserSelectsNothing_SessionNotUpdated()
+    {
+        // Arrange
+        var request = new IsTradingNameDifferentViewModel { IsTradingNameDifferent = null };
+        _systemUnderTest.ModelState.AddModelError("IsTradingNameDifferent", "Select if your organisation's trading name is different to its Companies House name");
+
+        // Act
+        await _systemUnderTest.IsTradingNameDifferent(request);
+
+        // Assert
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(),
+                It.IsAny<OrganisationSession>()),
+            Times.Never);
+    }
+
+    [TestMethod]
+    public async Task POST_UserSelectsNothing_ViewIsReturnedWithCorrectModel()
+    {
+        // Arrange
+        var request = new IsTradingNameDifferentViewModel { IsTradingNameDifferent = null };
+        _systemUnderTest.ModelState.AddModelError("IsTradingNameDifferent", "Select if your organisation's trading name is different to its Companies House name");
+
+        // Act
+        var result = await _systemUnderTest.IsTradingNameDifferent(request);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<IsTradingNameDifferentViewModel>();
+        var viewModel = (IsTradingNameDifferentViewModel?)viewResult.Model;
+        viewModel!.IsTradingNameDifferent.Should().BeNull();
+    }
 
 
 
