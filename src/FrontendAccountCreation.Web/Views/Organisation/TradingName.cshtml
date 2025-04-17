@@ -6,7 +6,10 @@
 
 @{
     ViewData["Title"] = Localizer["TradingName.Title"];
-    // todo: ViewData overrides will go here
+    // these aren't required yet, but they're part of the reason why we're duplicating the views (which Sonar is complaining about)
+    ViewData["ApplicationTitleOverride"] = "ReExApplicationTitle";
+    ViewData["HeaderOverride"] = "_ReExHeader";
+
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
