@@ -203,6 +203,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.IsTradingNameDifferent)]
+    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
     public async Task<IActionResult> IsTradingNameDifferent(IsTradingNameDifferentViewModel model)
     {
         if (!ModelState.IsValid)
@@ -219,6 +220,44 @@ public class OrganisationController : Controller
             return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
         }
         return await SaveSessionAndRedirect(session, nameof(IsPartnership), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+    }
+
+    [HttpGet]
+    [Route(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
+    public async Task<IActionResult> TradingName()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TradingName);
+
+        var viewModel = new TradingNameViewModel()
+        {
+            TradingName = session?.ManualInputSession?.TradingName,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.TradingName)]
+    [JourneyAccess(PagePath.TradingName)]
+    public async Task<IActionResult> TradingName(TradingNameViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.TradingName);
+
+            return View(model);
+        }
+
+        session.ManualInputSession ??= new ReExManualInputSession();
+
+        session.ManualInputSession.TradingName = model.TradingName!;
+
+        return await SaveSessionAndRedirect(session, nameof(/*todo*/TradingName), PagePath.TradingName,
+            PagePath.BusinessAddressPostcode);
     }
 
     [HttpGet]
@@ -257,15 +296,6 @@ public class OrganisationController : Controller
 
         return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.TypeOfOrganisation,
             PagePath.TradingName);
-    }
-
-    [HttpGet]
-    [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
-    public Task<IActionResult> TradingName()
-    {
-        throw new NotImplementedException(
-            "The trading name page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
