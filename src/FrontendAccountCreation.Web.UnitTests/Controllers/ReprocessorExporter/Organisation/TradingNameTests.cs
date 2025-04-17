@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -81,21 +80,44 @@ public class TradingNameTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenNoTradingName_ThenReturnViewWithError()
+    public async Task POST_GivenNoTradingName_ThenReturnView()
     {
         // Arrange
         _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
+        var viewModel = new TradingNameViewModel
+        {
+            TradingName = ""
+        };
 
         // Act
-        var result = await _systemUnderTest.TradingName(new TradingNameViewModel());
+        var result = await _systemUnderTest.TradingName(viewModel);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
+    }
 
+    [TestMethod]
+    public async Task POST_GivenNoTradingName_ThenReturnViewWithUsersBadInput()
+    {
+        // Arrange
+        const string badTradingName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
+
+        _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name must be 170 characters or less");
+        var viewModel = new TradingNameViewModel
+        {
+            TradingName = badTradingName
+        };
+
+        // Act
+        var result = await _systemUnderTest.TradingName(viewModel);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
 
-        viewResult.Model.Should().BeOfType<TradingNameViewModel>();
-        //todo: test error
+        viewResult.Model.Should().BeOfType<TradingNameViewModel?>();
+        var resultViewModel = (TradingNameViewModel?)viewResult.Model;
+        resultViewModel!.TradingName.Should().Be(badTradingName);
     }
 
     [TestMethod]
