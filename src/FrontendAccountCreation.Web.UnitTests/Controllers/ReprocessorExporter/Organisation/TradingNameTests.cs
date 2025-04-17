@@ -91,9 +91,10 @@ public class TradingNameTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TradingName));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.PartnerOrganisation));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
+            Times.Once);
     }
 
     [TestMethod]

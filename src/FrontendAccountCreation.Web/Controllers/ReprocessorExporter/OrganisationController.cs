@@ -258,8 +258,17 @@ public class OrganisationController : Controller
 
         session.ManualInputSession.TradingName = model.TradingName!;
 
-        return await SaveSessionAndRedirect(session, nameof(/*todo*/TradingName), PagePath.TradingName,
+        return await SaveSessionAndRedirect(session, nameof(PartnerOrganisation), PagePath.TradingName,
             PagePath.BusinessAddressPostcode);
+    }
+
+    [HttpGet]
+    [Route(PagePath.PartnerOrganisation)]
+    [OrganisationJourneyAccess(PagePath.PartnerOrganisation)]
+    public Task<IActionResult> PartnerOrganisation()
+    {
+        throw new NotImplementedException(
+            "The 'partner organisation' page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
