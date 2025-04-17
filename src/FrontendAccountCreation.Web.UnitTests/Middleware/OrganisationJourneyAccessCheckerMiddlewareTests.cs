@@ -192,16 +192,6 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         _httpResponseMock.Verify(x => x.Redirect(PagePath.PageNotFound), Times.Once);
     }
 
-    //[TestMethod]
-    //public async Task Invoke_PageDoesntRequiresFeatureFlagAndFlagIsDisabled_ThenNoRedirect()
-    //{
-    //}
-
-    //[TestMethod]
-    //public async Task Invoke_PageDoesntRequiresFeatureFlagAndFlagIsEnabled_ThenNoRedirect()
-    //{
-    //}
-
     private void SetupEndpointMock(params object[] attributes)
     {
         var endpoint = new Endpoint(null, new EndpointMetadataCollection(attributes), null);
