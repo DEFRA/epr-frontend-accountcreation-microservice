@@ -113,47 +113,6 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
     }
 
     [TestMethod]
-    [DataRow(PagePath.SelectBusinessAddress, PagePath.SelectBusinessAddress)]
-    public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLsButIsComingFromUserDetails_WhenInvokeCalled_ThenNoRedirect
-        (string pageUrl, params string[] visitedUrls)
-    {
-        // Arrange
-        var session = new OrganisationSession { Journey = visitedUrls.ToList(), IsUserChangingDetails = true };
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
-    }
-
-    [TestMethod]
-    [DataRow(PagePath.SelectBusinessAddress, PagePath.BusinessAddress, PagePath.BusinessAddress)]
-    public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLsAndIsNotComingFromUserDetails_WhenInvokeCalled_ThenRedirectedToExpectedPage
-        (string pageUrl, string expectedPage, params string[] visitedUrls)
-    {
-        // Arrange
-        var session = new OrganisationSession { Journey = visitedUrls.ToList(), IsUserChangingDetails = false };
-        var expectedURL = expectedPage;
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
-    }
-
-    //todo: replace above with unit tests from user
-
-    [TestMethod]
     [DataRow(PagePath.TradingName, PagePath.IsTradingNameDifferent, PagePath.TradingName)]
     public async Task Invoke_PageRequiresFeatureFlagAndFlagIsEnabled_ThenNoRedirect(string pageUrl, params string[] visitedUrls)
     {
