@@ -26,14 +26,58 @@ public class TradingNameTests : OrganisationTestBase
                 PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
                 PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent,
                 PagePath.TradingName
-            ],
-            IsUserChangingDetails = false
+            ]
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
     }
 
-    //todo: GET tests
+    [TestMethod]
+    public async Task GET_WhenTradingNameIsNotInSession_ThenViewIsReturnedWithoutTradingName()
+    {
+        //Act
+        var result = await _systemUnderTest.TradingName();
+
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<TradingNameViewModel>();
+        var viewModel = (TradingNameViewModel?)viewResult.Model;
+        viewModel!.TradingName.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task GET_WhenTradingNameIsInSession_ThenViewIsReturnedWithTradingName()
+    {
+        //Arrange
+        const string tradingName = "Trading name";
+        _organisationSession.ManualInputSession = new ReExManualInputSession
+        {
+            TradingName = tradingName
+        };
+
+        //Act
+        var result = await _systemUnderTest.TradingName();
+
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<TradingNameViewModel>();
+        var viewModel = (TradingNameViewModel?)viewResult.Model;
+        viewModel!.TradingName.Should().Be(tradingName);
+    }
+
+    [TestMethod]
+    public async Task GET_ThenBackLinkIsCorrect()
+    {
+        //Act
+        var result = await _systemUnderTest.TradingName();
+
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
+    }
 
     [TestMethod]
     public async Task POST_GivenTradingName_ThenRedirectToPartnerOrganisation()
