@@ -151,6 +151,46 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
     }
 
+    //todo: replace above with unit tests from user
+
+    [TestMethod]
+    [DataRow(PagePath.TradingName, PagePath.IsTradingNameDifferent, PagePath.TradingName)]
+    public async Task Invoke_PageRequiresFeatureFlagAndFlagIsEnabled_ThenNoRedirect(string pageUrl, params string[] visitedUrls)
+    {
+        // Arrange
+        var session = new OrganisationSession { Journey = visitedUrls.ToList() };
+
+        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl, "AddOrganisationCompanyHouseDirectorJourney"));
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
+
+        // Assert
+        _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
+    }
+
+    //[TestMethod]
+    //[DataRow(PagePath.TradingName)]
+    //public async Task Invoke_PageRequiresFeatureFlagAndFlagIsDisabled_ThenNoRedirectToPageNotFound(string pageUrl)
+    //{
+    //    // Arrange
+    //    _featureManagerMock.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
+    //        .ReturnsAsync(false);
+
+    //}
+
+    //[TestMethod]
+    //public async Task Invoke_PageDoesntRequiresFeatureFlagAndFlagIsDisabled_ThenNoRedirect()
+    //{
+    //}
+
+    //[TestMethod]
+    //public async Task Invoke_PageDoesntRequiresFeatureFlagAndFlagIsEnabled_ThenNoRedirect()
+    //{
+    //}
+
     private void SetupEndpointMock(params object[] attributes)
     {
         var endpoint = new Endpoint(null, new EndpointMetadataCollection(attributes), null);
