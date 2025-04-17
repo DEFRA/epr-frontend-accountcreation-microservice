@@ -264,6 +264,7 @@ public class OrganisationController : Controller
             PagePath.PartnerOrganisation);
     }
 
+    [ExcludeFromCodeCoverage]
     [HttpGet]
     [Route(PagePath.PartnerOrganisation)]
     [OrganisationJourneyAccess(PagePath.PartnerOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
