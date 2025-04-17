@@ -171,15 +171,26 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
     }
 
-    //[TestMethod]
-    //[DataRow(PagePath.TradingName)]
-    //public async Task Invoke_PageRequiresFeatureFlagAndFlagIsDisabled_ThenNoRedirectToPageNotFound(string pageUrl)
-    //{
-    //    // Arrange
-    //    _featureManagerMock.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
-    //        .ReturnsAsync(false);
+    [TestMethod]
+    [DataRow(PagePath.TradingName, PagePath.IsTradingNameDifferent, PagePath.TradingName)]
+    public async Task Invoke_PageRequiresFeatureFlagAndFlagIsDisabled_ThenRedirectToPageNotFound(string pageUrl, params string[] visitedUrls)
+    {
+        // Arrange
+        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
+            .ReturnsAsync(false);
 
-    //}
+        var session = new OrganisationSession { Journey = visitedUrls.ToList() };
+
+        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl, "AddOrganisationCompanyHouseDirectorJourney"));
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
+
+        // Assert
+        _httpResponseMock.Verify(x => x.Redirect(PagePath.PageNotFound), Times.Once);
+    }
 
     //[TestMethod]
     //public async Task Invoke_PageDoesntRequiresFeatureFlagAndFlagIsDisabled_ThenNoRedirect()
