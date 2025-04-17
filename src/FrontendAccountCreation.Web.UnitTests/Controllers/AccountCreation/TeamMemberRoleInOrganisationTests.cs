@@ -111,7 +111,7 @@ public class TeamMemberRoleInOrganisationTests : AccountCreationTestBase
         //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+        viewResult.Model.Should().BeNull();
         AssertBackLink(viewResult, "Pagebefore");
     }
 }

@@ -55,14 +55,15 @@
 
                     </div>
 
-                    <button class="govuk-button" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="AccountCreation" name="invite" value="with-invite" data-module="govuk-button">
-                        @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
-                    </button>
-                    <br />
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="AccountCreation" name="invite" value="with-invite" data-module="govuk-button">
+                            @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
+                        </button>
 
-                    <button class="govuk-button govuk-button--secondary" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="AccountCreation" name="invite" value="without-invite" data-module="govuk-button">
-                        @Localizer["TeamMemberRoleInOrganisation.ContinueLink"]
-                    </button>
+                        <button class="govuk-button govuk-button--secondary" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="AccountCreation" name="invite" value="without-invite" data-module="govuk-button">
+                            @Localizer["TeamMemberRoleInOrganisation.ContinueLink"]
+                        </button>
+                    </div>
 
                 </form>
             </div>

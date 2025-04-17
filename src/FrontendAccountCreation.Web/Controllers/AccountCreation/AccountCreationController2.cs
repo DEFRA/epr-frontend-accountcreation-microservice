@@ -20,12 +20,21 @@ namespace FrontendAccountCreation.Web.Controllers.AccountCreation
             SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var viewModel = new TeamMemberRoleInOrganisationViewModel()
+            int? teamMemberIndex = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
+            if (teamMemberIndex.HasValue)
             {
-                RoleInOrganisation = session.CompaniesHouseSession?.TeamMemberRoleInOrganisation
-            };
+                var members = session.CompaniesHouseSession?.TeamMembers;
+                if (members?.Count > teamMemberIndex.Value)
+                {
+                    var viewModel = new TeamMemberRoleInOrganisationViewModel
+                    {
+                        RoleInOrganisation = members[teamMemberIndex.Value]?.Role
+                    };
+                    return View(viewModel);
+                }
+            }
 
-            return View(viewModel);
+            return View();
         }
 
         [HttpPost]
@@ -40,9 +49,13 @@ namespace FrontendAccountCreation.Web.Controllers.AccountCreation
                 return View(model);
             }
 
+            FillSessionWithALoadOfNonsense(model.RoleInOrganisation.Value);
+
             if (invite != null && invite == "without-invite")
             {
-                FillSessionWithALoadOfNonsense(model.RoleInOrganisation.Value);
+                session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].FullName = null;
+                session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].Telephone = null;
+                session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].Email = null;
 
                 return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TeamMemberRoleInOrganisation,
                     PagePath.CheckYourDetails);
@@ -73,8 +86,31 @@ namespace FrontendAccountCreation.Web.Controllers.AccountCreation
                 companiesHouseSession.Company = company;
                 session.OrganisationType = OrganisationType.CompaniesHouseCompany;
                 companiesHouseSession.RoleInOrganisation = (Core.Sessions.RoleInOrganisation) role;
-                companiesHouseSession.TeamMemberRoleInOrganisation = role;
+
+                int? teamMemberIndex = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
+                if (teamMemberIndex.HasValue)
+                {
+                    var members = session.CompaniesHouseSession?.TeamMembers;
+                    if (members?.Count > teamMemberIndex.Value)
+                    {
+                        members[teamMemberIndex.Value].Role = role;
+                        companiesHouseSession.TeamMembers = members;
+                        session.CompaniesHouseSession = companiesHouseSession;
+                        return;
+                    }
+                }
+
+                var newMembers = new List<CompanyTeamMember>();
+                CompanyTeamMember newMember = new CompanyTeamMember
+                {
+                    Role = role
+                };
+                newMembers.Add(newMember);
+
+                companiesHouseSession.TeamMembers = newMembers;
+                companiesHouseSession.CurrentTeamMemberIndex = 0;
                 session.CompaniesHouseSession = companiesHouseSession;
+
             }
         }
     }

@@ -10,5 +10,7 @@ public class CompaniesHouseSession
     
     public bool IsComplianceScheme { get; set; }
 
-    public TeamMemberRoleInOrganisation? TeamMemberRoleInOrganisation { get; set; }
+    public int CurrentTeamMemberIndex { get; set; }
+
+    public List<CompanyTeamMember?> TeamMembers { get; set; }
 }
