@@ -18,17 +18,10 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next, IF
         {
             var sessionValue = await sessionManager.GetSessionAsync(httpContext.Session);
 
-            //todo: do we need this?
-            //if (attribute.PagePath == PagePath.BusinessAddress && !sessionValue.Journey.Contains(PagePath.BusinessAddress))
-            //{
-            //    sessionValue.Journey.Add(PagePath.BusinessAddress);
-            //}
-
             string? pageToRedirect = null;
 
             if (sessionValue == null)
             {
-                //todo: do we have to prefix with journey base re-ex/organisation
                 pageToRedirect = PagePath.RegisteredAsCharity;
             }
             else if (sessionValue.Journey.Count == 0 || !await IsPageEnabled(attribute))

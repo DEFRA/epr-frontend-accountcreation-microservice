@@ -21,7 +21,6 @@ public class ReExJourneyAccessCheckerMiddleware(RequestDelegate next)
 
             if (sessionValue == null)
             {
-                //todo: do we have to prefix with journey base re-ex/user
                 pageToRedirect = PagePath.FullName;
             }
             else if (sessionValue.Journey.Count == 0)
