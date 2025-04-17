@@ -240,7 +240,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.TradingName)]
-    [JourneyAccess(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
     public async Task<IActionResult> TradingName(TradingNameViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
