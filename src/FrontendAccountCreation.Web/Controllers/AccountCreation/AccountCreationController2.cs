@@ -5,9 +5,11 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.AccountCreation
 {
+    [ExcludeFromCodeCoverage(Justification ="The pages before and after are not developed")]
     public partial class AccountCreationController : Controller
     {
         [HttpGet]
@@ -46,6 +48,7 @@ namespace FrontendAccountCreation.Web.Controllers.AccountCreation
                     PagePath.CheckYourDetails);
             }
 
+            // navigating to the wrong page, the correct page is not developed
             return await SaveSessionAndRedirect(session, nameof(Declaration), PagePath.TeamMemberRoleInOrganisation,
                     PagePath.Declaration);
 
