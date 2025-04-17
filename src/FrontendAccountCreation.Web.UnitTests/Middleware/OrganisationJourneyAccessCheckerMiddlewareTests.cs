@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Middleware;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.UnitTests;
+using FrontendAccountCreation.Web.UnitTests.Controllers;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
+using FrontendAccountCreation.Web.UnitTests.Middleware;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Moq;
 
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
+namespace FrontendAccountCreation.Web.UnitTests.Middleware;
 
 [TestClass]
 public class OrganisationJourneyAccessCheckerMiddlewareTests

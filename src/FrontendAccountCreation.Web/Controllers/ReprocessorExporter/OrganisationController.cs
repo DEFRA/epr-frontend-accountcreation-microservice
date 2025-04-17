@@ -222,6 +222,8 @@ public class OrganisationController : Controller
         return await SaveSessionAndRedirect(session, nameof(IsPartnership), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
 
+    //todo: feature flag 
+
     [HttpGet]
     [Route(PagePath.TradingName)]
     [OrganisationJourneyAccess(PagePath.TradingName)]
