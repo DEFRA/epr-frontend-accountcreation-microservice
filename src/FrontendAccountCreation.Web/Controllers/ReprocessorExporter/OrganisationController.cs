@@ -226,7 +226,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> TradingName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -242,7 +242,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> TradingName(TradingNameViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -259,7 +259,7 @@ public class OrganisationController : Controller
         session.ManualInputSession.TradingName = model.TradingName!;
 
         return await SaveSessionAndRedirect(session, nameof(PartnerOrganisation), PagePath.TradingName,
-            PagePath.BusinessAddressPostcode);
+            PagePath.PartnerOrganisation);
     }
 
     [HttpGet]
@@ -451,12 +451,11 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.UkNation)]
     [OrganisationJourneyAccess(PagePath.UkNation)]
-    public IActionResult UkNation()
+    public async Task<IActionResult> UkNation()
     {
-        return RedirectToAction(nameof(IsTradingNameDifferent));
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        //throw new NotImplementedException(
-        //    "The nation page isn't implemented yet and will be implemented in a later story");
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
     }
 
     [HttpGet]

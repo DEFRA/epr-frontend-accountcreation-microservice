@@ -1,13 +1,13 @@
-﻿using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.FeatureManagement;
 
 namespace FrontendAccountCreation.Web.Middleware;
 
-public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
+public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next, IFeatureManager featureManager)
 {
     public async Task Invoke(HttpContext httpContext, ISessionManager<OrganisationSession> sessionManager)
     {
@@ -18,24 +18,26 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
         {
             var sessionValue = await sessionManager.GetSessionAsync(httpContext.Session);
 
-            if (attribute.PagePath == PagePath.BusinessAddress && !sessionValue.Journey.Contains(PagePath.BusinessAddress))
-            {
-                sessionValue.Journey.Add(PagePath.BusinessAddress);
-            }
+            //todo: do we need this?
+            //if (attribute.PagePath == PagePath.BusinessAddress && !sessionValue.Journey.Contains(PagePath.BusinessAddress))
+            //{
+            //    sessionValue.Journey.Add(PagePath.BusinessAddress);
+            //}
 
             string? pageToRedirect = null;
 
             if (sessionValue == null)
             {
+                //todo: do we have to prefix with journey base re-ex/organisation
                 pageToRedirect = PagePath.RegisteredAsCharity;
             }
-            else if (sessionValue.Journey.Count == 0)
+            else if (sessionValue.Journey.Count == 0 || !await IsPageEnabled(attribute))
             {
                 pageToRedirect = PagePath.PageNotFound;
             }
-            else if (!sessionValue.Journey.Contains(attribute.PagePath) && !sessionValue.IsUserChangingDetails)
+            else if (!sessionValue.Journey.Contains(attribute.PagePath))
             {
-                pageToRedirect = sessionValue.Journey[sessionValue.Journey.Count - 1];
+                pageToRedirect = sessionValue.Journey[^1];
             }
 
             if (!string.IsNullOrEmpty(pageToRedirect))
@@ -47,5 +49,14 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
         }
 
         await next(httpContext);
+    }
+
+    private async Task<bool> IsPageEnabled(OrganisationJourneyAccessAttribute attribute)
+    {
+        if (attribute.RequiredFeature == null)
+        {
+            return true;
+        }
+        return await featureManager.IsEnabledAsync(attribute.RequiredFeature);
     }
 }
