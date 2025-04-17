@@ -28,7 +28,7 @@ public static class PagePath
     public const string UserAlreadyExists = "user-already-exists";
     public const string Invitation = "invitation";
     public const string InviteeFullName = "invitee-full-name";
-    public const string TeamMemberRoleInOrganisation = "team-member-role-in-organisation";
+    public const string TeamMemberRoleInOrganisation = "team-role";
 
     // Non journey paths
     public const string Accessibility = "accessibility";
