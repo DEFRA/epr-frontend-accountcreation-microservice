@@ -50,20 +50,20 @@ namespace FrontendAccountCreation.Web.Controllers.AccountCreation
             }
 
             FillSessionWithALoadOfNonsense(model.RoleInOrganisation.Value);
+            bool isInvited = invite != "without-invite";
+            session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].IsInvited = isInvited;
 
-            if (invite != null && invite == "without-invite")
+            if (isInvited)
             {
-                session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].FullName = null;
-                session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].Telephone = null;
-                session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].Email = null;
+                // navigating to the wrong page, the correct page is not developed
+                return await SaveSessionAndRedirect(session, nameof(Declaration), PagePath.TeamMemberRoleInOrganisation,
+                    PagePath.Declaration);
 
-                return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TeamMemberRoleInOrganisation,
-                    PagePath.CheckYourDetails);
             }
 
             // navigating to the wrong page, the correct page is not developed
-            return await SaveSessionAndRedirect(session, nameof(Declaration), PagePath.TeamMemberRoleInOrganisation,
-                    PagePath.Declaration);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TeamMemberRoleInOrganisation,
+                PagePath.CheckYourDetails);
 
             // for development only because the next page is not ready
             void FillSessionWithALoadOfNonsense(Core.Sessions.TeamMemberRoleInOrganisation role)

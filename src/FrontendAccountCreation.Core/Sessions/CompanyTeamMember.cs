@@ -8,5 +8,7 @@ public class CompanyTeamMember
 
     public string Telephone { get; set; }
 
+    public bool IsInvited { get; set; }
+
     public TeamMemberRoleInOrganisation? Role { get; set; }
 }
