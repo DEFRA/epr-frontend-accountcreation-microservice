@@ -1219,6 +1219,8 @@ public class AccountCreationController : Controller
     }
 
     [HttpPost]
+    [Route(PagePath.CannotCreateAccount)]
+    [JourneyAccess(PagePath.CannotCreateAccount)]
     public IActionResult TeamMembersDetails(TeamMemberViewModel model)
     {
         if (!ModelState.IsValid)
