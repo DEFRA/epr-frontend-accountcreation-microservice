@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FrontendAccountCreation.Web.ViewModels.AccountCreation;
+namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class TeamMemberViewModel
 {

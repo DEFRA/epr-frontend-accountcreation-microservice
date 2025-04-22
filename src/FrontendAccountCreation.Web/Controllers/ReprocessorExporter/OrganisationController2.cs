@@ -3,10 +3,13 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -113,6 +116,79 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 session.CompaniesHouseSession = companiesHouseSession;
 
             }
+        }
+
+        [HttpGet]
+        [Route(PagePath.TeamMemberDetails)]
+        public async Task<IActionResult> TeamMembersDetails()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+
+            SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            var teamMember = GetCurrentTeamMember(session);
+
+            if (teamMember != null)
+            {
+                var viewModel = new TeamMemberViewModel
+                {
+                    FullName = teamMember.FullName,
+                    Telephone = teamMember.TelephoneNumber,
+                    Email = teamMember.Email
+                };
+
+                return View(viewModel);
+            }
+
+            return View();
+        }
+
+
+        [HttpPost]
+        [Route(PagePath.TeamMemberDetails)]
+        [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+        public async Task<IActionResult> TeamMembersDetails(TeamMemberViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+                return View(model);
+            }
+
+            var index = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
+
+            if (index.HasValue && session.CompaniesHouseSession?.TeamMembers != null && index.Value < session.CompaniesHouseSession.TeamMembers.Count)
+            {
+                var teamMember = session.CompaniesHouseSession.TeamMembers[index.Value];
+
+                teamMember.FullName = model.FullName;
+                teamMember.TelephoneNumber = model.Telephone;
+                teamMember.Email = model.Email;
+            }
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+
+            return RedirectToAction("CheckInvitationDetails");
+        }
+
+
+        [HttpGet]
+        public IActionResult CheckInvitationDetails(TeamMemberViewModel model)
+        {
+            return Content("");
+        }
+
+        private ReExCompanyTeamMember? GetCurrentTeamMember(OrganisationSession session)
+        {
+            var members = session.CompaniesHouseSession?.TeamMembers;
+            var index = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
+
+            return (index.HasValue && members != null && index.Value < members.Count)
+                ? members[index.Value]
+                : null;
         }
     }
 }

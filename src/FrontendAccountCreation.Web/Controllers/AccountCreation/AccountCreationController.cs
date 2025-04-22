@@ -1219,26 +1219,6 @@ public class AccountCreationController : Controller
         return View();
     }
 
-    [HttpPost]
-    [Route(PagePath.CannotCreateAccount)]
-    [JourneyAccess(PagePath.CannotCreateAccount)]
-    public IActionResult TeamMembersDetails(TeamMemberViewModel model)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        // Save to session
-        HttpContext.Session.SetString("TeamMemberDetails", JsonSerializer.Serialize(model));
-
-        return RedirectToAction("CheckInvitationDetails");
-    }
-
-    [HttpGet]
-    public IActionResult CheckInvitationDetails(TeamMemberViewModel model)
-    {
-        return Content("");
-    }
-
     public IActionResult RedirectToStart()
     {
         return RedirectToAction(nameof(RegisteredAsCharity));
