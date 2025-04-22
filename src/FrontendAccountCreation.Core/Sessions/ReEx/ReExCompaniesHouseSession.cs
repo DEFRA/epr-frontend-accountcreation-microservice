@@ -9,4 +9,8 @@ public class ReExCompaniesHouseSession
     public RoleInOrganisation? RoleInOrganisation { get; set; }
 
     public bool IsComplianceScheme { get; set; }
+
+    public int CurrentTeamMemberIndex { get; set; }
+
+    public List<ReExCompanyTeamMember?> TeamMembers { get; set; }
 }
