@@ -23,7 +23,7 @@ public class TypeOfOrganisationTests : OrganisationTestBase
         _accountCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string> { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation },
-            CompaniesHouseSession = new ReExCompaniesHouseSession()
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession()
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_accountCreationSessionMock);

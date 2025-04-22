@@ -131,7 +131,7 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
 
     [TestMethod]
     [DataRow(YesNoAnswer.Yes, nameof(OrganisationController.TradingName))]
-    [DataRow(YesNoAnswer.No, nameof(OrganisationController.IsPartnership))]
+    [DataRow(YesNoAnswer.No, nameof(OrganisationController.IsOrganisationAPartner))]
     public async Task POST_UserSelectsYesOrNo_UserIsRedirected(YesNoAnswer userAnswer, string expectedRedirect)
     {
         // Arrange

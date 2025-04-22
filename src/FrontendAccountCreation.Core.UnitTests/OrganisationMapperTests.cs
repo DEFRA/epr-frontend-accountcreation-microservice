@@ -108,7 +108,7 @@ public class OrganisationMapperTests
             RoleInOrganisation = RoleInOrganisation.Partner,
             IsComplianceScheme = true
         };
-        organisationCreationSession.CompaniesHouseSession = companiesHouseSession;
+        organisationCreationSession.ReExCompaniesHouseSession = companiesHouseSession;
         OrganisationMapper orgMapper = new();
 
         // Act
@@ -157,7 +157,7 @@ public class OrganisationMapperTests
             RoleInOrganisation = RoleInOrganisation.Partner,
             IsComplianceScheme = true
         };
-        orgCreationSession.CompaniesHouseSession = companiesHouseSession;
+        orgCreationSession.ReExCompaniesHouseSession = companiesHouseSession;
         OrganisationMapper orgMapper = new();
 
         // Act
@@ -234,7 +234,7 @@ public class OrganisationMapperTests
             TradingName = "KAINOS SOFTWARE LIMITED"
         };
 
-        orgCreationSession.ManualInputSession = manualInputSession;
+        orgCreationSession.ReExManualInputSession = manualInputSession;
         var accountMapper = new OrganisationMapper();
 
         // Act
@@ -330,7 +330,7 @@ public class OrganisationMapperTests
         mockSession.Object.IsApprovedUser = true;
         mockSession.Object.OrganisationType = OrganisationType.CompaniesHouseCompany;
 
-        mockSession.Object.CompaniesHouseSession =
+        mockSession.Object.ReExCompaniesHouseSession =
             new ReExCompaniesHouseSession()
             {
                 Company = new Company

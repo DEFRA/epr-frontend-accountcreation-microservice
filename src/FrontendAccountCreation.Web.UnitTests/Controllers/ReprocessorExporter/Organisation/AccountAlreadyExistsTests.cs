@@ -25,7 +25,7 @@ public class AccountAlreadyExistsTests : OrganisationTestBase
                 PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
                 PagePath.ConfirmCompanyDetails, PagePath.AccountAlreadyExists
             ],
-            CompaniesHouseSession = new ReExCompaniesHouseSession
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 Company = new Core.Services.Dto.Company.Company
                 {
@@ -52,7 +52,7 @@ public class AccountAlreadyExistsTests : OrganisationTestBase
 
         var accountAlreadyExistsViewModel = (AccountAlreadyExistsViewModel)viewResult.Model!;
 
-        accountAlreadyExistsViewModel.DateCreated.Should().Be(_organisationSession.CompaniesHouseSession?.Company.AccountCreatedOn?.Date);
+        accountAlreadyExistsViewModel.DateCreated.Should().Be(_organisationSession.ReExCompaniesHouseSession?.Company.AccountCreatedOn?.Date);
 
         accountAlreadyExistsViewModel.DisplayDateCreated.Should().Be(accountAlreadyExistsViewModel.DateCreated.ToString("d MMMM yyyy"));
     }
