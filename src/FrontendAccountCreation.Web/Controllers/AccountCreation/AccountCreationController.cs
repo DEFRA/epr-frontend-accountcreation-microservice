@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace FrontendAccountCreation.Web.Controllers.AccountCreation;
 
 using System.Net;
