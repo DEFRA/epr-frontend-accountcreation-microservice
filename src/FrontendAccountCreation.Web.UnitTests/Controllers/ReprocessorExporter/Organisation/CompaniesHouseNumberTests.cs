@@ -47,7 +47,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         _accountCreationSessionMock = new OrganisationSession
         {
             Journey = new List<string> { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber },
-            CompaniesHouseSession = new ReExCompaniesHouseSession
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 Company = _companyMock
             }
