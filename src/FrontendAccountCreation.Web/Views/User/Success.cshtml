@@ -1,0 +1,58 @@
+﻿﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+
+@* todo: generate css so don't have to use class="govuk-body" *@
+
+@model SuccessViewModel
+
+@{
+    ViewData["Title"] = Localizer["Success.Title"];
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+    
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        @Localizer["Success.Success"]
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <h3 class="govuk-notification-banner__heading">
+                        @Localizer["Success.CreatedAccountFor"] @Model.UserName
+                    </h3>
+                </div>
+            </div>
+
+            <h3 class="govuk-notification-banner__heading">
+                @Localizer["Success.WhatYouCanDoNow.Heading"]
+            </h3>
+            <p class="govuk-body govuk-!-margin-bottom-7">
+                @Localizer["Success.WhatYouCanDoNow.Paragraph.1"]
+            </p>
+
+            <h3 class="govuk-notification-banner__heading">
+                @Localizer["Success.AfterAddingOrganisation.Heading"]
+            </h3>
+            <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.1.List.LeadIn"]</p>
+
+            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+                <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item1"]</li>
+                <li>@Localizer["Success.AfterAddingOrganisation.1.List.Item2"]</li>
+            </ul>
+
+            <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.2.Paragraph"]</p>
+            <p class="govuk-body govuk-!-margin-bottom-7">@Localizer["Success.AfterAddingOrganisation.3.Paragraph"]</p>
+            
+            @* this will point to the account home page, but it doesn't currently exist *@
+            <a href="#" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                @Localizer["Success.Continue"]
+            </a>
+
+        </div>
+    </div>
+    </main>
+</div>

@@ -103,6 +103,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRequestLocalization();
 app.UseMiddleware<JourneyAccessCheckerMiddleware>();
+app.UseMiddleware<ReExJourneyAccessCheckerMiddleware>();
+//app.UseMiddleware<OrganisationJourneyAccessCheckerMiddleware>();
 app.UseMiddleware<AnalyticsCookieMiddleware>();
 
 app.MapControllerRoute(
