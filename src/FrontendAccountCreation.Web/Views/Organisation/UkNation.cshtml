@@ -16,7 +16,7 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="AccountCreation" asp-action="UkNation" method="post">
+                <form asp-controller="Organisation" asp-action="UkNation" method="post">
                     @if (Model.IsManualInputFlow)
                     {
                         <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">

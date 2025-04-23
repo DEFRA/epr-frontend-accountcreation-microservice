@@ -218,7 +218,7 @@ public class OrganisationController : Controller
 
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.RoleInOrganisation);
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
         }
         return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
@@ -262,8 +262,8 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.RoleInOrganisation)]
-    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
+    [Route(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
     public Task<IActionResult> TradingName()
     {
         throw new NotImplementedException(
@@ -500,13 +500,6 @@ public class OrganisationController : Controller
         }
         session!.UkNation = model.UkNation;
         return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
-    }
-
-    [HttpGet]
-    [Route(PagePath.TradingName)]
-    public async Task<IActionResult> AboutYourOrganisationTradingNameCheck()
-    {
-       throw new NotImplementedException("AboutYourOrganisationTradingNameCheck");
     }
 
     [HttpGet]
