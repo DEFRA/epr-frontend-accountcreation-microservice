@@ -2,7 +2,7 @@
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.TeamMemberViewModel
 
 @{
-    ViewData["Title"] = "What are your team member’s details?";
+    ViewData["Title"] = Localizer["TeamMemberDetails.Title"];
 }
 
 <div class="govuk-width-container">
@@ -10,19 +10,19 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <form asp-action="TeamMembersDetails" method="post" novalidate>
-                    <h1 class="govuk-heading-l">What are your team member's details?</h1>
+                    <h1 class="govuk-heading-l">@Localizer["TeamMemberDetails.Header"]</h1>
 
-                    <govuk-text-input asp-for="FullName" label-class="govuk-label" label-text="Full name" />
+                    <govuk-text-input asp-for="FullName" label-class="govuk-label" label-text=@Localizer["TeamMemberDetails.FullName"] />
 
-                    <govuk-text-input asp-for="Email" label-text="Email">
-                        <govuk-hint>We ask for this so we can invite them to join your team.</govuk-hint>
+                    <govuk-text-input asp-for="Email" label-text=@Localizer["TeamMemberDetails.Email"]>
+                        <govuk-hint>@Localizer["TeamMemberDetails.HintEmail"]</govuk-hint>
                     </govuk-text-input>
 
-                    <govuk-text-input asp-for="Telephone" label-text="Telephone">
-                        <govuk-hint>We ask for this in case your regulator needs to call them directly with any queries.</govuk-hint>
+                    <govuk-text-input asp-for="Telephone" label-text=@Localizer["TeamMemberDetails.Telephone"]>
+                        <govuk-hint>@Localizer["TeamMemberDetails.HintTelephone"]</govuk-hint>
                     </govuk-text-input>
 
-                    <button class="govuk-button" data-module="govuk-button" type="submit">Continue</button>
+                    <button class="govuk-button" data-module="govuk-button" type="submit">@Localizer["TeamMemberDetails.Continue"]</button>
                 </form>
             </div>
         </div>
