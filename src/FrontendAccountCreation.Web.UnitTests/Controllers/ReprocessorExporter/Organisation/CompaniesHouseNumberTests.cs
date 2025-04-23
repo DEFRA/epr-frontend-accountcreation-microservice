@@ -1,14 +1,13 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services.Dto.Company;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.AccountCreation;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using global::FrontendAccountCreation.Core.Addresses;
 using global::FrontendAccountCreation.Core.Services.Dto.Company;
-using global::FrontendAccountCreation.Core.Sessions;
 using global::FrontendAccountCreation.Web.Constants;
 using global::FrontendAccountCreation.Web.Controllers.AccountCreation;
 using global::FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
@@ -69,11 +68,10 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.ConfirmCompanyDetails));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ConfirmCompanyDetails));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
         _facadeServiceMock.Verify(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>()), Times.Once);
-
     }
 
     [TestMethod]
@@ -89,7 +87,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.CannotVerifyOrganisation));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.CannotVerifyOrganisation));
         _facadeServiceMock.Verify(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>()), Times.Once);
     }
 
@@ -127,7 +125,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(AccountCreationController.CompaniesHouseNumber));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.CompaniesHouseNumber));
         _facadeServiceMock.Verify(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>()), Times.Once);
     }
 
