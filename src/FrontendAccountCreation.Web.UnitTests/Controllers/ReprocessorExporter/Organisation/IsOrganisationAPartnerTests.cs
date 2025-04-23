@@ -56,7 +56,7 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
 
     [TestMethod]
     [DataRow(true, YesNoAnswer.Yes, nameof(OrganisationController.RoleInOrganisation))]
-    [DataRow(false, YesNoAnswer.No, nameof(OrganisationController.IsOrganisationAPartner))]
+    [DataRow(false, YesNoAnswer.No, nameof(OrganisationController.RoleInOrganisation))]
     public async Task Post_IsOrganisationAPartner_ReturnsAsExpected(bool? isAPartnership, YesNoAnswer? yesNoAnswer, string expectedRedirect)
     {
         // Arrange 
