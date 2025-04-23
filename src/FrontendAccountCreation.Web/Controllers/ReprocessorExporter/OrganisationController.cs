@@ -305,7 +305,7 @@ public class OrganisationController : Controller
             // TODO: Yes or No ending up same pagePath - to be confirmed
             return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
         }
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
     }
 
     [HttpGet]
