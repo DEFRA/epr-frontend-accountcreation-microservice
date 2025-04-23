@@ -2,8 +2,10 @@
 using System.Net;
 using System.Text.Json;
 using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
+using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -347,6 +349,55 @@ public class OrganisationController : Controller
         };
 
         return View(viewModel);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UkNation)]
+    [OrganisationJourneyAccess(PagePath.UkNation)]
+    public async Task<IActionResult> UkNation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UkNation);
+
+        var viewModel = new UkNationViewModel()
+        {
+            UkNation = session.UkNation,
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow,
+            IsManualInputFlow = session.IsManualInputFlow
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.UkNation)]
+    [OrganisationJourneyAccess(PagePath.UkNation)]
+    public async Task<IActionResult> UkNation(UkNationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        model.IsCompaniesHouseFlow = session.IsCompaniesHouseFlow;
+        model.IsManualInputFlow = session.IsManualInputFlow;
+
+        if (!ModelState.IsValid)
+        {
+            if (model.UkNation == null)
+            {
+                var errorMessage = model.IsCompaniesHouseFlow ? "UkNation.LimitedCompany.ErrorMessage" : "UkNation.SoleTrader.ErrorMessage";
+                ModelState.ClearValidationState(nameof(model.UkNation));
+                ModelState.AddModelError(nameof(model.UkNation), errorMessage);
+            }
+            SetBackLink(session, PagePath.UkNation);
+            return View(model);
+        }
+        session!.UkNation = model.UkNation;
+        // to do need to know the next journey where it continues. as per prototype it takes to trading name  your - organisation / trading - name
+        return await SaveSessionAndRedirect(session, nameof(AboutYourOrganisationTradingNameCheck), PagePath.UkNation, PagePath.TradingName);
+    }
+
+    [HttpGet]
+    [Route(PagePath.TradingName)]
+    public async Task<IActionResult> AboutYourOrganisationTradingNameCheck()
+    {
+       throw new NotImplementedException("AboutYourOrganisationTradingNameCheck");
     }
 
     [HttpGet]
