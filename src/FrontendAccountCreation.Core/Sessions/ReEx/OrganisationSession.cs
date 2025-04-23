@@ -13,12 +13,12 @@ public class OrganisationSession
     /// <summary>
     /// ReEx Companies-House session
     /// </summary>
-    public ReExCompaniesHouseSession? CompaniesHouseSession { get; set; }
+    public ReExCompaniesHouseSession? ReExCompaniesHouseSession { get; set; }
 
     /// <summary>
     /// ReEx Manual input session
     /// </summary>
-    public ReExManualInputSession? ManualInputSession { get; set; }
+    public ReExManualInputSession? ReExManualInputSession { get; set; }
 
     public Contact? Contact { get; set; } = new();
 
@@ -26,15 +26,13 @@ public class OrganisationSession
 
     public DateTime DeclarationTimestamp { get; set; }
 
-    public string? InviteToken { get; set; }
-
     public bool IsCompaniesHouseFlow => OrganisationType == Sessions.OrganisationType.CompaniesHouseCompany;
-
-    public bool IsManualInputFlow => OrganisationType == Sessions.OrganisationType.NonCompaniesHouseCompany;
 
     public bool IsUserChangingDetails { get; set; }
 
     public bool IsApprovedUser { get; set; }
 
-    public string OrganisationId { get; set; }
+    public bool? IsTradingNameDifferent { get; set; }
+
+    public bool? IsOrganisationAPartnership { get; set; }
 }

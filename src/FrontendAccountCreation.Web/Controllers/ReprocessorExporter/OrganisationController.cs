@@ -9,29 +9,27 @@ using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Route("re-ex/organisation")]
 public class OrganisationController : Controller
 {
-    private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
-    private const string OrganisationMetaDataKey = "OrganisationMetaData";
-
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly ICompanyService _companyService;
@@ -71,6 +69,8 @@ public class OrganisationController : Controller
             });
         }
 
+        //todo: the account will already exist, so I don't think this check is wanted
+        // in fact, we probably want to check that the account *does* already exist
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
         {
@@ -84,8 +84,7 @@ public class OrganisationController : Controller
             }
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
         YesNoAnswer? isTheOrganisationCharity = null;
 
@@ -188,6 +187,46 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
+    [Route(PagePath.IsTradingNameDifferent)]
+    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
+    public async Task<IActionResult> IsTradingNameDifferent()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.IsTradingNameDifferent);
+
+        YesNoAnswer? isTradingNameDifferent = null;
+        if (session.IsTradingNameDifferent != null)
+        {
+            isTradingNameDifferent = session.IsTradingNameDifferent.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(new IsTradingNameDifferentViewModel
+        {
+            IsTradingNameDifferent = isTradingNameDifferent
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsTradingNameDifferent)]
+    public async Task<IActionResult> IsTradingNameDifferent(IsTradingNameDifferentViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
+
+        if (session.IsTradingNameDifferent == true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.RoleInOrganisation);
+        }
+        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+    }
+
+    [HttpGet]
     [Route(PagePath.TypeOfOrganisation)]
     [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
     public async Task<IActionResult> TypeOfOrganisation()
@@ -198,7 +237,7 @@ public class OrganisationController : Controller
 
         var viewModel = new TypeOfOrganisationViewModel()
         {
-            ProducerType = session.ManualInputSession?.ProducerType
+            ProducerType = session.ReExManualInputSession?.ProducerType
         };
 
         return View(viewModel);
@@ -217,28 +256,71 @@ public class OrganisationController : Controller
             return View(model);
         }
 
-        session.ManualInputSession ??= new ReExManualInputSession();
-        session.ManualInputSession.ProducerType = model.ProducerType;
-        session.CompaniesHouseSession = null;
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+        session.ReExManualInputSession.ProducerType = model.ProducerType;
+        session.ReExCompaniesHouseSession = null;
 
         return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.TypeOfOrganisation,
-            PagePath.TradingName);
+            PagePath.RoleInOrganisation);
     }
 
     [HttpGet]
-    [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
-    public async Task<IActionResult> TradingName()
+    [Route(PagePath.RoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
+    public Task<IActionResult> TradingName()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        throw new NotImplementedException(
+            "The trading name page hasn't been built. It will be built in a future story.");
+    }
 
-        SetBackLink(session, PagePath.TradingName);
+    [HttpGet]
+    [Route(PagePath.IsPartnership)]
+    [OrganisationJourneyAccess(PagePath.IsPartnership)]
+    public async Task<IActionResult> IsOrganisationAPartner()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        SetBackLink(session, PagePath.IsPartnership);
 
-        var viewModel = new TradingNameViewModel()
+        YesNoAnswer? isOrganisationAPartnership = null;
+        if (session.IsOrganisationAPartnership != null)
         {
-            TradingName = session?.ManualInputSession?.TradingName,
-        };
-        return View(viewModel);
+            isOrganisationAPartnership = session.IsOrganisationAPartnership.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(new IsOrganisationAPartnerViewModel
+        {
+            IsOrganisationAPartner = isOrganisationAPartnership
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsPartnership)]
+    public async Task<IActionResult> IsOrganisationAPartner(IsOrganisationAPartnerViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+
+        session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+
+        if (session.IsOrganisationAPartnership == true)
+        {
+            // TODO: Yes or No ending up same pagePath - to be confirmed
+            return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+        }
+        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+    }
+
+    [HttpGet]
+    [Route(PagePath.RoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
+    public Task<IActionResult> RoleInOrganisation()
+    {
+        throw new NotImplementedException(
+            "The trading name page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
@@ -254,7 +336,7 @@ public class OrganisationController : Controller
 
         var viewModel = new CompaniesHouseNumberViewModel
         {
-            CompaniesHouseNumber = session.CompaniesHouseSession?.Company?.CompaniesHouseNumber,
+            CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company?.CompaniesHouseNumber,
         };
 
         if (TempData["ModelState"] is not null)
@@ -283,9 +365,9 @@ public class OrganisationController : Controller
             return View(model);
         }
 
-        if (session.CompaniesHouseSession == null)
+        if (session.ReExCompaniesHouseSession == null)
         {
-            session.CompaniesHouseSession = new ReExCompaniesHouseSession();
+            session.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
         }
 
         Company? company;
@@ -314,7 +396,7 @@ public class OrganisationController : Controller
             return RedirectToAction(nameof(CompaniesHouseNumber));
         }
 
-        session.CompaniesHouseSession.Company = company;
+        session.ReExCompaniesHouseSession.Company = company;
 
         return await SaveSessionAndRedirect(session, nameof(ConfirmCompanyDetails), PagePath.CompaniesHouseNumber, PagePath.ConfirmCompanyDetails);
     }
@@ -343,12 +425,57 @@ public class OrganisationController : Controller
 
         var viewModel = new ConfirmCompanyDetailsViewModel
         {
-            CompanyName = session.CompaniesHouseSession.Company.Name,
-            CompaniesHouseNumber = session.CompaniesHouseSession.Company.CompaniesHouseNumber,
-            BusinessAddress = session.CompaniesHouseSession.Company.BusinessAddress
+            CompanyName = session.ReExCompaniesHouseSession.Company.Name,
+            CompaniesHouseNumber = session.ReExCompaniesHouseSession.Company.CompaniesHouseNumber,
+            BusinessAddress = session.ReExCompaniesHouseSession.Company.BusinessAddress
         };
 
         return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.ConfirmCompanyDetails)]
+    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails)]
+    public async Task<IActionResult> ConfirmDetailsOfTheCompany()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (session.ReExCompaniesHouseSession.Company.AccountExists)
+        {
+            return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails,
+                PagePath.AccountAlreadyExists);
+        }
+
+        session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
+
+        return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.UkNation)]
+    [OrganisationJourneyAccess(PagePath.UkNation)]
+    public IActionResult UkNation()
+    {
+        return RedirectToAction(nameof(IsTradingNameDifferent));
+
+        //throw new NotImplementedException(
+        //    "The nation page isn't implemented yet and will be implemented in a later story");
+    }
+
+    [HttpGet]
+    [Route(PagePath.AccountAlreadyExists)]
+    [OrganisationJourneyAccess(PagePath.AccountAlreadyExists)]
+    public async Task<IActionResult> AccountAlreadyExists()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.AccountAlreadyExists);
+
+        return View(new AccountAlreadyExistsViewModel
+        {
+            DateCreated = session.ReExCompaniesHouseSession.Company.AccountCreatedOn.Value.Date
+        });
     }
 
     [HttpGet]

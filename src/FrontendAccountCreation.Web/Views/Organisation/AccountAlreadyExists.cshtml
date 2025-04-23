@@ -1,0 +1,28 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+
+@model AccountAlreadyExistsViewModel
+
+@{
+    ViewData["Title"] = Localizer["AccountAlreadyExists.Title"];
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                    @Localizer["AccountAlreadyExists.ContentHeading"].Value
+                </h1>
+                <p class="govuk-body">
+                    @Localizer["AccountAlreadyExists.Paragraph1"].Value
+                </p>
+
+                <p class="govuk-body">
+                    @Localizer["AccountAlreadyExists.Paragraph2"].Value @(Model.DisplayDateCreated).
+                </p>
+
+                <p class="govuk-body">@Localizer["AccountAlreadyExists.Paragraph3"].Value</p>
+            </div>
+        </div>
+    </main>
+</div>
