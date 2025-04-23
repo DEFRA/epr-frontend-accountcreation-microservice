@@ -1,4 +1,8 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using System;
+using System.Net;
+using System.Text.Json;
+using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -15,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 
@@ -215,7 +218,7 @@ public class OrganisationController : Controller
 
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.RoleInOrganisation);
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
         }
         return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
@@ -259,8 +262,8 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.RoleInOrganisation)]
-    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
+    [Route(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
     public Task<IActionResult> TradingName()
     {
         throw new NotImplementedException(
@@ -445,18 +448,6 @@ public class OrganisationController : Controller
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
     }
 
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.UkNation)]
-    [OrganisationJourneyAccess(PagePath.UkNation)]
-    public IActionResult UkNation()
-    {
-        return RedirectToAction(nameof(IsTradingNameDifferent));
-
-        //throw new NotImplementedException(
-        //    "The nation page isn't implemented yet and will be implemented in a later story");
-    }
-
     [HttpGet]
     [Route(PagePath.AccountAlreadyExists)]
     [OrganisationJourneyAccess(PagePath.AccountAlreadyExists)]
@@ -470,6 +461,45 @@ public class OrganisationController : Controller
         {
             DateCreated = session.ReExCompaniesHouseSession.Company.AccountCreatedOn.Value.Date
         });
+    }
+
+    [HttpGet]
+    [Route(PagePath.UkNation)]
+    [OrganisationJourneyAccess(PagePath.UkNation)]
+    public async Task<IActionResult> UkNation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UkNation);
+
+        var viewModel = new UkNationViewModel()
+        {
+            UkNation = session.UkNation,
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.UkNation)]
+    [OrganisationJourneyAccess(PagePath.UkNation)]
+    public async Task<IActionResult> UkNation(UkNationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        model.IsCompaniesHouseFlow = session.IsCompaniesHouseFlow;
+
+        if (!ModelState.IsValid)
+        {
+            if (model.UkNation == null)
+            {
+                var errorMessage = model.IsCompaniesHouseFlow ? "UkNation.LimitedCompany.ErrorMessage" : "UkNation.SoleTrader.ErrorMessage";
+                ModelState.ClearValidationState(nameof(model.UkNation));
+                ModelState.AddModelError(nameof(model.UkNation), errorMessage);
+            }
+            SetBackLink(session, PagePath.UkNation);
+            return View(model);
+        }
+        session!.UkNation = model.UkNation;
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
     }
 
     [HttpGet]
