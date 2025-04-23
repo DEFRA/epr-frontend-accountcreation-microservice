@@ -4,6 +4,7 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -27,6 +28,25 @@ public class UkNationtests : OrganisationTestBase
             IsUserChangingDetails = false
         };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationCreationSessionMock);
+    }
+
+    [TestMethod]
+    public async Task UkNation_Should_Return_UKNationView()
+    {
+        // Arrange
+        _organisationCreationSessionMock.OrganisationType = OrganisationType.CompaniesHouseCompany;
+
+        // Act
+        var result = await _systemUnderTest.UkNation();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<UkNationViewModel>();
+        var viewModel = (UkNationViewModel?)viewResult.Model;
+        viewModel!.IsCompaniesHouseFlow.Should().Be(true);
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
     [TestMethod]
