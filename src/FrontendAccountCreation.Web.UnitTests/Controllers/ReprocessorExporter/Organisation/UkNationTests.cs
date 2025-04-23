@@ -25,14 +25,13 @@ public class UkNationtests : OrganisationTestBase
         {
             Journey = new List<string> { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation, PagePath.TradingName, PagePath.ConfirmCompanyDetails, PagePath.UkNation },
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
-            ManualInputSession = new ReExManualInputSession() { BusinessAddress = new Address { Postcode = "NW2 3TB" } },
             IsUserChangingDetails = false
         };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationCreationSessionMock);
     }
 
     [TestMethod]
-    public async Task UkNation_OrganisationIsRegisteredWithCompaniesHouse_RedirectsToTradingNameCheckPageAndUpdateSession()
+    public async Task UkNation_OrganisationIsRegisteredWithCompaniesHouse_RedirectsToIsTradingNameDifferentCheckPageAndUpdateSession()
     {
         // Arrange
         _organisationCreationSessionMock.OrganisationType = OrganisationType.CompaniesHouseCompany;
@@ -44,7 +43,7 @@ public class UkNationtests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((result as RedirectToActionResult)!).ActionName.Should().Be(nameof(OrganisationController.AboutYourOrganisationTradingNameCheck));
+        ((result as RedirectToActionResult)!).ActionName.Should().Be(nameof(OrganisationController.IsTradingNameDifferent));
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 

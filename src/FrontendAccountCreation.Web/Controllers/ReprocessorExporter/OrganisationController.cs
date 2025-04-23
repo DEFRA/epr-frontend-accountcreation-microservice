@@ -451,18 +451,6 @@ public class OrganisationController : Controller
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
     }
 
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.UkNation)]
-    [OrganisationJourneyAccess(PagePath.UkNation)]
-    public IActionResult UkNation()
-    {
-        return RedirectToAction(nameof(IsTradingNameDifferent));
-
-        //throw new NotImplementedException(
-        //    "The nation page isn't implemented yet and will be implemented in a later story");
-    }
-
     [HttpGet]
     [Route(PagePath.AccountAlreadyExists)]
     [OrganisationJourneyAccess(PagePath.AccountAlreadyExists)]
@@ -489,8 +477,7 @@ public class OrganisationController : Controller
         var viewModel = new UkNationViewModel()
         {
             UkNation = session.UkNation,
-            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow,
-            IsManualInputFlow = session.IsManualInputFlow
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
         };
         return View(viewModel);
     }
@@ -502,7 +489,6 @@ public class OrganisationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         model.IsCompaniesHouseFlow = session.IsCompaniesHouseFlow;
-        model.IsManualInputFlow = session.IsManualInputFlow;
 
         if (!ModelState.IsValid)
         {
@@ -516,8 +502,7 @@ public class OrganisationController : Controller
             return View(model);
         }
         session!.UkNation = model.UkNation;
-        // to do need to know the next journey where it continues. as per prototype it takes to trading name  your - organisation / trading - name
-        return await SaveSessionAndRedirect(session, nameof(AboutYourOrganisationTradingNameCheck), PagePath.UkNation, PagePath.TradingName);
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
     }
 
     [HttpGet]
