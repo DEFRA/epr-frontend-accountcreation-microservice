@@ -2,10 +2,8 @@
 using System.Net;
 using System.Text.Json;
 using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
-using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -21,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 
