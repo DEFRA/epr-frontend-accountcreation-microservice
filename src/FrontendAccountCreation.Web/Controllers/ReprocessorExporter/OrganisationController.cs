@@ -359,11 +359,60 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.RoleInOrganisation)]
-    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
-    public Task<IActionResult> RoleInOrganisation()
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> RoleInOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TypeOfOrganisation);
+
+        var viewModel = new RoleInOrganisationViewModel()
+        {
+            RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.RoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> RoleInOrganisation(RoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.RoleInOrganisation);
+
+            return View(model);
+        }
+
+        if (session.ReExCompaniesHouseSession == null)
+        {
+            ReExCompaniesHouseSession companiesHouseSession = new ReExCompaniesHouseSession();
+            session.ReExCompaniesHouseSession = companiesHouseSession;
+        }
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
+
+        if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
+        {
+            return await SaveSessionAndRedirect(session, "CannotCreateAccount", PagePath.RoleInOrganisation,
+                PagePath.CannotCreateAccount);
+        }
+
+        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation,
+                PagePath.ManageAccountPerson);
+    }
+
+    [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
+    [HttpGet]
+    [Route(PagePath.ManageAccountPerson)]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> AddApprovedPerson()
     {
         throw new NotImplementedException(
-            "The trading name page hasn't been built. It will be built in a future story.");
+            "The 'Manage Account Person' page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
