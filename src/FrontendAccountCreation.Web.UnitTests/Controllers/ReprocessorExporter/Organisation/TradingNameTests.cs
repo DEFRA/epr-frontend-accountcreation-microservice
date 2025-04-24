@@ -51,7 +51,7 @@ public class TradingNameTests : OrganisationTestBase
     {
         //Arrange
         const string tradingName = "Trading name";
-        _organisationSession.ManualInputSession = new ReExManualInputSession
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
         {
             TradingName = tradingName
         };
