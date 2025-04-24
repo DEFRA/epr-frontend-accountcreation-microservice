@@ -565,6 +565,55 @@ public class OrganisationController : Controller
         return RedirectToAction(nameof(RegisteredAsCharity));
     }
 
+    [HttpGet]
+    [Route(PagePath.ManageAccountPerson)]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
+    public async Task<IActionResult> AddApprovedPerson2()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.ManageAccountPerson);
+
+        bool? agreedApprovedPerson = null;
+        bool? inviteEligiblePerson = null;
+        bool? inviteApprovedPersonLater = null;
+
+        if (session.IsApprovedPersonOptionSelected)
+        {
+            agreedApprovedPerson = session.AgreedApprovedPerson;
+            inviteEligiblePerson = session.InviteEligiblePerson;
+            inviteApprovedPersonLater = session.InviteApprovedPersonLater;
+        }
+
+        return View(new AccountPersonViewModel
+        {
+            AgreedApprovedPerson = agreedApprovedPerson,
+            InviteEligiblePerson = inviteEligiblePerson,
+            InviteApprovedPersonLater = inviteApprovedPersonLater
+        });
+    }
+    
+    [HttpPost]
+    [Route(PagePath.ManageAccountPerson)]
+    public async Task<IActionResult> AddApprovedPerson2(AccountPersonViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.AgreedApprovedPerson = model.AgreedApprovedPerson;
+        session.InviteEligiblePerson = model.InviteEligiblePerson;
+        session.InviteApprovedPersonLater = model.InviteEligiblePerson;
+
+        if (session.IsApprovedPersonOptionSelected)
+        {
+            return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.ManageAccountPerson, PagePath.RoleInOrganisation);
+        }
+        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.ManageAccountPerson, PagePath.RoleInOrganisation);
+    }
+
     #region Private Methods 
 
     private void SetBackLink(OrganisationSession session, string currentPagePath)
