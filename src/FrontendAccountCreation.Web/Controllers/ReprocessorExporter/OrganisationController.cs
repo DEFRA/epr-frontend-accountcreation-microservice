@@ -405,12 +405,14 @@ public class OrganisationController : Controller
                 PagePath.ManageAccountPerson);
     }
 
+    [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
     [HttpGet]
     [Route(PagePath.ManageAccountPerson)]
     [OrganisationJourneyAccess(PagePath.ManageAccountPerson, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> AddApprovedPerson()
     {
-        return View();
+        throw new NotImplementedException(
+            "The 'Manage Account Person' page hasn't been built. It will be built in a future story.");
     }
 
     [HttpGet]
