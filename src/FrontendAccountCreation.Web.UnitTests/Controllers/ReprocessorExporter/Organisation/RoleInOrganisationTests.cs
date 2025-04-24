@@ -1,9 +1,12 @@
-﻿using FluentAssertions;
+﻿using Azure.Core;
+using FluentAssertions;
 using FluentAssertions;
 using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using global::FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
@@ -16,10 +19,44 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 public class RoleInOrganisationTests : OrganisationTestBase
 {
 
+    private OrganisationSession _organisationSession = null!;
+
     [TestInitialize]
     public void Setup()
     {
         SetupBase();
+
+        _organisationSession = new OrganisationSession
+        {
+            Journey =
+            [
+                PagePath.RegisteredAsCharity,
+                PagePath.RegisteredWithCompaniesHouse,
+                PagePath.CompaniesHouseNumber,
+                PagePath.ConfirmCompanyDetails,
+                PagePath.UkNation,
+                PagePath.IsTradingNameDifferent,
+                PagePath.TradingName,
+                PagePath.TypeOfOrganisation,
+                PagePath.RoleInOrganisation
+            ]
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
+    }
+
+    [TestMethod]
+    public async Task Get_RoleInOrganisation_IsAllowed()
+    {
+            //Act
+            var result = await _systemUnderTest.RoleInOrganisation();
+
+            //Assert
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = (ViewResult)result;
+            viewResult.Model.Should().BeOfType<RoleInOrganisationViewModel>();
+            var viewModel = (RoleInOrganisationViewModel?)viewResult.Model;
+            viewModel!.RoleInOrganisation.Should().BeNull();
     }
 
     [TestMethod]
@@ -33,9 +70,6 @@ public class RoleInOrganisationTests : OrganisationTestBase
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
-
-        //TODO: Uncomment when Cannot create Account is Scoped.
-        //((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.CannotCreateAccount));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }

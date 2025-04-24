@@ -22,7 +22,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using System.Net;
 using System.Text.Json;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -398,7 +397,6 @@ public class OrganisationController : Controller
 
         if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
         {
-            //TODO : Create CannotCreateAccount when scoped.
             return await SaveSessionAndRedirect(session, "CannotCreateAccount", PagePath.RoleInOrganisation,
                 PagePath.CannotCreateAccount);
         }
