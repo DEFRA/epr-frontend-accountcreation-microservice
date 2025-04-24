@@ -37,6 +37,6 @@ public class OrganisationSession
     public bool? IsOrganisationAPartnership { get; set; }
 
     public List<ApprovedPerson> ApprovedPersons { get; set; }
-    public ApprovedPerson? CurrentApprovedPersons { get; set; }
+    public ApprovedPerson? CurrentApprovedPerson { get; set; }
 
 }
