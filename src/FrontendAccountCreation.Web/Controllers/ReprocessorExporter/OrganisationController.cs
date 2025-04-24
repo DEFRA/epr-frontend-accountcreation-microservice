@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -259,8 +260,8 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.RoleInOrganisation)]
-    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
+    [Route(PagePath.TradingName)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
     public Task<IActionResult> TradingName()
     {
         throw new NotImplementedException(
@@ -311,10 +312,50 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.RoleInOrganisation)]
     [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
-    public Task<IActionResult> RoleInOrganisation()
+    public async Task<IActionResult> RoleInOrganisation()
     {
-        throw new NotImplementedException(
-            "The trading name page hasn't been built. It will be built in a future story.");
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+
+        SetBackLink(session, PagePath.RoleInOrganisation);
+        _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+        var viewModel = new RoleInOrganisationViewModel()
+        {
+            RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.RoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    public async Task<IActionResult> RoleInOrganisation(RoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.RoleInOrganisation);
+
+            return View(model);
+        }
+
+        if (session.ReExCompaniesHouseSession == null)
+        {
+            ReExCompaniesHouseSession companiesHouseSession = new ReExCompaniesHouseSession();
+            session.ReExCompaniesHouseSession = companiesHouseSession;
+        }
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
+
+        if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
+        {
+            return await SaveSessionAndRedirect(session, /*nameof(CannotCreateAccount)*/"CannotCreateAccount", PagePath.RoleInOrganisation,
+                /*TODO: PagePath.CannotCreateAccount*/ PagePath.Error);
+        }
+
+        return await SaveSessionAndRedirect(session, /*nameof(Manage Account)*/ "Manage Account", PagePath.RoleInOrganisation, /*TODO: PagePath.ManageAccount*/PagePath.ManualInputRoleInOrganisation);
     }
 
     [HttpGet]
