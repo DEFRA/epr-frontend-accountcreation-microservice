@@ -22,6 +22,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using System.Net;
 using System.Text.Json;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -359,11 +360,52 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.RoleInOrganisation)]
-    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
-    public Task<IActionResult> RoleInOrganisation()
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> RoleInOrganisation()
     {
-        throw new NotImplementedException(
-            "The trading name page hasn't been built. It will be built in a future story.");
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TypeOfOrganisation);
+
+        var viewModel = new RoleInOrganisationViewModel()
+        {
+            RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.RoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> RoleInOrganisation(RoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.RoleInOrganisation);
+
+            return View(model);
+        }
+
+        if (session.ReExCompaniesHouseSession == null)
+        {
+            ReExCompaniesHouseSession companiesHouseSession = new ReExCompaniesHouseSession();
+            session.ReExCompaniesHouseSession = companiesHouseSession;
+        }
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
+
+        if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
+        {
+            //TODO : Create CannotCreateAccount when scoped.
+            return await SaveSessionAndRedirect(session, "CannotCreateAccount", PagePath.RoleInOrganisation,
+                PagePath.CannotCreateAccount);
+        }
+
+         //TODO : Once Manage Account Page Built Replace Method and Next Page Path
+        return await SaveSessionAndRedirect(session, "Manage Account", PagePath.RoleInOrganisation,
+                PagePath.Invitation);
     }
 
     [HttpGet]
