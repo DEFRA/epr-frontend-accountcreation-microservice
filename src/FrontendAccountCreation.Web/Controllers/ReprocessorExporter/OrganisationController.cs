@@ -95,7 +95,6 @@ public class OrganisationController : Controller
             }
         }
 
-
         return View(new RegisteredAsCharityRequestViewModel
         {
             isTheOrganisationCharity = isTheOrganisationCharity
@@ -133,7 +132,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.RegisteredWithCompaniesHouse);
 
         YesNoAnswer? isTheOrganisationRegistered = session.OrganisationType switch
@@ -155,10 +154,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse(RegisteredWithCompaniesHouseViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
-        {
-            Journey = [PagePath.RegisteredWithCompaniesHouse]
-        };
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
@@ -188,7 +184,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
     public async Task<IActionResult> IsTradingNameDifferent()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.IsTradingNameDifferent);
 
         YesNoAnswer? isTradingNameDifferent = null;
@@ -212,7 +208,7 @@ public class OrganisationController : Controller
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
@@ -228,7 +224,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
     public async Task<IActionResult> TypeOfOrganisation()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         SetBackLink(session, PagePath.TypeOfOrganisation);
 
@@ -245,7 +241,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
     public async Task<IActionResult> TypeOfOrganisation(TypeOfOrganisationViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
@@ -275,7 +271,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.IsPartnership)]
     public async Task<IActionResult> IsOrganisationAPartner()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.IsPartnership);
 
         YesNoAnswer? isOrganisationAPartnership = null;
@@ -299,7 +295,7 @@ public class OrganisationController : Controller
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
@@ -325,7 +321,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber)]
     public async Task<IActionResult> CompaniesHouseNumber()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         SetBackLink(session, PagePath.CompaniesHouseNumber);
 
@@ -351,7 +347,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber)]
     public async Task<IActionResult> CompaniesHouseNumber(CompaniesHouseNumberViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
@@ -403,7 +399,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.CannotVerifyOrganisation)]
     public async Task<IActionResult> CannotVerifyOrganisation()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         SetBackLink(session, PagePath.CannotVerifyOrganisation);
 
@@ -415,7 +411,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails)]
     public async Task<IActionResult> ConfirmCompanyDetails()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         SetBackLink(session, PagePath.ConfirmCompanyDetails);
         ViewBag.MakeChangesToYourLimitedCompanyLink = _urlOptions.MakeChangesToYourLimitedCompany;
@@ -507,7 +503,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.NotAffected)]
     public async Task<IActionResult> NotAffected()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         SetBackLink(session, PagePath.NotAffected);
 
