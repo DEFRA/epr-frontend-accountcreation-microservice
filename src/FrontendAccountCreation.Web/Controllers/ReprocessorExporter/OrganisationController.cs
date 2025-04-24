@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation;
+﻿using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -20,8 +16,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -360,10 +361,26 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.RoleInOrganisation)]
     [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
-    public Task<IActionResult> RoleInOrganisation()
+    public async Task<IActionResult> RoleInOrganisation()
     {
-        throw new NotImplementedException(
-            "The trading name page hasn't been built. It will be built in a future story.");
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        return await SaveSessionAndRedirect(session, nameof(TeamRole), PagePath.RoleInOrganisation, PagePath.TeamRole);
+    }
+
+    [HttpGet]
+    [Route(PagePath.TeamRole)]
+    [OrganisationJourneyAccess(PagePath.TeamRole)]
+    public async Task<IActionResult> TeamRole()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TeamRole);
+
+        var viewModel = new TeamRoleViewModel
+        {
+        };
+        return View(viewModel);
     }
 
     [HttpGet]
