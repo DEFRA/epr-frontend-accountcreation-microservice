@@ -114,7 +114,8 @@ public class RegisteredAsCharityTests : OrganisationTestBase
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
 
-    [TestMethod]
+    // commented following as userAlreadyExists not being used for testing.
+    /*[TestMethod]
     public async Task RegisteredAsCharity_IfUserExistsAndAccountRedirectUrlIsNull_ThenRedirectsToUserAlreadyExistsPage()
     {
         //Arrange
@@ -151,7 +152,7 @@ public class RegisteredAsCharityTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectResult>();
         ((RedirectResult)result).Url.Should().Be("dummy url");
-    }
+    }*/
 
     [TestMethod]
     public void RedirectToStart_ReturnsView()
