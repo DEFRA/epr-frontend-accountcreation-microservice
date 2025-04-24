@@ -22,7 +22,6 @@
                 <form asp-controller="Organisation" asp-action="TradingName" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                            @* todo: check TradingName id gets added by gov-for or something else *@
                             <label for="TradingName">
                                 @Localizer["TradingName.Question"]
                             </label>
