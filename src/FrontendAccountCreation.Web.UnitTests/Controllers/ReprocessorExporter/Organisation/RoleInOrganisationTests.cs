@@ -3,10 +3,8 @@ using FluentAssertions;
 using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
-using global::FrontendAccountCreation.Web.Constants;
 using global::FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +15,6 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 [TestClass]
 public class RoleInOrganisationTests : OrganisationTestBase
 {
-    private OrganisationSession _orgSessionMock = null!;
 
     [TestInitialize]
     public void Setup()
@@ -55,8 +52,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        //TODO: Uncomment when ManageAccount is created.
-        //((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccount));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
@@ -73,8 +69,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        //TODO: Uncomment when ManageAccount is created.
-        //((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccount));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
@@ -91,8 +86,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        //TODO: Uncomment when ManageAccount is created.
-        //((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccount));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
@@ -109,8 +103,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        //TODO: Uncomment when ManageAccount is created.
-        //((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccount));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }

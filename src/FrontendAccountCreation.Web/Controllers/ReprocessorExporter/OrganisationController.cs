@@ -403,9 +403,16 @@ public class OrganisationController : Controller
                 PagePath.CannotCreateAccount);
         }
 
-         //TODO : Once Manage Account Page Built Replace Method and Next Page Path
-        return await SaveSessionAndRedirect(session, "Manage Account", PagePath.RoleInOrganisation,
-                PagePath.Invitation);
+        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation,
+                PagePath.ManageAccountPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.ManageAccountPerson)]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> AddApprovedPerson()
+    {
+        return View();
     }
 
     [HttpGet]
