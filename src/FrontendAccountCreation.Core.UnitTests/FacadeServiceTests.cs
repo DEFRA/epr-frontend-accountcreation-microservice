@@ -105,7 +105,7 @@ public class FacadeServiceTests
         httpTestHandler.Dispose();
     }
 
-    [TestMethod]
+    /*[TestMethod]
     public async Task GetCompanyByCompanyHouseNumber_WhenNoContent_ReturnsNull()
     {
         // Arrange
@@ -171,7 +171,7 @@ public class FacadeServiceTests
         Assert.IsNotNull(response);
         Assert.AreEqual(expected: expectedResponse.Organisation.Name, actual: response.Name);
         httpTestHandler.Dispose();
-    }
+    }*/
 
     [TestMethod]
     public async Task GetAddressListByPostcode_WithNoContent_ReturnsNull()

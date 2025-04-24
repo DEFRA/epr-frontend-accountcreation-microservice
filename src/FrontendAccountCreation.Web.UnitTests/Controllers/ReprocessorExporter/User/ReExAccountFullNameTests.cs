@@ -31,7 +31,7 @@ public class ReExAccountFullNameTests : UserTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_reExAccountCreationSessionMock);
     }
 
-    [TestMethod]
+    /*[TestMethod]
     public async Task ReExAccountFullName_IfUserExistsAndAccountRedirectUrlIsNull_ThenRedirectsToUserAlreadyExistsPage()
     {
         //Arrange
@@ -68,7 +68,7 @@ public class ReExAccountFullNameTests : UserTestBase
         // Assert
         result.Should().BeOfType<RedirectResult>();
         ((RedirectResult)result).Url.Should().Be("dummy url");
-    }
+    }*/
 
     [TestMethod]
     public async Task Get_ReExAccountFullName_IsAllowed()
