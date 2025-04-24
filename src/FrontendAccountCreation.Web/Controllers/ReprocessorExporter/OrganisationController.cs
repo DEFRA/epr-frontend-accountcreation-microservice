@@ -370,7 +370,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.TeamRole)]
-    [OrganisationJourneyAccess(PagePath.TeamRole)]
+    [OrganisationJourneyAccess(PagePath.TeamRole, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> TeamRole()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -381,6 +381,30 @@ public class OrganisationController : Controller
         {
         };
         return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.TeamRole)]
+    [OrganisationJourneyAccess(PagePath.TeamRole, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> TeamRole(TeamRoleViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
+
+        if (session.IsTheOrganisationCharity)
+        {
+            return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
+        }
     }
 
     [HttpGet]
