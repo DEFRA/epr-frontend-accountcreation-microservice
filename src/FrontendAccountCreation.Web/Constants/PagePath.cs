@@ -35,7 +35,8 @@ public static class PagePath
     public const string TeamRole = "team-role";
     public const string TeamInvite = "team-invite";
     public const string CheckYourAnswers = "check-your-answers";
-
+    public const string ManageAccountPerson = "manage-account-person";
+    
     // Non journey paths
     public const string Accessibility = "accessibility";
     public const string SignedOut = "signed-out";

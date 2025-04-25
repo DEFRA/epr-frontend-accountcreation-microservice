@@ -360,7 +360,17 @@ public class OrganisationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        return await SaveSessionAndRedirect(session, nameof(TeamRole), PagePath.RoleInOrganisation, PagePath.TeamRole);
+        return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.RoleInOrganisation, PagePath.ManageAccountPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.ManageAccountPerson)]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
+    public async Task<IActionResult> ManageAccountPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        return await SaveSessionAndRedirect(session, nameof(TeamRole), PagePath.ManageAccountPerson, PagePath.TeamRole);
     }
 
     [HttpGet]
