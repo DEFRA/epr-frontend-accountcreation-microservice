@@ -33,6 +33,8 @@ public static class PagePath
     public const string IsPartnership = "is-partnership";
     public const string PartnerOrganisation = "partner-organisation";
     public const string TeamRole = "team-role";
+    public const string TeamInvite = "team-invite";
+    public const string CheckYourAnswers = "check-your-answers";
 
     // Non journey paths
     public const string Accessibility = "accessibility";

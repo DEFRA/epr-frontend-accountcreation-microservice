@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -16,13 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Net;
 using System.Text.Json;
-using System.Text.Json;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -379,6 +374,7 @@ public class OrganisationController : Controller
 
         var viewModel = new TeamRoleViewModel
         {
+            TeamRoleInOrganisation = session.CurrentApprovedPerson?.TeamRoleInOrganisation
         };
         return View(viewModel);
     }
@@ -386,7 +382,7 @@ public class OrganisationController : Controller
     [HttpPost]
     [Route(PagePath.TeamRole)]
     [OrganisationJourneyAccess(PagePath.TeamRole, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
-    public async Task<IActionResult> TeamRole(TeamRoleViewModel model)
+    public async Task<IActionResult> TeamRole(TeamRoleViewModel model, bool invitation)
     {
         if (!ModelState.IsValid)
         {
@@ -395,16 +391,32 @@ public class OrganisationController : Controller
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
+        session.CurrentApprovedPerson ??= new ApprovedPerson();
+        session.CurrentApprovedPerson.TeamRoleInOrganisation = model.TeamRoleInOrganisation!.Value;
 
-        if (session.IsTheOrganisationCharity)
+        if (invitation)
         {
-            return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+            return await SaveSessionAndRedirect(session, nameof(TeamInvite), PagePath.TeamRole, PagePath.TeamInvite);
         }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
-        }
+        return await SaveSessionAndRedirect(session, nameof(CheckYourAnswers), PagePath.TeamRole, PagePath.CheckYourAnswers);
+    }
+
+    [HttpGet]
+    [Route(PagePath.TeamInvite)]
+    [OrganisationJourneyAccess(PagePath.TeamInvite, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [ExcludeFromCodeCoverage]
+    public Task<IActionResult> TeamInvite()
+    {
+        throw new NotImplementedException("Team invite page isn't created yet.");
+    }
+
+    [HttpGet]
+    [Route(PagePath.CheckYourAnswers)]
+    [OrganisationJourneyAccess(PagePath.CheckYourAnswers, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [ExcludeFromCodeCoverage]
+    public Task<IActionResult> CheckYourAnswers()
+    {
+        throw new NotImplementedException("Check your answers page isn't created yet.");
     }
 
     [HttpGet]
