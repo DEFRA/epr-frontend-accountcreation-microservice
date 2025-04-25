@@ -126,6 +126,9 @@
   <data name="TeamRole.ContinueWithoutInvitation" xml:space="preserve">
     <value>Continue without invitation</value>
   </data>
+  <data name="TeamRole.Description" xml:space="preserve">
+    <value>These roles are eligible to be invited as an approved person. You can still enrol an organisation without inviting someone if you do not have a name and contact details yet.</value>
+  </data>
   <data name="TeamRole.Director" xml:space="preserve">
     <value>Director</value>
   </data>
