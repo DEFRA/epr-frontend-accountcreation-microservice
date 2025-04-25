@@ -384,15 +384,18 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.TeamRole, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> TeamRole(TeamRoleViewModel model, bool invitation)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.TeamRole);
+
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
         session.CurrentApprovedPerson ??= new ApprovedPerson();
         session.CurrentApprovedPerson.TeamRoleInOrganisation = model.TeamRoleInOrganisation!.Value;
+        session.CurrentApprovedPerson.Invited = invitation;
 
         if (invitation)
         {
