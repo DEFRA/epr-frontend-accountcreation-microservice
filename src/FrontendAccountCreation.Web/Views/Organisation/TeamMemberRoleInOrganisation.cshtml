@@ -50,13 +50,12 @@
                                 </label>
                             </div>
 
-
                         </div>
 
                     </div>
 
                     <div class="govuk-button-group">
-                        <button class="govuk-button" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="Organisation" name="invite" value="with-invite" data-module="govuk-button">
+                        <button class="govuk-button" type="submit" name="invite" value="with-invite" data-module="govuk-button" formaction="/re-ex/organisation/check-companies-house-role">
                             @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
                         </button>
 

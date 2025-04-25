@@ -1,0 +1,120 @@
+﻿@using FrontendAccountCreation.Core.Sessions;
+@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
+
+@model List<ReExCompanyTeamMember>;
+
+@{
+    ViewData["Title"] = "Check invitation details";
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-6">
+                    Check invitation details
+                </h1>
+
+                <div class="govuk-summary-card">
+
+                    <div class="govuk-summary-card__title-wrapper">
+                        <p class="govuk-body">Any invites created for one or more approved persons will be sent once the organisation is added.</p>
+                    </div>
+
+                    @for (int i = 0; i < Model?.Count; i++)
+                    {
+                        <div class="govuk-summary-card__content">
+                            <dl class="govuk-summary-list">
+
+                                <!-- Role of team member -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Role
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @SharedLocalizer[Model[i].Role.ToString()]
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation")">Change<span class="govuk-visually-hidden"> role</span></a>
+                                    </dd>
+                                </div>
+
+                                <!-- Name -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Name
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        Frank Bridger @i.ToString()
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> name</span></a>
+                                    </dd>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Email
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        frankie.bridger@acornltd.com
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> email</span></a>
+                                    </dd>
+                                </div>
+
+                                <!-- Telephone -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Telephone
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        07890030028
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> telephone</span></a>
+                                    </dd>
+                                </div>
+
+                            </dl>
+                        </div>
+
+                        <div class="govuk-button-group">
+                            @Html.ActionLink("Change", "TeamMemberRoleInOrganisation", "Organisation",
+                                     new
+                                     {
+                                         @index = i
+                                     },
+                                     new
+                                     {
+                                         @class = "govuk-button govuk-button--secondary"
+                                     })
+@*                             <button class="govuk-button govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4" data-module="govuk-button">
+                                Change
+                            </button> *@
+                            <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+                                Remove
+                            </button>
+                        </div>
+                    }
+
+                    <form action="check-your-answers" method="post" novalidate>
+                        <button class="govuk-button" data-module="govuk-button">
+                            Continue
+                        </button>
+
+                    </form>
+
+                    <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { index = Model?.Count ?? 0 })">Invite another approved person</a>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

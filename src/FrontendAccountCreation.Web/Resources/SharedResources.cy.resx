@@ -52,4 +52,10 @@
   <data name="GovUKTitle" xml:space="preserve">
     <value>GOV.UK</value>
   </data>
+  <data name="CompanySecretary" xml:space="preserve">
+    <value>Ysgrifennydd y cwmni</value>
+  </data>
+  <data name="Director" xml:space="preserve">
+    <value>Cyfarwyddwr</value>
+  </data>
 </root>

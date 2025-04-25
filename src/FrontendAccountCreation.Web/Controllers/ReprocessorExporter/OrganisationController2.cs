@@ -14,24 +14,42 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
     public partial class OrganisationController : Controller
     {
         [HttpGet]
-        [Route(PagePath.TeamMemberRoleInOrganisation)]
-        public async Task<IActionResult> TeamMemberRoleInOrganisation()
+        [Route(PagePath.TeamMemberRoleInOrganisation + "/{index:int?}")]
+        public async Task<IActionResult> TeamMemberRoleInOrganisation(int? index)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
             SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            int? teamMemberIndex = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
-            if (teamMemberIndex.HasValue)
+            if (index.HasValue)
             {
-                var members = session.CompaniesHouseSession?.TeamMembers;
-                if (members?.Count > teamMemberIndex.Value)
+                ReExCompaniesHouseSession? companiesHouseSession = session.CompaniesHouseSession;
+                if (companiesHouseSession != null)
                 {
-                    var viewModel = new TeamMemberRoleInOrganisationViewModel
+                    var members = session.CompaniesHouseSession.TeamMembers;
+                    if (members?.Count > index.Value)
                     {
-                        RoleInOrganisation = members[teamMemberIndex.Value]?.Role
-                    };
-                    return View(viewModel);
+                        var viewModel = new TeamMemberRoleInOrganisationViewModel
+                        {
+                            RoleInOrganisation = members[index.Value]?.Role
+                        };
+
+                        if (index.Value != session.CompaniesHouseSession.CurrentTeamMemberIndex)
+                        {
+                            session.CompaniesHouseSession.CurrentTeamMemberIndex = index.Value;
+                            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+                        }
+
+                        return View(viewModel);
+                    }
+
+                    index = members?.Count ?? 0;
+                    if (index.Value != session.CompaniesHouseSession.CurrentTeamMemberIndex)
+                    {
+                        session.CompaniesHouseSession.CurrentTeamMemberIndex = index.Value;
+                        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+                    }
+
                 }
             }
 
@@ -52,7 +70,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             FillSessionWithALoadOfNonsense(model.RoleInOrganisation.Value);
             bool isInvited = invite != "without-invite";
-            session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].IsInvited = isInvited;
+            //session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].IsInvited = isInvited;
 
             if (isInvited)
             {
@@ -62,9 +80,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             }
 
-            // navigating to the wrong page, the correct page is not developed
-            return await SaveSessionAndRedirect(session, nameof(CompaniesHouseNumber), PagePath.TeamMemberRoleInOrganisation,
-                PagePath.CompaniesHouseNumber);
+            session.IsUserChangingDetails = false;
+            await SaveSession(session, "/re-ex/organisation/check-companies-house-role", $"/create-account/{PagePath.CheckYourDetails}");
+            return Redirect($"/create-account/{PagePath.CheckYourDetails}");
 
             // for development only because the next page is not ready
             void FillSessionWithALoadOfNonsense(ReExTeamMemberRole role)
@@ -101,7 +119,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     }
                 }
 
-                var newMembers = new List<ReExCompanyTeamMember>();
+                var newMembers = session.CompaniesHouseSession?.TeamMembers ?? new List<ReExCompanyTeamMember>();
                 ReExCompanyTeamMember newMember = new ReExCompanyTeamMember
                 {
                     Role = role
@@ -109,10 +127,39 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 newMembers.Add(newMember);
 
                 companiesHouseSession.TeamMembers = newMembers;
-                companiesHouseSession.CurrentTeamMemberIndex = 0;
+                companiesHouseSession.CurrentTeamMemberIndex = newMembers.Count;
                 session.CompaniesHouseSession = companiesHouseSession;
 
             }
         }
+
+        [HttpGet]
+        [Route(PagePath.TeamMembersCheckInvitationDetails)]
+        public async Task<IActionResult> TeamMembersCheckInvitationDetails()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+            SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View(session.CompaniesHouseSession?.TeamMembers);
+        }
+
+        //[HttpGet]
+        //[Route("some-action")]
+        //public async Task<IActionResult> SomeAction()
+        //{
+        //    OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ();
+        //    ReExCompaniesHouseSession? companiesHouseSession = session.CompaniesHouseSession ?? new();
+
+        //    List<ReExCompanyTeamMember?> teamMembers = companiesHouseSession.TeamMembers ?? new();
+        //    ReExCompanyTeamMember newMember = new ReExCompanyTeamMember();
+        //    teamMembers.Add(newMember);
+        //    companiesHouseSession.TeamMembers = teamMembers;
+        //    companiesHouseSession.CurrentTeamMemberIndex = teamMembers.Count - 1;
+        //    session.CompaniesHouseSession = companiesHouseSession;
+        //    await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+        //    return RedirectToAction("TeamMemberRoleInOrganisation");
+        //}
     }
 }
