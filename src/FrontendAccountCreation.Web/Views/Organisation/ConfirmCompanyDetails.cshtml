@@ -1,9 +1,12 @@
-﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.AccountCreation
 
 @model ConfirmCompanyDetailsViewModel
 
 @{
     ViewData["Title"] = Localizer["ConfirmCompanyDetails.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExHeaderOverride;
 }
 
 <div class="govuk-width-container">

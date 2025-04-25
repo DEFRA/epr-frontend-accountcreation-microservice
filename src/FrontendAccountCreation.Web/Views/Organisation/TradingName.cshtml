@@ -1,4 +1,5 @@
-﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.AccountCreation
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 
@@ -6,9 +7,8 @@
 
 @{
     ViewData["Title"] = Localizer["TradingName.Title"];
-    // these aren't required yet, but they're part of the reason why we're duplicating the views (which Sonar is complaining about)
-    ViewData["ApplicationTitleOverride"] = "ReExApplicationTitle";
-    ViewData["HeaderOverride"] = "_ReExHeader";
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExHeaderOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
@@ -22,7 +22,6 @@
                 <form asp-controller="Organisation" asp-action="TradingName" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                            @* todo: check TradingName id gets added by gov-for or something else *@
                             <label for="TradingName">
                                 @Localizer["TradingName.Question"]
                             </label>

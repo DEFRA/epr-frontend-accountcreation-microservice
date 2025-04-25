@@ -7,6 +7,9 @@
 
 @{
     ViewData["Title"] = Localizer["CompaniesHouseNumber.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExHeaderOverride;
+
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
     var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
 }
