@@ -7,8 +7,8 @@
 
 @{
     ViewData["Title"] = Localizer["FullName.Title"];
-    ViewData["ApplicationTitleOverride"] = LayoutOverrides.CreateAccountTitleOverride;
-    ViewData["HeaderOverride"] = LayoutOverrides.CreateAccountHeaderOverride;
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExHeaderOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, 
         nameof(ReExAccountFullNameViewModel.FirstName), nameof(ReExAccountFullNameViewModel.LastName));

@@ -31,7 +31,7 @@
         <div class="govuk-header__content">
             @* todo: what's our home page? *@
             <a class="govuk-header__link govuk-header__service-name" asp-controller="User" asp-action="ReExAccountFullName">
-                @SharedLocalizer["ReExApplicationTitle"]
+                @SharedLocalizer["EprForPackaging"]
             </a>
 
             <nav aria-label="Menu" class="govuk-header__navigation ">
@@ -45,12 +45,12 @@
                         </a>
                     </li>
 
-                    <li class="govuk-header__navigation-item">
-                        @* todo: once we have it. should it only be displayed if have already added an user? *@
+                    @* todo: will need to be displayed once an organisation has been added *@
+@*                     <li class="govuk-header__navigation-item">
                         <a class="govuk-header__link" href="#">
                             @Localizer["Header.ManageAccount"]
                         </a>
-                    </li>
+                    </li> *@
 
                     <li class="govuk-header__navigation-item">
                         @if (User.Identity?.IsAuthenticated == true)

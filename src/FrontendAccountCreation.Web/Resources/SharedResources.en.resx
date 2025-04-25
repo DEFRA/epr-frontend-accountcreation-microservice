@@ -153,16 +153,13 @@
   <data name="GovUKTitle" xml:space="preserve">
     <value>GOV.UK</value>
   </data>
-  <data name="ReExApplicationTitle" xml:space="preserve">
-    <value>Reprocessor and exporters service</value>
-  </data>
   <data name="Header.SignIn" xml:space="preserve">
     <value>Sign in</value>
   </data>
   <data name="Header.SignOut" xml:space="preserve">
     <value>Sign out</value>
   </data>
-  <data name="CreateAnAccount" xml:space="preserve">
-    <value>Create an account</value>
+  <data name="EprForPackaging" xml:space="preserve">
+    <value>EPR for packaging: reprocessors and exporters</value>
   </data>
 </root>
