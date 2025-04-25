@@ -1,0 +1,110 @@
+﻿@using FrontendAccountCreation.Core.Sessions;
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
+
+@model AddApprovedPersonViewModel;
+
+@{
+    ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form asp-controller="AccountCreation" method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
+                        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                            @Localizer["AddAnApprovedPerson.Title"]
+                        </h1>
+
+                        <p class="govuk-body">You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</p>
+
+                        <p class="govuk-body">You do not have to do this immediately but one must be appointed before you can:</p>
+
+                        <ul>
+                            <li><p class="govuk">Apply for accreditation</p></li>
+                            <li><p class="govuk">Submit and verify data returns</p></li>
+                        </ul>
+
+                        <p class="govuk-body">
+                            An approved person may delegate their functions to another person (a delegate) at a later stage —
+                            subject to regulator approval.
+                        </p>
+
+                        <p class="govuk-body">
+                            More than one person can be invited – you will need to confirm their role, enter their name and contact details.
+                        </p>
+
+                        <div class="section">
+                            <h3>Roles eligible to be an approved person</h3>
+                            <p class="govuk-body">Either of these roles can be an approved person:</p>
+                            <ul>
+                                <li>Director</li>
+                                <li>Company Secretary</li>
+                            </ul>
+                        </div>
+
+                        <div class="section">
+                            <h3>Invite users in your team</h3>
+                            <p class="govuk-body">Select an option to proceed.</p>
+                        </div>
+
+                        <fieldset class="govuk-fieldset">
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoDirector"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IAgreeToBeAnApprovedPerson)"
+                                           gov-first-option="true">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IAgreeToBeAnApprovedPerson)"
+                                           gov-first-option="true">
+                                        @Localizer["AddAnApprovedPerson.IAgreeToBeAnApprovedPerson"]
+                                    </label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IWillInviteAnotherApprovedPerson)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IWillInviteAnotherApprovedPerson)">
+                                        @Localizer["AddAnApprovedPerson.IWillInviteAnotherApprovedPerson"]
+                                    </label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoPartner"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IWillInviteApprovedPersonLater)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IWillInviteApprovedPersonLater)">
+                                        @Localizer["AddAnApprovedPerson.IWillInviteApprovedPersonLater"]
+                                    </label>
+                                </div>
+
+                            </div>
+                        </fieldset>
+
+                    </div>
+                    <button class="govuk-button" data-module="govuk-button">
+                        @SharedLocalizer["Confirm"]
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
