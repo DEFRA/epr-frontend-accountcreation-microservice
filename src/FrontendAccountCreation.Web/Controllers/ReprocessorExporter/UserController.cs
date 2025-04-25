@@ -45,7 +45,7 @@ public class UserController : Controller
     public async Task<IActionResult> ReExAccountFullName()
     {
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
-        if (userExists)
+        /*if (userExists) TODO: uncomment this when sorted
         {
             if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
             {
@@ -55,7 +55,7 @@ public class UserController : Controller
             {
                 return Redirect(_urlOptions.ExistingUserRedirectUrl);
             }
-        }
+        }*/
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 

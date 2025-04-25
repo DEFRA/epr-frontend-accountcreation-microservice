@@ -52,4 +52,7 @@
   <data name="GovUKTitle" xml:space="preserve">
     <value>GOV.UK</value>
   </data>
+  <data name="ReExApplicationTitle" xml:space="preserve">
+    <value>EPR for packaging: reprocessors and exporters</value>
+  </data>
 </root>
