@@ -356,6 +356,7 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.RoleInOrganisation)]
     [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
+    [ExcludeFromCodeCoverage(Justification = "placeholder as developing pages out of order")]
     public async Task<IActionResult> RoleInOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -366,6 +367,7 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.ManageAccountPerson)]
     [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
+    [ExcludeFromCodeCoverage(Justification = "placeholder as developing pages out of order")]
     public async Task<IActionResult> ManageAccountPerson()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
