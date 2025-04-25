@@ -22,6 +22,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using System.Net;
 using System.Text.Json;
+using System.Reflection;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -338,6 +339,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.IsPartnership)]
+    [OrganisationJourneyAccess(PagePath.IsPartnership)]
     public async Task<IActionResult> IsOrganisationAPartner(IsOrganisationAPartnerViewModel model)
     {
         if (!ModelState.IsValid)
@@ -397,22 +399,54 @@ public class OrganisationController : Controller
 
         if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
         {
-            return await SaveSessionAndRedirect(session, "CannotCreateAccount", PagePath.RoleInOrganisation,
-                PagePath.CannotCreateAccount);
+            return await SaveSessionAndRedirect(session, "CannotCreateAccount", PagePath.RoleInOrganisation, PagePath.CannotCreateAccount);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation,
-                PagePath.ManageAccountPerson);
+        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation, PagePath.ApprovedPerson);
     }
 
-    [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
     [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [Route(PagePath.ApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.ApprovedPerson)]
     public async Task<IActionResult> AddApprovedPerson()
     {
-        throw new NotImplementedException(
-            "The 'Manage Account Person' page hasn't been built. It will be built in a future story.");
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.ApprovedPerson);
+
+        return View(new AccountPersonViewModel
+        {
+            AgreedApprovedPerson = session.AgreedApprovedPerson.Value ? YesNoAnswer.Yes : YesNoAnswer.No,
+            InviteEligiblePerson = session.InviteEligiblePerson.Value ? YesNoAnswer.Yes : YesNoAnswer.No,
+            InviteApprovedPersonLater = session.InviteApprovedPersonLater.Value ? YesNoAnswer.Yes : YesNoAnswer.No
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.ApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.ApprovedPerson)]
+    public async Task<IActionResult> AddApprovedPerson(AccountPersonViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.AgreedApprovedPerson = model.AgreedApprovedPerson == YesNoAnswer.Yes;
+        session.InviteEligiblePerson = model.InviteEligiblePerson == YesNoAnswer.Yes;
+        session.InviteApprovedPersonLater = model.InviteEligiblePerson == YesNoAnswer.Yes;
+
+        if (session.IsApprovedPersonOptionSelected)
+        {
+            return await SaveSessionAndRedirect(session, nameof(TeamRole2), PagePath.ApprovedPerson, PagePath.TeamRole);
+        }
+        return await SaveSessionAndRedirect(session, nameof(TeamRole2), PagePath.ApprovedPerson, PagePath.TeamRole);
+    }
+
+    public async Task<IActionResult> TeamRole2()
+    {
+        throw new NotImplementedException();
     }
 
     [HttpGet]
@@ -612,55 +646,6 @@ public class OrganisationController : Controller
     public IActionResult RedirectToStart()
     {
         return RedirectToAction(nameof(RegisteredAsCharity));
-    }
-
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public async Task<IActionResult> AddApprovedPerson2()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.ManageAccountPerson);
-
-        bool? agreedApprovedPerson = null;
-        bool? inviteEligiblePerson = null;
-        bool? inviteApprovedPersonLater = null;
-
-        if (session.IsApprovedPersonOptionSelected)
-        {
-            agreedApprovedPerson = session.AgreedApprovedPerson;
-            inviteEligiblePerson = session.InviteEligiblePerson;
-            inviteApprovedPersonLater = session.InviteApprovedPersonLater;
-        }
-
-        return View(new AccountPersonViewModel
-        {
-            AgreedApprovedPerson = agreedApprovedPerson,
-            InviteEligiblePerson = inviteEligiblePerson,
-            InviteApprovedPersonLater = inviteApprovedPersonLater
-        });
-    }
-    
-    [HttpPost]
-    [Route(PagePath.ManageAccountPerson)]
-    public async Task<IActionResult> AddApprovedPerson2(AccountPersonViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        session.AgreedApprovedPerson = model.AgreedApprovedPerson;
-        session.InviteEligiblePerson = model.InviteEligiblePerson;
-        session.InviteApprovedPersonLater = model.InviteEligiblePerson;
-
-        if (session.IsApprovedPersonOptionSelected)
-        {
-            return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.ManageAccountPerson, PagePath.RoleInOrganisation);
-        }
-        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.ManageAccountPerson, PagePath.RoleInOrganisation);
     }
 
     #region Private Methods 
