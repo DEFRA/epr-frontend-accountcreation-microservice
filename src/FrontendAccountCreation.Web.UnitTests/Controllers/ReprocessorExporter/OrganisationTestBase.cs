@@ -2,9 +2,7 @@
 
 using System.Security.Claims;
 using Core.Services;
-using Core.Services.Dto.User;
 using Core.Services.FacadeModels;
-using Core.Sessions;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -15,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Web.Configs;
-using Web.Controllers.ReprocessorExporter;
 using Web.Sessions;
 
 /// <summary>
@@ -24,7 +21,6 @@ using Web.Sessions;
 public abstract class OrganisationTestBase
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
-    protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
 
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
@@ -90,14 +86,5 @@ public abstract class OrganisationTestBase
         hasBackLinkKey.Should().BeTrue();
         (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
     }
-
-    protected static UserAccount CreateUserAccountModel(string enrolmentStatus) => new()
-    {
-        User = new User
-        {
-            Id = Guid.NewGuid(),
-            EnrolmentStatus = enrolmentStatus
-        }
-    };
 }
 

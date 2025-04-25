@@ -6,8 +6,6 @@
 
 @model ReExAccountFullNameViewModel
 
-@inject IOptions<DeploymentRoleOptions> DeploymentRoleOption
-
 @{
     ViewData["Title"] = Localizer["FullName.Title"];
     // todo: const
@@ -25,20 +23,19 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
-                
-                @* todo: ReExAccount controller doesn't exist anymore*@
-                <form asp-controller="ReExAccount" asp-action="@Model.PostAction" method="post">
+
+                <form asp-controller="User" asp-action="ReExAccountFullName" method="post">
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                    @Localizer["ReExAccountFullName.Question"]
+                                    @Localizer["FullName.Question"]
                                 </h1>
                             </legend>
-
+                            <p class="govuk-body">@Localizer["FullName.Hint"]</p>
                             <div class="govuk-form-group govuk-!-margin-bottom-4@(errorsViewModel.HasErrorKey(nameof(ReExAccountFullNameViewModel.FirstName)) ? " govuk-form-group--error" : "")">
                                 <label class="govuk-label" gov-for="FirstName">
-                                    @Localizer["ReExAccountFullName.FirstName"]
+                                    @Localizer["FullName.FirstName"]
                                 </label>
 
                                 @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(ReExAccountFullNameViewModel.FirstName)])
@@ -51,7 +48,7 @@
 
                             <div class="govuk-form-group govuk-!-margin-top-0@(errorsViewModel.HasErrorKey(nameof(ReExAccountFullNameViewModel.LastName)) ? " govuk-form-group--error" : "")">
                                 <label class="govuk-label" gov-for="LastName">
-                                    @Localizer["ReExAccountFullName.LastName"]
+                                    @Localizer["FullName.LastName"]
                                 </label>
 
                                 @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(ReExAccountFullNameViewModel.LastName)])
@@ -61,8 +58,6 @@
                                        gov-for="LastName"
                                        gov-value="@Model.LastName">
                             </div>
-
-                            @Html.HiddenFor(m => m.PostAction)
                         </fieldset>
                     </div>
 
