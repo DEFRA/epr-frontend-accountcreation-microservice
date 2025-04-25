@@ -39,18 +39,18 @@
 
                 <ul id="navigation" class="govuk-header__navigation-list">
                     <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-                        @* todo: what's our home page? *@
-                        <a class="govuk-header__link" asp-controller="User" asp-action="ReExAccountFullName">
+                        @* todo: this will link to the dashboard page, once it's built *@
+                        <a class="govuk-header__link" href="#">
                             @Localizer["Header.Home"]
                         </a>
                     </li>
 
-                    @* todo: will need to be displayed once an organisation has been added *@
-@*                     <li class="govuk-header__navigation-item">
+                    @* todo: this will link to the 'Manage account details' page, once it's built *@
+                    <li class="govuk-header__navigation-item">
                         <a class="govuk-header__link" href="#">
                             @Localizer["Header.ManageAccount"]
                         </a>
-                    </li> *@
+                    </li>
 
                     <li class="govuk-header__navigation-item">
                         @if (User.Identity?.IsAuthenticated == true)
