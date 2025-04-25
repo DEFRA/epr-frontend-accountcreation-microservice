@@ -1,16 +1,13 @@
-﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
-@using FrontendAccountCreation.Web.Configs
-@using Microsoft.Extensions.Options
 
 @model ReExAccountFullNameViewModel
 
 @{
     ViewData["Title"] = Localizer["FullName.Title"];
-    // todo: const
-    ViewData["ApplicationTitleOverride"] = "ReExApplicationTitle";
-    ViewData["HeaderOverride"] = "_ReExHeader";
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.CreateAccountTitleOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, 
         nameof(ReExAccountFullNameViewModel.FirstName), nameof(ReExAccountFullNameViewModel.LastName));

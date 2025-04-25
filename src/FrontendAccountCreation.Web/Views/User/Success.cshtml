@@ -1,11 +1,13 @@
-﻿﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+﻿﻿@* todo: generate css so don't have to use class="govuk-body" *@
 
-@* todo: generate css so don't have to use class="govuk-body" *@
+@using FrontendAccountCreation.Web.Constants
 
-@model SuccessViewModel
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.SuccessViewModel
 
 @{
     ViewData["Title"] = Localizer["Success.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.CreateUserSuccessTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.CreateUserSuccessHeaderOverride;
 }
 
 <div class="govuk-width-container">

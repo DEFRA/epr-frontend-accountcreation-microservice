@@ -162,4 +162,7 @@
   <data name="Header.SignOut" xml:space="preserve">
     <value>Allgofnodi</value>
   </data>
+  <data name="CreateAnAccount" xml:space="preserve">
+    <value>WCreate an account</value>
+  </data>
 </root>
