@@ -7,7 +7,7 @@
 @model List<ReExCompanyTeamMember>;
 
 @{
-    ViewData["Title"] = "Check invitation details";
+    ViewData["Title"] = Localizer["TeamMembersCheckInvitationDetails.Title"];
 }
 
 <div class="govuk-width-container">
@@ -16,13 +16,13 @@
             <div class="govuk-grid-column-two-thirds">
 
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-6">
-                    Check invitation details
+                    @Localizer["TeamMembersCheckInvitationDetails.Title"]
                 </h1>
 
                 <div class="govuk-summary-card">
 
                     <div class="govuk-summary-card__title-wrapper">
-                        <p class="govuk-body">Any invites created for one or more approved persons will be sent once the organisation is added.</p>
+                        <p class="govuk-body">@Localizer["TeamMembersCheckInvitationDetails.Help"]</p>
                     </div>
 
                     @for (int i = 0; i < Model?.Count; i++)
@@ -33,52 +33,30 @@
                                 <!-- Role of team member -->
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        Role
+                                        @Localizer["TeamMembersCheckInvitationDetails.Role"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         @SharedLocalizer[Model[i].Role.ToString()]
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation")">Change<span class="govuk-visually-hidden"> role</span></a>
+                                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { index = i })">@Localizer["TeamMembersCheckInvitationDetails.Change"]<span class="govuk-visually-hidden"> role</span></a>
                                     </dd>
                                 </div>
 
-                                <!-- Name -->
+                                <!-- Name, Email, Telephone -->
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        Name
+                                        @Localizer["TeamMembersCheckInvitationDetails.Name"]<br />
+                                        @Localizer["TeamMembersCheckInvitationDetails.Email"]<br />
+                                        @Localizer["TeamMembersCheckInvitationDetails.Telephone"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        Frank Bridger @i.ToString()
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> name</span></a>
-                                    </dd>
-                                </div>
-
-                                <!-- Email -->
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        Email
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        frankie.bridger@acornltd.com
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> email</span></a>
-                                    </dd>
-                                </div>
-
-                                <!-- Telephone -->
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        Telephone
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
+                                        Frank Bridger @i.ToString()<br/>
+                                        frankie.bridger@acornltd.com<br/>
                                         07890030028
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> telephone</span></a>
+                                        <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> name</span></a>
                                     </dd>
                                 </div>
 
@@ -86,7 +64,7 @@
                         </div>
 
                         <div class="govuk-button-group">
-                            @Html.ActionLink("Change", "TeamMemberRoleInOrganisation", "Organisation",
+                            @Html.ActionLink(@Localizer["TeamMembersCheckInvitationDetails.Remove"].Value, "TeamMembersCheckInvitationDetails", "Organisation",
                                      new
                                      {
                                          @index = i
@@ -95,23 +73,18 @@
                                      {
                                          @class = "govuk-button govuk-button--secondary"
                                      })
-@*                             <button class="govuk-button govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4" data-module="govuk-button">
-                                Change
-                            </button> *@
-                            <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-                                Remove
-                            </button>
                         </div>
                     }
 
                     <form action="check-your-answers" method="post" novalidate>
                         <button class="govuk-button" data-module="govuk-button">
-                            Continue
+                            @Localizer["TeamMembersCheckInvitationDetails.Continue"]
                         </button>
-
                     </form>
 
-                    <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { index = Model?.Count ?? 0 })">Invite another approved person</a>
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { index = Model?.Count ?? 0 })">@Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]</a>
+                    </p>
 
                 </div>
             </div>
