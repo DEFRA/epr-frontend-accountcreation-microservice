@@ -32,6 +32,7 @@ public static class PagePath
     public const string IsTradingNameDifferent = "confirm-trading-name";
     public const string IsPartnership = "is-partnership";
     public const string TeamMemberRoleInOrganisation = "check-companies-house-role";
+    public const string AddAnApprovedPerson = "add-an-approved-person";
 
     // Non journey paths
     public const string Accessibility = "accessibility";

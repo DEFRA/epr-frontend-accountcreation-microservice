@@ -114,5 +114,29 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             }
         }
+
+        [HttpGet]
+        [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson()
+        {         
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.AddAnApprovedPerson)]
+        [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+        public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+                return View(model);
+            }
+
+            // return page based on model.InviteUserOption value          
+            return View();
+        }
+
     }
 }
