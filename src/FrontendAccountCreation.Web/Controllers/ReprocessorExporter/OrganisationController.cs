@@ -401,10 +401,10 @@ public class OrganisationController : Controller
             PagePath.ManageAccountPerson);
     }
 
+    [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
     [HttpGet]
     [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    [ExcludeFromCodeCoverage(Justification = "placeholder as developing pages out of order")]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> ManageAccountPerson()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
