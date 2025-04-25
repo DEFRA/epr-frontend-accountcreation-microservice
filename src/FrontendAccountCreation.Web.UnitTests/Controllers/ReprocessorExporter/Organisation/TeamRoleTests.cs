@@ -99,19 +99,24 @@ public class TeamRoleTests : OrganisationTestBase
     }
 
     [TestMethod]
-    [DataRow(YesNoAnswer.Yes, true)]
-    [DataRow(YesNoAnswer.No, false)]
-    public async Task POST_UserSelectsYesOrNo_SessionUpdatedCorrectly(YesNoAnswer userAnswer, bool expectedIsTradingNameDifferentInSession)
+    [DataRow(TeamRoleInOrganisation.Director, true, TeamRoleInOrganisation.Director)]
+    [DataRow(TeamRoleInOrganisation.Director, false, TeamRoleInOrganisation.Director)]
+    [DataRow(TeamRoleInOrganisation.CompanySecretary, true, TeamRoleInOrganisation.CompanySecretary)]
+    [DataRow(TeamRoleInOrganisation.CompanySecretary, false, TeamRoleInOrganisation.CompanySecretary)]
+    public async Task POST_UserSelectsDirectorOrSecretary_SessionUpdatedCorrectly(
+        TeamRoleInOrganisation userAnswer,
+        bool invitation,
+        TeamRoleInOrganisation expectedTeamRoleInSession)
     {
         // Arrange
-        var request = new IsTradingNameDifferentViewModel { IsTradingNameDifferent = userAnswer };
+        var request = new TeamRoleViewModel { TeamRoleInOrganisation = userAnswer };
 
         // Act
-        await _systemUnderTest.IsTradingNameDifferent(request);
+        await _systemUnderTest.TeamRole(request, invitation);
 
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(),
-            It.Is<OrganisationSession>(os => os.IsTradingNameDifferent == expectedIsTradingNameDifferentInSession)),
+            It.Is<OrganisationSession>(os => os.CurrentApprovedPerson!.TeamRoleInOrganisation == expectedTeamRoleInSession)),
             Times.Once);
     }
 
