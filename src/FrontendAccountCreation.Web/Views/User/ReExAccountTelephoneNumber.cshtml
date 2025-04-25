@@ -8,6 +8,7 @@
 @{
     ViewData["Title"] = Localizer["TelephoneNumber.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.CreateAccountTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.CreateAccountHeaderOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, 
         nameof(ReExAccountTelephoneNumberViewModel.TelephoneNumber));

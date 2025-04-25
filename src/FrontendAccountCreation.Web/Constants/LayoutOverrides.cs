@@ -3,6 +3,7 @@
 public static class LayoutOverrides
 {
     public const string CreateAccountTitleOverride = "CreateAnAccount";
+    public const string CreateAccountHeaderOverride = "_CreateAnAccountHeader";
 
     public const string CreateUserSuccessTitleOverride = "ReExApplicationTitle";
     public const string CreateUserSuccessHeaderOverride = "_ReExHeader";
