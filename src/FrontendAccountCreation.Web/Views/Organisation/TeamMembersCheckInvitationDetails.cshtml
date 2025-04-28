@@ -39,7 +39,7 @@
                                         @SharedLocalizer[Model[i].Role.ToString()]
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { index = i })">@Localizer["TeamMembersCheckInvitationDetails.Change"]<span class="govuk-visually-hidden"> role</span></a>
+                                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { id = Model[i].Id })">@Localizer["TeamMembersCheckInvitationDetails.Change"]<span class="govuk-visually-hidden"> role</span></a>
                                     </dd>
                                 </div>
 
@@ -51,7 +51,7 @@
                                         @Localizer["TeamMembersCheckInvitationDetails.Telephone"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        Frank Bridger @i.ToString()<br/>
+                                        Frank Bridger @Model[i].Id.ToString().Substring(0, 5)<br/>
                                         frankie.bridger@acornltd.com<br/>
                                         07890030028
                                     </dd>
@@ -67,7 +67,7 @@
                             @Html.ActionLink(@Localizer["TeamMembersCheckInvitationDetails.Remove"].Value, "TeamMembersCheckInvitationDetails", "Organisation",
                                      new
                                      {
-                                         @index = i
+                                         @id = Model[i].Id
                                      },
                                      new
                                      {
@@ -83,7 +83,7 @@
                     </form>
 
                     <p class="govuk-body">
-                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { index = Model?.Count ?? 0 })">@Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]</a>
+                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation")">@Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]</a>
                     </p>
 
                 </div>

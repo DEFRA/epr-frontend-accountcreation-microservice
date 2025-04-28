@@ -17,13 +17,15 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="AccountCreation" method="post">
+                <form asp-controller="Organisation" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                             @Localizer["TeamMemberRoleInOrganisation.Question"]
                         </h1>
 
                         <p class="govuk-body">@Localizer["TeamMemberRoleInOrganisation.QuestionDescription"]</p>
+
+                        @Html.HiddenFor(x => x.Id)
                         <div class="govuk-radios" data-module="govuk-radios">
                             <!-- director -->
                             <div class="govuk-radios__item">
@@ -55,13 +57,17 @@
                     </div>
 
                     <div class="govuk-button-group">
-                        <button class="govuk-button" type="submit" name="invite" value="with-invite" data-module="govuk-button" formaction="/re-ex/organisation/check-companies-house-role">
+                        <button class="govuk-button" type="submit">
                             @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
                         </button>
 
-                        <button class="govuk-button govuk-button--secondary" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="Organisation" name="invite" value="without-invite" data-module="govuk-button">
+@*                         <button class="govuk-button" type="submit" data-module="govuk-button" formaction="/re-ex/organisation/check-companies-house-role">
+                            @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
+                        </button> *@
+
+@*                         <button class="govuk-button govuk-button--secondary" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="Organisation" name="invite" value="without-invite" data-module="govuk-button">
                             @Localizer["TeamMemberRoleInOrganisation.ContinueLink"]
-                        </button>
+                        </button> *@
                     </div>
 
                 </form>

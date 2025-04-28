@@ -1,7 +1,4 @@
-﻿using FrontendAccountCreation.Core.Addresses;
-using FrontendAccountCreation.Core.Services.Dto.Company;
-using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -13,42 +10,24 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
     public partial class OrganisationController : Controller
     {
         [HttpGet]
-        [Route(PagePath.TeamMemberRoleInOrganisation + "/{index:int?}")]
-        public async Task<IActionResult> TeamMemberRoleInOrganisation(int? index)
+        [Route(PagePath.TeamMemberRoleInOrganisation + "/{id:guid?}")]
+        public async Task<IActionResult> TeamMemberRoleInOrganisation(Guid? id)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
             SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            if (index.HasValue)
+            // show previously selected team member role
+            if (id.HasValue)
             {
-                ReExCompaniesHouseSession? companiesHouseSession = session.CompaniesHouseSession;
-                if (companiesHouseSession != null)
+                int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                if (index.GetValueOrDefault(-1) >= 0)
                 {
-                    var members = session.CompaniesHouseSession.TeamMembers;
-                    if (members?.Count > index.Value)
+                    TeamMemberRoleInOrganisationViewModel viewModel = new TeamMemberRoleInOrganisationViewModel
                     {
-                        var viewModel = new TeamMemberRoleInOrganisationViewModel
-                        {
-                            RoleInOrganisation = members[index.Value]?.Role
-                        };
-
-                        if (index.Value != session.CompaniesHouseSession.CurrentTeamMemberIndex)
-                        {
-                            session.CompaniesHouseSession.CurrentTeamMemberIndex = index.Value;
-                            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-                        }
-
-                        return View(viewModel);
-                    }
-
-                    index = members?.Count ?? 0;
-                    if (index.Value != session.CompaniesHouseSession.CurrentTeamMemberIndex)
-                    {
-                        session.CompaniesHouseSession.CurrentTeamMemberIndex = index.Value;
-                        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-                    }
-
+                        RoleInOrganisation = session.CompaniesHouseSession.TeamMembers[index.Value]?.Role
+                    };
+                    return View(viewModel);
                 }
             }
 
@@ -56,103 +35,56 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpPost]
-        [Route(PagePath.TeamMemberRoleInOrganisation)]
-        public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model, string? invite)
+        [Route(PagePath.TeamMemberRoleInOrganisation + "/{id:guid?}")]
+        public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
             if (!ModelState.IsValid)
             {
                 SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
                 return View(model);
             }
 
-            FillSessionWithALoadOfNonsense(model.RoleInOrganisation.Value);
-            bool isInvited = invite != "without-invite";
-            //session.CompaniesHouseSession.TeamMembers[session.CompaniesHouseSession.CurrentTeamMemberIndex].IsInvited = isInvited;
-
-            if (isInvited)
+            ReExCompaniesHouseSession companiesHouseSession = session.CompaniesHouseSession ?? new();
+            int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model?.Id));
+            if (index.GetValueOrDefault(-1) >= 0)
             {
-                // navigating to the wrong page, the correct page is not developed
-                return await SaveSessionAndRedirect(session, nameof(ConfirmDetailsOfTheCompany), PagePath.TeamMemberRoleInOrganisation,
-                    PagePath.ConfirmCompanyDetails);
-
+                // found existing team member
+                session.CompaniesHouseSession.TeamMembers[index.Value].Role = model.RoleInOrganisation;
             }
-
-            session.IsUserChangingDetails = false;
-            await SaveSession(session, "/re-ex/organisation/check-companies-house-role", $"/create-account/{PagePath.CheckYourDetails}");
-            return Redirect($"/create-account/{PagePath.CheckYourDetails}");
-
-            // for development only because the next page is not ready
-            void FillSessionWithALoadOfNonsense(ReExTeamMemberRole role)
+            else
             {
-                Contact contact = new Contact();
-                contact.FirstName = "Bloke";
-                contact.LastName = "Downpub";
-                contact.TelephoneNumber = "06783327395";
-                session.Contact = contact;
-                session.UkNation = Nation.Scotland;
-
-                ReExCompaniesHouseSession companiesHouseSession = new ReExCompaniesHouseSession();
-                var address = new Address();
-                address.Town = "Chesterfield";
-                var company = new Company();
-                company.Name = "Snibbo Widgets Ltd";
-                company.CompaniesHouseNumber = role.ToString();
-                company.BusinessAddress = address;
-
-                companiesHouseSession.Company = company;
-                session.OrganisationType = OrganisationType.CompaniesHouseCompany;
-                companiesHouseSession.RoleInOrganisation = (RoleInOrganisation) role;
-
-                int? teamMemberIndex = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
-                if (teamMemberIndex.HasValue)
-                {
-                    var members = session.CompaniesHouseSession?.TeamMembers;
-                    if (members?.Count > teamMemberIndex.Value)
-                    {
-                        members[teamMemberIndex.Value].Role = role;
-                        companiesHouseSession.TeamMembers = members;
-                        session.CompaniesHouseSession = companiesHouseSession;
-                        return;
-                    }
-                }
-
-                var newMembers = session.CompaniesHouseSession?.TeamMembers ?? new List<ReExCompanyTeamMember>();
-                ReExCompanyTeamMember newMember = new ReExCompanyTeamMember
-                {
-                    Role = role
-                };
-                newMembers.Add(newMember);
-
-                companiesHouseSession.TeamMembers = newMembers;
-                companiesHouseSession.CurrentTeamMemberIndex = newMembers.Count;
+                // add new team member
+                List<ReExCompanyTeamMember> members = companiesHouseSession.TeamMembers ?? new();
+                members.Add(new ReExCompanyTeamMember { Id = Guid.NewGuid(), Role = model.RoleInOrganisation });
+                companiesHouseSession.TeamMembers = members;
                 session.CompaniesHouseSession = companiesHouseSession;
-
             }
+
+            // navigating to the wrong page, the correct page is not developed
+            return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.TeamMemberRoleInOrganisation,
+                PagePath.UkNation);
+
         }
 
         [HttpGet]
-        [Route(PagePath.TeamMembersCheckInvitationDetails + "/{index:int?}")]
-        public async Task<IActionResult> TeamMembersCheckInvitationDetails(int? index)
+        [Route(PagePath.TeamMembersCheckInvitationDetails + "/{id:guid?}")]
+        public async Task<IActionResult> TeamMembersCheckInvitationDetails(Guid? id)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-            SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
 
-            if (index.HasValue)
+            // if id is supplied, remove the team member
+            if (id.HasValue)
             {
-                ReExCompaniesHouseSession? companiesHouseSession = session.CompaniesHouseSession;
-                if (companiesHouseSession != null)
+                int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                if (index.GetValueOrDefault(-1) >= 0)
                 {
-                    var members = session.CompaniesHouseSession.TeamMembers;
-                    if (members?.Count > index.Value)
-                    {
-                        members.Remove(members[index.Value]);
-                        session.CompaniesHouseSession.TeamMembers = members;
-                        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-                    }
+                    session.CompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
                 }
             }
+
+            SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.CompaniesHouseSession?.TeamMembers);
         }
