@@ -1,25 +1,26 @@
-﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions;
+﻿
+namespace FrontendAccountCreation.Web.UnitTests.Sessions;
+
+using FluentAssertions;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Text;
 using System.Text.Json;
 
-namespace FrontendAccountCreation.Web.UnitTests.Sessions;
-
 [TestClass]
 public class SessionManagerTests
 {
-    private readonly AccountCreationSession _testSession = new() { IsTheOrganisationCharity = true};
-    private readonly string _sessionKey = nameof(AccountCreationSession);
+    private const string Name = "TestCo";
+    private readonly TestSessionData _testSession = new() { Name = Name };
+    private const string SessionKey = nameof(TestSessionData);
 
-    private string _serializedTestSession = null!;
-    private byte[] _sessionBytes = null!;
+    private string _serializedTestSession;
+    private byte[] _sessionBytes;
 
-    private Mock<ISession> _sessionMock = null!;
-    private AccountCreationSessionManager _sessionManager = null!;
-
+    private Mock<ISession> _sessionMock;
+    private SessionManager<TestSessionData> _sessionManager;
 
     [TestInitialize]
     public void Setup()
@@ -28,14 +29,14 @@ public class SessionManagerTests
         _sessionBytes = Encoding.UTF8.GetBytes(_serializedTestSession);
 
         _sessionMock = new Mock<ISession>();
-        _sessionManager = new AccountCreationSessionManager();
+        _sessionManager = new SessionManager<TestSessionData>();
     }
 
     [TestMethod]
     public async Task GivenNoSessionInMemory_WhenGetSessionAsyncCalled_ThenSessionReturnedFromSessionStore()
     {
         // Arrange
-        _sessionMock.Setup(x => x.TryGetValue(_sessionKey, out _sessionBytes)).Returns(true);
+        _sessionMock.Setup(x => x.TryGetValue(SessionKey, out _sessionBytes)).Returns(true);
 
         // Act
         var session = await _sessionManager.GetSessionAsync(_sessionMock.Object);
@@ -43,14 +44,14 @@ public class SessionManagerTests
         // Assert
         _sessionMock.Verify(x => x.LoadAsync(It.IsAny<CancellationToken>()), Times.Once());
 
-        session!.IsTheOrganisationCharity.Should().Be(_testSession.IsTheOrganisationCharity);
+        session.Name.Should().Be(_testSession.Name);
     }
 
     [TestMethod]
     public async Task GivenSessionInMemory_WhenGetSessionAsyncCalled_ThenSessionReturnedFromMemory()
     {
         // Arrange
-        _sessionMock.Setup(x => x.Set(_sessionKey, It.IsAny<byte[]>()));
+        _sessionMock.Setup(x => x.Set(SessionKey, It.IsAny<byte[]>()));
         await _sessionManager.SaveSessionAsync(_sessionMock.Object, _testSession);
 
         // Act
@@ -58,16 +59,16 @@ public class SessionManagerTests
 
         // Assert
         _sessionMock.Verify(x => x.LoadAsync(It.IsAny<CancellationToken>()), Times.Once);
-        _sessionMock.Verify(x => x.TryGetValue(_sessionKey, out It.Ref<byte[]?>.IsAny), Times.Never);
+        _sessionMock.Verify(x => x.TryGetValue(SessionKey, out It.Ref<byte[]>.IsAny), Times.Never);
 
-        session!.IsTheOrganisationCharity.Should().Be(_testSession.IsTheOrganisationCharity);
+        session.Name.Should().Be(_testSession.Name);
     }
 
     [TestMethod]
     public async Task GivenNewSession_WhenSaveSessionAsyncCalled_ThenSessionSavedInStoreAndMemory()
     {
         // Arrange
-        _sessionMock.Setup(x => x.Set(_sessionKey, It.IsAny<byte[]>()));
+        _sessionMock.Setup(x => x.Set(SessionKey, It.IsAny<byte[]>()));
 
         // Act
         await _sessionManager.SaveSessionAsync(_sessionMock.Object, _testSession);
@@ -76,17 +77,17 @@ public class SessionManagerTests
         var savedSession = await _sessionManager.GetSessionAsync(_sessionMock.Object);
 
         _sessionMock.Verify(x => x.LoadAsync(It.IsAny<CancellationToken>()), Times.Once);
-        _sessionMock.Verify(x => x.Set(_sessionKey, It.IsAny<byte[]>()), Times.Once);
+        _sessionMock.Verify(x => x.Set(SessionKey, It.IsAny<byte[]>()), Times.Once);
 
         savedSession.Should().NotBeNull();
-        savedSession!.IsTheOrganisationCharity.Should().Be(_testSession.IsTheOrganisationCharity);
+        savedSession.Name.Should().Be(_testSession.Name);
     }
 
     [TestMethod]
     public async Task GivenSessionKey_WhenRemoveSessionCalled_ThenSessionRemovedFromMemoryAndSessionStore()
     {
         // Arrange
-        _sessionMock.Setup(x => x.Set(_sessionKey, It.IsAny<byte[]>()));
+        _sessionMock.Setup(x => x.Set(SessionKey, It.IsAny<byte[]>()));
 
         await _sessionManager.SaveSessionAsync(_sessionMock.Object, _testSession);
 
@@ -96,7 +97,7 @@ public class SessionManagerTests
         // Assert
         var savedSession = await _sessionManager.GetSessionAsync(_sessionMock.Object);
 
-        _sessionMock.Verify(x => x.Remove(_sessionKey), Times.Once);
+        _sessionMock.Verify(x => x.Remove(SessionKey), Times.Once);
 
         savedSession.Should().BeNull();
     }
@@ -104,41 +105,35 @@ public class SessionManagerTests
     [TestMethod]
     public async Task GivenNoSessionInMemory_WhenUpdateSessionAsyncCalled_ThenSessionHasBeenUpdatedInMemoryAndStore()
     {
-        // Arrange
-        const bool isTheOrganisationCharity = true;
-
         // Act
-        await _sessionManager.UpdateSessionAsync(_sessionMock.Object, (x) => x.IsTheOrganisationCharity = isTheOrganisationCharity);
+        await _sessionManager.UpdateSessionAsync(_sessionMock.Object, (x) => x.Name = Name);
 
         // Assert
         var savedSession = await _sessionManager.GetSessionAsync(_sessionMock.Object);
 
         _sessionMock.Verify(x => x.LoadAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
-        _sessionMock.Verify(x => x.Set(_sessionKey, It.IsAny<byte[]>()), Times.Once);
+        _sessionMock.Verify(x => x.Set(SessionKey, It.IsAny<byte[]>()), Times.Once);
 
         savedSession.Should().NotBeNull();
-        savedSession!.IsTheOrganisationCharity.Should().Be(isTheOrganisationCharity);
+        savedSession.Name.Should().Be(Name);
     }
 
     [TestMethod]
     public async Task GivenSessionInMemory_WhenUpdateSessionAsyncCalled_ThenSessionHasBeenUpdatedInMemoryAndStore()
     {
-        // Arrange
-        const bool isTheOrganisationCharity = true;
-
-        _sessionMock.Setup(x => x.Set(_sessionKey, It.IsAny<byte[]>()));
+        _sessionMock.Setup(x => x.Set(SessionKey, It.IsAny<byte[]>()));
         await _sessionManager.SaveSessionAsync(_sessionMock.Object, _testSession);
 
         // Act
-        await _sessionManager.UpdateSessionAsync(_sessionMock.Object, (x) => x.IsTheOrganisationCharity = isTheOrganisationCharity);
+        await _sessionManager.UpdateSessionAsync(_sessionMock.Object, (x) => x.Name = Name);
 
         // Assert
         var savedSession = await _sessionManager.GetSessionAsync(_sessionMock.Object);
 
         _sessionMock.Verify(x => x.LoadAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
-        _sessionMock.Verify(x => x.Set(_sessionKey, It.IsAny<byte[]>()), Times.Exactly(2));
+        _sessionMock.Verify(x => x.Set(SessionKey, It.IsAny<byte[]>()), Times.Exactly(2));
 
         savedSession.Should().NotBeNull();
-        savedSession!.IsTheOrganisationCharity.Should().Be(isTheOrganisationCharity);
+        savedSession.Name.Should().Be(Name);
     }
 }

@@ -18,10 +18,18 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Header.SignOut" xml:space="preserve">
-    <value>Sign out</value>
-  </data>
-    <data name="Header.SignIn" xml:space="preserve">
-    <value>Sign in</value>
-  </data>
+    <data name="CannotVerifyOrganisation.Title" xml:space="preserve">
+        <value>Cannot Verify Organisation</value>
+    </data>
+    <data name="CannotVerifyOrganisation.Paragraph1" xml:space="preserve">
+        <value>This is because the Companies House register isn’t responding at the
+moment. </value>
+    </data>
+    <data name="CannotVerifyOrganisation.Paragraph2" xml:space="preserve">
+        <value>You will be able to use the service later.</value>
+    </data>
+    <data name="CannotVerifyOrganisation.ContentHeading" xml:space="preserve">
+        <value>Sorry, we can’t verify your organisation
+right now</value>
+    </data>
 </root>

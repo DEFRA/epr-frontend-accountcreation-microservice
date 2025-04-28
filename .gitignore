@@ -366,3 +366,4 @@ FodyWeavers.xsd
 # Mac OS Files
 *.DS_Store
 /src/FrontendAccountCreation.Web/appsettings.development.json
+/src/FrontendAccountCreation.Web/appsettings.development.json

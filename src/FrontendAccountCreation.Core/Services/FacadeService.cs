@@ -1,15 +1,16 @@
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Exceptions;
 using FrontendAccountCreation.Core.Services.Dto.Address;
 using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using FrontendAccountCreation.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
 using static Microsoft.Identity.Web.Constants;
 
 namespace FrontendAccountCreation.Core.Services;
@@ -84,11 +85,11 @@ public class FacadeService : IFacadeService
 
         return new AddressList(addressResponse);
     }
-    
+
     public async Task PostAccountDetailsAsync(AccountModel account)
     {
         await PrepareAuthenticatedClient();
-        
+
         var response = await _httpClient.PostAsJsonAsync("/api/producer-accounts", account);
 
         if (!response.IsSuccessStatusCode)
@@ -104,10 +105,40 @@ public class FacadeService : IFacadeService
         response.EnsureSuccessStatusCode();
     }
 
+    // possible todo: could have a generic method to do the heavy lifting and handle deserialization better
+    public async Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account)
+    {
+        await PrepareAuthenticatedClient();
+
+        var response = await _httpClient.PostAsJsonAsync("/api/v1/reprocessor-exporter-accounts", account);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            ProblemDetails? problemDetails = null;
+            try
+            {
+                problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            }
+            catch (JsonException e)
+            {
+                // if the response isn't a valid ProblemDetails, either this exception is thrown,
+                // or in some circumstances, null is returned.
+                // we handle both scenarios next
+            }
+
+            if (problemDetails != null)
+            {
+                throw new ProblemResponseException(problemDetails, response.StatusCode);
+            }
+
+            response.EnsureSuccessStatusCode();
+        }
+    }
+
     public async Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser)
     {
         await PrepareAuthenticatedClient();
-        
+
         var response = await _httpClient.PostAsJsonAsync("/api/accounts-management/enrol-invited-user", enrolInvitedUser);
 
         response.EnsureSuccessStatusCode();
@@ -117,7 +148,7 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync($"/api/persons/current");
-        
+
         if (response.StatusCode == HttpStatusCode.NoContent)
         {
             return false;
@@ -125,17 +156,17 @@ public class FacadeService : IFacadeService
         response.EnsureSuccessStatusCode();
         return true;
     }
-    
+
     public async Task<UserAccount?> GetUserAccount()
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync("/api/user-accounts");
-        
+
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return default;
         }
-        
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<UserAccount>();
     }
@@ -146,24 +177,24 @@ public class FacadeService : IFacadeService
         var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Bearer, accessToken);
     }
-    
+
     public async Task<InviteApprovedUserModel> GetServiceRoleIdAsync(string token)
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync($"/api/persons/person-by-invite-token?token={token}");
- 
+
         if (response.StatusCode == HttpStatusCode.NoContent)
         {
             return null;
         }
 
         response.EnsureSuccessStatusCode();
-        
+
         var inviteApprovedUser = await response.Content.ReadFromJsonAsync<InviteApprovedUserModel>();
 
         return inviteApprovedUser;
     }
-    
+
     public async Task<ApprovedPersonOrganisationModel> GetOrganisationNameByInviteTokenAsync(string token)
     {
         await PrepareAuthenticatedClient();
@@ -176,17 +207,17 @@ public class FacadeService : IFacadeService
         }
 
         response.EnsureSuccessStatusCode();
-        
+
         var organisation = await response.Content.ReadFromJsonAsync<ApprovedPersonOrganisationModel>();
 
         return organisation;
     }
-    
+
     public async Task PostApprovedUserAccountDetailsAsync(AccountModel account)
     {
         await PrepareAuthenticatedClient();
         var response = await _httpClient.PostAsJsonAsync("/api/producer-accounts/ApprovedUser", account);
-        
+
         if (!response.IsSuccessStatusCode)
         {
             var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();

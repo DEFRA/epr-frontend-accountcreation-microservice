@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Cookies;
@@ -74,6 +75,8 @@ public static class ServiceProviderExtension
     {
         services.AddSingleton<ICookieService, CookieService>();
         services.AddScoped<ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
+        services.AddScoped<ISessionManager<ReExAccountCreationSession>, SessionManager<ReExAccountCreationSession>>();
+        services.AddScoped<ISessionManager<OrganisationSession>, SessionManager<OrganisationSession>>();
     }
 
     private static void SetTempDataCookieOptions(IServiceCollection services, IConfiguration configuration)
