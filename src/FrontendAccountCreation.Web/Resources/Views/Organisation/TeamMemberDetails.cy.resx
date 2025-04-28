@@ -141,4 +141,13 @@
   <data name="TeamMemberDetails.Header" xml:space="preserve">
     <value>[Welsh] What are your team member’s details?</value>
   </data>
+  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
+    <value>[Welsh] Enter a valid telephone number</value>
+  </data>
+  <data name="TeamMemberDetails.FullNameError" xml:space="preserve">
+    <value>[Welsh] Enter full name</value>
+  </data>
+  <data name="TeamMemberDetails.EmailError" xml:space="preserve">
+    <value>[Welsh] Enter a valid email address</value>
+  </data>
 </root>

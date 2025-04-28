@@ -1,16 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FrontendAccountCreation.Web.Controllers.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class TeamMemberViewModel
 {
-    [Required(ErrorMessage = "Enter full name")]
+    [Required(ErrorMessage = "TeamMemberDetails.FullNameError")]
     public string FullName { get; set; }
 
-    [Required(ErrorMessage = "Enter email address")]
-    [EmailAddress(ErrorMessage = "Enter a valid email address")]
+    [Required(ErrorMessage = "TeamMemberDetails.EmailError")]
     public string Email { get; set; }
 
-    [Required(ErrorMessage = "Enter telephone number")]
+    [TeamMemberTelephoneNumberValidation(ErrorMessage = "TelephoneNumber.TelephoneNumberErrorMessage")]
     public string Telephone { get; set; }
 }

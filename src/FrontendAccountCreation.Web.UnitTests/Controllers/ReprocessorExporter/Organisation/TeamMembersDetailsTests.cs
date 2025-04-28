@@ -47,7 +47,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
         public async Task TeamMembersDetails_Get_WithExistingTeamMember_ReturnsPopulatedView()
         {
             // Act
-            var result = await _systemUnderTest.TeamMembersDetails();
+            var result = await _systemUnderTest.TeamMemberDetails();
 
             // Assert
             result.Should().BeOfType<ViewResult>();
@@ -68,7 +68,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             _orgSessionMock.CompaniesHouseSession = new ReExCompaniesHouseSession(); // No members
 
             // Act
-            var result = await _systemUnderTest.TeamMembersDetails();
+            var result = await _systemUnderTest.TeamMemberDetails();
 
             // Assert
             result.Should().BeOfType<ViewResult>();
@@ -90,11 +90,10 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             };
 
             // Act
-            var result = await _systemUnderTest.TeamMembersDetails(model);
+            var result = await _systemUnderTest.TeamMemberDetails(model);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            ((RedirectToActionResult)result).ActionName.Should().Be("");
+            result.Should().BeOfType<ViewResult>();
 
             var updatedMember = _orgSessionMock.CompaniesHouseSession.TeamMembers[0];
             updatedMember.FullName.Should().Be("Jane Doe");
@@ -116,14 +115,14 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             _systemUnderTest.ModelState.AddModelError("Email", "Required");
 
             // Act
-            var result = await _systemUnderTest.TeamMembersDetails(model);
+            var result = await _systemUnderTest.TeamMemberDetails(model);
 
             // Assert
             result.Should().BeOfType<ViewResult>();
             var viewResult = (ViewResult)result;
 
             viewResult.Model.Should().BeEquivalentTo(model);
-            AssertBackLink(viewResult, PagePath.TeamMemberRoleInOrganisation);
+            AssertBackLink(viewResult, PagePath.TeamMemberDetails);
         }
     }
 }
