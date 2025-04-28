@@ -2,7 +2,7 @@
 
 public class OrganisationSession
 {
-    public List<string> Journey { get; set; } = new();
+    public List<string> Journey { get; set; } = [];
 
     public bool? IsTheOrganisationCharity { get; set; }
 
