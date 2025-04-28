@@ -45,7 +45,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
     {
         // Arrange
         var session = new OrganisationSession { Journey = visitedUrls.ToList() };
-        var expectedURL = expectedPage;
+        var expectedUrl = expectedPage;
 
         SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl));
 
@@ -55,7 +55,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
 
         // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
+        _httpResponseMock.Verify(x => x.Redirect(expectedUrl), Times.Once);
     }
 
     [TestMethod]
