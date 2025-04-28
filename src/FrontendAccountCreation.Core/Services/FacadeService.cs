@@ -52,8 +52,7 @@ public class FacadeService : IFacadeService
 
     public async Task<Company?> GetCompanyByCompaniesHouseNumberAsync(string companiesHouseNumber)
     {
-        //phil: use this instead if can't connect to companies house
-        return GetDummyCompany("01234567");
+        //phil: use this instead if can't connect to companies house // return GetDummyCompany("01234567");
 
         await PrepareAuthenticatedClient();
 
