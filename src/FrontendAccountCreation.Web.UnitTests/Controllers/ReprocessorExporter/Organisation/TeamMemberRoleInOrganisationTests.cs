@@ -48,42 +48,20 @@ public class TeamMemberRoleInOrganisationTests : OrganisationTestBase
     }
 
     [TestMethod]
-    [DataRow(ReExTeamMemberRole.CompanySecretary, "with-invite")]
-    [DataRow(ReExTeamMemberRole.Director, "with-invite")]
-    [DataRow(ReExTeamMemberRole.CompanySecretary, "")]
-    [DataRow(ReExTeamMemberRole.Director, null)]
-    public async Task TeamMemberRoleInOrganisation_WithInvitation_Redirects_AndUpdateSession(ReExTeamMemberRole role, string? invite)
+    [DataRow(ReExTeamMemberRole.CompanySecretary)]
+    [DataRow(ReExTeamMemberRole.Director)]
+    public async Task TeamMemberRoleInOrganisation_WithInvitation_Redirects_AndUpdateSession(ReExTeamMemberRole role)
     {
         // Arrange
         var request = new TeamMemberRoleInOrganisationViewModel() { RoleInOrganisation = role };
 
         // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(request, invite);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(request);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        // this is the wrong page, should be page where name, telephone, and email are entered
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ConfirmDetailsOfTheCompany));
-
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    }
-
-    [TestMethod]
-    [DataRow(ReExTeamMemberRole.CompanySecretary)]
-    [DataRow(ReExTeamMemberRole.Director)]
-    public async Task TeamMemberRoleInOrganisation_WithoutInvitation_RedirectsToCheckYourDetails_AndUpdateSession(ReExTeamMemberRole role)
-    {
-        // Arrange
-        var request = new TeamMemberRoleInOrganisationViewModel() { RoleInOrganisation = role };
-
-        // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(request, "without-invite");
-
-        // Assert
-        result.Should().BeOfType<RedirectResult>();
-
-        ((RedirectResult)result).Url.Should().Contain(PagePath.CheckYourDetails);
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TeamMembersDetails));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
@@ -95,7 +73,7 @@ public class TeamMemberRoleInOrganisationTests : OrganisationTestBase
         _systemUnderTest.ModelState.AddModelError(nameof(TeamMemberRoleInOrganisationViewModel.RoleInOrganisation), "Field is required");
 
         // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(new TeamMemberRoleInOrganisationViewModel(), string.Empty);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(new TeamMemberRoleInOrganisationViewModel());
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -112,7 +90,7 @@ public class TeamMemberRoleInOrganisationTests : OrganisationTestBase
     public async Task TeamMemberRoleInOrganisation_PageIsExited_BackLinkIsPageBefore()
     {
         //Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(0);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(Guid.NewGuid());
 
         //Assert
         result.Should().BeOfType<ViewResult>();
