@@ -117,7 +117,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
-        public async Task<IActionResult> TeamMembersDetails()
+        public async Task<IActionResult> TeamMemberDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
@@ -146,12 +146,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.TeamMemberDetails)]
-        public async Task<IActionResult> TeamMembersDetails(TeamMemberViewModel model)
+        public async Task<IActionResult> TeamMemberDetails(TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                ViewBag.BackLinkToDisplay = PagePath.TeamMemberRoleInOrganisation;
+                ViewBag.BackLinkToDisplay = PagePath.TeamMemberDetails;
                 return View(model);
             }
 
@@ -168,8 +168,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-
-            return RedirectToAction("");
+            //Todo: once the next page is developed, this needs to change to RedirectToAction
+            return View(model);
         }
 
 
