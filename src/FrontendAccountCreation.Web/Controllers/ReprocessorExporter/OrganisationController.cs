@@ -90,16 +90,12 @@ public class OrganisationController : Controller
 
         YesNoAnswer? isTheOrganisationCharity = null;
 
-        if (session != null)
+        isTheOrganisationCharity = session.IsTheOrganisationCharity ? YesNoAnswer.Yes : YesNoAnswer.No;
+
+        if (session.IsUserChangingDetails)
         {
-            isTheOrganisationCharity = session.IsTheOrganisationCharity ? YesNoAnswer.Yes : YesNoAnswer.No;
-
-            if (session.IsUserChangingDetails)
-            {
-                SetBackLink(session, string.Empty);
-            }
+            SetBackLink(session, string.Empty);
         }
-
 
         return View(new RegisteredAsCharityRequestViewModel
         {
@@ -164,7 +160,7 @@ public class OrganisationController : Controller
         {
             Journey = [PagePath.RegisteredWithCompaniesHouse]
         };
-
+        
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.RegisteredWithCompaniesHouse);
@@ -321,7 +317,7 @@ public class OrganisationController : Controller
 
     public async Task<IActionResult> IsOrganisationAPartner()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.IsPartnership);
 
         YesNoAnswer? isOrganisationAPartnership = null;
@@ -345,8 +341,7 @@ public class OrganisationController : Controller
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);            
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
         if (session.IsOrganisationAPartnership == true)
@@ -602,7 +597,7 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.NotAffected, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> NotAffected()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         SetBackLink(session, PagePath.NotAffected);
 
