@@ -2,11 +2,15 @@
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Core.Sessions
+@using FrontendAccountCreation.Web.Constants
 
 @model RoleInOrganisationViewModel
 
 @{
     ViewData["Title"] = Localizer["RoleInOrganisation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
