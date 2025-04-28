@@ -422,7 +422,7 @@ public class OrganisationController : Controller
 
         ViewBag.FindAndUpdateCompanyInformationLink = _urlOptions.FindAndUpdateCompanyInformation;
 
-        var viewModel = new CompaniesHouseNumberViewModel
+        var viewModel = new ReExCompaniesHouseNumberViewModel
         {
             CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company?.CompaniesHouseNumber,
         };
@@ -440,7 +440,7 @@ public class OrganisationController : Controller
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.CompaniesHouseNumber)]
     [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
-    public async Task<IActionResult> CompaniesHouseNumber(CompaniesHouseNumberViewModel model)
+    public async Task<IActionResult> CompaniesHouseNumber(ReExCompaniesHouseNumberViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -473,7 +473,7 @@ public class OrganisationController : Controller
 
         if (company == null)
         {
-            ModelState.AddModelError(nameof(CompaniesHouseNumberViewModel.CompaniesHouseNumber), "CompaniesHouseNumber.NotFoundError");
+            ModelState.AddModelError(nameof(ReExCompaniesHouseNumberViewModel.CompaniesHouseNumber), "CompaniesHouseNumber.NotFoundError");
 
             SetBackLink(session, PagePath.CompaniesHouseNumber);
 
