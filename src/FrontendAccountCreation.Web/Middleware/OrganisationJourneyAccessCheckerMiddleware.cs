@@ -3,11 +3,10 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.FeatureManagement;
 
 namespace FrontendAccountCreation.Web.Middleware;
 
-public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next, IFeatureManager featureManager)
+public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
 {
     public async Task Invoke(HttpContext httpContext, ISessionManager<OrganisationSession> sessionManager)
     {
@@ -24,7 +23,7 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next, IF
             {
                 pageToRedirect = PagePath.RegisteredAsCharity;
             }
-            else if (sessionValue.Journey.Count == 0) // || !await IsPageEnabled(attribute))
+            else if (sessionValue.Journey.Count == 0)
             {
                 pageToRedirect = PagePath.PageNotFound;
             }
@@ -43,13 +42,4 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next, IF
 
         await next(httpContext);
     }
-
-    //private async Task<bool> IsPageEnabled(OrganisationJourneyAccessAttribute attribute)
-    //{
-    //    if (attribute.RequiredFeature == null)
-    //    {
-    //        return true;
-    //    }
-    //    return await featureManager.IsEnabledAsync(attribute.RequiredFeature);
-    //}
 }

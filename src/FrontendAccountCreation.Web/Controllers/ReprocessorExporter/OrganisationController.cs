@@ -134,7 +134,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.RegisteredWithCompaniesHouse)]
-    [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -156,7 +156,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.RegisteredWithCompaniesHouse)]
-    [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse(RegisteredWithCompaniesHouseViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
@@ -189,7 +189,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.IsTradingNameDifferent)]
-    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
     public async Task<IActionResult> IsTradingNameDifferent()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -209,7 +209,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.IsTradingNameDifferent)]
-    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
     public async Task<IActionResult> IsTradingNameDifferent(IsTradingNameDifferentViewModel model)
     {
         if (!ModelState.IsValid)
@@ -230,7 +230,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
     public async Task<IActionResult> TradingName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -246,7 +246,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.TradingName)]
     public async Task<IActionResult> TradingName(TradingNameViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -269,7 +269,7 @@ public class OrganisationController : Controller
     [ExcludeFromCodeCoverage]
     [HttpGet]
     [Route(PagePath.PartnerOrganisation)]
-    [OrganisationJourneyAccess(PagePath.PartnerOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.PartnerOrganisation)]
     public Task<IActionResult> PartnerOrganisation()
     {
         throw new NotImplementedException(
@@ -278,7 +278,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.TypeOfOrganisation)]
-    [OrganisationJourneyAccess(PagePath.TypeOfOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
     public async Task<IActionResult> TypeOfOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -295,7 +295,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.TypeOfOrganisation)]
-    [OrganisationJourneyAccess(PagePath.TypeOfOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
     public async Task<IActionResult> TypeOfOrganisation(TypeOfOrganisationViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -316,7 +316,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.IsPartnership)]
-    [OrganisationJourneyAccess(PagePath.IsPartnership, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.IsPartnership)]
 
     public async Task<IActionResult> IsOrganisationAPartner()
     {
@@ -358,7 +358,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.RoleInOrganisation)]
-    [OrganisationJourneyAccess(PagePath.RoleInOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
     public async Task<IActionResult> RoleInOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -375,7 +375,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.RoleInOrganisation)]
-    [OrganisationJourneyAccess(PagePath.RoleInOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.RoleInOrganisation)]
     public async Task<IActionResult> RoleInOrganisation(RoleInOrganisationViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -407,7 +407,7 @@ public class OrganisationController : Controller
     [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
     [HttpGet]
     [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
     public async Task<IActionResult> AddApprovedPerson()
     {
         throw new NotImplementedException(
@@ -416,7 +416,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.CompaniesHouseNumber)]
-    [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber)]
     public async Task<IActionResult> CompaniesHouseNumber()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -442,7 +442,7 @@ public class OrganisationController : Controller
     [HttpPost]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.CompaniesHouseNumber)]
-    [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.CompaniesHouseNumber)]
     public async Task<IActionResult> CompaniesHouseNumber(CompaniesHouseNumberViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -494,7 +494,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.CannotVerifyOrganisation)]
-    [OrganisationJourneyAccess(PagePath.CannotVerifyOrganisation, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.CannotVerifyOrganisation)]
     public async Task<IActionResult> CannotVerifyOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -506,7 +506,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.ConfirmCompanyDetails)]
-    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails)]
     public async Task<IActionResult> ConfirmCompanyDetails()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -526,7 +526,7 @@ public class OrganisationController : Controller
 
     [HttpPost]
     [Route(PagePath.ConfirmCompanyDetails)]
-    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.ConfirmCompanyDetails)]
     public async Task<IActionResult> ConfirmDetailsOfTheCompany()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -544,7 +544,7 @@ public class OrganisationController : Controller
 
     [ExcludeFromCodeCoverage]
     [Route(PagePath.AccountAlreadyExists)]
-    [OrganisationJourneyAccess(PagePath.AccountAlreadyExists, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.AccountAlreadyExists)]
     public async Task<IActionResult> AccountAlreadyExists()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -598,7 +598,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.NotAffected)]
-    [OrganisationJourneyAccess(PagePath.NotAffected, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [OrganisationJourneyAccess(PagePath.NotAffected)]
     public async Task<IActionResult> NotAffected()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
