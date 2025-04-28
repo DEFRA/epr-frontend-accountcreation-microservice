@@ -15,7 +15,7 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-action="TeamMemberDetails" method="post" novalidate>
+                <form asp-action="TeamMemberDetails" method="post">
                     <h1 class="govuk-heading-l">@Localizer["TeamMemberDetails.Header"]</h1>
 
                     <div class="govuk-form-group">
