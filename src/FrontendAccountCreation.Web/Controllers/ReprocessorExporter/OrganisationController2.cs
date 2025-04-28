@@ -146,7 +146,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.TeamMemberDetails)]
-        [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
         public async Task<IActionResult> TeamMembersDetails(TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
