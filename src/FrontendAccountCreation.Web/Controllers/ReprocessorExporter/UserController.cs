@@ -16,6 +16,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// <summary>
 /// Reprocessor & Exporter Account creation controller.
 /// </summary>
+[Feature(FeatureFlags.ReprocessorExporter)]
 [Route("re-ex/user")]
 public class UserController : Controller
 {

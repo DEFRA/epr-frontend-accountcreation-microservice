@@ -1,7 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web.Constants;
+﻿using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.FeatureManagement;
 
@@ -9,7 +7,7 @@ namespace FrontendAccountCreation.Web.Middleware;
 
 public class FeatureMiddleware(RequestDelegate next, IFeatureManager featureManager)
 {
-    public async Task Invoke(HttpContext httpContext, ISessionManager<OrganisationSession> sessionManager)
+    public async Task Invoke(HttpContext httpContext)
     {
         var attribute = httpContext.Features.Get<IEndpointFeature>()?.Endpoint?.Metadata.GetMetadata<FeatureAttribute>();
 
