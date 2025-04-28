@@ -93,8 +93,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             var result = await _systemUnderTest.TeamMemberDetails(model);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            ((RedirectToActionResult)result).ActionName.Should().Be("");
+            result.Should().BeOfType<ViewResult>();
 
             var updatedMember = _orgSessionMock.CompaniesHouseSession.TeamMembers[0];
             updatedMember.FullName.Should().Be("Jane Doe");
@@ -123,7 +122,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             var viewResult = (ViewResult)result;
 
             viewResult.Model.Should().BeEquivalentTo(model);
-            AssertBackLink(viewResult, PagePath.TeamMemberRoleInOrganisation);
+            AssertBackLink(viewResult, PagePath.TeamMemberDetails);
         }
     }
 }
