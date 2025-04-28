@@ -4,7 +4,7 @@ public class OrganisationSession
 {
     public List<string> Journey { get; set; } = new();
 
-    public bool IsTheOrganisationCharity { get; set; }
+    public bool? IsTheOrganisationCharity { get; set; }
 
     public OrganisationType? OrganisationType { get; set; }
 
