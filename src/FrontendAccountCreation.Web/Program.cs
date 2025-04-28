@@ -102,6 +102,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRequestLocalization();
+app.UseMiddleware<FeatureMiddleware>();
 app.UseMiddleware<JourneyAccessCheckerMiddleware>();
 app.UseMiddleware<ReExJourneyAccessCheckerMiddleware>();
 app.UseMiddleware<OrganisationJourneyAccessCheckerMiddleware>();
