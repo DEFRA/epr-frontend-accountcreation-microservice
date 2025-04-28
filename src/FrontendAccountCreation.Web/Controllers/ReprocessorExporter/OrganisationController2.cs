@@ -124,6 +124,40 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+                return View(model);
+            }
+
+            if (model.InviteUserOption == InviteUserOptions.IAgreeToBeAnApprovedPerson.ToString())
+            {
+                return RedirectToAction("");
+            }
+            else if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
+            {
+                return RedirectToAction("TeamMemberRoleInOrganisation");
+            }
+            else // I will invite an approved person later
+            {
+                return RedirectToAction("");
+            }
+
+        }
+
+
+        [HttpGet]
+        [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson()
+        {         
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.AddAnApprovedPerson)]
         [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
