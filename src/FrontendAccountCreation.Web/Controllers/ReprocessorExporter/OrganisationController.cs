@@ -86,15 +86,16 @@ public class OrganisationController : Controller
             }
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
+        {
+            Journey = [PagePath.RegisteredAsCharity]
+        };
 
         YesNoAnswer? isTheOrganisationCharity = null;
 
-        isTheOrganisationCharity = session.IsTheOrganisationCharity ? YesNoAnswer.Yes : YesNoAnswer.No;
-
-        if (session.IsUserChangingDetails)
+        if (session.IsTheOrganisationCharity.HasValue)
         {
-            SetBackLink(session, string.Empty);
+            isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
         }
 
         return View(new RegisteredAsCharityRequestViewModel
@@ -119,7 +120,7 @@ public class OrganisationController : Controller
 
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
-        if (session.IsTheOrganisationCharity)
+        if (session.IsTheOrganisationCharity.Value)
         {
             return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
