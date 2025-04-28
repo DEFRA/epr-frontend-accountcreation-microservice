@@ -3,15 +3,12 @@ using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.AccountCreation;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using global::FrontendAccountCreation.Core.Addresses;
 using global::FrontendAccountCreation.Core.Services.Dto.Company;
 using global::FrontendAccountCreation.Web.Constants;
-using global::FrontendAccountCreation.Web.Controllers.AccountCreation;
 using global::FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
-using global::FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -45,7 +42,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
 
         _accountCreationSessionMock = new OrganisationSession
         {
-            Journey = new List<string> { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber },
+            Journey = [PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber],
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 Company = _companyMock
@@ -60,7 +57,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
     public async Task CompaniesHouseNumber_CompaniesHouseNumberIsGiven_RedirectsToConfirmCompanyDetailsAndUpdateSession()
     {
         // Arrange
-        var request = new CompaniesHouseNumberViewModel { CompaniesHouseNumber = "1234" };
+        var request = new ReExCompaniesHouseNumberViewModel { CompaniesHouseNumber = "1234" };
 
         // Act
         var result = await _systemUnderTest.CompaniesHouseNumber(request);
@@ -79,7 +76,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
     {
         // Arrange
         _facadeServiceMock.Setup(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>())).Throws(new Exception());
-        var request = new CompaniesHouseNumberViewModel { CompaniesHouseNumber = "x" };
+        var request = new ReExCompaniesHouseNumberViewModel { CompaniesHouseNumber = "x" };
 
         // Act
         var result = await _systemUnderTest.CompaniesHouseNumber(request);
@@ -95,17 +92,17 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
     public async Task CompaniesHouseNumber_NoCompaniesHouseNumberIsGiven_ReturnsViewWithErrorAndBackLinkIsRegisteredWithCompaniesHouse()
     {
         // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(CompaniesHouseNumberViewModel.CompaniesHouseNumber), "Field is required");
+        _systemUnderTest.ModelState.AddModelError(nameof(ReExCompaniesHouseNumberViewModel.CompaniesHouseNumber), "Field is required");
 
         // Act
-        var result = await _systemUnderTest.CompaniesHouseNumber(new CompaniesHouseNumberViewModel());
+        var result = await _systemUnderTest.CompaniesHouseNumber(new ReExCompaniesHouseNumberViewModel());
 
         // Assert
         result.Should().BeOfType<ViewResult>();
 
         var viewResult = (ViewResult)result;
 
-        viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
+        viewResult.Model.Should().BeOfType<ReExCompaniesHouseNumberViewModel>();
 
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
         AssertBackLink(viewResult, PagePath.RegisteredWithCompaniesHouse);
@@ -120,7 +117,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
             .ReturnsAsync((Company?)null);
 
         // Act
-        var result = await _systemUnderTest.CompaniesHouseNumber(new CompaniesHouseNumberViewModel());
+        var result = await _systemUnderTest.CompaniesHouseNumber(new ReExCompaniesHouseNumberViewModel());
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -138,7 +135,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
+        viewResult.Model.Should().BeOfType<ReExCompaniesHouseNumberViewModel>();
         AssertBackLink(viewResult, PagePath.RegisteredWithCompaniesHouse);
     }
 
@@ -166,7 +163,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         result.Should().NotBeNull();
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
+        viewResult.Model.Should().BeOfType<ReExCompaniesHouseNumberViewModel>();
         AssertBackLink(viewResult, PagePath.CheckYourDetails);
 
     }
@@ -185,8 +182,8 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<CompaniesHouseNumberViewModel>();
-        var viewModel = (CompaniesHouseNumberViewModel)viewResult.Model;
+        viewResult.Model.Should().BeOfType<ReExCompaniesHouseNumberViewModel>();
+        var viewModel = (ReExCompaniesHouseNumberViewModel)viewResult.Model;
         viewModel.CompaniesHouseNumber.Should().Be("123456");
     }
 }
