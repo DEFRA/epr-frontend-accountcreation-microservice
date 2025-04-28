@@ -151,7 +151,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                ViewBag.BackLinkToDisplay = PagePath.TeamMemberRoleInOrganisation;
+                ViewBag.BackLinkToDisplay = PagePath.TeamMemberDetails;
                 return View(model);
             }
 
@@ -168,8 +168,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-
-            return RedirectToAction("");
+            return View(model);
         }
 
 

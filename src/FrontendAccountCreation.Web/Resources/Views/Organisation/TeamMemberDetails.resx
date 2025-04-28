@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,36 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>[Welsh] Full name</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.Email" xml:space="preserve">
-    <value>[Welsh] Email</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.HintEmail" xml:space="preserve">
-    <value>[Welsh] We ask for this so we can invite them to join your team.</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.HintTelephone" xml:space="preserve">
-    <value>[Welsh] We ask for this in case your regulator needs to call them directly with any queries.</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.Telephone" xml:space="preserve">
-    <value>[Welsh] Telephone</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.Continue" xml:space="preserve">
-    <value>[Welsh] Continue</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.FullName" xml:space="preserve">
-    <value>[Welsh] What are your team member’s details?</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.Header" xml:space="preserve">
-    <value>[Welsh] What are your team member’s details?</value>
+    <value />
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter a valid telephone number</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.FullNameError" xml:space="preserve">
-    <value>[Welsh] Enter full name</value>
+    <value />
   </data>
   <data name="TeamMemberDetails.EmailError" xml:space="preserve">
-    <value>[Welsh] Enter a valid email address</value>
+    <value />
   </data>
 </root>
