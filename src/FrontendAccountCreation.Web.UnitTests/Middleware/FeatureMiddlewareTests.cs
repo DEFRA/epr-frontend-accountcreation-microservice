@@ -11,6 +11,8 @@ namespace FrontendAccountCreation.Web.UnitTests.Middleware;
 [TestClass]
 public class FeatureMiddlewareTests
 {
+    private const string FeatureName = "feature-name";
+
     Mock<HttpContext> _httpContextMock = null!;
     Mock<HttpResponse> _httpResponseMock = null!;
     Mock<IFeatureCollection> _featureCollectionMock = null!;
@@ -27,9 +29,6 @@ public class FeatureMiddlewareTests
         _featureCollectionMock = new Mock<IFeatureCollection>();
         _featureManagerMock = new Mock<IFeatureManager>();
         _endpointFeatureMock = new Mock<IEndpointFeature>();
-
-        //_featureManagerMock.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
-        //    .ReturnsAsync(true);
 
         _httpContextMock.Setup(x => x.Response).Returns(_httpResponseMock.Object);
 
@@ -49,7 +48,7 @@ public class FeatureMiddlewareTests
         //todo: const string for featurename
         SetupEndpointMock();
 
-        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
+        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync(FeatureName))
             .ReturnsAsync(featureEnabled);
 
         // Act
@@ -65,9 +64,9 @@ public class FeatureMiddlewareTests
         // Arrange
         //todo: in setup
         //todo: const string for featurename
-        SetupEndpointMock(new FeatureAttribute("AddOrganisationCompanyHouseDirectorJourney"));
+        SetupEndpointMock(new FeatureAttribute(FeatureName));
 
-        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
+        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync(FeatureName))
             .ReturnsAsync(true);
 
         // Act
@@ -81,10 +80,10 @@ public class FeatureMiddlewareTests
     public async Task Invoke_PageRequiresFeatureFlagAndFlagIsDisabled_ThenRedirectToPageNotFound()
     {
         // Arrange
-        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
+        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync(FeatureName))
             .ReturnsAsync(false);
 
-        SetupEndpointMock(new FeatureAttribute("AddOrganisationCompanyHouseDirectorJourney"));
+        SetupEndpointMock(new FeatureAttribute(FeatureName));
 
         // Act
         await _middleware.Invoke(_httpContextMock.Object);
