@@ -3,13 +3,10 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.Attributes;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -124,7 +121,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
-            SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+            SetBackLink(session, PagePath.TeamMemberDetails);
+            ViewBag.BackLinkToDisplay = PagePath.TeamMemberRoleInOrganisation;
+
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             var teamMember = GetCurrentTeamMember(session);
@@ -153,7 +152,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+                ViewBag.BackLinkToDisplay = PagePath.TeamMemberRoleInOrganisation;
                 return View(model);
             }
 
@@ -171,15 +170,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
 
-            return RedirectToAction("CheckInvitationDetails");
+            return RedirectToAction("");
         }
 
-
-        [HttpGet]
-        public IActionResult CheckInvitationDetails(TeamMemberViewModel model)
-        {
-            return Content("");
-        }
 
         private ReExCompanyTeamMember? GetCurrentTeamMember(OrganisationSession session)
         {

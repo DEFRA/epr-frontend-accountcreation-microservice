@@ -94,7 +94,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 
             // Assert
             result.Should().BeOfType<RedirectToActionResult>();
-            ((RedirectToActionResult)result).ActionName.Should().Be("CheckInvitationDetails");
+            ((RedirectToActionResult)result).ActionName.Should().Be("");
 
             var updatedMember = _orgSessionMock.CompaniesHouseSession.TeamMembers[0];
             updatedMember.FullName.Should().Be("Jane Doe");
