@@ -117,7 +117,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
-        public async Task<IActionResult> TeamMembersDetails()
+        public async Task<IActionResult> TeamMemberDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
@@ -146,7 +146,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.TeamMemberDetails)]
-        public async Task<IActionResult> TeamMembersDetails(TeamMemberViewModel model)
+        public async Task<IActionResult> TeamMemberDetails(TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
