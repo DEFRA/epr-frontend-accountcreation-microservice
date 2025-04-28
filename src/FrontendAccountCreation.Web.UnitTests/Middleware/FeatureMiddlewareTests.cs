@@ -44,8 +44,6 @@ public class FeatureMiddlewareTests
     public async Task Invoke_PageDoesNotRequiresFeatureFlag_ThenNoRedirect(bool featureEnabled)
     {
         // Arrange
-        //todo: in setup
-        //todo: const string for featurename
         SetupEndpointMock();
 
         _featureManagerMock!.Setup(fm => fm.IsEnabledAsync(FeatureName))
@@ -62,8 +60,6 @@ public class FeatureMiddlewareTests
     public async Task Invoke_PageRequiresFeatureFlagAndFlagIsEnabled_ThenNoRedirect()
     {
         // Arrange
-        //todo: in setup
-        //todo: const string for featurename
         SetupEndpointMock(new FeatureAttribute(FeatureName));
 
         _featureManagerMock!.Setup(fm => fm.IsEnabledAsync(FeatureName))
