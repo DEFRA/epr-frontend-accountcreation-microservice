@@ -17,7 +17,7 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="AccountCreation" method="post">
+                <form asp-controller="Organisation" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                             @Localizer["AddAnApprovedPerson.Title"]
@@ -27,9 +27,9 @@
 
                         <p class="govuk-body">You do not have to do this immediately but one must be appointed before you can:</p>
 
-                        <ul>
-                            <li><p class="govuk">Apply for accreditation</p></li>
-                            <li><p class="govuk">Submit and verify data returns</p></li>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>Apply for accreditation</li>
+                            <li>Submit and verify data returns</li>
                         </ul>
 
                         <p class="govuk-body">
@@ -42,16 +42,16 @@
                         </p>
 
                         <div class="section">
-                            <h3>Roles eligible to be an approved person</h3>
+                            <h3 class="govuk-heading-s">Roles eligible to be an approved person</h3>
                             <p class="govuk-body">Either of these roles can be an approved person:</p>
-                            <ul>
+                            <ul class="govuk-list govuk-list--bullet">
                                 <li>Director</li>
                                 <li>Company Secretary</li>
                             </ul>
                         </div>
 
                         <div class="section">
-                            <h3>Invite users in your team</h3>
+                            <h3 class="govuk-heading-s">Invite users in your team</h3>
                             <p class="govuk-body">Select an option to proceed.</p>
                         </div>
 
