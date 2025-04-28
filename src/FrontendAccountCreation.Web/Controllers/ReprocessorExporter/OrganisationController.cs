@@ -25,7 +25,7 @@ using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-//todo: need to add feature flag config to config repo(?)
+//to do: need to add feature flag config to config repo(?)
 
 [Route("re-ex/organisation")]
 public class OrganisationController : Controller
@@ -56,8 +56,6 @@ public class OrganisationController : Controller
         _logger = logger;
     }
 
-    //todo: how do we handle feature flag for first page? manually?
-
     [HttpGet]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.RegisteredAsCharity)]
@@ -71,7 +69,7 @@ public class OrganisationController : Controller
             });
         }
 
-        //todo: the account will already exist, so I don't think this check is wanted
+        //to do: the account will already exist, so I don't think this check is wanted
         // in fact, we probably want to check that the account *does* already exist
         /*var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
