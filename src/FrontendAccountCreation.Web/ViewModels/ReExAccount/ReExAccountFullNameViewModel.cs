@@ -27,7 +27,7 @@ public class ReExAccountFullNameViewModel : IValidatableObject
             yield return new ValidationResult($"FullName.FirstNameErrorMessage",
                 new[] { nameof(FirstName) });
         }
-        else if (!Regex.IsMatch(FirstName, @"^[a-z|A-Z]*$", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
+        else if (!Regex.IsMatch(FirstName, @"^[A-Za-z]+(-[A-Za-z]+)*$", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
         {
             yield return new ValidationResult($"FullName.FirstNameAlphabetOnlyErrorMessage",
                 new[] { nameof(FirstName) });
@@ -46,7 +46,7 @@ public class ReExAccountFullNameViewModel : IValidatableObject
             yield return new ValidationResult($"FullName.LastNameErrorMessage",
                 new[] { nameof(LastName) });
         }
-        else if (!Regex.IsMatch(LastName, @"^[a-z|A-Z]*$", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250))) 
+        else if (!Regex.IsMatch(LastName, @"^[A-Za-z]+(-[A-Za-z]+)*$", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250))) 
         {
             yield return new ValidationResult($"FullName.LastNameAlphabetOnlyErrorMessage",
                 new[] { nameof(LastName) });
