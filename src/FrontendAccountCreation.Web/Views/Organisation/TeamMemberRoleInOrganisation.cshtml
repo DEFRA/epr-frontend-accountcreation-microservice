@@ -1,4 +1,5 @@
 ﻿@using FrontendAccountCreation.Core.Sessions;
+@using FrontendAccountCreation.Web.Controllers.AccountCreation
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
@@ -60,6 +61,12 @@
                         <button class="govuk-button" type="submit">
                             @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
                         </button>
+
+                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueLink"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
+                                 new
+                                 {
+                                     @class = "govuk-button govuk-button--secondary"
+                                 })
 
 @*                         <button class="govuk-button" type="submit" data-module="govuk-button" formaction="/re-ex/organisation/check-companies-house-role">
                             @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]

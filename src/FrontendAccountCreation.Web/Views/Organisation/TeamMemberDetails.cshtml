@@ -16,8 +16,10 @@
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
                 <form asp-action="TeamMemberDetails" method="post">
+                    
                     <h1 class="govuk-heading-l">@Localizer["TeamMemberDetails.Header"]</h1>
 
+                    @Html.HiddenFor(x => x.Id)
                     <div class="govuk-form-group">
                         <label class="govuk-label" asp-for="FullName">
                             @Localizer["TeamMemberDetails.FullName"]

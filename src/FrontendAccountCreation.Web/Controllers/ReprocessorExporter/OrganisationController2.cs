@@ -14,6 +14,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> TeamMemberRoleInOrganisation(Guid? id)
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+
             SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
@@ -47,26 +48,51 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             ReExCompaniesHouseSession companiesHouseSession = session.CompaniesHouseSession ?? new();
             int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model?.Id));
+            Guid queryStringId;
+            bool isExistingMember = false;
+
             if (index.GetValueOrDefault(-1) >= 0)
             {
-                // found existing team member
+                queryStringId = model.Id.Value;
+                isExistingMember = true;
+
+                // found existing team member, set their role
                 session.CompaniesHouseSession.TeamMembers[index.Value].Role = model.RoleInOrganisation;
+
             }
             else
             {
+                queryStringId = Guid.NewGuid();
+
                 // add new team member
                 List<ReExCompanyTeamMember> members = companiesHouseSession.TeamMembers ?? new();
-                members.Add(new ReExCompanyTeamMember { Id = Guid.NewGuid(), Role = model.RoleInOrganisation });
+                members.Add(new ReExCompanyTeamMember { Id = queryStringId, Role = model.RoleInOrganisation });
                 companiesHouseSession.TeamMembers = members;
                 session.CompaniesHouseSession = companiesHouseSession;
+
             }
 
-            // navigating to the wrong page, the correct page is not developed
-            return await SaveSessionAndRedirect(session, nameof(TeamMembersDetails), PagePath.TeamMemberRoleInOrganisation,
-                PagePath.TeamMemberDetails);
+            session.IsUserChangingDetails = false;
+            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation, PagePath.TeamMemberDetails + $"/{queryStringId}");
+
+            if (isExistingMember)
+            {
+                // move to enter team member details: full name, email, telephone
+                return RedirectToAction(nameof(TeamMembersCheckInvitationDetails));
+            }
+            else
+            {
+                // go back to check their invitation detials
+                return RedirectToAction(nameof(TeamMemberDetails), new { id = queryStringId });
+            }
 
         }
 
+        /// <summary>
+        /// Show team member details enetered so far
+        /// </summary>
+        /// <param name="id">Id of team member to remove</param>
+        /// <returns></returns>
         [HttpGet]
         [Route(PagePath.TeamMembersCheckInvitationDetails + "/{id:guid?}")]
         public async Task<IActionResult> TeamMembersCheckInvitationDetails(Guid? id)
@@ -86,29 +112,31 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(session.CompaniesHouseSession?.TeamMembers);
+            return View(session.CompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
+            //return View(session.CompaniesHouseSession?.TeamMembers);
+
         }
 
         [HttpGet]
-        [Route(PagePath.TeamMemberDetails)]
-        public async Task<IActionResult> TeamMemberDetails()
+        [Route(PagePath.TeamMemberDetails + "/{id:guid}")]
+        public async Task<IActionResult> TeamMemberDetails(Guid id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
             SetBackLink(session, PagePath.TeamMemberDetails);
-            ViewBag.BackLinkToDisplay = PagePath.TeamMemberRoleInOrganisation;
+            //ViewBag.BackLinkToDisplay = PagePath.TeamMemberRoleInOrganisation;
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
 
-            var teamMember = GetCurrentTeamMember(session);
-
-            if (teamMember != null)
+            if (index.GetValueOrDefault(-1) >= 0)
             {
                 var viewModel = new TeamMemberViewModel
                 {
-                    FullName = teamMember.FullName,
-                    Telephone = teamMember.TelephoneNumber,
-                    Email = teamMember.Email
+                    Id = id,
+                    FullName = session.CompaniesHouseSession.TeamMembers[index.Value].FullName,
+                    Telephone = session.CompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber,
+                    Email = session.CompaniesHouseSession.TeamMembers[index.Value].Email
                 };
 
                 return View(viewModel);
@@ -119,8 +147,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
 
         [HttpPost]
-        [Route(PagePath.TeamMemberDetails)]
-        public async Task<IActionResult> TeamMemberDetails(TeamMemberViewModel model)
+        [Route(PagePath.TeamMemberDetails + "/{id:guid?}")]
+        public async Task<IActionResult> TeamMemberDetails(Guid? id, TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
@@ -129,32 +157,20 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            var index = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
+            ReExCompaniesHouseSession companiesHouseSession = session.CompaniesHouseSession ?? new();
+            int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
 
-            if (index.HasValue && session.CompaniesHouseSession?.TeamMembers != null && index.Value < session.CompaniesHouseSession.TeamMembers.Count)
+            if (index.GetValueOrDefault(-1) >= 0)
             {
-                var teamMember = session.CompaniesHouseSession.TeamMembers[index.Value];
-
-                teamMember.FullName = model.FullName;
-                teamMember.TelephoneNumber = model.Telephone;
-                teamMember.Email = model.Email;
+                // found existing team member
+                session.CompaniesHouseSession.TeamMembers[index.Value].FullName = model.FullName;
+                session.CompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber = model.Telephone;
+                session.CompaniesHouseSession.TeamMembers[index.Value].Email = model.Email;
             }
 
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
-            //Todo: once the next page is developed, this needs to change to RedirectToAction
-            return View(model);
-        }
-
-
-        private ReExCompanyTeamMember? GetCurrentTeamMember(OrganisationSession session)
-        {
-            var members = session.CompaniesHouseSession?.TeamMembers;
-            var index = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
-
-            return (index.HasValue && members != null && index.Value < members.Count)
-                ? members[index.Value]
-                : null;
+            // go to check invitation details summary page for all team members
+            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.TeamMemberDetails,
+                PagePath.TeamMembersCheckInvitationDetails);
         }
 
     }
