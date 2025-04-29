@@ -71,7 +71,7 @@ public class OrganisationController : Controller
 
         //to do: the account will already exist, so I don't think this check is wanted
         // in fact, we probably want to check that the account *does* already exist
-        /*var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
         {
             if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
@@ -82,7 +82,7 @@ public class OrganisationController : Controller
             {
                 return Redirect(_urlOptions.ExistingUserRedirectUrl);
             }
-        }*/
+        }
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
         {
