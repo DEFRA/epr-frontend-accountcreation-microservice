@@ -26,7 +26,7 @@
                             @Localizer["TelephoneNumber.Question"]
                         </h1>
 
-                        <p class="govuk-body">
+                        <p class="govuk-body" id="TelephoneNumber-hint">
                             @Localizer["TelephoneNumber.Hint"]
                         </p>
 
@@ -34,10 +34,6 @@
                             <label class="govuk-label" gov-for="TelephoneNumber">
                                 @Localizer["TelephoneNumber.TelephoneNumber"]
                             </label>
-                            
-                            <div class="govuk-hint" id="TelephoneNumber-hint">
-                                @Localizer["TelephoneNumber.InternationalNumbers"]
-                            </div>
                             
                             @await Html.PartialAsync("Partials/Govuk/_FormItemError",
                                      errorsViewModel[nameof(ReExAccountTelephoneNumberViewModel.TelephoneNumber)])
@@ -47,14 +43,7 @@
                                     maxlength="20"
                                     gov-for="TelephoneNumber"
                                     gov-value="@Model.TelephoneNumber"
-                                    aria-describedby="TelephoneNumber-hint">
-                        </div>
-                            
-                        <div class="govuk-inset-text">
-                            <p class="govuk-body">
-                                @Localizer["TelephoneNumber.NotificationInfo"]
-                                <strong>@Model.EmailAddress</strong>
-                            </p>
+                                    aria-describedby="TelephoneNumber-hint" id="telephone-id">
                         </div>
                     </div>
 
