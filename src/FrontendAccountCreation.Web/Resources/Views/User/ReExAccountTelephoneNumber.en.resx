@@ -127,7 +127,7 @@
     <value>We ask for this in case we need to call you directly with any queries about your account.</value>
   </data>
   <data name="TelephoneNumber.Hint" xml:space="preserve">
-    <value>We ask for this in case we need to call you directly with any queries about your organisation’s account.</value>
+    <value>We ask for this in case we need to call you directly with any queries about your account.</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
     <value>Enter a valid telephone number</value>

@@ -27,6 +27,10 @@
                                     @Localizer["RegisteredAsCharity.Question"]
                                 </h1>
                             </legend>
+
+                            <div class="govuk-hint" id="RegisteredAsCharity-hint">
+                                @Localizer["RegisteredAsCharity.Description"]
+                            </div>
                             
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
