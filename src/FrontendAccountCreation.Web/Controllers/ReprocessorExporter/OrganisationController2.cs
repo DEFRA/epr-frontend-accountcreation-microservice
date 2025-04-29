@@ -145,7 +145,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else // I-will-Invite-an-Approved-Person-Later
             {
-                return RedirectToAction(nameof(AccountCreationController.CheckYourDetails), "AccountCreation");
+                throw new NotImplementedException("This feature is not implemented yet."); // Page "CheckYourDetails"
             }
         }
 
