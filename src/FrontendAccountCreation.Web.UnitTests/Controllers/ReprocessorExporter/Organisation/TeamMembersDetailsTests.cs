@@ -93,7 +93,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
         //    };
 
         //    // Act
-        //    var result = await _systemUnderTest.TeamMemberDetails(model.Id, model);
+        //    var result = await _systemUnderTest.TeamMemberDetails(model);
 
         //    // Assert
         //    //result.Should().BeOfType<ViewResult>();
@@ -119,7 +119,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             _systemUnderTest.ModelState.AddModelError("Email", "Required");
 
             // Act
-            var result = await _systemUnderTest.TeamMemberDetails(model.Id, model);
+            var result = await _systemUnderTest.TeamMemberDetails(model);
 
             // Assert
             result.Should().BeOfType<ViewResult>();

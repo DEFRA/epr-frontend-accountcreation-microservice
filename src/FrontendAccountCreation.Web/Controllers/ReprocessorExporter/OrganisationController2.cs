@@ -22,7 +22,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (id.HasValue)
             {
                 int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
-                if (index.GetValueOrDefault(-1) >= 0)
+                if (index != null && index.GetValueOrDefault(-1) >= 0)
                 {
                     TeamMemberRoleInOrganisationViewModel viewModel = new TeamMemberRoleInOrganisationViewModel
                     {
