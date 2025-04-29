@@ -5,7 +5,6 @@ using FrontendAccountCreation.Web.Middleware;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.FeatureManagement;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Middleware;
@@ -16,7 +15,6 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
     Mock<HttpContext> _httpContextMock = null!;
     Mock<HttpResponse> _httpResponseMock = null!;
     Mock<IFeatureCollection> _featureCollectionMock = null!;
-    Mock<IFeatureManager>? _featureManagerMock;
     Mock<IEndpointFeature> _endpointFeatureMock = null!;
     Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
 
@@ -28,19 +26,15 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         _httpContextMock = new Mock<HttpContext>();
         _httpResponseMock = new Mock<HttpResponse>();
         _featureCollectionMock = new Mock<IFeatureCollection>();
-        _featureManagerMock = new Mock<IFeatureManager>();
         _endpointFeatureMock = new Mock<IEndpointFeature>();
         _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
-
-        _featureManagerMock.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
-            .ReturnsAsync(true);
 
         _httpContextMock.Setup(x => x.Response).Returns(_httpResponseMock.Object);
 
         _httpContextMock.Setup(x => x.Features).Returns(_featureCollectionMock.Object);
         _featureCollectionMock.Setup(x => x.Get<IEndpointFeature>()).Returns(_endpointFeatureMock.Object);
 
-        _middleware = new OrganisationJourneyAccessCheckerMiddleware(_ => Task.CompletedTask, _featureManagerMock.Object);
+        _middleware = new OrganisationJourneyAccessCheckerMiddleware(_ => Task.CompletedTask);
     }
 
     [TestMethod]
@@ -51,7 +45,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
     {
         // Arrange
         var session = new OrganisationSession { Journey = visitedUrls.ToList() };
-        var expectedURL = expectedPage;
+        var expectedUrl = expectedPage;
 
         SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl));
 
@@ -61,7 +55,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
 
         // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
+        _httpResponseMock.Verify(x => x.Redirect(expectedUrl), Times.Once);
     }
 
     [TestMethod]
@@ -110,45 +104,6 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
 
         // Assert
         _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
-    }
-
-    [TestMethod]
-    [DataRow(PagePath.TradingName, PagePath.IsTradingNameDifferent, PagePath.TradingName)]
-    public async Task Invoke_PageRequiresFeatureFlagAndFlagIsEnabled_ThenNoRedirect(string pageUrl, params string[] visitedUrls)
-    {
-        // Arrange
-        var session = new OrganisationSession { Journey = visitedUrls.ToList() };
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl, "AddOrganisationCompanyHouseDirectorJourney"));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
-    }
-
-    [TestMethod]
-    [DataRow(PagePath.TradingName, PagePath.IsTradingNameDifferent, PagePath.TradingName)]
-    public async Task Invoke_PageRequiresFeatureFlagAndFlagIsDisabled_ThenRedirectToPageNotFound(string pageUrl, params string[] visitedUrls)
-    {
-        // Arrange
-        _featureManagerMock!.Setup(fm => fm.IsEnabledAsync("AddOrganisationCompanyHouseDirectorJourney"))
-            .ReturnsAsync(false);
-
-        var session = new OrganisationSession { Journey = visitedUrls.ToList() };
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl, "AddOrganisationCompanyHouseDirectorJourney"));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(PagePath.PageNotFound), Times.Once);
     }
 
     private void SetupEndpointMock(params object[] attributes)
