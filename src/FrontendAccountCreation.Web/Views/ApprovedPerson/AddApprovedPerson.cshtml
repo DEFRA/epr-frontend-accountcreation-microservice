@@ -17,7 +17,7 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="Organisation" method="post">
+                <form asp-controller="ApprovedPerson" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                             @Localizer["AddAnApprovedPerson.Title"]

@@ -6,20 +6,21 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.UnitTests;
 using FrontendAccountCreation.Web.UnitTests.Controllers;
-using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Collections.Generic;
 
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
 /// <summary>
 /// These tests should fail when the correct pages are plumbed in.
 /// </summary>
 [TestClass]
-public class TeamMemberRoleInOrganisationTests : OrganisationTestBase
+public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
 {
     private OrganisationSession _orgSessionMock = null!;
 
@@ -61,7 +62,7 @@ public class TeamMemberRoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TeamMemberDetails));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberDetails));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }

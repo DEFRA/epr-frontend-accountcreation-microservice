@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson
 {
     [TestClass]
-    public class TeamMembersDetailsTests : OrganisationTestBase
+    public class TeamMembersDetailsTests : ApprovedPersonTestBase
     {
         private OrganisationSession _orgSessionMock = null!;
         private Guid _teamMemberId = Guid.NewGuid();

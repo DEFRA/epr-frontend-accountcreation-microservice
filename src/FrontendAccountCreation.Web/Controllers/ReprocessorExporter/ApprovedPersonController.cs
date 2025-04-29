@@ -1,6 +1,8 @@
-﻿using FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
@@ -8,8 +10,19 @@ using System.Diagnostics.CodeAnalysis;
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
     [ExcludeFromCodeCoverage(Justification ="The pages before and after are not developed")]
-    public partial class OrganisationController : Controller
+    [Route("re-ex/organisation")]
+    public partial class ApprovedPersonController : Controller
     {
+        private readonly ISessionManager<OrganisationSession> _sessionManager;
+        private readonly ILogger<ApprovedPersonController> _logger;
+
+        public ApprovedPersonController(
+             ISessionManager<OrganisationSession> sessionManager,
+             ILogger<ApprovedPersonController> logger)
+        {
+            _sessionManager = sessionManager;
+            _logger = logger;
+        }
 
         [HttpGet]
         [Route(PagePath.AddAnApprovedPerson)]
@@ -200,6 +213,45 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return View(session.CompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
 
+        }
+
+        private void SetBackLink(OrganisationSession session, string currentPagePath)
+        {
+            if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+            {
+                ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+            }
+            else
+            {
+                ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+            }
+        }
+
+        private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+            string actionName, string currentPagePath, string? nextPagePath)
+        {
+            session.IsUserChangingDetails = false;
+            await SaveSession(session, currentPagePath, nextPagePath);
+
+            return RedirectToAction(actionName);
+        }
+
+        private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
+        {
+            ClearRestOfJourney(session, currentPagePath);
+
+            // back link was not working as expected until line below was added
+            session.Journey.AddIfNotExists(currentPagePath);
+            session.Journey.AddIfNotExists(nextPagePath);
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        }
+        private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
+        {
+            var index = session.Journey.IndexOf(currentPagePath);
+
+            // this also cover if current page not found (index = -1) then it clears all pages
+            session.Journey = session.Journey.Take(index + 1).ToList();
         }
 
     }
