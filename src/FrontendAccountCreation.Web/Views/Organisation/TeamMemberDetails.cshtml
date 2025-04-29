@@ -15,7 +15,7 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-action="TeamMemberDetails" method="post">
+                <form method="post">
                     
                     <h1 class="govuk-heading-l">@Localizer["TeamMemberDetails.Header"]</h1>
 
@@ -47,9 +47,10 @@
                         <input class="govuk-input" asp-for="Telephone" type="tel"/>
                     </div>
 
-                    <button class="govuk-button" data-module="govuk-button" type="submit">
+                    <button class="govuk-button" data-module="govuk-button" asp-action="TeamMemberDetails" type="submit">
                         @Localizer["TeamMemberDetails.Continue"]
                     </button>
+
                 </form>
             </div>
         </div>

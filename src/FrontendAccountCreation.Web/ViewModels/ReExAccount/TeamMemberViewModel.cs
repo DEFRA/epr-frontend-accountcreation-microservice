@@ -6,7 +6,11 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class TeamMemberViewModel
 {
+    [Required]
     public Guid Id { get; set; }
+
+    [Required]
+    public ReExTeamMemberRole RoleInOrganisation { get; set; }
 
     [Required(ErrorMessage = "TeamMemberDetails.FullNameError")]
     public string FullName { get; set; }

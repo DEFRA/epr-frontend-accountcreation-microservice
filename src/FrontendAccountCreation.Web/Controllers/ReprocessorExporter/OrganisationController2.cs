@@ -10,8 +10,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
     public partial class OrganisationController : Controller
     {
         [HttpGet]
-        [Route(PagePath.TeamMemberRoleInOrganisation + "/{id:guid?}")]
-        public async Task<IActionResult> TeamMemberRoleInOrganisation(Guid? id)
+        [Route(PagePath.TeamMemberRoleInOrganisation)]
+        public async Task<IActionResult> TeamMemberRoleInOrganisation([FromQuery] Guid? id)
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
@@ -36,7 +36,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpPost]
-        [Route(PagePath.TeamMemberRoleInOrganisation + "/{id:guid?}")]
+        [Route(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
         {
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
@@ -51,20 +51,19 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             Guid queryStringId;
             bool isExistingMember = false;
 
-            if (index.GetValueOrDefault(-1) >= 0)
+            if (index != null && index.GetValueOrDefault(-1) >= 0)
             {
+                // found existing team member, set their role
                 queryStringId = model.Id.Value;
                 isExistingMember = true;
-
-                // found existing team member, set their role
                 session.CompaniesHouseSession.TeamMembers[index.Value].Role = model.RoleInOrganisation;
 
             }
             else
             {
+                // add new team member
                 queryStringId = Guid.NewGuid();
 
-                // add new team member
                 List<ReExCompanyTeamMember> members = companiesHouseSession.TeamMembers ?? new();
                 members.Add(new ReExCompanyTeamMember { Id = queryStringId, Role = model.RoleInOrganisation });
                 companiesHouseSession.TeamMembers = members;
@@ -73,7 +72,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             session.IsUserChangingDetails = false;
-            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation, PagePath.TeamMemberDetails + $"/{queryStringId}");
+            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation + $"?id={queryStringId}", PagePath.TeamMemberDetails + $"?id={queryStringId}");
 
             if (isExistingMember)
             {
@@ -88,48 +87,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         }
 
-        /// <summary>
-        /// Show team member details enetered so far
-        /// </summary>
-        /// <param name="id">Id of team member to remove</param>
-        /// <returns></returns>
         [HttpGet]
-        [Route(PagePath.TeamMembersCheckInvitationDetails + "/{id:guid?}")]
-        public async Task<IActionResult> TeamMembersCheckInvitationDetails(Guid? id)
-        {
-            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
-
-            // if id is supplied, remove the team member
-            if (id.HasValue)
-            {
-                int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
-                if (index.GetValueOrDefault(-1) >= 0)
-                {
-                    session.CompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
-                }
-            }
-
-            SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
-            return View(session.CompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
-            //return View(session.CompaniesHouseSession?.TeamMembers);
-
-        }
-
-        [HttpGet]
-        [Route(PagePath.TeamMemberDetails + "/{id:guid}")]
-        public async Task<IActionResult> TeamMemberDetails(Guid id)
+        [Route(PagePath.TeamMemberDetails)]
+        public async Task<IActionResult> TeamMemberDetails([FromQuery] Guid id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-
             SetBackLink(session, PagePath.TeamMemberDetails);
-            //ViewBag.BackLinkToDisplay = PagePath.TeamMemberRoleInOrganisation;
-
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            
             int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
 
-            if (index.GetValueOrDefault(-1) >= 0)
+            if (index != null && index.GetValueOrDefault(-1) >= 0)
             {
                 var viewModel = new TeamMemberViewModel
                 {
@@ -145,10 +113,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View();
         }
 
-
         [HttpPost]
-        [Route(PagePath.TeamMemberDetails + "/{id:guid?}")]
-        public async Task<IActionResult> TeamMemberDetails(Guid? id, TeamMemberViewModel model)
+        [Route(PagePath.TeamMemberDetails)]
+        public async Task<IActionResult> TeamMemberDetails(TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
@@ -158,9 +125,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             ReExCompaniesHouseSession companiesHouseSession = session.CompaniesHouseSession ?? new();
-            int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+            int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
 
-            if (index.GetValueOrDefault(-1) >= 0)
+            if (index != null && index.GetValueOrDefault(-1) >= 0)
             {
                 // found existing team member
                 session.CompaniesHouseSession.TeamMembers[index.Value].FullName = model.FullName;
@@ -171,6 +138,35 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // go to check invitation details summary page for all team members
             return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.TeamMemberDetails,
                 PagePath.TeamMembersCheckInvitationDetails);
+        }
+
+        /// <summary>
+        /// Show team member details enetered so far
+        /// </summary>
+        /// <param name="id">Id of team member to remove</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route(PagePath.TeamMembersCheckInvitationDetails)]
+        public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
+        {
+            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
+
+            // if id is supplied, remove the team member
+            if (id.HasValue)
+            {
+                int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                if (index != null && index.GetValueOrDefault(-1) >= 0)
+                {
+                    session.CompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
+                }
+            }
+
+            SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            //return View(session.CompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
+            return View(session.CompaniesHouseSession?.TeamMembers);
+
         }
 
     }

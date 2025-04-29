@@ -39,7 +39,7 @@
                                         @SharedLocalizer[Model[i].Role.ToString()]
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { id = Model[i].Id })">@Localizer["TeamMembersCheckInvitationDetails.Change"]<span class="govuk-visually-hidden"> role</span></a>
+                                        <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation", new { id = Model[i].Id })">@SharedLocalizer["Change"]<span class="govuk-visually-hidden"> role</span></a>
                                     </dd>
                                 </div>
 
@@ -56,9 +56,7 @@
                                         @Model[i].TelephoneNumber
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-@*                                         <a class="govuk-link" href="httpps:www.google.com">Change<span class="govuk-visually-hidden"> name</span></a> *@
-                                        <a class="govuk-link" href="@Url.Action("TeamMemberDetails", "Organisation", new { id = Model[i].Id })">@Localizer["TeamMembersCheckInvitationDetails.Change"]<span class="govuk-visually-hidden"> details</span></a>
-
+                                        <a class="govuk-link" href="@Url.Action("TeamMemberDetails", "Organisation", new { id = Model[i].Id })">@SharedLocalizer["Change"]<span class="govuk-visually-hidden"> details</span></a>
                                     </dd>
                                 </div>
 
@@ -80,11 +78,12 @@
 
                     <form action="check-your-answers" method="post" novalidate>
                         <button class="govuk-button" data-module="govuk-button">
-                            @Localizer["TeamMembersCheckInvitationDetails.Continue"]
+                            @SharedLocalizer["Continue"]
                         </button>
                     </form>
 
                     <p class="govuk-body">
+                        <!-- goes to 'What is their role as shown on Companies House? -->
                         <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "Organisation")">@Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]</a>
                     </p>
 

@@ -18,13 +18,13 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="Organisation" method="post">
+                <form method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                            @Localizer["TeamMemberRoleInOrganisation.Question"]
+                            @Localizer["TeamMemberRoleInOrganisation.WhatIsTheirRole"]
                         </h1>
 
-                        <p class="govuk-body">@Localizer["TeamMemberRoleInOrganisation.QuestionDescription"]</p>
+                        <p class="govuk-body">@Localizer["TeamMemberRoleInOrganisation.WhatIsTheirRoleAdditionalInformation"]</p>
 
                         @Html.HiddenFor(x => x.Id)
                         <div class="govuk-radios" data-module="govuk-radios">
@@ -38,7 +38,7 @@
                                        gov-for="RoleInOrganisation"
                                        gov-value="@nameof(RoleInOrganisation.Director)"
                                        gov-first-option="true">
-                                    @Localizer["TeamMemberRoleInOrganisation.Director"]
+                                    @SharedLocalizer["Director"]
                                 </label>
                             </div>
                             <!-- company secretary -->
@@ -49,7 +49,7 @@
                                 <label class="govuk-label govuk-radios__label"
                                        gov-for="RoleInOrganisation"
                                        gov-value="@nameof(RoleInOrganisation.CompanySecretary)">
-                                    @Localizer["TeamMemberRoleInOrganisation.CompanySecretary"]
+                                    @SharedLocalizer["CompanySecretary"]
                                 </label>
                             </div>
 
@@ -58,23 +58,18 @@
                     </div>
 
                     <div class="govuk-button-group">
-                        <button class="govuk-button" type="submit">
-                            @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
+
+                        <!-- goes to what are their details-->
+                        <button class="govuk-button" asp-controller="Organisation" asp-action="TeamMemberRoleInOrganisation" type="submit">
+                            @Localizer["TeamMemberRoleInOrganisation.ContinueWithInvitation"]
                         </button>
 
-                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueLink"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
+                        <!-- goes to check your details -->
+                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueWithoutInvitation"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
                                  new
                                  {
                                      @class = "govuk-button govuk-button--secondary"
                                  })
-
-@*                         <button class="govuk-button" type="submit" data-module="govuk-button" formaction="/re-ex/organisation/check-companies-house-role">
-                            @Localizer["TeamMemberRoleInOrganisation.ContinueButton"]
-                        </button> *@
-
-@*                         <button class="govuk-button govuk-button--secondary" type="submit" asp-action="TeamMemberRoleInOrganisation" asp-controller="Organisation" name="invite" value="without-invite" data-module="govuk-button">
-                            @Localizer["TeamMemberRoleInOrganisation.ContinueLink"]
-                        </button> *@
                     </div>
 
                 </form>
