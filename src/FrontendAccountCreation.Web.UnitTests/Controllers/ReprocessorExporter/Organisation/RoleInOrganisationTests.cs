@@ -86,7 +86,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccountPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
@@ -103,7 +103,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccountPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
@@ -120,7 +120,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccountPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
@@ -137,7 +137,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageAccountPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }

@@ -35,4 +35,8 @@ public class OrganisationSession
     public bool? IsTradingNameDifferent { get; set; }
 
     public bool? IsOrganisationAPartnership { get; set; }
+
+    public List<ApprovedPerson> ApprovedPersons { get; set; }
+    public ApprovedPerson? CurrentApprovedPerson { get; set; }
+
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -20,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 
@@ -397,18 +393,78 @@ public class OrganisationController : Controller
                 PagePath.CannotCreateAccount);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation,
-                PagePath.ManageAccountPerson);
+        return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.RoleInOrganisation,
+            PagePath.ManageAccountPerson);
     }
 
     [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
     [HttpGet]
     [Route(PagePath.ManageAccountPerson)]
     [OrganisationJourneyAccess(PagePath.ManageAccountPerson, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
-    public async Task<IActionResult> AddApprovedPerson()
+    public async Task<IActionResult> ManageAccountPerson()
     {
-        throw new NotImplementedException(
-            "The 'Manage Account Person' page hasn't been built. It will be built in a future story.");
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        return await SaveSessionAndRedirect(session, nameof(TeamRole), PagePath.ManageAccountPerson, PagePath.TeamRole);
+    }
+
+    [HttpGet]
+    [Route(PagePath.TeamRole)]
+    [OrganisationJourneyAccess(PagePath.TeamRole, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> TeamRole()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.TeamRole);
+
+        var viewModel = new TeamRoleViewModel
+        {
+            TeamRoleInOrganisation = session.CurrentApprovedPerson?.TeamRoleInOrganisation
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.TeamRole)]
+    [OrganisationJourneyAccess(PagePath.TeamRole, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    public async Task<IActionResult> TeamRole(TeamRoleViewModel model, bool invitation)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.TeamRole);
+
+            return View(model);
+        }
+
+        session.CurrentApprovedPerson ??= new ApprovedPerson();
+        session.CurrentApprovedPerson.TeamRoleInOrganisation = model.TeamRoleInOrganisation!.Value;
+        session.CurrentApprovedPerson.Invited = invitation;
+
+        if (invitation)
+        {
+            return await SaveSessionAndRedirect(session, nameof(TeamInvite), PagePath.TeamRole, PagePath.TeamInvite);
+        }
+        return await SaveSessionAndRedirect(session, nameof(CheckYourAnswers), PagePath.TeamRole, PagePath.CheckYourAnswers);
+    }
+
+    [HttpGet]
+    [Route(PagePath.TeamInvite)]
+    [OrganisationJourneyAccess(PagePath.TeamInvite, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [ExcludeFromCodeCoverage]
+    public Task<IActionResult> TeamInvite()
+    {
+        throw new NotImplementedException("Team invite page isn't created yet.");
+    }
+
+    [HttpGet]
+    [Route(PagePath.CheckYourAnswers)]
+    [OrganisationJourneyAccess(PagePath.CheckYourAnswers, FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+    [ExcludeFromCodeCoverage]
+    public Task<IActionResult> CheckYourAnswers()
+    {
+        throw new NotImplementedException("Check your answers page isn't created yet.");
     }
 
     [HttpGet]
