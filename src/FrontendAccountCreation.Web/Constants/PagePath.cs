@@ -33,6 +33,7 @@ public static class PagePath
     public const string IsPartnership = "is-partnership";
     public const string PartnerOrganisation = "partner-organisation";
     public const string ManageAccountPerson = "manage-account-person";
+    public const string YouAreApprovedPerson = 
 
     // Non journey paths
     public const string Accessibility = "accessibility";

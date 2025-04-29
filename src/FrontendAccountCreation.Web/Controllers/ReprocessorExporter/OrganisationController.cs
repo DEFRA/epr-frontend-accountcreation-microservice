@@ -601,6 +601,47 @@ public class OrganisationController : Controller
         return View();
     }
 
+    [HttpGet]
+    [Route(PagePath.IsPartnership)]
+    [OrganisationJourneyAccess(PagePath.IsPartnership)]
+
+    public async Task<IActionResult> YouAreApprovedPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.IsPartnership);
+
+        YesNoAnswer? isOrganisationAPartnership = null;
+        if (session.IsOrganisationAPartnership != null)
+        {
+            isOrganisationAPartnership = session.IsOrganisationAPartnership.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(new IsOrganisationAPartnerViewModel
+        {
+            IsOrganisationAPartner = isOrganisationAPartnership
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsPartnership)]
+    public async Task<IActionResult> YouAreApprovedPerson(YouAreApprovedPersonViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+
+        if (session.IsOrganisationAPartnership == true)
+        {
+            // TODO: Yes or No ending up same pagePath - to be confirmed
+            return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+        }
+        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+    }
+
     public IActionResult RedirectToStart()
     {
         return RedirectToAction(nameof(RegisteredAsCharity));
