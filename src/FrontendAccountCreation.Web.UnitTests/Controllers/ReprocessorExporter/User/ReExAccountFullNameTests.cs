@@ -223,4 +223,51 @@ public class ReExAccountFullNameTests : UserTestBase
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().Be(model);
     }
+
+    [TestMethod]
+    public async Task Get_ReExAccountFullName_SessionIsNull_DefaultSessionIsUsed()
+    {
+        // Arrange
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync((ReExAccountCreationSession)null!);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<ReExAccountFullNameViewModel>();
+
+        var model = (ReExAccountFullNameViewModel)viewResult.Model!;
+        model.FirstName.Should().BeNull();
+        model.LastName.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task Get_ReExAccountFullName_ContactIsNull_ModelFieldsAreNull()
+    {
+        // Arrange
+        var session = new ReExAccountCreationSession
+        {
+            Contact = null
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        var model = (ReExAccountFullNameViewModel)viewResult.Model!;
+        model.FirstName.Should().BeNull();
+        model.LastName.Should().BeNull();
+    }
 }
