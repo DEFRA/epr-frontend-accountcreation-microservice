@@ -2,6 +2,7 @@
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
@@ -16,7 +17,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// <summary>
 /// Reprocessor & Exporter Account creation controller.
 /// </summary>
-[Feature(FeatureFlags.ReprocessorExporter)]
 [Route("re-ex/user")]
 public class UserController : Controller
 {
@@ -45,27 +45,29 @@ public class UserController : Controller
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
-        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
-        if (userExists)
-        {
-            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
-            {
-                return RedirectToAction("UserAlreadyExists", "Home");
-            }
-            else
-            {
-                return Redirect(_urlOptions.ExistingUserRedirectUrl);
-            }
-        }
+        //var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        //if (userExists)
+        //{
+        //    if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
+        //    {
+        //        return RedirectToAction("UserAlreadyExists", "Home");
+        //    }
+        //    else
+        //    {
+        //        return Redirect(_urlOptions.ExistingUserRedirectUrl);
+        //    }
+        //}
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
-        if (session != null)
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession
         {
-            viewModel.FirstName = session.Contact.FirstName;
-            viewModel.LastName = session.Contact.LastName;
-        }
+            Journey = [PagePath.FullName]
+        };
+
+        var viewModel = new ReExAccountFullNameViewModel
+        {
+            FirstName = session.Contact?.FirstName,
+            LastName = session.Contact?.LastName
+        };
 
         return View(viewModel);
     }
@@ -79,7 +81,10 @@ public class UserController : Controller
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession()
+        {
+            Journey = [PagePath.FullName]
+        };
 
         session.Contact.FirstName = model.FirstName;
         session.Contact.LastName = model.LastName;

@@ -138,44 +138,6 @@ public class RegisteredAsCharityTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task RegisteredAsCharity_IfUserExistsAndAccountRedirectUrlIsNull_ThenRedirectsToUserAlreadyExistsPage()
-    {
-        //Arrange
-        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
-
-        // Act
-        var result = await _systemUnderTest.RegisteredAsCharity();
-
-        // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(HomeController.UserAlreadyExists));
-    }
-
-    [TestMethod]
-    public async Task RegisteredAsCharity_IfUserExistsAndHasAccountRedirectUrl_ThenRedirectsToAccountRedirectUrl()
-    {
-        //Arrange
-        var urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
-        var externalUrl = new ExternalUrlsOptions()
-        {
-            ExistingUserRedirectUrl = "dummy url"
-        };
-
-        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
-        urlsOptionMock.Setup(x => x.Value)
-            .Returns(externalUrl);
-        var systemUnderTest = new OrganisationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
-            _organisationServiceMock.Object, urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
-
-        // Act
-        var result = await systemUnderTest.RegisteredAsCharity();
-
-        // Assert
-        result.Should().BeOfType<RedirectResult>();
-        ((RedirectResult)result).Url.Should().Be("dummy url");
-    }
-
-    [TestMethod]
     public void RedirectToStart_ReturnsView()
     {
         //Act

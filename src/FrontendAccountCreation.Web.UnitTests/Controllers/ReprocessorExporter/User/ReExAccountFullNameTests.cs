@@ -2,14 +2,11 @@
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.Home;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 
 [TestClass]
@@ -29,45 +26,6 @@ public class ReExAccountFullNameTests : UserTestBase
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_reExAccountCreationSessionMock);
-    }
-
-    [TestMethod]
-    public async Task ReExAccountFullName_IfUserExistsAndAccountRedirectUrlIsNull_ThenRedirectsToUserAlreadyExistsPage()
-    {
-        //Arrange
-        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
-
-        // Act
-        var result = await _systemUnderTest.ReExAccountFullName();
-
-        // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(HomeController.UserAlreadyExists));
-    }
-
-    [TestMethod]
-    public async Task ReExAccountFullName_IfUserExistsAndHasAccountRedirectUrl_ThenRedirectsToAccountRedirectUrl()
-    {
-        //Arrange
-        var urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
-        var externalUrl = new ExternalUrlsOptions()
-        {
-            ExistingUserRedirectUrl = "dummy url"
-        };
-
-
-        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
-        urlsOptionMock.Setup(x => x.Value)
-            .Returns(externalUrl);
-        var systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
-            _reExAccountMapperMock.Object, urlsOptionMock.Object, _loggerMock.Object);
-
-        // Act
-        var result = await systemUnderTest.ReExAccountFullName();
-
-        // Assert
-        result.Should().BeOfType<RedirectResult>();
-        ((RedirectResult)result).Url.Should().Be("dummy url");
     }
 
     [TestMethod]
