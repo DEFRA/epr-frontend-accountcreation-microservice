@@ -45,6 +45,37 @@ public class ReExAccountFullNameTests : UserTestBase
     }
 
     [TestMethod]
+    public async Task Get_ReExAccountFullName_ReturnsViewModel_WithSessionData_FirstAndLastName()
+    {
+        // Arrange
+        var sessionData = new ReExAccountCreationSession
+        {
+            Contact = new ReExContact
+            {
+                FirstName = "John",
+                LastName = "Smith"
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+                           .ReturnsAsync(sessionData);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<ReExAccountFullNameViewModel>();
+
+        var viewModel = (ReExAccountFullNameViewModel)viewResult.Model!;
+        viewModel.FirstName.Should().Be("John");
+        viewModel.LastName.Should().Be("Smith");
+    }
+
+    [TestMethod]
     public async Task GivenFullNameProvided_WhenReExAccountFullNamePosted_ThenRedirectsToTelephoneNumberPage_AndUpdateSession()
     {
         // Arrange
