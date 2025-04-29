@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,39 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
     [ExcludeFromCodeCoverage(Justification ="The pages before and after are not developed")]
     public partial class OrganisationController : Controller
     {
+
+        [HttpGet]
+        [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+            SetBackLink(session, PagePath.AddAnApprovedPerson);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.AddAnApprovedPerson);
+                return View(model);
+            }
+
+            if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
+            {
+                return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
+            }
+            else // I-will-Invite-an-Approved-Person-Later
+            {
+                throw new NotImplementedException("This feature is not implemented yet."); // Page "CheckYourDetails"
+            }
+        }
+
         [HttpGet]
         [Route(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation([FromQuery] Guid? id)
@@ -72,7 +106,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             session.IsUserChangingDetails = false;
-            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation + $"?id={queryStringId}", PagePath.TeamMemberDetails + $"?id={queryStringId}");
+            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation, PagePath.TeamMemberDetails);
 
             if (isExistingMember)
             {
@@ -164,8 +198,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            //return View(session.CompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
-            return View(session.CompaniesHouseSession?.TeamMembers);
+            return View(session.CompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
 
         }
 

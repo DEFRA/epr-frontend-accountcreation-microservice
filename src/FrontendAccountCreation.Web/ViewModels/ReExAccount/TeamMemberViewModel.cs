@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web.Controllers.Attributes;
+﻿using FrontendAccountCreation.Web.Controllers.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -8,9 +7,6 @@ public class TeamMemberViewModel
 {
     [Required]
     public Guid Id { get; set; }
-
-    [Required]
-    public ReExTeamMemberRole RoleInOrganisation { get; set; }
 
     [Required(ErrorMessage = "TeamMemberDetails.FullNameError")]
     public string FullName { get; set; }
