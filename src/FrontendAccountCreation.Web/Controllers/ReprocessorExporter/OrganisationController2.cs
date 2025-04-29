@@ -3,6 +3,8 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.AccountCreation;
+using FrontendAccountCreation.Web.Controllers.Home;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
@@ -10,7 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
-    [ExcludeFromCodeCoverage(Justification ="The pages before and after are not developed")]
+    [ExcludeFromCodeCoverage(Justification = "The pages before and after are not developed")]
     public partial class OrganisationController : Controller
     {
         [HttpGet]
@@ -86,7 +88,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
                 companiesHouseSession.Company = company;
                 session.OrganisationType = OrganisationType.CompaniesHouseCompany;
-                companiesHouseSession.RoleInOrganisation = (RoleInOrganisation) role;
+                companiesHouseSession.RoleInOrganisation = (RoleInOrganisation)role;
 
                 int? teamMemberIndex = session.CompaniesHouseSession?.CurrentTeamMemberIndex;
                 if (teamMemberIndex.HasValue)
@@ -112,6 +114,38 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 companiesHouseSession.CurrentTeamMemberIndex = 0;
                 session.CompaniesHouseSession = companiesHouseSession;
 
+            }
+        }
+
+        [HttpGet]
+        [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+            SetBackLink(session, PagePath.AddAnApprovedPerson);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.AddAnApprovedPerson);
+                return View(model);
+            }
+
+            if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
+            {
+                return RedirectToAction("TeamMemberRoleInOrganisation");
+            }
+            else // I-will-Invite-an-Approved-Person-Later
+            {
+                throw new NotImplementedException("This feature is not implemented yet."); // Page "CheckYourDetails"
             }
         }
 
