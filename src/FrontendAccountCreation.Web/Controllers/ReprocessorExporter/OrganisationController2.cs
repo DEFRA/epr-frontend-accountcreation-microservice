@@ -3,6 +3,8 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.AccountCreation;
+using FrontendAccountCreation.Web.Controllers.Home;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
@@ -141,11 +143,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 return RedirectToAction("TeamMemberRoleInOrganisation");
             }
-            else // I will invite an approved person later
+            else // I-will-Invite-an-Approved-Person-Later
             {
-                return View(); // need to find the url 
+                return RedirectToAction(nameof(AccountCreationController.CheckYourDetails), "AccountCreation");
             }
-
         }
 
         [HttpGet]
