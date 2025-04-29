@@ -23,8 +23,6 @@ using Microsoft.Identity.Web;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-//todo: need to add feature flag config to config repo
-
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
 public class OrganisationController : Controller
