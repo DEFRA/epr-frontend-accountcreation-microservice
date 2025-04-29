@@ -120,7 +120,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AddApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-            SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+            SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View();
@@ -133,15 +133,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+                SetBackLink(session, PagePath.AddAnApprovedPerson);
                 return View(model);
             }
 
-            if (model.InviteUserOption == InviteUserOptions.IAgreeToBeAnApprovedPerson.ToString())
-            {
-                return View(); // need to find the url 
-            }
-            else if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
+            if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
             {
                 return RedirectToAction("TeamMemberRoleInOrganisation");
             }
