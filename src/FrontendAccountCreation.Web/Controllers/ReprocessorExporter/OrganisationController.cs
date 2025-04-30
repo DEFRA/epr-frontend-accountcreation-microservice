@@ -602,8 +602,8 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.IsPartnership)]
-    [OrganisationJourneyAccess(PagePath.IsPartnership)]
+    [Route(PagePath.PersonApproved)]
+    [OrganisationJourneyAccess(PagePath.PersonApproved)]
 
     public async Task<IActionResult> YouAreApprovedPerson()
     {
@@ -623,14 +623,9 @@ public class OrganisationController : Controller
     }
 
     [HttpPost]
-    [Route(PagePath.IsPartnership)]
+    [Route(PagePath.PersonApproved)]
     public async Task<IActionResult> YouAreApprovedPerson(YouAreApprovedPersonViewModel model)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
