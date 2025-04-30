@@ -121,10 +121,10 @@
     <value>Welsh - We ask this as your organisation must be reprocessing or exporting packaging waste in the course of business to proceed.</value>
   </data>
   <data name="RegisteredAsCharity.ErrorMessage" xml:space="preserve">
-    <value>Dewiswch a yw’ch sefydliad yn elusen gofrestredig.</value>
+    <value>Dewiswch a yw'ch sefydliad yn elusen gofrestredig</value>
   </data>
   <data name="RegisteredAsCharity.Question" xml:space="preserve">
-    <value>Ydy’ch sefydliad yn elusen gofrestredig?</value>
+    <value>Ydy'ch sefydliad yn elusen gofrestredig?</value>
   </data>
   <data name="RegisteredAsCharity.Title" xml:space="preserve">
     <value>Wedi’i gofrestru fel elusen</value>
