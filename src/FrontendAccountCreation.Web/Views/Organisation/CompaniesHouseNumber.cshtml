@@ -1,12 +1,16 @@
 ﻿﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.Constants
 
-@model CompaniesHouseNumberViewModel
+@model ReExCompaniesHouseNumberViewModel
 
 @{
     ViewData["Title"] = Localizer["CompaniesHouseNumber.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
     var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
 }

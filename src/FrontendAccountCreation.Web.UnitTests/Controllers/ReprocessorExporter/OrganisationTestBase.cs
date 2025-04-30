@@ -21,7 +21,6 @@ using Web.Sessions;
 public abstract class OrganisationTestBase
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
-    protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
 
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;

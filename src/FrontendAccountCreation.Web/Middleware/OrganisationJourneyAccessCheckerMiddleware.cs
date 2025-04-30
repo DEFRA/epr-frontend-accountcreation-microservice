@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
@@ -18,11 +17,6 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
         {
             var sessionValue = await sessionManager.GetSessionAsync(httpContext.Session);
 
-            if (attribute.PagePath == PagePath.BusinessAddress && !sessionValue.Journey.Contains(PagePath.BusinessAddress))
-            {
-                sessionValue.Journey.Add(PagePath.BusinessAddress);
-            }
-
             string? pageToRedirect = null;
 
             if (sessionValue == null)
@@ -33,9 +27,9 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
             {
                 pageToRedirect = PagePath.PageNotFound;
             }
-            else if (!sessionValue.Journey.Contains(attribute.PagePath) && !sessionValue.IsUserChangingDetails)
+            else if (!sessionValue.Journey.Contains(attribute.PagePath))
             {
-                pageToRedirect = sessionValue.Journey[sessionValue.Journey.Count - 1];
+                pageToRedirect = sessionValue.Journey[^1];
             }
 
             if (!string.IsNullOrEmpty(pageToRedirect))
