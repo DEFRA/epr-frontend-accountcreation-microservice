@@ -15,5 +15,10 @@ public static class ReExPagePath
     public const string RoleInOrganisation = "role-in-organisation";
     
     public const string FullName = "full-name";
-    public const string TelephoneNumber = "telephone-number";    
+    public const string TelephoneNumber = "telephone-number";
+
+    public const string AddAnApprovedPerson = "add-an-approved-person";
+    public const string TeamMemberRoleInOrganisation = "check-companies-house-role";
+    public const string TeamMemberDetails = "eligible-person-details";
+    public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
 }

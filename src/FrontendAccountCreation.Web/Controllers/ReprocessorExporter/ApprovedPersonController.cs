@@ -21,24 +21,24 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.AddAnApprovedPerson)]
+        [Route(ReExPagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-            SetBackLink(session, PagePath.AddAnApprovedPerson);
+            SetBackLink(session, ReExPagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View();
         }
 
         [HttpPost]
-        [Route(PagePath.AddAnApprovedPerson)]
+        [Route(ReExPagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.AddAnApprovedPerson);
+                SetBackLink(session, ReExPagePath.AddAnApprovedPerson);
                 return View(model);
             }
 
@@ -53,12 +53,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.TeamMemberRoleInOrganisation)]
+        [Route(ReExPagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation([FromQuery] Guid? id)
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
-            SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+            SetBackLink(session, ReExPagePath.TeamMemberRoleInOrganisation);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             // show previously selected team member role
@@ -79,13 +79,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpPost]
-        [Route(PagePath.TeamMemberRoleInOrganisation)]
+        [Route(ReExPagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
         {
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+                SetBackLink(session, ReExPagePath.TeamMemberRoleInOrganisation);
                 return View(model);
             }
 
@@ -115,7 +115,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             session.IsUserChangingDetails = false;
-            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation, PagePath.TeamMemberDetails);
+            await SaveSession(session, ReExPagePath.TeamMemberRoleInOrganisation, ReExPagePath.TeamMemberDetails);
 
             if (isExistingMember)
             {
@@ -131,11 +131,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.TeamMemberDetails)]
+        [Route(ReExPagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails([FromQuery] Guid id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-            SetBackLink(session, PagePath.TeamMemberDetails);
+            SetBackLink(session, ReExPagePath.TeamMemberDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             
             int? index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
@@ -157,13 +157,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpPost]
-        [Route(PagePath.TeamMemberDetails)]
+        [Route(ReExPagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails(TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                ViewBag.BackLinkToDisplay = PagePath.TeamMemberDetails;
+                ViewBag.BackLinkToDisplay = ReExPagePath.TeamMemberDetails;
                 return View(model);
             }
 
@@ -179,8 +179,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             // go to check invitation details summary page for all team members
-            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.TeamMemberDetails,
-                PagePath.TeamMembersCheckInvitationDetails);
+            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), ReExPagePath.TeamMemberDetails,
+                ReExPagePath.TeamMembersCheckInvitationDetails);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         /// <param name="id">Id of team member to remove</param>
         /// <returns></returns>
         [HttpGet]
-        [Route(PagePath.TeamMembersCheckInvitationDetails)]
+        [Route(ReExPagePath.TeamMembersCheckInvitationDetails)]
         public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
@@ -204,7 +204,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 }
             }
 
-            SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
+            SetBackLink(session, ReExPagePath.TeamMembersCheckInvitationDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
