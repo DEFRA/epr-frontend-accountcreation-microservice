@@ -225,15 +225,28 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     public async Task TeamMemberRoleInOrganisation_Post_WithInvalidModel_ReturnsViewWithError()
     {
         // Arrange
+        var request = new TeamMemberRoleInOrganisationViewModel
+        {
+            RoleInOrganisation = null
+        };
+
         _systemUnderTest.ModelState.AddModelError(nameof(TeamMemberRoleInOrganisationViewModel.RoleInOrganisation), "Field is required");
 
         // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(new TeamMemberRoleInOrganisationViewModel());
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(request);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
+        var model = viewResult.Model as TeamMemberRoleInOrganisationViewModel;
+        model.Should().NotBeNull();
         viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
         AssertBackLink(viewResult, "Pagebefore");
+
+        // Verify ModelState contains the error
+        _systemUnderTest.ModelState.IsValid.Should().BeFalse();
+        _systemUnderTest.ModelState[nameof(TeamMemberRoleInOrganisationViewModel.RoleInOrganisation)]
+            .Errors.Should()
+            .Contain(e => e.ErrorMessage == "Field is required");
     }
 }
