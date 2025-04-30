@@ -2,7 +2,6 @@
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
@@ -18,6 +17,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// Reprocessor & Exporter Account creation controller.
 /// </summary>
 [Route("re-ex/user")]
+[Feature(FeatureFlags.ReprocessorExporter)]
 public class UserController : Controller
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
