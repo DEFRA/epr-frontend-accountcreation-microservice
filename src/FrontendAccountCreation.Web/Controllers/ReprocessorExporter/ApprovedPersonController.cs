@@ -52,7 +52,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else // I-will-Invite-an-Approved-Person-Later
             {
-                throw new NotImplementedException("This feature is not implemented yet."); // Page "CheckYourDetails"
+                return RedirectToAction("CheckyourDetails"); // currently not available
             }
         }
 

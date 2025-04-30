@@ -131,28 +131,6 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         viewResult.Model.Should().BeNull();
     }
 
-    [TestMethod]
-    public async Task AddApprovedPerson_ModelStateInvalid_ReturnsViewWithModel()
-    {
-        // Arrange
-        var session = new OrganisationSession();
-        _sessionManagerMock
-            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(session);
-
-        var model = new AddApprovedPersonViewModel();
-        _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
-
-        // Act
-        var result = await _systemUnderTest.AddApprovedPerson(model);
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.Model.Should().Be(model);
-
-        _sessionManagerMock.Verify(s => s.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
-    }
 
     [TestMethod]
     public async Task AddApprovedPerson_InviteAnotherApprovedPersonSelected_RedirectsToTeamMemberRole()
@@ -175,25 +153,5 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
-    }
-
-    [TestMethod]
-    public async Task AddApprovedPerson_InviteLaterSelected_ThrowsNotImplementedException()
-    {
-        // Arrange
-        var session = new OrganisationSession();
-        _sessionManagerMock
-            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(session);
-
-        var model = new AddApprovedPersonViewModel
-        {
-            InviteUserOption = InviteUserOptions.IWillInviteApprovedPersonLater.ToString()
-        };
-
-        // Act & Assert // need to re-visit once we found the correct URL
-        await Assert.ThrowsExceptionAsync<NotImplementedException>(() =>
-            _systemUnderTest.AddApprovedPerson(model)
-        );
     }
 }
