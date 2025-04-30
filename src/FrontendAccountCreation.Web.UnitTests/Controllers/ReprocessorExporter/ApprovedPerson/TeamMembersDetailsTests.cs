@@ -28,7 +28,6 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
                 ],
                 CompaniesHouseSession = new ReExCompaniesHouseSession
                 {
-                    CurrentTeamMemberIndex = 0,
                     TeamMembers =
                     [
                         new ReExCompanyTeamMember
