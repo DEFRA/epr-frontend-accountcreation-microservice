@@ -26,7 +26,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
                 "PageBefore",
                 PagePath.TeamMemberRoleInOrganisation
             ],
-            CompaniesHouseSession = new ReExCompaniesHouseSession
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers =
                 [
@@ -117,7 +117,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
-        var updatedMember = _orgSessionMock.CompaniesHouseSession.TeamMembers.First(x => x.Id == _teamMemberId);
+        var updatedMember = _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.First(x => x.Id == _teamMemberId);
         updatedMember.FullName.Should().Be("Jane Doe");
         updatedMember.TelephoneNumber.Should().Be("0987654321");
         updatedMember.Email.Should().Be("jane@example.com");

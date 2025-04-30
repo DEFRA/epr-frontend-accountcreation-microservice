@@ -25,7 +25,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
                "Pagebefore", // replace when page is developed
                 PagePath.TeamMemberRoleInOrganisation,
             },
-            CompaniesHouseSession = new ReExCompaniesHouseSession(),
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession(),
             IsUserChangingDetails = false,
         };
 
@@ -43,13 +43,13 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid() };
         teamMembers.Add(jack);
         teamMembers.Add(jill);
-        _orgSessionMock.CompaniesHouseSession.TeamMembers = teamMembers;
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
         // Act
         await _systemUnderTest.TeamMembersCheckInvitationDetails(id);
 
         // Assert
-        _orgSessionMock.CompaniesHouseSession.TeamMembers?.Count().Should().Be(2);
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count().Should().Be(2);
     }
 
     [TestMethod]
@@ -61,13 +61,13 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid() };
         teamMembers.Add(jack);
         teamMembers.Add(jill);
-        _orgSessionMock.CompaniesHouseSession.TeamMembers = teamMembers;
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
         
         // Act
         await _systemUnderTest.TeamMembersCheckInvitationDetails(jack.Id);
 
         // Assert
-        _orgSessionMock.CompaniesHouseSession.TeamMembers?.Count().Should().Be(1);
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count().Should().Be(1);
      }
 
     [TestMethod]
@@ -81,7 +81,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         teamMembers.Add(jack);
         teamMembers.Add(jill);
         teamMembers.Add(nobby);
-        _orgSessionMock.CompaniesHouseSession.TeamMembers = teamMembers;
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
         // Act
         IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetails(jack.Id);

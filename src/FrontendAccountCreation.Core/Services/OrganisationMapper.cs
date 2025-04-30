@@ -21,23 +21,23 @@ public class OrganisationMapper : IOrganisationMapper
 
         if (session.IsCompaniesHouseFlow)
         {
-            name = session.CompaniesHouseSession.Company.Name;
-            companiesHouseNumber = session.CompaniesHouseSession.Company.CompaniesHouseNumber;
-            isComplianceScheme = session.CompaniesHouseSession.IsComplianceScheme;
+            name = session.ReExCompaniesHouseSession.Company.Name;
+            companiesHouseNumber = session.ReExCompaniesHouseSession.Company.CompaniesHouseNumber;
+            isComplianceScheme = session.ReExCompaniesHouseSession.IsComplianceScheme;
             validatedWithCompaniesHouse = true;
-            jobTitle = session.CompaniesHouseSession.RoleInOrganisation.ToString();
+            jobTitle = session.ReExCompaniesHouseSession.RoleInOrganisation.ToString();
             producerType = null;
-            organisationId = session.CompaniesHouseSession.Company.OrganisationId;
+            organisationId = session.ReExCompaniesHouseSession.Company.OrganisationId;
         }
         else
         {
-            name = session.ManualInputSession.TradingName;
+            name = session.ReExManualInputSession.TradingName;
             companiesHouseNumber = null;
             isComplianceScheme = false;
             validatedWithCompaniesHouse = false;
-            jobTitle = session.ManualInputSession.RoleInOrganisation;
-            producerType = session.ManualInputSession.ProducerType;
-            organisationId = session.ManualInputSession.OrganisationId;
+            jobTitle = session.ReExManualInputSession.RoleInOrganisation;
+            producerType = session.ReExManualInputSession.ProducerType;
+            organisationId = session.ReExManualInputSession.OrganisationId;
         }
 
         var person = new PersonModel()
@@ -87,34 +87,34 @@ public class OrganisationMapper : IOrganisationMapper
 
         if (session.IsCompaniesHouseFlow)
         {
-            if (session.CompaniesHouseSession.Company.BusinessAddress is null)
+            if (session.ReExCompaniesHouseSession.Company.BusinessAddress is null)
             {
                 return address;
             }
 
-            address.SubBuildingName = session.CompaniesHouseSession.Company.BusinessAddress.SubBuildingName;
-            address.BuildingName = session.CompaniesHouseSession.Company.BusinessAddress.BuildingName;
-            address.BuildingNumber = session.CompaniesHouseSession.Company.BusinessAddress.BuildingNumber;
-            address.Street = session.CompaniesHouseSession.Company.BusinessAddress.Street;
-            address.Town = session.CompaniesHouseSession.Company.BusinessAddress.Town;
-            address.Country = session.CompaniesHouseSession.Company.BusinessAddress.Country;
-            address.Postcode = session.CompaniesHouseSession.Company.BusinessAddress.Postcode;
-            address.Locality = session.CompaniesHouseSession.Company.BusinessAddress.Locality;
-            address.DependentLocality = session.CompaniesHouseSession.Company.BusinessAddress.DependentLocality;
-            address.County = session.CompaniesHouseSession.Company.BusinessAddress.County;
+            address.SubBuildingName = session.ReExCompaniesHouseSession.Company.BusinessAddress.SubBuildingName;
+            address.BuildingName = session.ReExCompaniesHouseSession.Company.BusinessAddress.BuildingName;
+            address.BuildingNumber = session.ReExCompaniesHouseSession.Company.BusinessAddress.BuildingNumber;
+            address.Street = session.ReExCompaniesHouseSession.Company.BusinessAddress.Street;
+            address.Town = session.ReExCompaniesHouseSession.Company.BusinessAddress.Town;
+            address.Country = session.ReExCompaniesHouseSession.Company.BusinessAddress.Country;
+            address.Postcode = session.ReExCompaniesHouseSession.Company.BusinessAddress.Postcode;
+            address.Locality = session.ReExCompaniesHouseSession.Company.BusinessAddress.Locality;
+            address.DependentLocality = session.ReExCompaniesHouseSession.Company.BusinessAddress.DependentLocality;
+            address.County = session.ReExCompaniesHouseSession.Company.BusinessAddress.County;
         }
         else
         {
-            address.SubBuildingName = session.ManualInputSession.BusinessAddress.SubBuildingName;
-            address.BuildingName = session.ManualInputSession.BusinessAddress.BuildingName;
-            address.BuildingNumber = session.ManualInputSession.BusinessAddress.BuildingNumber;
-            address.Street = session.ManualInputSession.BusinessAddress.Street;
-            address.Town = session.ManualInputSession.BusinessAddress.Town;
-            address.Country = session.ManualInputSession.BusinessAddress.Country;
-            address.Postcode = session.ManualInputSession.BusinessAddress.Postcode;
-            address.Locality = session.ManualInputSession.BusinessAddress.Locality;
-            address.DependentLocality = session.ManualInputSession.BusinessAddress.DependentLocality;
-            address.County = session.ManualInputSession.BusinessAddress.County;
+            address.SubBuildingName = session.ReExManualInputSession.BusinessAddress.SubBuildingName;
+            address.BuildingName = session.ReExManualInputSession.BusinessAddress.BuildingName;
+            address.BuildingNumber = session.ReExManualInputSession.BusinessAddress.BuildingNumber;
+            address.Street = session.ReExManualInputSession.BusinessAddress.Street;
+            address.Town = session.ReExManualInputSession.BusinessAddress.Town;
+            address.Country = session.ReExManualInputSession.BusinessAddress.Country;
+            address.Postcode = session.ReExManualInputSession.BusinessAddress.Postcode;
+            address.Locality = session.ReExManualInputSession.BusinessAddress.Locality;
+            address.DependentLocality = session.ReExManualInputSession.BusinessAddress.DependentLocality;
+            address.County = session.ReExManualInputSession.BusinessAddress.County;
         }
 
         return address;

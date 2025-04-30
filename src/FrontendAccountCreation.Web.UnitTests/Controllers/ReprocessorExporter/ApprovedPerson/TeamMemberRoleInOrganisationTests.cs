@@ -41,7 +41,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 "Pagebefore", // replace when page is developed
                 PagePath.TeamMemberRoleInOrganisation,
             },
-            CompaniesHouseSession = new ReExCompaniesHouseSession(),
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession(),
             IsUserChangingDetails = false,
         };
 

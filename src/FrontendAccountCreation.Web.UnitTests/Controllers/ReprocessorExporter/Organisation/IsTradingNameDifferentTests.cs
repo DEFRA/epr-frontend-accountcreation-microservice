@@ -25,7 +25,7 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
     public async Task GET_BackLinkIsUkNation()
     {
         //Arrange
-        var orgCreationSessionMock = new OrganisationSession
+        var orgCreationSession = new OrganisationSession
         {
             Journey =
             [
@@ -34,7 +34,7 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
             ]
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSessionMock);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
 
         //Act
         var result = await _systemUnderTest.IsTradingNameDifferent();
@@ -53,7 +53,7 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
     public async Task GET_CorrectViewModelIsReturnedInTheView(bool? isTradingNameDifferentSession, YesNoAnswer? expectedIsTradingNameDifferentViewModel)
     {
         //Arrange
-        var orgCreationSessionMock = new OrganisationSession
+        var orgCreationSession = new OrganisationSession
         {
             Journey =
             [
@@ -63,7 +63,7 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
             IsTradingNameDifferent = isTradingNameDifferentSession
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSessionMock);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
 
         //Act
         var result = await _systemUnderTest.IsTradingNameDifferent();
@@ -131,7 +131,7 @@ public class IsTradingNameDifferentTests : OrganisationTestBase
 
     [TestMethod]
     [DataRow(YesNoAnswer.Yes, nameof(OrganisationController.TradingName))]
-    [DataRow(YesNoAnswer.No, nameof(OrganisationController.IsPartnership))]
+    [DataRow(YesNoAnswer.No, nameof(OrganisationController.IsOrganisationAPartner))]
     public async Task POST_UserSelectsYesOrNo_UserIsRedirected(YesNoAnswer userAnswer, string expectedRedirect)
     {
         // Arrange

@@ -43,7 +43,7 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
                 PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
                 PagePath.ConfirmCompanyDetails
             ],
-            CompaniesHouseSession = new ReExCompaniesHouseSession
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 Company = _company
             }
@@ -107,7 +107,7 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
     [TestMethod]
     public async Task GivenAccountAlreadyExists_WhenConfirmDetailsOfTheCompanyCalled_ThenRedirectsToAccountAlreadyExistsPage()
     {
-        _organisationSessionMock.CompaniesHouseSession.Company.AccountCreatedOn = DateTime.Now;
+        _organisationSessionMock.ReExCompaniesHouseSession.Company.AccountCreatedOn = DateTime.Now;
 
         // Act
         var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();

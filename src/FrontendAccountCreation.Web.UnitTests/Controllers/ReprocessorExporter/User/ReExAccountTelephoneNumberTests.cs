@@ -3,6 +3,7 @@
 using FluentAssertions;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -137,5 +138,40 @@ public class ReExAccountTelephoneNumberTests : UserTestBase
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().BeOfType<ReExAccountTelephoneNumberViewModel>();
         AssertBackLink(viewResult, PagePath.FullName);
+    }
+
+    [TestMethod]
+    public async Task ReExAccountTelephoneNumber_TelephoneNumberPageEntered_BackLinkIsSetAndViewModelPopulated()
+    {
+        // Arrange
+        var testSession = new ReExAccountCreationSession
+        {
+            Contact = new ReExContact
+            {
+                TelephoneNumber = "0123456789",
+                Email = "test@example.com"
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(testSession);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountTelephoneNumber();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<ReExAccountTelephoneNumberViewModel>();
+
+        var model = (ReExAccountTelephoneNumberViewModel)viewResult.Model;
+        model.TelephoneNumber.Should().Be("0123456789");
+        model.EmailAddress.Should().Be("test@example.com");
+
+        var hasBackLinkKey = viewResult.ViewData.TryGetValue("BackLinkToDisplay", out var gotBackLinkObject);
+        hasBackLinkKey.Should().BeTrue();
     }
 }

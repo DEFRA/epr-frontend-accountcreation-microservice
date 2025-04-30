@@ -124,10 +124,10 @@
     <value>Beth yw’ch rhif ffôn?</value>
   </data>
   <data name="TelephoneNumber.SoleTrader.Hint" xml:space="preserve">
-    <value>Rydyn ni’n gofyn am hyn rhag ofn y bydd angen inni eich ffonio’n uniongyrchol ynghylch eich cyfrif.</value>
+    <value>Rydyn ni’n gofyn am hyn rhag ofn y bydd angen inni eich ffonio'n uniongyrchol gydag unrhyw ymholiadau am eich cyfrif.</value>
   </data>
   <data name="TelephoneNumber.Hint" xml:space="preserve">
-    <value>Rydyn ni’n gofyn am hyn rhag ofn y bydd angen inni eich ffonio’n uniongyrchol gydag unrhyw ymholiadau am gyfrif eich sefydliad.</value>
+    <value>Rydyn ni’n gofyn am hyn rhag ofn y bydd angen inni eich ffonio'n uniongyrchol gydag unrhyw ymholiadau am eich cyfrif.</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
     <value>Rhowch rif ffôn dilys</value>

@@ -64,12 +64,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // show previously selected team member role
             if (id.HasValue)
             {
-                int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                int? index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
                 if (index != null && index.GetValueOrDefault(-1) >= 0)
                 {
                     TeamMemberRoleInOrganisationViewModel viewModel = new TeamMemberRoleInOrganisationViewModel
                     {
-                        RoleInOrganisation = session.CompaniesHouseSession.TeamMembers[index.Value]?.Role
+                        RoleInOrganisation = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Role
                     };
                     return View(viewModel);
                 }
@@ -89,7 +89,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            ReExCompaniesHouseSession companiesHouseSession = session.CompaniesHouseSession ?? new();
+            ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
             int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model?.Id));
             Guid queryStringId;
             bool isExistingMember = false;
@@ -99,7 +99,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 // found existing team member, set their role
                 queryStringId = model.Id.Value;
                 isExistingMember = true;
-                session.CompaniesHouseSession.TeamMembers[index.Value].Role = model.RoleInOrganisation;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role = model.RoleInOrganisation;
 
             }
             else
@@ -110,7 +110,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 List<ReExCompanyTeamMember> members = companiesHouseSession.TeamMembers ?? new();
                 members.Add(new ReExCompanyTeamMember { Id = queryStringId, Role = model.RoleInOrganisation });
                 companiesHouseSession.TeamMembers = members;
-                session.CompaniesHouseSession = companiesHouseSession;
+                session.ReExCompaniesHouseSession = companiesHouseSession;
 
             }
 
@@ -138,16 +138,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.TeamMemberDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             
-            int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+            int? index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
 
             if (index != null && index.GetValueOrDefault(-1) >= 0)
             {
                 var viewModel = new TeamMemberViewModel
                 {
                     Id = id,
-                    FullName = session.CompaniesHouseSession.TeamMembers[index.Value].FullName,
-                    Telephone = session.CompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber,
-                    Email = session.CompaniesHouseSession.TeamMembers[index.Value].Email
+                    FullName = session.ReExCompaniesHouseSession.TeamMembers[index.Value].FullName,
+                    Telephone = session.ReExCompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber,
+                    Email = session.ReExCompaniesHouseSession.TeamMembers[index.Value].Email
                 };
 
                 return View(viewModel);
@@ -167,15 +167,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            ReExCompaniesHouseSession companiesHouseSession = session.CompaniesHouseSession ?? new();
+            ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
             int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
 
             if (index != null && index.GetValueOrDefault(-1) >= 0)
             {
                 // found existing team member
-                session.CompaniesHouseSession.TeamMembers[index.Value].FullName = model.FullName;
-                session.CompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber = model.Telephone;
-                session.CompaniesHouseSession.TeamMembers[index.Value].Email = model.Email;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].FullName = model.FullName;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber = model.Telephone;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].Email = model.Email;
             }
 
             // go to check invitation details summary page for all team members
@@ -197,17 +197,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // if id is supplied, remove the team member
             if (id.HasValue)
             {
-                int? index = session.CompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                int? index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
                 if (index != null && index.GetValueOrDefault(-1) >= 0)
                 {
-                    session.CompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
+                    session.ReExCompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
                 }
             }
 
             SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(session.CompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
+            return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
 
         }
 
