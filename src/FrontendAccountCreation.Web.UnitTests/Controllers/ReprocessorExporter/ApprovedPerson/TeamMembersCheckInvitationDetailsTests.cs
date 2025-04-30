@@ -2,7 +2,9 @@
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
@@ -37,8 +39,8 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
     {
         // Arrange
         List<ReExCompanyTeamMember?> teamMembers = [];
-        ReExCompanyTeamMember jack = new ReExCompanyTeamMember { Id = Guid.NewGuid() };
-        ReExCompanyTeamMember jill = new ReExCompanyTeamMember { Id = Guid.NewGuid() };
+        ReExCompanyTeamMember jack = new() { Id = Guid.NewGuid() };
+        ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid() };
         teamMembers.Add(jack);
         teamMembers.Add(jill);
         _orgSessionMock.CompaniesHouseSession.TeamMembers = teamMembers;
@@ -55,8 +57,8 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
     {
         // Arrange
         List<ReExCompanyTeamMember?> teamMembers = [];
-        ReExCompanyTeamMember jack = new ReExCompanyTeamMember { Id = Guid.NewGuid() };
-        ReExCompanyTeamMember jill = new ReExCompanyTeamMember { Id = Guid.NewGuid() };
+        ReExCompanyTeamMember jack = new() { Id = Guid.NewGuid() };
+        ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid() };
         teamMembers.Add(jack);
         teamMembers.Add(jill);
         _orgSessionMock.CompaniesHouseSession.TeamMembers = teamMembers;
@@ -67,4 +69,34 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         // Assert
         _orgSessionMock.CompaniesHouseSession.TeamMembers?.Count().Should().Be(1);
      }
+
+    [TestMethod]
+    public async Task TeamMembersCheckInvitationDetails_UpdatesSession_And_ReturnsView()
+    {
+        // Arrange
+        List<ReExCompanyTeamMember?> teamMembers = [];
+        ReExCompanyTeamMember jack = new() { Id = Guid.NewGuid(), FullName = "Jack Dors" };
+        ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid(), FullName = "Jill Dors" };
+        ReExCompanyTeamMember nobby = new() { Id = Guid.NewGuid() };
+        teamMembers.Add(jack);
+        teamMembers.Add(jill);
+        teamMembers.Add(nobby);
+        _orgSessionMock.CompaniesHouseSession.TeamMembers = teamMembers;
+
+        // Act
+        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetails(jack.Id);
+
+        // Assert
+        result.Should().BeOfType<List<ReExCompanyTeamMember>>();
+
+        ViewResult viewResult = (ViewResult)result;
+
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+
+        // nobby has empty full name, hence excluded from view reult
+        ((List<ReExCompanyTeamMember>) viewResult.Model).Count.Should().Be(2);
+
+        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
+        AssertBackLink(viewResult, "Pagebefore");
+    }
 }

@@ -41,7 +41,9 @@
                                         @SharedLocalizer[Model[i].Role.ToString()]
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "ApprovedPerson", new { id = Model[i].Id })">@SharedLocalizer["Change"]<span class="govuk-visually-hidden"> role</span></a>
+                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "ApprovedPerson", new { id = Model[i].Id })">@SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.Role"].Value.ToLower()</span>
+                                        </a>
                                     </dd>
                                 </div>
 
@@ -58,7 +60,9 @@
                                         @Model[i].TelephoneNumber
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetails), "ApprovedPerson", new { id = Model[i].Id })">@SharedLocalizer["Change"]<span class="govuk-visually-hidden"> details</span></a>
+                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetails), "ApprovedPerson", new { id = Model[i].Id })">@SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
+                                        </a>
                                     </dd>
                                 </div>
 
