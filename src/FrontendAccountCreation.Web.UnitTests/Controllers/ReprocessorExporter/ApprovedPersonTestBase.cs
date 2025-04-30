@@ -16,7 +16,7 @@ using Web.Configs;
 using Web.Sessions;
 
 /// <summary>
-/// Used for Reprocessor and Exporter.
+/// Used for selection of approved team members - directors and comapny secretary.
 /// </summary>
 public abstract class ApprovedPersonTestBase
 {
@@ -74,7 +74,7 @@ public abstract class ApprovedPersonTestBase
         _loggerMock = new Mock<ILogger<ApprovedPersonController>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        _systemUnderTest = new ApprovedPersonController(_sessionManagerMock.Object, _loggerMock.Object);
+        _systemUnderTest = new ApprovedPersonController(_sessionManagerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;

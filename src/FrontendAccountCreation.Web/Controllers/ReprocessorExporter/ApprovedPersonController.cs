@@ -14,14 +14,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
     public partial class ApprovedPersonController : Controller
     {
         private readonly ISessionManager<OrganisationSession> _sessionManager;
-        private readonly ILogger<ApprovedPersonController> _logger;
 
-        public ApprovedPersonController(
-             ISessionManager<OrganisationSession> sessionManager,
-             ILogger<ApprovedPersonController> logger)
+        public ApprovedPersonController(ISessionManager<OrganisationSession> sessionManager)
         {
             _sessionManager = sessionManager;
-            _logger = logger;
         }
 
         [HttpGet]
