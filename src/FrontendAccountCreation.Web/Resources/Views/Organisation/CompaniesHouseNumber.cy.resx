@@ -136,9 +136,9 @@
     <value>Rhif Tŷ’r Cwmnïau</value>
   </data>
   <data name="CompaniesHouseNumber.MaxLengthErrorMessage" xml:space="preserve">
-    <value>Welsh - Invalid house number more than 8 character entered</value>
+    <value>Rhif tŷ annilys: mwy nag 8 o gymeriadau wedi'u teipio</value>
   </data>
   <data name="CompaniesHouseNumber.MinLengthErrorMessage" xml:space="preserve">
-    <value>Welsh - Invalid house number less than 8 character entered</value>
+    <value>Rhif tŷ annilys: llai nag 8 o gymeriadau wedi'u teipio</value>
   </data>
 </root>
