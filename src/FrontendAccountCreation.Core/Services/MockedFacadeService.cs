@@ -31,7 +31,7 @@ public class MockedFacadeService : IFacadeService
         return Task.CompletedTask;
     }
 
-    public Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account)
+    public Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account, string serviceKey)
     {
         return Task.CompletedTask;
     }
