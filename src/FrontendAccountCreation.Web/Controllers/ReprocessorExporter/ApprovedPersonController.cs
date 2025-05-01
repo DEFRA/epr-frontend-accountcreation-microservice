@@ -33,6 +33,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -54,7 +56,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
 
-            SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             // show previously selected team member role
@@ -81,7 +82,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
                 return View(model);
             }
 
@@ -199,23 +199,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 }
             }
 
-            SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
 
-        }
-
-        private void SetBackLink(OrganisationSession session, string currentPagePath)
-        {
-            if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
-            {
-                ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
-            }
-            else
-            {
-                ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-            }
         }
 
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
