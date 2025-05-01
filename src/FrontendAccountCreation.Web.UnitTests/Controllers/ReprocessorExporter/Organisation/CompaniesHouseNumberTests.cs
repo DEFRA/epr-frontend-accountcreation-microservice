@@ -11,6 +11,7 @@ using global::FrontendAccountCreation.Web.Constants;
 using global::FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
@@ -185,6 +186,33 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         viewResult.Model.Should().BeOfType<ReExCompaniesHouseNumberViewModel>();
         var viewModel = (ReExCompaniesHouseNumberViewModel)viewResult.Model;
         viewModel.CompaniesHouseNumber.Should().Be("123456");
+    }
+
+    [TestMethod]
+    public async Task CompaniesHouseNumber_GetCompanyInformationThrows_ErrorLogIsWritten()
+    {
+        // Arrange
+        _facadeServiceMock
+            .Setup(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>()))
+            .ThrowsAsync(new NotImplementedException());
+
+        // Act
+        await _systemUnderTest.CompaniesHouseNumber(new ReExCompaniesHouseNumberViewModel
+        {
+            CompaniesHouseNumber = "123"
+        });
+
+        // Assert
+
+        // it would be better to have tests that check that newlines are removed from the log line
+        // but it's complicated by moq's inability to verify extension methods
+
+        _loggerMock.Verify(l => l.Log<It.IsAnyType>(
+            LogLevel.Error,
+            It.IsAny<EventId>(),
+            It.IsAny<It.IsAnyType>(),
+            It.IsAny<NotImplementedException>(),
+            It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Once);
     }
 }
 

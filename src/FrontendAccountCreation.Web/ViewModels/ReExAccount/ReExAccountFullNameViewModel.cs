@@ -11,7 +11,6 @@ public class ReExAccountFullNameViewModel : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-       // var deploymentRole = validationContext.GetService<IOptions<DeploymentRoleOptions>>();
         return ValidateFirstName().Union(ValidateLastName());
     }
 

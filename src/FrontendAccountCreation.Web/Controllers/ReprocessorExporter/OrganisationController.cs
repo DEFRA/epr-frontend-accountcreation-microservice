@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Net.WebSockets;
-using System.Text.Json;
-using FrontendAccountCreation;
+﻿using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -21,6 +16,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Reflection;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -68,21 +68,6 @@ public class OrganisationController : Controller
             {
                 statusCode = (int)HttpStatusCode.Forbidden
             });
-        }
-
-        //todo: the account will already exist, so I don't think this check is wanted
-        // in fact, we probably want to check that the account *does* already exist
-        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
-        if (userExists)
-        {
-            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
-            {
-                return RedirectToAction("UserAlreadyExists", "Home");
-            }
-            else
-            {
-                return Redirect(_urlOptions.ExistingUserRedirectUrl);
-            }
         }
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
@@ -464,7 +449,7 @@ public class OrganisationController : Controller
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}", model.CompaniesHouseNumber);
+            LogCompaniesHouseLookupFailed(exception, model.CompaniesHouseNumber);
 
             return await SaveSessionAndRedirect(session, nameof(CannotVerifyOrganisation), PagePath.CompaniesHouseNumber, PagePath.CannotVerifyOrganisation);
         }
@@ -485,6 +470,16 @@ public class OrganisationController : Controller
         session.ReExCompaniesHouseSession.Company = company;
 
         return await SaveSessionAndRedirect(session, nameof(ConfirmCompanyDetails), PagePath.CompaniesHouseNumber, PagePath.ConfirmCompanyDetails);
+    }
+
+    // this monstrosity is required because Sonar complains that _logger.LogError isn't covered by a test.
+    // it is covered, but Moq doesn't support verifying extension methods, so we have to verify the first
+    // non-extension method in the LogError call stack, which Sonar isn't smart enough to interpret as covering LogError
+    [ExcludeFromCodeCoverage]
+    private void LogCompaniesHouseLookupFailed(Exception exception, string? companiesHouseNumber)
+    {
+        _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}",
+            companiesHouseNumber?.Replace(Environment.NewLine, ""));
     }
 
     [HttpGet]

@@ -16,27 +16,27 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// <summary>
 /// Reprocessor & Exporter Account creation controller.
 /// </summary>
-[Feature(FeatureFlags.ReprocessorExporter)]
 [Route("re-ex/user")]
+[Feature(FeatureFlags.ReprocessorExporter)]
 public class UserController : Controller
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<UserController> _logger;
-    private readonly ExternalUrlsOptions _urlOptions;
+    private readonly ServiceKeysOptions _serviceKeyOptions;
 
     public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IReExAccountMapper reExAccountMapper,
-        IOptions<ExternalUrlsOptions> urlOptions,
+        IOptions<ServiceKeysOptions> serviceKeyOptions,
         ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
-        _urlOptions = urlOptions.Value;
+        _serviceKeyOptions = serviceKeyOptions.Value;
         _logger = logger;
     }
 
@@ -45,27 +45,16 @@ public class UserController : Controller
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
-        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
-        if (userExists)
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession
         {
-            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
-            {
-                return RedirectToAction("UserAlreadyExists", "Home");
-            }
-            else
-            {
-                return Redirect(_urlOptions.ExistingUserRedirectUrl);
-            }
-        }
+            Journey = [PagePath.FullName]
+        };
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
-        if (session != null)
+        var viewModel = new ReExAccountFullNameViewModel
         {
-            viewModel.FirstName = session.Contact.FirstName;
-            viewModel.LastName = session.Contact.LastName;
-        }
+            FirstName = session.Contact?.FirstName,
+            LastName = session.Contact?.LastName
+        };
 
         return View(viewModel);
     }
@@ -79,7 +68,10 @@ public class UserController : Controller
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession()
+        {
+            Journey = [PagePath.FullName]
+        };
 
         session.Contact.FirstName = model.FirstName;
         session.Contact.LastName = model.LastName;
@@ -127,7 +119,7 @@ public class UserController : Controller
 
         var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
 
-        await _facadeService.PostReprocessorExporterAccountAsync(account);
+        await _facadeService.PostReprocessorExporterAccountAsync(account, _serviceKeyOptions.ReprocessorExporter);
 
         return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
             PagePath.Success);
