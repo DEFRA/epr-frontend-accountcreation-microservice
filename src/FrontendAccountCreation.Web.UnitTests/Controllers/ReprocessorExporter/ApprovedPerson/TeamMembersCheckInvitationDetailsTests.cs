@@ -9,6 +9,7 @@ using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
+[TestClass]
 public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
 {
     private OrganisationSession _orgSessionMock = null!;
@@ -49,7 +50,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         await _systemUnderTest.TeamMembersCheckInvitationDetails(id);
 
         // Assert
-        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count().Should().Be(2);
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(2);
     }
 
     [TestMethod]
@@ -67,7 +68,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         await _systemUnderTest.TeamMembersCheckInvitationDetails(jack.Id);
 
         // Assert
-        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count().Should().Be(1);
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(1);
      }
 
     [TestMethod]

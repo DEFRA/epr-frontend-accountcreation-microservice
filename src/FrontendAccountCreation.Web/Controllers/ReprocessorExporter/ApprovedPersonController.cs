@@ -202,7 +202,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 }
             }
 
-            SetBackLink(session, ReExPagePath.TeamMembersCheckInvitationDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
