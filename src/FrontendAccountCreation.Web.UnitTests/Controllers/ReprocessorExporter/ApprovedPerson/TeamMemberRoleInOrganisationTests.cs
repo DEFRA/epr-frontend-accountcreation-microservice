@@ -45,7 +45,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         var teamMemberId = Guid.NewGuid();
         var existingRole = ReExTeamMemberRole.Director;
 
-        _orgSessionMock.CompaniesHouseSession = new ReExCompaniesHouseSession
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
             TeamMembers = new List<ReExCompanyTeamMember>
             {
@@ -74,7 +74,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Arrange
         var invalidTeamMemberId = Guid.NewGuid();
 
-        _orgSessionMock.CompaniesHouseSession = new ReExCompaniesHouseSession
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
             TeamMembers = new List<ReExCompanyTeamMember>
             {
@@ -100,7 +100,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     {
         // Arrange
         var teamMemberId = Guid.NewGuid();
-        _orgSessionMock.CompaniesHouseSession = new ReExCompaniesHouseSession
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
             TeamMembers = new List<ReExCompanyTeamMember>()
         };
@@ -121,7 +121,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         var teamMemberId = Guid.NewGuid();
         var newRole = ReExTeamMemberRole.CompanySecretary;
 
-        _orgSessionMock.CompaniesHouseSession = new ReExCompaniesHouseSession
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
             TeamMembers = new List<ReExCompanyTeamMember>
             {
@@ -150,8 +150,8 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.CompaniesHouseSession.TeamMembers[0].Role == newRole &&
-                s.CompaniesHouseSession.TeamMembers[0].Id == teamMemberId
+                s.ReExCompaniesHouseSession.TeamMembers[0].Role == newRole &&
+                s.ReExCompaniesHouseSession.TeamMembers[0].Id == teamMemberId
             )),
             Times.Once);
     }
@@ -162,7 +162,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Arrange
         var newRole = ReExTeamMemberRole.Director;
 
-        _orgSessionMock.CompaniesHouseSession = new ReExCompaniesHouseSession
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
             TeamMembers = new List<ReExCompanyTeamMember>()
         };
@@ -183,9 +183,9 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.CompaniesHouseSession.TeamMembers.Count == 1 &&
-                s.CompaniesHouseSession.TeamMembers[0].Role == newRole &&
-                s.CompaniesHouseSession.TeamMembers[0].Id != Guid.Empty
+                s.ReExCompaniesHouseSession.TeamMembers.Count == 1 &&
+                s.ReExCompaniesHouseSession.TeamMembers[0].Role == newRole &&
+                s.ReExCompaniesHouseSession.TeamMembers[0].Id != Guid.Empty
             )),
             Times.Once);
     }
@@ -195,7 +195,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     {
         // Arrange
         var newRole = ReExTeamMemberRole.Director;
-        _orgSessionMock.CompaniesHouseSession = null;
+        _orgSessionMock.ReExCompaniesHouseSession = null;
 
         var request = new TeamMemberRoleInOrganisationViewModel
         {
@@ -213,10 +213,10 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.CompaniesHouseSession != null &&
-                s.CompaniesHouseSession.TeamMembers.Count == 1 &&
-                s.CompaniesHouseSession.TeamMembers[0].Role == newRole &&
-                s.CompaniesHouseSession.TeamMembers[0].Id != Guid.Empty
+                s.ReExCompaniesHouseSession != null &&
+                s.ReExCompaniesHouseSession.TeamMembers.Count == 1 &&
+                s.ReExCompaniesHouseSession.TeamMembers[0].Role == newRole &&
+                s.ReExCompaniesHouseSession.TeamMembers[0].Id != Guid.Empty
             )),
             Times.Once);
     }
