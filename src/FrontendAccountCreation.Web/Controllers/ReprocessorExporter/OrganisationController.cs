@@ -57,6 +57,7 @@ public class OrganisationController : Controller
     //todo: how do we handle feature flag for first page? manually?
 
     [HttpGet]
+    [Route("")]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity()
@@ -104,7 +105,7 @@ public class OrganisationController : Controller
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
         if (session.IsTheOrganisationCharity.Value)
-        {
+        {            
             return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
         else
@@ -595,6 +596,37 @@ public class OrganisationController : Controller
         SetBackLink(session, PagePath.NotAffected);
 
         return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.YouAreApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
+    public async Task<IActionResult> YouAreApprovedPerson()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.ApprovedPersonContinue)]
+    public async Task<IActionResult> ApprovedConfirmationContinue()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.YouAreApprovedPerson, "ToBeAdded");
+        return Ok();
+    }
+
+    public void NotImplementedMethod()
+    {
+        // TO DO following & modify - once Tungsten has merged
+        throw new NotImplementedException("not been implemented yet...as no related user-story has been confirmed!");
+    }
+
+    [HttpGet]
+    [Route(PagePath.AddApprovedPerson)]
+    public IActionResult InviteOtherApprovedPerson()
+    {
+        // TO DO following & modify - once Tungsten has merged
+        return Ok("not been implemented yet...WIP by Tungsten team.");
     }
 
     public IActionResult RedirectToStart()
