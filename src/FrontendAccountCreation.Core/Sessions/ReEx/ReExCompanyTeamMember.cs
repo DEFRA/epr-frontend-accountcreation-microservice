@@ -2,7 +2,7 @@
 
 public class ReExCompanyTeamMember
 {
-    public bool IsInvited { get; set; }
+    public Guid Id { get; set; }
 
     public ReExTeamMemberRole? Role { get; set; }
 

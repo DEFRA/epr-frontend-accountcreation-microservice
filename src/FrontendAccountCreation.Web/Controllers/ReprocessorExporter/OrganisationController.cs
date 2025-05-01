@@ -25,7 +25,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
-public partial class OrganisationController : Controller
+public class OrganisationController : Controller
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
@@ -618,8 +618,6 @@ public partial class OrganisationController : Controller
     {
         ClearRestOfJourney(session, currentPagePath);
 
-        // back link was not working as expected until line below was added
-        session.Journey.AddIfNotExists(currentPagePath);
         session.Journey.AddIfNotExists(nextPagePath);
 
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);

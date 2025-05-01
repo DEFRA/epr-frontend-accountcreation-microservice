@@ -147,6 +147,9 @@
   <data name="AddAnApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
     <value />
   </data>
+  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
+    <value />
+  </data>
   <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
     <value />
   </data>

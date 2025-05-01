@@ -17,25 +17,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TeamMemberRoleInOrganisation.Title" xml:space="preserve">
-    <value>[Welsh]Role in organisation</value>
-  </data>
-  <data name="TeamMemberRoleInOrganisation.Question" xml:space="preserve">
     <value>[Welsh]What is their role as shown on Companies House?</value>
   </data>
-  <data name="TeamMemberRoleInOrganisation.QuestionDescription" xml:space="preserve">
+  <data name="TeamMemberRoleInOrganisation.WhatIsTheirRole" xml:space="preserve">
+    <value>[Welsh]What is their role as shown on Companies House?</value>
+  </data>
+  <data name="TeamMemberRoleInOrganisation.WhatIsTheirRoleAdditionalInformation" xml:space="preserve">
     <value>[Welsh]These roles are eligible to be invited as an approved person. You can still enrol an organisation without inviting someone if you do not have a name and contact details yet.
 	</value>
   </data>
-  <data name="TeamMemberRoleInOrganisation.Director" xml:space="preserve">
-    <value>Cyfarwyddwr</value>
-  </data>
-  <data name="TeamMemberRoleInOrganisation.CompanySecretary" xml:space="preserve">
-    <value>Ysgrifennydd y cwmni</value>
-  </data>
-  <data name="TeamMemberRoleInOrganisation.ContinueButton" xml:space="preserve">
+  <data name="TeamMemberRoleInOrganisation.ContinueWithInvitation" xml:space="preserve">
     <value>[Welsh]Continue with invitation</value>
   </data>
-  <data name="TeamMemberRoleInOrganisation.ContinueLink" xml:space="preserve">
+  <data name="TeamMemberRoleInOrganisation.ContinueWithoutInvitation" xml:space="preserve">
     <value>[Welsh]Continue without invitation</value>
   </data>
   <data name="TeamMemberRoleInOrganisation.ErrorMessage" xml:space="preserve">

@@ -162,4 +162,10 @@
   <data name="EprForPackaging" xml:space="preserve">
     <value>EPR dros becynwaith: ailbroseswyr ac allforwyr</value>
   </data>
+  <data name="CompanySecretary" xml:space="preserve">
+    <value>Ysgrifennydd y cwmni</value>
+  </data>
+  <data name="Director" xml:space="preserve">
+    <value>Cyfarwyddwr</value>
+  </data>
 </root>

@@ -1,0 +1,101 @@
+﻿@using FrontendAccountCreation.Core.Sessions;
+@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Controllers.AccountCreation
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
+
+@model List<ReExCompanyTeamMember>;
+
+@{
+    ViewData["Title"] = Localizer["TeamMembersCheckInvitationDetails.Title"];
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-6">
+                    @Localizer["TeamMembersCheckInvitationDetails.Title"]
+                </h1>
+
+                <div class="govuk-summary-card">
+
+                    <div class="govuk-summary-card__title-wrapper">
+                        <p class="govuk-body">@Localizer["TeamMembersCheckInvitationDetails.Help"]</p>
+                    </div>
+
+                    @for (int i = 0; i < Model?.Count; i++)
+                    {
+                        <div class="govuk-summary-card__content">
+                            <dl class="govuk-summary-list">
+
+                                <!-- Role of team member -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["TeamMembersCheckInvitationDetails.Role"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @SharedLocalizer[Model[i].Role.ToString()]
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "ApprovedPerson", new { id = Model[i].Id })">@SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.Role"].Value.ToLower()</span>
+                                        </a>
+                                    </dd>
+                                </div>
+
+                                <!-- Name, Email, Telephone -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["TeamMembersCheckInvitationDetails.Name"]<br />
+                                        @Localizer["TeamMembersCheckInvitationDetails.Email"]<br />
+                                        @Localizer["TeamMembersCheckInvitationDetails.Telephone"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @Model[i].FullName<br/>
+                                        @Model[i].Email<br/>
+                                        @Model[i].TelephoneNumber
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetails), "ApprovedPerson", new { id = Model[i].Id })">@SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
+                                        </a>
+                                    </dd>
+                                </div>
+
+                            </dl>
+                        </div>
+
+                        <div class="govuk-button-group">
+                            @Html.ActionLink(@Localizer["TeamMembersCheckInvitationDetails.Remove"].Value, nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails), "ApprovedPerson",
+                                     new
+                                     {
+                                         @id = Model[i].Id
+                                     },
+                                     new
+                                     {
+                                         @class = "govuk-button govuk-button--secondary"
+                                     })
+                        </div>
+                    }
+
+                    <!-- goes to check your details -->
+                    @Html.ActionLink(@SharedLocalizer["Continue"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
+                             new
+                             {
+                                 @class = "govuk-button"
+                             })
+
+                    <p class="govuk-body">
+                        <!-- goes to 'What is their role as shown on Companies House? -->
+                        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "ApprovedPerson")">@Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

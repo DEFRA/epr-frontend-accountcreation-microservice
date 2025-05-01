@@ -8,6 +8,8 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class TeamMemberRoleInOrganisationViewModel
 {
+    public Guid? Id { get; set; }
+
     [Required(ErrorMessage = "TeamMemberRoleInOrganisation.ErrorMessage")]
     public ReExTeamMemberRole? RoleInOrganisation { get; set; }
 }

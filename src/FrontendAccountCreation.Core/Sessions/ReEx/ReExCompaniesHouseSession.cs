@@ -10,7 +10,5 @@ public class ReExCompaniesHouseSession
 
     public bool IsComplianceScheme { get; set; }
 
-    public int CurrentTeamMemberIndex { get; set; }
-
     public List<ReExCompanyTeamMember?> TeamMembers { get; set; }
 }
