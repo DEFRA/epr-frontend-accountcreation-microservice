@@ -57,6 +57,7 @@ public class OrganisationController : Controller
     //todo: how do we handle feature flag for first page? manually?
 
     [HttpGet]
+    [Route("")]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity()
@@ -71,18 +72,18 @@ public class OrganisationController : Controller
 
         //todo: the account will already exist, so I don't think this check is wanted
         // in fact, we probably want to check that the account *does* already exist
-        //var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
-        //if (userExists)
-        //{
-        //    if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
-        //    {
-        //        return RedirectToAction("UserAlreadyExists", "Home");
-        //    }
-        //    else
-        //    {
-        //        return Redirect(_urlOptions.ExistingUserRedirectUrl);
-        //    }
-        //}
+        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        if (userExists)
+        {
+            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
+            {
+                return RedirectToAction("UserAlreadyExists", "Home");
+            }
+            else
+            {
+                return Redirect(_urlOptions.ExistingUserRedirectUrl);
+            }
+        }
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
         {
@@ -119,9 +120,8 @@ public class OrganisationController : Controller
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
         if (session.IsTheOrganisationCharity.Value)
-        {
-            return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.RegisteredAsCharity, PagePath.PersonApproved);
-            //return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+        {            
+            return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
         else
         {
@@ -604,57 +604,35 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.PersonApproved)]
-    [OrganisationJourneyAccess(PagePath.PersonApproved)]
+    [Route(PagePath.YouAreApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
     public async Task<IActionResult> YouAreApprovedPerson()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        //SetBackLink(session, PagePath.PersonApproved);
-                
-        return View(new YouAreApprovedPersonViewModel
-        {
-        });
+        return View();
     }
 
-    public async Task ApprovedConfirmationContinue()
+    [HttpGet]
+    [Route(PagePath.ApprovedPersonContinue)]
+    public async Task<IActionResult> ApprovedConfirmationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.PersonApproved, PagePath.RoleInOrganisation);
+        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.YouAreApprovedPerson, "ToBeAdded");
+        return Ok();
     }
 
-    //[HttpPost]
-    public IActionResult TestMethod()
+    public void NotImplementedMethod()
     {
-        // Your logic here
-        return null; // Or redirect to another view
+        // TO DO following & modify - once Tungsten has merged
+        throw new NotImplementedException("not been implemented yet...as no related user-story has been confirmed!");
     }
 
-    //[HttpGet]
-    public IActionResult HyperlinkMethod()
+    [HttpGet]
+    [Route(PagePath.AddApprovedPerson)]
+    public IActionResult InviteOtherApprovedPerson()
     {
-        // Your logic here
-        return null; // Or redirect to another view
+        // TO DO following & modify - once Tungsten has merged
+        return Ok("not been implemented yet...WIP by Tungsten team.");
     }
-
-    public bool NotImplementedMethod()
-    {
-        return true;
-        // throw new NotImplementedException("Not implemeneted yet....!");
-    }
-
-    //[HttpPost]
-    //[Route(PagePath.PersonApproved)]
-    //public async Task<IActionResult> YouAreApprovedPerson(YouAreApprovedPersonViewModel model)
-    //{
-    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        
-    //    if (session.IsOrganisationAPartnership == true)
-    //    {
-    //        // TODO: Yes or No ending up same pagePath - to be confirmed
-    //        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
-    //    }
-    //    return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
-    //}
 
     public IActionResult RedirectToStart()
     {

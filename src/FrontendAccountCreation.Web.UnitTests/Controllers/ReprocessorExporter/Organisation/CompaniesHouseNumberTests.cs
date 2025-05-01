@@ -18,7 +18,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 [TestClass]
 public class CompaniesHouseNumberTests : OrganisationTestBase
 {
-    private OrganisationSession _accountCreationSessionMock = null!;
+    private OrganisationSession _organisationSessionMock = null!;
 
     private readonly Company _companyMock = new Company
     {
@@ -40,7 +40,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
     {
         SetupBase();
 
-        _accountCreationSessionMock = new OrganisationSession
+        _organisationSessionMock = new OrganisationSession
         {
             Journey = [PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber],
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
@@ -49,7 +49,7 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
             }
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_accountCreationSessionMock);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSessionMock);
         _facadeServiceMock.Setup(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>())).ReturnsAsync(_companyMock);
     }
 
