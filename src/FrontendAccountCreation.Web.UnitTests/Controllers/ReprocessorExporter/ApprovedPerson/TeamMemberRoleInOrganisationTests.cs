@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -248,5 +249,45 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _systemUnderTest.ModelState[nameof(TeamMemberRoleInOrganisationViewModel.RoleInOrganisation)]
             .Errors.Should()
             .Contain(e => e.ErrorMessage == "Field is required");
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_ReturnsViewWithNoModel()
+    {
+        // Arrange
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult.Model.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_InviteAnotherApprovedPersonSelected_RedirectsToTeamMemberRole()
+    {
+        // Arrange
+        var session = new OrganisationSession();
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString()
+        };
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
     }
 }
