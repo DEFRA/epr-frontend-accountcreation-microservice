@@ -17,6 +17,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// Reprocessor & Exporter Account creation controller.
 /// </summary>
 [Route("re-ex/user")]
+[Feature(FeatureFlags.ReprocessorExporter)]
 public class UserController : Controller
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
@@ -44,27 +45,16 @@ public class UserController : Controller
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
-        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
-        if (userExists)
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession
         {
-            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
-            {
-                return RedirectToAction("UserAlreadyExists", "Home");
-            }
-            else
-            {
-                return Redirect(_urlOptions.ExistingUserRedirectUrl);
-            }
-        }
+            Journey = [PagePath.FullName]
+        };
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        ReExAccountFullNameViewModel viewModel = new ReExAccountFullNameViewModel();
-        if (session != null)
+        var viewModel = new ReExAccountFullNameViewModel
         {
-            viewModel.FirstName = session.Contact.FirstName;
-            viewModel.LastName = session.Contact.LastName;
-        }
+            FirstName = session.Contact?.FirstName,
+            LastName = session.Contact?.LastName
+        };
 
         return View(viewModel);
     }
@@ -78,7 +68,10 @@ public class UserController : Controller
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession()
+        {
+            Journey = [PagePath.FullName]
+        };
 
         session.Contact.FirstName = model.FirstName;
         session.Contact.LastName = model.LastName;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Middleware;
@@ -11,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Moq;
 
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
+namespace FrontendAccountCreation.Web.UnitTests.Middleware;
 
 [TestClass]
 public class OrganisationJourneyAccessCheckerMiddlewareTests
@@ -34,6 +30,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
 
         _httpContextMock.Setup(x => x.Response).Returns(_httpResponseMock.Object);
+
         _httpContextMock.Setup(x => x.Features).Returns(_featureCollectionMock.Object);
         _featureCollectionMock.Setup(x => x.Get<IEndpointFeature>()).Returns(_endpointFeatureMock.Object);
 
@@ -48,7 +45,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
     {
         // Arrange
         var session = new OrganisationSession { Journey = visitedUrls.ToList() };
-        var expectedURL = expectedPage;
+        var expectedUrl = expectedPage;
 
         SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl));
 
@@ -58,7 +55,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
 
         // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
+        _httpResponseMock.Verify(x => x.Redirect(expectedUrl), Times.Once);
     }
 
     [TestMethod]
@@ -101,61 +98,6 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
     {
         // Arrange
         SetupEndpointMock();
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
-    }
-
-    [TestMethod]
-    [DataRow(PagePath.SelectBusinessAddress, PagePath.SelectBusinessAddress)]
-    public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLsButIsComingFromUserDetails_WhenInvokeCalled_ThenNoRedirect
-        (string pageUrl, params string[] visitedUrls)
-    {
-        // Arrange
-        var session = new OrganisationSession { Journey = visitedUrls.ToList(), IsUserChangingDetails = true };
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
-    }
-
-    [TestMethod]
-    [DataRow(PagePath.SelectBusinessAddress, PagePath.BusinessAddress, PagePath.BusinessAddress)]
-    public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLsAndIsNotComingFromUserDetails_WhenInvokeCalled_ThenRedirectedToExpectedPage
-        (string pageUrl, string expectedPage, params string[] visitedUrls)
-    {
-        // Arrange
-        var session = new OrganisationSession { Journey = visitedUrls.ToList(), IsUserChangingDetails = false };
-        var expectedURL = expectedPage;
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(pageUrl));
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _httpResponseMock.Verify(x => x.Redirect(expectedURL), Times.Once);
-    }
-
-    [TestMethod]
-    public async Task GivenBusinessAddressPage_WhenInvokeCalled_ThenNoRedirectionOccurs()
-    {
-        // Arrange
-        var session = new OrganisationSession { Journey = { PagePath.SelectBusinessAddress }, IsUserChangingDetails = false };
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(PagePath.BusinessAddress));
 
         // Act
         await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);

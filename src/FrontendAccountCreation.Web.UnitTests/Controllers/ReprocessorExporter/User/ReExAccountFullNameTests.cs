@@ -2,14 +2,11 @@
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.Home;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 
 [TestClass]
@@ -32,45 +29,6 @@ public class ReExAccountFullNameTests : UserTestBase
     }
 
     [TestMethod]
-    public async Task ReExAccountFullName_IfUserExistsAndAccountRedirectUrlIsNull_ThenRedirectsToUserAlreadyExistsPage()
-    {
-        //Arrange
-        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
-
-        // Act
-        var result = await _systemUnderTest.ReExAccountFullName();
-
-        // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(HomeController.UserAlreadyExists));
-    }
-
-    [TestMethod]
-    public async Task ReExAccountFullName_IfUserExistsAndHasAccountRedirectUrl_ThenRedirectsToAccountRedirectUrl()
-    {
-        //Arrange
-        var urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
-        var externalUrl = new ExternalUrlsOptions()
-        {
-            ExistingUserRedirectUrl = "dummy url"
-        };
-
-
-        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
-        urlsOptionMock.Setup(x => x.Value)
-            .Returns(externalUrl);
-        var systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
-            _reExAccountMapperMock.Object, urlsOptionMock.Object, _loggerMock.Object);
-
-        // Act
-        var result = await systemUnderTest.ReExAccountFullName();
-
-        // Assert
-        result.Should().BeOfType<RedirectResult>();
-        ((RedirectResult)result).Url.Should().Be("dummy url");
-    }
-
-    [TestMethod]
     public async Task Get_ReExAccountFullName_IsAllowed()
     {
         // Act
@@ -84,6 +42,37 @@ public class ReExAccountFullNameTests : UserTestBase
 
         var reExAccountFullNameViewModel = (ReExAccountFullNameViewModel)viewResult.Model!;
         reExAccountFullNameViewModel.FirstName.Should().BeNullOrEmpty();
+    }
+
+    [TestMethod]
+    public async Task Get_ReExAccountFullName_ReturnsViewModel_WithSessionData_FirstAndLastName()
+    {
+        // Arrange
+        var sessionData = new ReExAccountCreationSession
+        {
+            Contact = new ReExContact
+            {
+                FirstName = "John",
+                LastName = "Smith"
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+                           .ReturnsAsync(sessionData);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<ReExAccountFullNameViewModel>();
+
+        var viewModel = (ReExAccountFullNameViewModel)viewResult.Model!;
+        viewModel.FirstName.Should().Be("John");
+        viewModel.LastName.Should().Be("Smith");
     }
 
     [TestMethod]
@@ -148,5 +137,137 @@ public class ReExAccountFullNameTests : UserTestBase
 
         _sessionManagerMock.Verify(
             x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<ReExAccountCreationSession>>()), Times.Never);
+    }
+
+    [TestMethod]
+    [DataRow("John", "Smith")]
+    [DataRow(null, null)]
+    public async Task Get_ReExAccountFullName_ReturnsViewModel_WithSessionData_As(string firstName, string lastName)
+    {
+        // Arrange
+        var session = new ReExAccountCreationSession
+        {
+            Contact = new ReExContact
+            {
+                FirstName = firstName,
+                LastName = lastName
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<ReExAccountFullNameViewModel>();
+
+        var model = (ReExAccountFullNameViewModel)viewResult.Model!;
+        model.FirstName.Should().Be(firstName);
+        model.LastName.Should().Be(lastName);
+    }
+
+    [TestMethod]
+    [DataRow("John", "Smith")]
+    public async Task Post_ReExAccountFullName_WithValidModel_SavesToSessionAndRedirects_As(string firstName, string lastName)
+    {
+        // Arrange
+        var session = new ReExAccountCreationSession
+        {
+            Contact = new ReExContact()
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var model = new ReExAccountFullNameViewModel
+        {
+            FirstName = firstName,
+            LastName = lastName
+        };
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        session.Contact.FirstName.Should().Be(firstName);
+        session.Contact.LastName.Should().Be(lastName);
+    }
+
+    [TestMethod]
+    public async Task Post_ReExAccountFullName_WithInvalidModel_ReturnsSameView()
+    {
+        // Arrange
+        var model = new ReExAccountFullNameViewModel
+        {
+            FirstName = "",
+            LastName = ""
+        };
+
+        _systemUnderTest.ModelState.AddModelError("FirstName", "Required");
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().Be(model);
+    }
+
+    [TestMethod]
+    public async Task Get_ReExAccountFullName_SessionIsNull_DefaultSessionIsUsed()
+    {
+        // Arrange
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync((ReExAccountCreationSession)null!);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<ReExAccountFullNameViewModel>();
+
+        var model = (ReExAccountFullNameViewModel)viewResult.Model!;
+        model.FirstName.Should().BeNull();
+        model.LastName.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task Get_ReExAccountFullName_ContactIsNull_ModelFieldsAreNull()
+    {
+        // Arrange
+        var session = new ReExAccountCreationSession
+        {
+            Contact = null
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        var model = (ReExAccountFullNameViewModel)viewResult.Model!;
+        model.FirstName.Should().BeNull();
+        model.LastName.Should().BeNull();
     }
 }

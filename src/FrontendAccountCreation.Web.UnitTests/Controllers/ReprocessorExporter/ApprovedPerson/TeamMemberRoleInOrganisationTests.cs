@@ -29,9 +29,9 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 PagePath.ConfirmCompanyDetails,
                 PagePath.RoleInOrganisation,
                 "Pagebefore",
-                PagePath.TeamMemberRoleInOrganisation,
+                ReExPagePath.TeamMemberRoleInOrganisation,
             },
-            CompaniesHouseSession = new ReExCompaniesHouseSession(),
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession(),
             IsUserChangingDetails = false,
         };
 

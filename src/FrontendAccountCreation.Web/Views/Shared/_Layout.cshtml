@@ -9,17 +9,20 @@
     var useGoogleAnalyticsCookie = (bool?)Context.Items[ContextKeys.UseGoogleAnalyticsCookieKey];
     var googleTagManagerContainerId = (string?)Context.Items[ContextKeys.TagManagerContainerIdKey];
     var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
+
+    string applicationTitle = ViewData["ApplicationTitleOverride"] as string ?? "ApplicationTitle";
+    string headerPartial = ViewData["HeaderOverride"] as string ?? "_Header";
 }
 
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head>
     <meta charset="utf-8">
-    <title>@ViewData["Title"] - @SharedLocalizer["ApplicationTitle"] - GOV.UK</title>
+    <title>@ViewData["Title"] - @SharedLocalizer[applicationTitle] - GOV.UK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b0c0c">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="application-name" content="@SharedLocalizer["ApplicationTitle"]" data-version="@System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()">
+    <meta name="application-name" content="@SharedLocalizer[applicationTitle]" data-version="@System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()">
     <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="~/images/favicon.ico" type="image/x-icon">
     <link rel="mask-icon" href="~/images/govuk-mask-icon.svg" color="#0b0c0c">
     <link rel="apple-touch-icon" sizes="180x180" href="~/images/govuk-apple-touch-icon-180x180.png">
@@ -67,8 +70,8 @@
     @await Component.InvokeAsync("CookieBanner", new { returnUrl = ((string)ViewBag.CurrentPage ?? Url.CurrentPath()) })
 
     <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">@SharedLocalizer["SkipToMainContent"].Value</a>
-
-    @await Html.PartialAsync("Partials/Govuk/_Header", ExternalUrlsOptions.Value)
+    
+    @await Html.PartialAsync($"Partials/Govuk/{headerPartial}", ExternalUrlsOptions.Value)
 
     <div class="govuk-width-container">
         <div class="govuk-grid-row">

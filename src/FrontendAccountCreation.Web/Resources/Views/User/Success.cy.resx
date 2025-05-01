@@ -118,39 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Success.Title" xml:space="preserve">
-    <value>WAccount creation success</value>
+    <value>Llwyddiant wrth greu cyfrif</value>
   </data>
   <data name="Success.Success" xml:space="preserve">
-    <value>WSuccess</value>
+    <value>Llwyddiant</value>
   </data>
   <data name="Success.CreatedAccountFor" xml:space="preserve">
-    <value>WYou've created an account for</value>
+    <value>Rydych chi wedi creu cyfrif ar gyfer</value>
   </data>
   <data name="Success.WhatYouCanDoNow.Heading" xml:space="preserve">
-    <value>WWhat you can do now</value>
+    <value>Yr hyn y gallwch ei wneud nawr</value>
   </data>
   <data name="Success.WhatYouCanDoNow.Paragraph.1" xml:space="preserve">
-    <value>WReprocessors and exporters can add organisations ahead of registration.</value>
+    <value>Caiff ailbroseswyr ac allforwyr ychwanegu sefydliadau cyn cofrestru.</value>
   </data>
   <data name="Success.AfterAddingOrganisation.Heading" xml:space="preserve">
-    <value>WWhat you must do after adding an organisation</value>
+    <value>Yr hyn mae'n rhaid ichi ei wneud ar ôl ychwanegu sefydliad</value>
   </data>
   <data name="Success.AfterAddingOrganisation.1.List.LeadIn" xml:space="preserve">
-    <value>WTo comply with the law:</value>
+    <value>I gydymffurfio â'r gyfraith:</value>
   </data>
   <data name="Success.AfterAddingOrganisation.1.List.Item1" xml:space="preserve">
-    <value>Wreprocessors must apply to register each packaging waste material for each UK reprocessing site</value>
+    <value>rhaid i ailbroseswyr wneud cais am gofrestru pob deunydd gwastraff pecynwaith ar gyfer pob safle ailbrosesu yn y Deyrnas Unedig</value>
   </data>
   <data name="Success.AfterAddingOrganisation.1.List.Item2" xml:space="preserve">
-    <value>Wexporters must apply to register each UK-derived packaging waste material they will export overseas for reprocessing outside the UK</value>
+    <value>rhaid i allforwyr wneud cais am gofrestru pob deunydd gwastraff pecynwaith sy'n deillio o'r Deyrnas Unedig y byddan nhw'n ei allforio dros y môr i'w ailbrosesu y tu allan i'r Deyrnas Unedig</value>
   </data>
   <data name="Success.AfterAddingOrganisation.2.Paragraph" xml:space="preserve">
-    <value>WReprocessors and exporters can choose to apply for accreditation.</value>
+    <value>Caiff ailbroseswyr ac allforwyr ddewis gwneud cais am achrediad.</value>
   </data>
   <data name="Success.AfterAddingOrganisation.3.Paragraph" xml:space="preserve">
-    <value>WYou can add organisations from the account home.</value>
+    <value>Cewch ychwanegu sefydliadau o hafan y cyfrif.</value>
   </data>
   <data name="Success.Continue" xml:space="preserve">
-    <value>Continue to account home</value>
+    <value>Parhau i hafan y cyfrif</value>
   </data>
 </root>
