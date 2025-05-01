@@ -124,4 +124,90 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
     }
+
+    [TestMethod]
+    public async Task TeamMemberDetails_Get_WhenTeamMembersIsNull_ReturnsEmptyView()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = null;
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberDetails(_teamMemberId);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task TeamMemberDetails_Get_WhenReExCompaniesHouseSessionIsNull_ReturnsEmptyView()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession = null;
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberDetails(_teamMemberId);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task TeamMemberDetails_Get_CallsSaveSession()
+    {
+        // Act
+        var result = await _systemUnderTest.TeamMemberDetails(_teamMemberId);
+
+        // Assert
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task TeamMemberDetails_Post_WhenTeamMembersIsNull_DoesNotThrow()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = null;
+
+        var model = new TeamMemberViewModel
+        {
+            Id = _teamMemberId,
+            FullName = "Updated",
+            Telephone = "123456",
+            Email = "update@example.com"
+        };
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberDetails(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        // No update should happen but also no exception
+    }
+
+    [TestMethod]
+    public async Task TeamMemberDetails_Post_WhenTeamMemberNotFound_DoesNotUpdateOrThrow()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        var model = new TeamMemberViewModel
+        {
+            Id = nonExistentId,
+            FullName = "Ghost",
+            Telephone = "0000",
+            Email = "ghost@example.com"
+        };
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberDetails(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers
+            .Any(x => x.FullName == "Ghost").Should().BeFalse();
+    }
+
 }
