@@ -59,7 +59,11 @@ namespace FrontendAccountCreation.Web.Controllers.Account
             }
 
             scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
-            var callbackUrl = Url.Action(action: "SignedOut", controller: "Home", values: null, protocol: Request.Scheme);
+            var callbackUrl = Url.Action(action: "SignedOut", controller: "Home", values: new
+            {
+                applicationTitleOverride = "test",
+                headerOverride = "test2"
+            }, protocol: Request.Scheme);
             return SignOut(
                  new AuthenticationProperties
                  {

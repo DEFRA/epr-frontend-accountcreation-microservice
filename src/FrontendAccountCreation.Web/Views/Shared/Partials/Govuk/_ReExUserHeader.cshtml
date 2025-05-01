@@ -1,4 +1,5 @@
-﻿<header role="banner">
+﻿@using FrontendAccountCreation.Web.Constants
+<header role="banner">
     <div class="govuk-header epr-header epr-header--with-additional-navigation" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
             <div class="govuk-header__logo">
@@ -21,11 +22,17 @@
                 <nav class="epr-sign-out-nav">
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignOut">@SharedLocalizer["Header.SignOut"]</a>
+                        <a class="govuk-link epr-sign-out-nav__link"
+                           asp-controller="Account" asp-action="SignOut" asp-route-returnUrl="">
+                            @SharedLocalizer["Header.SignOut"]
+                        </a>
                     }
                     else
                     {
-                        <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignIn">@SharedLocalizer["Header.SignIn"]</a>
+                        <a class="govuk-link epr-sign-out-nav__link"
+                           asp-controller="Account" asp-action="SignIn" asp-route-applicationTitleOverride="@LayoutOverrides.ReExTitleOverride" asp-route-headerOverride="@LayoutOverrides.ReExUserHeaderOverride">
+                            @SharedLocalizer["Header.SignIn"]
+                        </a>
                     }
                 </nav>
             </div>

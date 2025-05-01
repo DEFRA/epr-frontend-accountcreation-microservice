@@ -7,14 +7,9 @@ namespace FrontendAccountCreation.Web.Controllers.Home;
 
 public class HomeController : Controller
 {
-    
-    public HomeController()
-    {
-    }
-
     [AllowAnonymous]
     [Route(PagePath.SignedOut)]
-    public IActionResult SignedOut()
+    public IActionResult SignedOut(string? applicationTitleOverride, string? headerOverride)
     {
         HttpContext.Session.Clear();
         return View();
