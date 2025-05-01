@@ -33,7 +33,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
                 PagePath.ConfirmCompanyDetails,
                 PagePath.RoleInOrganisation,
                 "Pagebefore",
-                ReExPagePath.TeamMemberRoleInOrganisation,
+                PagePath.TeamMemberRoleInOrganisation,
             },
                 ReExCompaniesHouseSession = new ReExCompaniesHouseSession(),
                 IsUserChangingDetails = false,
