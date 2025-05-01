@@ -14,7 +14,7 @@ public interface IFacadeService
     Task<AddressList?> GetAddressListByPostcodeAsync(string postcode);
     Task<bool> DoesAccountAlreadyExistAsync();
     Task PostAccountDetailsAsync(AccountModel account);
-    Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account);
+    Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account, string serviceKey);
     Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser);
     Task<UserAccount?> GetUserAccount();
     Task<InviteApprovedUserModel> GetServiceRoleIdAsync(string token);
