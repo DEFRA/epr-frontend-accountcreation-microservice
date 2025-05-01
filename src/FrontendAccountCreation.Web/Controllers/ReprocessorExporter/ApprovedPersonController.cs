@@ -33,6 +33,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
             if (!ModelState.IsValid)
             {
                 return View(model);
