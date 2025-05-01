@@ -447,7 +447,7 @@ public class OrganisationController : Controller
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}", model.CompaniesHouseNumber);
+            _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}", model.CompaniesHouseNumber?.Replace(Environment.NewLine, ""));
 
             return await SaveSessionAndRedirect(session, nameof(CannotVerifyOrganisation), PagePath.CompaniesHouseNumber, PagePath.CannotVerifyOrganisation);
         }
