@@ -23,7 +23,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AddApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-            SetBackLink(session, ReExPagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View();
@@ -36,7 +35,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, ReExPagePath.AddAnApprovedPerson);
                 return View(model);
             }
 
@@ -46,7 +44,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else // I-will-Invite-an-Approved-Person-Later
             {
-                return RedirectToAction("CheckYourDetails", "AccountCreation");
+                return RedirectToAction("CheckYourDetails", "AccountCreation"); // need to re-visit with correct URL
             }
         }
 
