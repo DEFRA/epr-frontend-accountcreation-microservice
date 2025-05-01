@@ -1,0 +1,83 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+
+@model YouAreApprovedPersonViewModel
+
+@{
+	ViewData["Title"] = Localizer["YouAreApprovedPerson.Title"];
+	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+	ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
+		@* 		<form asp-controller="Organisation" asp-action="RegisteredAsCharity"> *@
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+							<h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
+								@Localizer["YouAreApprovedPerson.Header"]
+							</h1>
+						</legend>
+
+					</fieldset>
+
+					<p class="govuk-body">@Localizer["YouAreApprovedPerson.Description"].Value</p>
+
+					<p class="govuk-body">@Localizer["YouAreApprovedPerson.YouCanNow"].Value</p>
+
+					<div class="govuk-details">
+						<ul>
+							<li>
+								@Localizer["YouAreApprovedPerson.Item1"]
+							<li>
+									@Localizer["YouAreApprovedPerson.Item2"]
+							</li>
+						</ul>
+					</div>
+
+				<form asp-action="YourMethod" asp-controller="Organisation" method="post">
+					<button class="govuk-button" data-module="govuk-button" asp-action=""  formmethod="post">
+						@SharedLocalizer["Continue"]
+					</button>
+				</form>
+
+			@* 	<a asp-controller="Organisation" asp-action="HyperlinkMethod" class="govuk-link">
+					@Localizer["YouAreApprovedPerson.InviteLink"]
+				</a> *@
+
+
+				@* <form asp-controller="Organisation" asp-action="RegisteredAsCharity" method="post">
+					<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+						<fieldset class="govuk-fieldset">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+								<h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+									@Localizer["YouAreApprovedPerson.Header"]
+								</h1>
+							</legend>
+
+						</fieldset>
+					</div>
+
+					<div class="govuk-hint" id="YouAreApprovedPerson-hint">
+						@Localizer["YouAreApprovedPerson.Description"]
+					</div>
+
+					<div class="govuk-hint">
+						@Localizer["YouAreApprovedPerson.YouCanNow"]
+					</div>
+
+					<button class="govuk-button" data-module="govuk-button">
+						@SharedLocalizer["Continue"]
+					</button>
+				</form> *@
+			</div>
+		</div>
+	</main>
+</div>

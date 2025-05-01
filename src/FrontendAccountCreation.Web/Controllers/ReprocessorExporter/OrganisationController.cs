@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Net.WebSockets;
 using System.Text.Json;
 using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
@@ -70,18 +71,18 @@ public class OrganisationController : Controller
 
         //todo: the account will already exist, so I don't think this check is wanted
         // in fact, we probably want to check that the account *does* already exist
-        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
-        if (userExists)
-        {
-            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
-            {
-                return RedirectToAction("UserAlreadyExists", "Home");
-            }
-            else
-            {
-                return Redirect(_urlOptions.ExistingUserRedirectUrl);
-            }
-        }
+        //var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        //if (userExists)
+        //{
+        //    if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
+        //    {
+        //        return RedirectToAction("UserAlreadyExists", "Home");
+        //    }
+        //    else
+        //    {
+        //        return Redirect(_urlOptions.ExistingUserRedirectUrl);
+        //    }
+        //}
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
         {
@@ -119,7 +120,8 @@ public class OrganisationController : Controller
 
         if (session.IsTheOrganisationCharity.Value)
         {
-            return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+            return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.RegisteredAsCharity, PagePath.PersonApproved);
+            //return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
         else
         {
@@ -604,38 +606,55 @@ public class OrganisationController : Controller
     [HttpGet]
     [Route(PagePath.PersonApproved)]
     [OrganisationJourneyAccess(PagePath.PersonApproved)]
-
     public async Task<IActionResult> YouAreApprovedPerson()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.IsPartnership);
-
-        YesNoAnswer? isOrganisationAPartnership = null;
-        if (session.IsOrganisationAPartnership != null)
+        //SetBackLink(session, PagePath.PersonApproved);
+                
+        return View(new YouAreApprovedPersonViewModel
         {
-            isOrganisationAPartnership = session.IsOrganisationAPartnership.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
-        }
-
-        return View(new IsOrganisationAPartnerViewModel
-        {
-            IsOrganisationAPartner = isOrganisationAPartnership
         });
     }
 
-    [HttpPost]
-    [Route(PagePath.PersonApproved)]
-    public async Task<IActionResult> YouAreApprovedPerson(YouAreApprovedPersonViewModel model)
+    public async Task ApprovedConfirmationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
-
-        if (session.IsOrganisationAPartnership == true)
-        {
-            // TODO: Yes or No ending up same pagePath - to be confirmed
-            return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
-        }
-        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.PersonApproved, PagePath.RoleInOrganisation);
     }
+
+    //[HttpPost]
+    public IActionResult TestMethod()
+    {
+        // Your logic here
+        return null; // Or redirect to another view
+    }
+
+    //[HttpGet]
+    public IActionResult HyperlinkMethod()
+    {
+        // Your logic here
+        return null; // Or redirect to another view
+    }
+
+    public bool NotImplementedMethod()
+    {
+        return true;
+        // throw new NotImplementedException("Not implemeneted yet....!");
+    }
+
+    //[HttpPost]
+    //[Route(PagePath.PersonApproved)]
+    //public async Task<IActionResult> YouAreApprovedPerson(YouAreApprovedPersonViewModel model)
+    //{
+    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        
+    //    if (session.IsOrganisationAPartnership == true)
+    //    {
+    //        // TODO: Yes or No ending up same pagePath - to be confirmed
+    //        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+    //    }
+    //    return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+    //}
 
     public IActionResult RedirectToStart()
     {
