@@ -1,12 +1,10 @@
-﻿using Azure.Core;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions;
 using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using global::FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
@@ -75,7 +73,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task RoleInOrganisation_RoleSavedAsDirector_RedirectsToManageAccount_AndUpdateSession()
+    public async Task RoleInOrganisation_RoleSavedAsDirector_RedirectsToAddProvedPerson_AndUpdateSession()
     {
         // Arrange
         var request = new RoleInOrganisationViewModel() { RoleInOrganisation = RoleInOrganisation.Director };
@@ -86,13 +84,13 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task RoleInOrganisation_RoleSavedAsPartner_RedirectsToManageAccount_AndUpdateSession()
+    public async Task RoleInOrganisation_RoleSavedAsPartner_RedirectsToAddProvedPerson_AndUpdateSession()
     {
         // Arrange
         var request = new RoleInOrganisationViewModel() { RoleInOrganisation = RoleInOrganisation.Partner };
@@ -103,13 +101,13 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task RoleInOrganisation_RoleSavedAsMember_RedirectsToManageAccount_AndUpdateSession()
+    public async Task RoleInOrganisation_RoleSavedAsMember_RedirectsToAddProvedPerson_AndUpdateSession()
     {
         // Arrange
         var request = new RoleInOrganisationViewModel() { RoleInOrganisation = RoleInOrganisation.Member };
@@ -120,13 +118,13 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task RoleInOrganisation_RoleSavedAsCompanySecretary_RedirectsToManageAccount_AndUpdateSession()
+    public async Task RoleInOrganisation_RoleSavedAsCompanySecretary_RedirectsToAddProvedPerson_AndUpdateSession()
     {
         // Arrange
         var request = new RoleInOrganisationViewModel() { RoleInOrganisation = RoleInOrganisation.CompanySecretary };
@@ -137,7 +135,7 @@ public class RoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddApprovedPerson));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }

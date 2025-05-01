@@ -30,7 +30,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 PagePath.ConfirmCompanyDetails,
                 PagePath.RoleInOrganisation,
                 "Pagebefore",
-                ReExPagePath.TeamMemberRoleInOrganisation,
+                PagePath.TeamMemberRoleInOrganisation,
             },
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession(),
             IsUserChangingDetails = false,

@@ -379,18 +379,8 @@ public class OrganisationController : Controller
                 PagePath.CannotCreateAccount);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation,
-                PagePath.ManageAccountPerson);
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public async Task<IActionResult> AddApprovedPerson()
-    {
-        throw new NotImplementedException(
-            "The 'Manage Account Person' page hasn't been built. It will be built in a future story.");
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
+                PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]
