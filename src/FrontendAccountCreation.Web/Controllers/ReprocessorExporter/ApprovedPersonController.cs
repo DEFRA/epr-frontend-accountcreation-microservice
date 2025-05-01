@@ -131,12 +131,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> TeamMemberDetails([FromQuery] Guid id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-            SetBackLink(session, ReExPagePath.TeamMemberDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             
-            int? index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+            var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
 
-            if (index != null && index.GetValueOrDefault(-1) >= 0)
+            if (index is >= 0)
             {
                 var viewModel = new TeamMemberViewModel
                 {
@@ -163,10 +162,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
-            int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
+            var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
+            var index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
 
-            if (index != null && index.GetValueOrDefault(-1) >= 0)
+            if (index is >= 0)
             {
                 // found existing team member
                 session.ReExCompaniesHouseSession.TeamMembers[index.Value].FullName = model.FullName;
