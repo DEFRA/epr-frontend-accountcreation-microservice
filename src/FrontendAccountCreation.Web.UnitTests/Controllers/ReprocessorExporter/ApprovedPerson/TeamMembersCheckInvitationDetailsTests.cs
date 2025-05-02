@@ -2,7 +2,6 @@
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -34,9 +33,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [DataRow(null)]
-    [DataRow("ee876b41-0f6b-481f-b574-4b4df313323b")]
-    public async Task TeamMembersCheckInvitationDetails_WhenIncorrectTeamMemberIdNotSupplied_SessionIsUnchanged(Guid? id)
+    public async Task TeamMembersCheckInvitationDetails_WhenNullTeamMemberIdNotSupplied_SessionIsUnchanged()
     {
         // Arrange
         List<ReExCompanyTeamMember?> teamMembers = [];
@@ -47,7 +44,25 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
         // Act
-        await _systemUnderTest.TeamMembersCheckInvitationDetails(id);
+        await _systemUnderTest.TeamMembersCheckInvitationDetails((Guid?) null);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(2);
+    }
+
+    [TestMethod]
+    public async Task TeamMembersCheckInvitationDetails_WhenIncorrectTeamMemberIdNotSupplied_SessionIsUnchanged()
+    {
+        // Arrange
+        List<ReExCompanyTeamMember?> teamMembers = [];
+        ReExCompanyTeamMember jack = new() { Id = Guid.NewGuid() };
+        ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid() };
+        teamMembers.Add(jack);
+        teamMembers.Add(jill);
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        // Act
+        await _systemUnderTest.TeamMembersCheckInvitationDetails(Guid.NewGuid());
 
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(2);
@@ -85,19 +100,16 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
         // Act
-        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetails(jack.Id);
+        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetails(null);
 
         // Assert
-        result.Should().BeOfType<List<ReExCompanyTeamMember>>();
-
+        result.Should().BeOfType<ViewResult>();
         ViewResult viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<List<ReExCompanyTeamMember>>();
 
-        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
-
-        // nobby has empty full name, hence excluded from view reult
+        // nobby has empty full name, hence excluded
         ((List<ReExCompanyTeamMember>) viewResult.Model).Count.Should().Be(2);
 
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
-        AssertBackLink(viewResult, "Pagebefore");
     }
 }

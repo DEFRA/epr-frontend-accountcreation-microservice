@@ -220,6 +220,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
         }
+
         private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
         {
             var index = session.Journey.IndexOf(currentPagePath);
