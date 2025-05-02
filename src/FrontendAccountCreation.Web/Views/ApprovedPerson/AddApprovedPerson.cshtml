@@ -32,7 +32,7 @@
                             <li>@Localizer["AddAnApprovedPerson.BulletSubmit"]</li>
                         </ul>
 
-                        <p class="govuk-body">
+                        <p class="govuk-inset-text">
                             @Localizer["AddAnApprovedPerson.IntroText2"]
                         </p>
 
@@ -59,8 +59,20 @@
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
                             <div class="govuk-radios" data-module="govuk-radios">
+
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
+                                    <input class="govuk-radios__input" type="radio" id="rdoIAgreeToBeAnApprovedPerson"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IAgreeToBeAnApprovedPerson)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="InviteUserOption"
+                                           gov-value="@nameof(InviteUserOptions.IAgreeToBeAnApprovedPerson)">
+                                        @Localizer["AddAnApprovedPerson.IAgreeToBeAnApprovedPerson"]
+                                    </label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoIWillInviteAnotherApprovedPerson"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.IWillInviteAnotherApprovedPerson)">
                                     <label class="govuk-label govuk-radios__label"
@@ -71,7 +83,7 @@
                                 </div>
 
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoPartner"
+                                    <input class="govuk-radios__input" type="radio" id="rdoIWillInviteApprovedPersonLater"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.IWillInviteApprovedPersonLater)">
                                     <label class="govuk-label govuk-radios__label"
