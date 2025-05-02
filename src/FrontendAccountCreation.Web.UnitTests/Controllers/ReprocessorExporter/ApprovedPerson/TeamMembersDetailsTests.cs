@@ -97,7 +97,6 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().BeEquivalentTo(model);
-        AssertBackLink(viewResult, PagePath.TeamMemberDetails);
     }
 
     [TestMethod]

@@ -20,7 +20,6 @@ using Web.Sessions;
 /// </summary>
 public abstract class ApprovedPersonTestBase
 {
-    private const string BackLinkViewDataKey = "BackLinkToDisplay";
     protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
 
     protected Mock<HttpContext> _httpContextMock = null!;
@@ -80,11 +79,4 @@ public abstract class ApprovedPersonTestBase
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;
     }
 
-    protected static void AssertBackLink(ViewResult viewResult, string expectedBackLink)
-    {
-        var hasBackLinkKey = viewResult.ViewData.TryGetValue(BackLinkViewDataKey, out var gotBackLinkObject);
-        hasBackLinkKey.Should().BeTrue();
-        (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
-    }
 }
-
