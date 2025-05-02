@@ -320,12 +320,13 @@ public class OrganisationController : Controller
     [Route(PagePath.IsPartnership)]
     public async Task<IActionResult> IsOrganisationAPartner(IsOrganisationAPartnerViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.IsPartnership);
             return View(model);
         }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);            
+                   
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
         if (session.IsOrganisationAPartnership == true)
@@ -343,7 +344,7 @@ public class OrganisationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        SetBackLink(session, PagePath.TypeOfOrganisation);
+        SetBackLink(session, PagePath.RoleInOrganisation);
 
         var viewModel = new RoleInOrganisationViewModel()
         {
