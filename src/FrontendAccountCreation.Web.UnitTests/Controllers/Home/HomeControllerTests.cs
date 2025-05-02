@@ -44,7 +44,10 @@ public class HomeControllerTests
 
 
     [TestMethod]
-    public void HomeController_SignedOut_RedirectsToSigneOutPage()
+    [DataRow(null, "SignedOut")]    // default behaviour is to use existing signed out page
+    [DataRow(false, "SignedOut")]
+    [DataRow(true, "SignedOutReEx")]
+    public void HomeController_SignedOut_RedirectsToCorrectSignedOutPage(bool? reEx, string expectedViewName)
     {
         //Arrange
         _httpContextMock!
@@ -52,11 +55,13 @@ public class HomeControllerTests
        .Returns(_responseCookiesMock!.Object);
 
         //Act
-        var result = _systemUnderTest.SignedOut();
+        var result = _systemUnderTest.SignedOut(reEx);
 
         //Assert
         Assert.IsNotNull(result);
         result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult.ViewName.Should().Be(expectedViewName);
     }
 
     [TestMethod]
