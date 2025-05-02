@@ -43,21 +43,21 @@ public class HomeControllerTests
     }
 
 
-    //[TestMethod]
-    //public void HomeController_SignedOut_RedirectsToSigneOutPage()
-    //{
-    //    //Arrange
-    //     _httpContextMock!
-    //        .Setup(x => x.Response.Cookies)
-    //    .Returns(_responseCookiesMock!.Object);
- 
-    //    //Act
-    //    var result = _systemUnderTest.SignedOut();
+    [TestMethod]
+    public void HomeController_SignedOut_RedirectsToSigneOutPage()
+    {
+        //Arrange
+        _httpContextMock!
+           .Setup(x => x.Response.Cookies)
+       .Returns(_responseCookiesMock!.Object);
 
-    //    //Assert
-    //    Assert.IsNotNull(result);
-    //    result.Should().BeOfType<ViewResult>();
-    //}
+        //Act
+        var result = _systemUnderTest.SignedOut();
+
+        //Assert
+        Assert.IsNotNull(result);
+        result.Should().BeOfType<ViewResult>();
+    }
 
     [TestMethod]
     public void HomeController_SignedOutInvalidToken_When_Called_Return_View() 

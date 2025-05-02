@@ -8,7 +8,7 @@ public class HomeController : Controller
 {
     [AllowAnonymous]
     [Route(PagePath.SignedOut)]
-    public IActionResult SignedOut(bool? reEx)
+    public IActionResult SignedOut(bool? reEx = null)
     {
         HttpContext.Session.Clear();
         return View(reEx == true ? "SignedOutReEx" : "SignedOut");
