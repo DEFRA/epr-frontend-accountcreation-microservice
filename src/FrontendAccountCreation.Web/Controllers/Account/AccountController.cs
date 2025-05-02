@@ -25,7 +25,6 @@ namespace FrontendAccountCreation.Web.Controllers.Account
             [FromRoute] string? scheme,
             [FromQuery] string redirectUri)
         {
-            //todo: sign in from our sign in page
             scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
             string redirect;
             if (!string.IsNullOrEmpty(redirectUri) && Url.IsLocalUrl(redirectUri))
