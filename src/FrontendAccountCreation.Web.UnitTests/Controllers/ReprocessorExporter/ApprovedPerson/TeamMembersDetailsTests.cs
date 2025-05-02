@@ -24,7 +24,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
             Journey =
             [
                 "PageBefore",
-                ReExPagePath.TeamMemberRoleInOrganisation
+                PagePath.TeamMemberRoleInOrganisation
             ],
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
@@ -97,7 +97,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().BeEquivalentTo(model);
-        AssertBackLink(viewResult, ReExPagePath.TeamMemberDetails);
+        AssertBackLink(viewResult, PagePath.TeamMemberDetails);
     }
 
     [TestMethod]

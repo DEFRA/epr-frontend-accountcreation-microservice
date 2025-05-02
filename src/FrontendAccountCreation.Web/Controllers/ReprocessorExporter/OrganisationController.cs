@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation;
+﻿using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -20,6 +16,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Reflection;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -379,18 +380,8 @@ public class OrganisationController : Controller
                 PagePath.CannotCreateAccount);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation,
-                PagePath.ManageAccountPerson);
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public async Task<IActionResult> AddApprovedPerson()
-    {
-        throw new NotImplementedException(
-            "The 'Manage Account Person' page hasn't been built. It will be built in a future story.");
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
+                PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]
@@ -447,7 +438,7 @@ public class OrganisationController : Controller
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}", model.CompaniesHouseNumber);
+            LogCompaniesHouseLookupFailed(exception, model.CompaniesHouseNumber);
 
             return await SaveSessionAndRedirect(session, nameof(CannotVerifyOrganisation), PagePath.CompaniesHouseNumber, PagePath.CannotVerifyOrganisation);
         }
@@ -468,6 +459,16 @@ public class OrganisationController : Controller
         session.ReExCompaniesHouseSession.Company = company;
 
         return await SaveSessionAndRedirect(session, nameof(ConfirmCompanyDetails), PagePath.CompaniesHouseNumber, PagePath.ConfirmCompanyDetails);
+    }
+
+    // this monstrosity is required because Sonar complains that _logger.LogError isn't covered by a test.
+    // it is covered, but Moq doesn't support verifying extension methods, so we have to verify the first
+    // non-extension method in the LogError call stack, which Sonar isn't smart enough to interpret as covering LogError
+    [ExcludeFromCodeCoverage]
+    private void LogCompaniesHouseLookupFailed(Exception exception, string? companiesHouseNumber)
+    {
+        _logger.LogError(exception, "Companies House Lookup failed for {RegistrationNumber}",
+            companiesHouseNumber?.Replace(Environment.NewLine, ""));
     }
 
     [HttpGet]

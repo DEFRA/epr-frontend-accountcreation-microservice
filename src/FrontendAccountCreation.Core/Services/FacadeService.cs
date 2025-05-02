@@ -106,11 +106,11 @@ public class FacadeService : IFacadeService
     }
 
     // possible todo: could have a generic method to do the heavy lifting and handle deserialization better
-    public async Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account)
+    public async Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account, string serviceKey)
     {
         await PrepareAuthenticatedClient();
 
-        var response = await _httpClient.PostAsJsonAsync("/api/v1/reprocessor-exporter-accounts", account);
+        var response = await _httpClient.PostAsJsonAsync($"/api/v1/reprocessor-exporter-accounts?serviceKey={serviceKey}", account);
 
         if (!response.IsSuccessStatusCode)
         {

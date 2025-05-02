@@ -99,7 +99,7 @@ public class ReExAccountTelephoneNumberTests : UserTestBase
                 && m.Person.LastName == "Stapleton"
                 && m.Person.TelephoneNumber == "01234567890"
                 && m.Person.ContactEmail == "email@example.com"
-            )), Times.Once);
+            ), ReExServiceKey), Times.Once);
     }
 
     [TestMethod]

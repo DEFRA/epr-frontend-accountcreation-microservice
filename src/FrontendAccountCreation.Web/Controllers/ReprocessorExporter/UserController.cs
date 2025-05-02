@@ -24,19 +24,19 @@ public class UserController : Controller
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<UserController> _logger;
-    private readonly ExternalUrlsOptions _urlOptions;
+    private readonly ServiceKeysOptions _serviceKeyOptions;
 
     public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IReExAccountMapper reExAccountMapper,
-        IOptions<ExternalUrlsOptions> urlOptions,
+        IOptions<ServiceKeysOptions> serviceKeyOptions,
         ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
-        _urlOptions = urlOptions.Value;
+        _serviceKeyOptions = serviceKeyOptions.Value;
         _logger = logger;
     }
 
@@ -119,7 +119,7 @@ public class UserController : Controller
 
         var account = _reExAccountMapper.CreateReprocessorExporterAccountModel(session, email);
 
-        await _facadeService.PostReprocessorExporterAccountAsync(account);
+        await _facadeService.PostReprocessorExporterAccountAsync(account, _serviceKeyOptions.ReprocessorExporter);
 
         return await SaveSessionAndRedirect(session, nameof(Success), PagePath.TelephoneNumber,
             PagePath.Success);

@@ -19,7 +19,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(ReExPagePath.AddAnApprovedPerson)]
+        [Route(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
@@ -29,10 +29,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpPost]
-        [Route(ReExPagePath.AddAnApprovedPerson)]
+        [Route(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -49,7 +51,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(ReExPagePath.TeamMemberRoleInOrganisation)]
+        [Route(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation([FromQuery] Guid? id)
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
@@ -74,7 +76,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpPost]
-        [Route(ReExPagePath.TeamMemberRoleInOrganisation)]
+        [Route(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
         {
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
@@ -109,7 +111,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             session.IsUserChangingDetails = false;
-            await SaveSession(session, ReExPagePath.TeamMemberRoleInOrganisation, ReExPagePath.TeamMemberDetails);
+            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation, PagePath.TeamMemberDetails);
 
             if (isExistingMember)
             {
@@ -125,7 +127,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(ReExPagePath.TeamMemberDetails)]
+        [Route(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails([FromQuery] Guid id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
@@ -150,13 +152,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpPost]
-        [Route(ReExPagePath.TeamMemberDetails)]
+        [Route(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails(TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                ViewBag.BackLinkToDisplay = ReExPagePath.TeamMemberDetails;
+                ViewBag.BackLinkToDisplay = PagePath.TeamMemberDetails;
                 return View(model);
             }
 
@@ -172,8 +174,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             // go to check invitation details summary page for all team members
-            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), ReExPagePath.TeamMemberDetails,
-                ReExPagePath.TeamMembersCheckInvitationDetails);
+            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.TeamMemberDetails,
+                PagePath.TeamMembersCheckInvitationDetails);
         }
 
         /// <summary>
@@ -182,7 +184,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         /// <param name="id">Id of team member to remove</param>
         /// <returns></returns>
         [HttpGet]
-        [Route(ReExPagePath.TeamMembersCheckInvitationDetails)]
+        [Route(PagePath.TeamMembersCheckInvitationDetails)]
         public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();

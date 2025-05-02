@@ -17,12 +17,13 @@ using Web.Configs;
 public abstract class UserTestBase
 {
     protected const string BackLinkViewDataKey = "BackLinkToDisplay";
+    protected const string ReExServiceKey = "ReprocessorExporter";
 
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<ReExAccountCreationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
     protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
-    protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
+    protected Mock<IOptions<ServiceKeysOptions>>? _serviceKeysOptionsMock;
     protected Mock<ILogger<UserController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
 
@@ -34,19 +35,16 @@ public abstract class UserTestBase
         _sessionManagerMock = new Mock<ISessionManager<ReExAccountCreationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
         _reExAccountMapperMock = new Mock<IReExAccountMapper>();
-        _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
+        _serviceKeysOptionsMock = new Mock<IOptions<ServiceKeysOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
             .Returns(Task.FromResult<ReExAccountCreationSession?>(new ReExAccountCreationSession()));
 
-        _urlsOptionMock.Setup(x => x.Value)
-            .Returns(new ExternalUrlsOptions
+        _serviceKeysOptionsMock.Setup(x => x.Value)
+            .Returns(new ServiceKeysOptions
             {
-                FindAndUpdateCompanyInformation = "dummy url",
-                ReportDataRedirectUrl = "/re-ex",
-                ReportDataLandingRedirectUrl = "/re-ex/landing",
-                ReportDataNewApprovedUser = "/re-ex/approved-person-created?notification=created_new_approved_person"
+                ReprocessorExporter = ReExServiceKey
             });
 
         _httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>
@@ -59,7 +57,7 @@ public abstract class UserTestBase
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
-           _reExAccountMapperMock.Object, _urlsOptionMock.Object, _loggerMock.Object);
+           _reExAccountMapperMock.Object, _serviceKeysOptionsMock.Object, _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;

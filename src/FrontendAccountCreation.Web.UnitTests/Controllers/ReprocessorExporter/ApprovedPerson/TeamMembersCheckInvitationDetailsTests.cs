@@ -23,7 +23,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
             Journey = new List<string>
             {
                "Pagebefore", // replace when page is developed
-                ReExPagePath.TeamMemberRoleInOrganisation,
+                PagePath.TeamMemberRoleInOrganisation,
             },
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession(),
             IsUserChangingDetails = false,
