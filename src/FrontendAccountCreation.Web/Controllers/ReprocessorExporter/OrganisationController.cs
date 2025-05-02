@@ -615,6 +615,7 @@ public class OrganisationController : Controller
         return Ok();
     }
 
+    [ExcludeFromCodeCoverage]
     public void NotImplementedMethod()
     {
         // TO DO following & modify - once Tungsten has merged
