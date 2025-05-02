@@ -25,17 +25,20 @@ public class UserController : Controller
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<UserController> _logger;
     private readonly ServiceKeysOptions _serviceKeyOptions;
+    private readonly ExternalUrlsOptions _urlOptions;
 
     public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
         IFacadeService facadeService,
         IReExAccountMapper reExAccountMapper,
+        IOptions<ExternalUrlsOptions> urlOptions,
         IOptions<ServiceKeysOptions> serviceKeyOptions,
         ILogger<UserController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
+        _urlOptions = urlOptions.Value;
         _serviceKeyOptions = serviceKeyOptions.Value;
         _logger = logger;
     }
@@ -45,6 +48,19 @@ public class UserController : Controller
     [Route(PagePath.FullName)]
     public async Task<IActionResult> ReExAccountFullName()
     {
+        var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
+        if (userExists)
+        {
+            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
+            {
+                return RedirectToAction("ReExUserAlreadyExists");
+            }
+            else
+            {
+                return Redirect(_urlOptions.ExistingUserRedirectUrl);
+            }
+        }
+
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession
         {
             Journey = [PagePath.FullName]
@@ -141,6 +157,13 @@ public class UserController : Controller
         _sessionManager.RemoveSession(HttpContext.Session);
 
         return View(viewModel);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UserAlreadyExists)]
+    public IActionResult ReExUserAlreadyExists()
+    {
+        return View();
     }
 
     private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??

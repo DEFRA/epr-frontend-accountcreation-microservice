@@ -2,11 +2,13 @@
 
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 
 [TestClass]
@@ -269,5 +271,61 @@ public class ReExAccountFullNameTests : UserTestBase
         var model = (ReExAccountFullNameViewModel)viewResult.Model!;
         model.FirstName.Should().BeNull();
         model.LastName.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task ReExAccountFullName_IfUserExistsAndAccountRedirectUrlIsNull_ThenRedirectsToUserAlreadyExistsPage()
+    {
+        // Arrange
+        var urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
+        var externalUrl = new ExternalUrlsOptions()
+        {
+            ExistingUserRedirectUrl = ""
+        };
+
+        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
+        urlsOptionMock.Setup(x => x.Value)
+            .Returns(externalUrl);
+
+        var systemUnderTest = new UserController(
+            _sessionManagerMock.Object,
+            _facadeServiceMock.Object,
+            _reExAccountMapperMock.Object,
+            urlsOptionMock.Object,
+            _serviceKeysOptionsMock.Object,
+            _loggerMock.Object
+        );
+
+        // Act
+        var result = await systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(UserController.ReExUserAlreadyExists));
+    }
+
+    [TestMethod]
+    public async Task ReExAccountFullName_IfUserExistsAndHasAccountRedirectUrl_ThenRedirectsToAccountRedirectUrl()
+    {
+        //Arrange
+        var urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
+        var externalUrl = new ExternalUrlsOptions()
+        {
+            ExistingUserRedirectUrl = "dummy url"
+        };
+
+
+        _facadeServiceMock.Setup(x => x.DoesAccountAlreadyExistAsync()).ReturnsAsync(true);
+        urlsOptionMock.Setup(x => x.Value)
+            .Returns(externalUrl);
+        var systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
+            _reExAccountMapperMock.Object, urlsOptionMock.Object, _serviceKeysOptionsMock.Object, _loggerMock.Object);
+
+        // Act
+        var result = await systemUnderTest.ReExAccountFullName();
+
+        // Assert
+        result.Should().BeOfType<RedirectResult>();
+        ((RedirectResult)result).Url.Should().Be("dummy url");
     }
 }
