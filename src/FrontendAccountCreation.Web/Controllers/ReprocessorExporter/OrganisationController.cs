@@ -57,6 +57,7 @@ public class OrganisationController : Controller
     //todo: how do we handle feature flag for first page? manually?
 
     [HttpGet]
+    [Route("")]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity()
@@ -104,7 +105,7 @@ public class OrganisationController : Controller
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
         if (session.IsTheOrganisationCharity.Value)
-        {
+        {            
             return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
         else
@@ -320,17 +321,18 @@ public class OrganisationController : Controller
     [Route(PagePath.IsPartnership)]
     public async Task<IActionResult> IsOrganisationAPartner(IsOrganisationAPartnerViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.IsPartnership);
             return View(model);
         }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);            
+                   
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
         if (session.IsOrganisationAPartnership == true)
         {
-            // TODO: Yes or No ending up same pagePath - to be confirmed
+            // TODO: No option ending up same YES pagePath - to be confirmed
             return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
         }
         return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
@@ -343,7 +345,7 @@ public class OrganisationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        SetBackLink(session, PagePath.TypeOfOrganisation);
+        SetBackLink(session, PagePath.RoleInOrganisation);
 
         var viewModel = new RoleInOrganisationViewModel()
         {
@@ -363,7 +365,6 @@ public class OrganisationController : Controller
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.RoleInOrganisation);
-
             return View(model);
         }
 
@@ -585,6 +586,37 @@ public class OrganisationController : Controller
         SetBackLink(session, PagePath.NotAffected);
 
         return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.YouAreApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
+    public async Task<IActionResult> YouAreApprovedPerson()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.ApprovedPersonContinue)]
+    public async Task<IActionResult> ApprovedConfirmationContinue()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.YouAreApprovedPerson, "ToBeAdded");
+        return Ok();
+    }
+
+    public void NotImplementedMethod()
+    {
+        // TO DO following & modify - once Tungsten has merged
+        throw new NotImplementedException("not been implemented yet...as no related user-story has been confirmed!");
+    }
+
+    [HttpGet]
+    [Route(PagePath.AddApprovedPerson)]
+    public IActionResult InviteOtherApprovedPerson()
+    {
+        // TO DO following & modify - once Tungsten has merged
+        return Ok("not been implemented yet...WIP by Tungsten team.");
     }
 
     public IActionResult RedirectToStart()
