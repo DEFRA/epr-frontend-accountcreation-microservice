@@ -1,7 +1,7 @@
 ﻿@using FrontendAccountCreation.Web.Constants
 
 @{
-    ViewData["Title"] = "User already exists";
+    ViewData["Title"] = @Localizer["ReExUserAlreadyExists.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
 }
@@ -11,10 +11,10 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                    User already exists
+                    @Localizer["ReExUserAlreadyExists.Title"]
                 </h1>
 
-                <p class="govuk-body">You have already created an account for this service.</p>
+                <p class="govuk-body">@Localizer["ReExUserAlreadyExists.Paragraph1"]</p>
             </div>
         </div>
     </main>
