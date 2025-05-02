@@ -26,6 +26,7 @@ public abstract class UserTestBase
     protected Mock<IOptions<ServiceKeysOptions>>? _serviceKeysOptionsMock;
     protected Mock<ILogger<UserController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
+    protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
 
     protected UserController _systemUnderTest = null!;
 
@@ -37,6 +38,7 @@ public abstract class UserTestBase
         _reExAccountMapperMock = new Mock<IReExAccountMapper>();
         _serviceKeysOptionsMock = new Mock<IOptions<ServiceKeysOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
+        _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
 
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
             .Returns(Task.FromResult<ReExAccountCreationSession?>(new ReExAccountCreationSession()));
@@ -57,7 +59,7 @@ public abstract class UserTestBase
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _systemUnderTest = new UserController(_sessionManagerMock.Object, _facadeServiceMock.Object,
-           _reExAccountMapperMock.Object, _serviceKeysOptionsMock.Object, _loggerMock.Object);
+           _reExAccountMapperMock.Object, _urlsOptionMock.Object, _serviceKeysOptionsMock.Object, _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;

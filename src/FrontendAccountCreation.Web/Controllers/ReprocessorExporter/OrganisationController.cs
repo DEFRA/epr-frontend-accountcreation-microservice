@@ -321,17 +321,18 @@ public class OrganisationController : Controller
     [Route(PagePath.IsPartnership)]
     public async Task<IActionResult> IsOrganisationAPartner(IsOrganisationAPartnerViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.IsPartnership);
             return View(model);
         }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);            
+                   
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
         if (session.IsOrganisationAPartnership == true)
         {
-            // TODO: Yes or No ending up same pagePath - to be confirmed
+            // TODO: No option ending up same YES pagePath - to be confirmed
             return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
         }
         return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
@@ -344,7 +345,7 @@ public class OrganisationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        SetBackLink(session, PagePath.TypeOfOrganisation);
+        SetBackLink(session, PagePath.RoleInOrganisation);
 
         var viewModel = new RoleInOrganisationViewModel()
         {
@@ -364,7 +365,6 @@ public class OrganisationController : Controller
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.RoleInOrganisation);
-
             return View(model);
         }
 
