@@ -331,7 +331,7 @@ public class OrganisationController : Controller
 
         if (session.IsOrganisationAPartnership == true)
         {
-            // TODO: Yes or No ending up same pagePath - to be confirmed
+            // TODO: No option ending up same YES pagePath - to be confirmed
             return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
         }
         return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
@@ -364,7 +364,6 @@ public class OrganisationController : Controller
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.RoleInOrganisation);
-
             return View(model);
         }
 
