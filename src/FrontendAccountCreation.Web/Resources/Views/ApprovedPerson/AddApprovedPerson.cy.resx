@@ -124,13 +124,16 @@
     <value>[Welsh]Submit and verify data returns</value>
   </data>
   <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
-    <value>[Welsh]Company Secretary</value>
+    <value>[Welsh]company secretary</value>
   </data>
   <data name="AddAnApprovedPerson.Director" xml:space="preserve">
-    <value>[Welsh]Director</value>
+    <value>[Welsh]director</value>
+  </data>
+  <data name="AddAnApprovedPerson.IAgreeToBeAnApprovedPerson" xml:space="preserve">
+    <value>[Welsh]I agree to be an approved person</value>
   </data>
   <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>[Welsh]You do not have to do this immediately but one must be appointed before you can</value>
+    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
   <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
     <value>[Welsh]You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
@@ -148,7 +151,7 @@
     <value>[Welsh]I will invite an approved person later</value>
   </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>[Welsh]Please select an option to proceed.</value>
+    <value>[Welsh]Select an option</value>
   </data>
   <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
     <value>[Welsh]Roles eligible to be an approved person</value>

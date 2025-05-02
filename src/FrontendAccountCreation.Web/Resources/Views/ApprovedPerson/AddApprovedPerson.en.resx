@@ -118,19 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddAnApprovedPerson.BulletAccreditation" xml:space="preserve">
-    <value>Apply for accreditation</value>
+    <value>apply for accreditation</value>
   </data>
   <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
-    <value>Submit and verify data returns</value>
+    <value>submit and verify data returns</value>
   </data>
   <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
-    <value>Company Secretary</value>
+    <value>company secretary</value>
   </data>
   <data name="AddAnApprovedPerson.Director" xml:space="preserve">
-    <value>Director</value>
+    <value>director</value>
+  </data>
+  <data name="AddAnApprovedPerson.IAgreeToBeAnApprovedPerson" xml:space="preserve">
+    <value>I agree to be an approved person</value>
   </data>
   <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>You do not have to do this immediately but one must be appointed before you can</value>
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
   <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
     <value>You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
@@ -148,7 +151,7 @@
     <value>I will invite an approved person later</value>
   </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>Please select an option to proceed.</value>
+    <value>Select an option</value>
   </data>
   <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
     <value>Roles eligible to be an approved person</value>

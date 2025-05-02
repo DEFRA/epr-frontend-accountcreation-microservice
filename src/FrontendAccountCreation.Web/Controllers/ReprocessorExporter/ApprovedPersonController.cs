@@ -40,7 +40,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
+            if (model.InviteUserOption == InviteUserOptions.IAgreeToBeAnApprovedPerson.ToString())
+            {
+                return RedirectToAction("YouAreApprovedPerson"); // need to re-visit with correct URL
+            }
+
+           else if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
             {
                 return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }

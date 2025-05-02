@@ -3,6 +3,7 @@
 public enum InviteUserOptions
 {
     None = 0,
-    IWillInviteAnotherApprovedPerson = 1,
-    IWillInviteApprovedPersonLater = 2,
+    IAgreeToBeAnApprovedPerson = 1,
+    IWillInviteAnotherApprovedPerson = 2,
+    IWillInviteApprovedPersonLater = 3,
 }
