@@ -85,6 +85,29 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
         }
 
         [TestMethod]
+        public async Task AddApprovedPerson_IAgreeToBeApprovedPerson_RedirectsToYouAreApprovedPerson()
+        {
+            // Arrange
+            var model = new AddApprovedPersonViewModel
+            {
+                InviteUserOption = InviteUserOptions.IAgreeToBeAnApprovedPerson.ToString()
+            };
+
+            _sessionManagerMock
+                .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+                .ReturnsAsync(new OrganisationSession());
+
+            // Act
+            var result = await _systemUnderTest.AddApprovedPerson(model);
+
+            // Assert
+            result.Should().BeOfType<RedirectToActionResult>();
+            var redirect = (RedirectToActionResult)result;
+            redirect.ActionName.Should().Be("YouAreApprovedPerson");
+        }
+
+
+        [TestMethod]
         public async Task AddApprovedPerson_InviteAnotherApprovedPerson_RedirectsToTeamMemberRoleInOrganisation()
         {
             // Arrange
