@@ -33,7 +33,7 @@ public class AccountControllerTests
     }
     
     [TestMethod]
-    public void SigIn_IfIsLocalUrl_RedirectsToCorrectUrl()
+    public void SignIn_IfIsLocalUrl_RedirectsToCorrectUrl()
     {
         //Arrange
         const string returnUrl = "~/home/index";
@@ -54,7 +54,7 @@ public class AccountControllerTests
     }
     
     [TestMethod]
-    public void SigIn_IfIsNotLocalUrl_RedirectsToCorrectUrl()
+    public void SignIn_IfIsNotLocalUrl_RedirectsToCorrectUrl()
     {
         //Arrange
         const string returnUrl = "~/home/index";
@@ -75,28 +75,43 @@ public class AccountControllerTests
     }
     
     [TestMethod]
-    public void SigOut_RedirectsToCorrectUrl()
+    [DataRow(null, "redirectUri")]
+    [DataRow(false, "redirectUri")]
+    [DataRow(true, "redirectUri?reEx=true")]
+    public void SignOut_RedirectsToCorrectUrl(bool? reEx, string expectedRedirectUri)
     {
         //Arrange
         var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+
         mockUrlHelper
             .Setup(
                 x => x.Action(
                     It.IsAny<UrlActionContext>()
                 )
             )
-            .Returns("callbackUrl")
+            .Returns<UrlActionContext>(context =>
+            {
+                var reExValue = context.Values?.GetType().GetProperty("reEx")?.GetValue(context.Values, null) as bool?;
+
+                return reExValue switch
+                {
+                    true => "redirectUri?reEx=true",
+                    _ => "redirectUri"
+                };
+            })
             .Verifiable();
+
         _accountController.Url = mockUrlHelper.Object;
         _accountController.ControllerContext.HttpContext = new DefaultHttpContext();
-       
         
         //Act
-        var result = _accountController.SignOut("Scheme");
+        var result = _accountController.SignOut("Scheme", reEx);
         
         //Assert
-        Assert.IsNotNull(result);
+        result.Should().NotBeNull();
         result.Should().BeOfType(typeof(SignOutResult));
-
+        var signOutResult = result as SignOutResult;
+        signOutResult!.Properties.Should().NotBeNull();
+        signOutResult!.Properties!.RedirectUri.Should().Be(expectedRedirectUri);
     }
 }
