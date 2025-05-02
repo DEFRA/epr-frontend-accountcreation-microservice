@@ -23,14 +23,14 @@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <a class="govuk-link epr-sign-out-nav__link"
-                           asp-controller="Account" asp-action="SignOut" asp-route-returnUrl="">
+                           asp-controller="Account" asp-action="SignOut" asp-route-reEx="true">
                             @SharedLocalizer["Header.SignOut"]
                         </a>
                     }
                     else
                     {
-                        <a class="govuk-link epr-sign-out-nav__link"
-                           asp-controller="Account" asp-action="SignIn" asp-route-applicationTitleOverride="@LayoutOverrides.ReExTitleOverride" asp-route-headerOverride="@LayoutOverrides.ReExUserHeaderOverride">
+                        @* todo: sign in should take user to our service. which page though? *@
+                        <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignIn">
                             @SharedLocalizer["Header.SignIn"]
                         </a>
                     }

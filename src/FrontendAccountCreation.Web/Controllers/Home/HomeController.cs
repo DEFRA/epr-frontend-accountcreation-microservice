@@ -1,5 +1,4 @@
 ﻿using FrontendAccountCreation.Web.Constants;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +8,10 @@ public class HomeController : Controller
 {
     [AllowAnonymous]
     [Route(PagePath.SignedOut)]
-    public IActionResult SignedOut(string? applicationTitleOverride, string? headerOverride)
+    public IActionResult SignedOut(bool? reEx)
     {
         HttpContext.Session.Clear();
-        return View();
+        return View(reEx == true ? "SignedOutReEx" : "SignedOut");
     }
 
     [AllowAnonymous]
