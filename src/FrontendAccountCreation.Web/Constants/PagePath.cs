@@ -42,8 +42,11 @@ public static class PagePath
     public const string SignedOut = "signed-out";
     public const string Error = "error";
     public const string AError = "auth-error";
+    public const string ErrorReEx = "error-reex";
+    public const string AErrorReEx = "auth-error-reex";
     public const string Culture = "culture";
     public const string PageNotFound = "PageNotFound";
+    public const string PageNotFoundReEx = "page-not-found-reex";
     public const string AcknowledgeCookieAcceptance = "acknowledge-cookie-acceptance";
     public const string UpdateCookieAcceptance = "update-cookie-acceptance";
 }

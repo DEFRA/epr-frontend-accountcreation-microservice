@@ -43,6 +43,15 @@ public class UserController : Controller
         _logger = logger;
     }
 
+    //todo: check error handling throwing from POST
+    //todo: check error handling when using path based routing in the app gateway
+    [HttpGet]
+    [Route("inject-error")]
+    public IActionResult InjectError()
+    {
+        throw new NotImplementedException();
+    }
+
     [HttpGet]
     [Route("")]
     [Route(PagePath.FullName)]

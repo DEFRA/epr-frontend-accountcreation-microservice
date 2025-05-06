@@ -1,0 +1,28 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@{
+    ViewData["Title"] = Localizer["PageNotFound.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+
+    var accountCreationTitle = SharedLocalizer["ApplicationTitle"].Value;
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                    @Localizer["PageNotFound.Warning"]
+                </h1>
+                <p class="govuk-body">@Localizer["PageNotFound.YouCannotContinue"]</p>
+                <p class="govuk-body">@Localizer["PageNotFound.TakeYouBeginningOfProcess", accountCreationTitle]</p>
+                <p class="govuk-body">@Localizer["PageNotFound.PleaseSelect"]</p>
+                
+                @* todo: where do we take them? add to story about header links *@
+                <a class="govuk-button" data-module="govuk-button" role="button" asp-controller="AccountCreation" asp-action="RedirectToStart">
+                    @Localizer["PageNotFound.GoToTheStart"]
+                </a>
+            </div>
+        </div>
+    </main>
+</div>

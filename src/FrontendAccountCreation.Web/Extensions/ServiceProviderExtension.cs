@@ -2,6 +2,7 @@
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Cookies;
 using FrontendAccountCreation.Web.Sessions;
 
@@ -78,6 +79,10 @@ public static class ServiceProviderExtension
         services.AddScoped<ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
         services.AddScoped<ISessionManager<ReExAccountCreationSession>, SessionManager<ReExAccountCreationSession>>();
         services.AddScoped<ISessionManager<OrganisationSession>, SessionManager<OrganisationSession>>();
+
+        // add the names of the Re/Ex controllers
+        // (if we want multiple allow lists, we can name them in the service collection)
+        services.AddSingleton(AllowList<string>.Create("User", "Organisation"));
     }
 
     private static void SetTempDataCookieOptions(IServiceCollection services, IConfiguration configuration)

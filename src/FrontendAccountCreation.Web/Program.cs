@@ -80,22 +80,23 @@ var app = builder.Build();
 
 app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
 
-if (app.Environment.IsDevelopment())
-{
-    IdentityModelEventSource.ShowPII = true;
-    app.UseDeveloperExceptionPage();
-}
-else
+//todo: put back as was
+//if (app.Environment.IsDevelopment())
+//{
+//    IdentityModelEventSource.ShowPII = true;
+//    app.UseDeveloperExceptionPage();
+//}
+//else
 {
     app.UseExceptionHandler("/error");
 }
+app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
 
 app.UseForwardedHeaders();
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
 app.UseCookiePolicy();
 app.UseSession();
-app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

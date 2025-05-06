@@ -1,0 +1,21 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@model FrontendAccountCreation.Web.ViewModels.Shared.ErrorViewModel
+@{
+    ViewData["Title"] = Localizer["Error.PageTitle"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                    @Localizer["Error.Title"]
+                </h1>
+                <p class="govuk-body">@Localizer["Error.TryAgainLater"]</p>
+                <p><b>@Html.Raw(Model.Timestamp)</b></p>
+            </div>
+        </div>
+    </main>
+</div>
