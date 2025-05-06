@@ -36,6 +36,9 @@ public static class PagePath
     public const string YouAreApprovedPerson = "person-approved";
     public const string AddApprovedPerson = "add-approved-person";
     public const string ApprovedPersonContinue = "person-approved-continue";
+    public const string DeclarationContinue = "declaration-continue";
+    public const string ToBeAdded = "to-be-added"; // To DO: replace or remove with required one
+    public const string ToDoPath = "to-do-path"; // To DO: replace or remove with required one
 
     // Non journey paths
     public const string Accessibility = "accessibility";
