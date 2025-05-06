@@ -55,7 +55,10 @@
                     <li class="govuk-header__navigation-item">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <a class="govuk-header__link" asp-controller="Account" asp-action="SignOut">@SharedLocalizer["Header.SignOut"]</a>
+                            <a class="govuk-header__link"
+                               asp-controller="Account" asp-action="SignOut" asp-route-reEx="true">
+                                @SharedLocalizer["Header.SignOut"]
+                            </a>
                         }
                         else
                         {
