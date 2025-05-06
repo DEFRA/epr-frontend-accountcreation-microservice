@@ -50,7 +50,10 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
         return View(errorView, new ErrorViewModel());
     }
 
-    // use if you want to redirect the user directly to the ReEx error page
+    /// <summary>
+    /// Use if you want to redirect the user directly to the ReEx error page.
+    /// </summary>
+    /// <param name="statusCode">An optional status code to return with the page. Defaults to 200.</param>
     [Route(PagePath.ErrorReEx)]
     public ViewResult ErrorReEx(int? statusCode)
     {
