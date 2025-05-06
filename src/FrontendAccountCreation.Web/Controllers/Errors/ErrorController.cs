@@ -5,30 +5,9 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Immutable;
 using System.Net;
+using FrontendAccountCreation.Core.Utilities;
 
 namespace FrontendAccountCreation.Web.Controllers.Errors;
-
-//todo: where should this live? do we make it generic and move into core?
-//do we DI it or have as static?
-public class AllowList<T>
-{
-    private readonly ImmutableHashSet<T> _allowList;
-
-    public static AllowList<T> Create(params T[] items)
-    {
-        return new AllowList<T>(items);
-    }
-
-    private AllowList(params T[] items)
-    {
-        _allowList = ImmutableHashSet.Create(items);
-    }
-
-    public bool IsAllowed(T val)
-    {
-        return _allowList.Contains(val);
-    }
-}
 
 [AllowAnonymous]
 public class ErrorController(AllowList<string> reExControllerNames) : Controller

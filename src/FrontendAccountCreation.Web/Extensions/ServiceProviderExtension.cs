@@ -2,7 +2,6 @@
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Cookies;
 using FrontendAccountCreation.Web.Sessions;
 
@@ -16,6 +15,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.Distributed;
 using StackExchange.Redis;
 using System.Diagnostics.CodeAnalysis;
+using FrontendAccountCreation.Core.Utilities;
 
 namespace FrontendAccountCreation.Web.Extensions;
 
