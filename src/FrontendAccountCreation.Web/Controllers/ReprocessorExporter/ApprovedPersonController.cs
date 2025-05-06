@@ -32,27 +32,23 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            if (model.InviteUserOption == InviteUserOptions.IAgreeToBeAnApprovedPerson.ToString())
+            if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
                 return RedirectToAction("YouAreApprovedPerson"); // need to re-visit with correct URL
             }
 
-           else if (model.InviteUserOption == InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString())
+            if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
             {
                 return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }
-            else // I-will-Invite-an-Approved-Person-Later
-            {
-                return RedirectToAction("CheckYourDetails", "AccountCreation"); // need to re-visit with correct URL
-            }
+
+            // I-will-Invite-an-Approved-Person-Later
+            return RedirectToAction("CheckYourDetails", "AccountCreation"); // need to re-visit with correct URL
         }
 
         [HttpGet]

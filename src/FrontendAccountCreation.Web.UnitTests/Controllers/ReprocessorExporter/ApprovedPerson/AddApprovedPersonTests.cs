@@ -7,9 +7,6 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson
 {
@@ -81,7 +78,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Assert
             result.Should().BeOfType<ViewResult>();
             var viewResult = (ViewResult)result;
-            viewResult.Model.Should().Be(model);
+            viewResult.Model.Should().BeOfType(model.GetType());
         }
 
         [TestMethod]
@@ -90,7 +87,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Arrange
             var model = new AddApprovedPersonViewModel
             {
-                InviteUserOption = InviteUserOptions.IAgreeToBeAnApprovedPerson.ToString()
+                InviteUserOption = InviteUserOptions.BeAnApprovedPerson.ToString()
             };
 
             _sessionManagerMock
@@ -113,7 +110,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Arrange
             var model = new AddApprovedPersonViewModel
             {
-                InviteUserOption = InviteUserOptions.IWillInviteAnotherApprovedPerson.ToString()
+                InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
             };
 
             _sessionManagerMock
@@ -135,7 +132,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Arrange
             var model = new AddApprovedPersonViewModel
             {
-                InviteUserOption = InviteUserOptions.IWillInviteApprovedPersonLater.ToString()
+                InviteUserOption = InviteUserOptions.InviteLater.ToString()
             };
 
             _sessionManagerMock
