@@ -4,7 +4,7 @@
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
 
-    var accountCreationTitle = SharedLocalizer["ApplicationTitle"].Value;
+    var accountCreationTitle = SharedLocalizer[LayoutOverrides.ReExTitleOverride].Value;
 }
 
 <div class="govuk-width-container">

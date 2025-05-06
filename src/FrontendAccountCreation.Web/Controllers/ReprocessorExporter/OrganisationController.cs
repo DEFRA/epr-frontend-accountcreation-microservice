@@ -64,7 +64,7 @@ public class OrganisationController : Controller
     {
         if (_deploymentRoleOptions.IsRegulator())
         {
-            return RedirectToAction(PagePath.Error, nameof(ErrorController.Error), new
+            return RedirectToAction("ErrorReEx", "Error", new
             {
                 statusCode = (int)HttpStatusCode.Forbidden
             });
