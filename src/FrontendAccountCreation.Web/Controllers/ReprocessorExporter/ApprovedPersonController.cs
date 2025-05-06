@@ -22,7 +22,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson()
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? throw new Exception("Organistion session is null");
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View();
@@ -55,7 +55,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation([FromQuery] Guid? id)
         {
-            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? throw new Exception("Organistion session is null");
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
@@ -80,7 +80,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
         {
-            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? throw new Exception("Organistion session is null");
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -131,7 +131,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails([FromQuery] Guid id)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? throw new Exception("Organistion session is null");
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             
             var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
@@ -162,7 +162,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
+            var companiesHouseSession = session.ReExCompaniesHouseSession;
             var index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
 
             if (index is >= 0)
@@ -187,7 +187,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.TeamMembersCheckInvitationDetails)]
         public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
         {
-            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new();
+            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? throw new Exception("Organistion session is null");
 
             // if id is supplied, remove the team member
             if (id.HasValue)

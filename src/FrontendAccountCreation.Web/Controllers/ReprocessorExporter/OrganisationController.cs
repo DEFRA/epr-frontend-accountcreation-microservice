@@ -381,7 +381,7 @@ public class OrganisationController : Controller
                 PagePath.CannotCreateAccount);
         }
 
-        return await SaveSessionAndRedirect(session, "ApprovedPerson", "AddApprovedPerson", PagePath.RoleInOrganisation,
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
                 PagePath.AddAnApprovedPerson);
     }
 
@@ -654,7 +654,7 @@ public class OrganisationController : Controller
         session.IsUserChangingDetails = false;
         await SaveSession(session, currentPagePath, nextPagePath);
 
-        return RedirectToAction(actionName,controllerName);
+        return RedirectToAction(actionName, controllerName);
     }
 
     private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)

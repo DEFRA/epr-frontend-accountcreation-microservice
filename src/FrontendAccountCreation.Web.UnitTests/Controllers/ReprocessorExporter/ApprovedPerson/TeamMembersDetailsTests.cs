@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -183,7 +184,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
-        // No update should happen but also no exception
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
     }
 
     [TestMethod]
@@ -205,6 +206,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
+
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers
             .Any(x => x.FullName == "Ghost").Should().BeFalse();
     }
