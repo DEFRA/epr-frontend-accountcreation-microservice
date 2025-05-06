@@ -153,7 +153,9 @@ public static class ServiceProviderExtension
         services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(options =>
             {
-                configuration.GetSection("AzureAdB2C").Bind(options);               
+                configuration.GetSection("AzureAdB2C").Bind(options);
+                //to-do: when we integrate with AzureAdB2C, we'll have to set up our own branded error page
+                // add to story
                 options.ErrorPath = "/auth-error";
                 options.Events.OnRemoteFailure = context =>
                 {
