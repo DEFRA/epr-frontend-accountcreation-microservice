@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Reflection;
 using System.Text.Json;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -105,7 +106,7 @@ public class OrganisationController : Controller
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
         if (session.IsTheOrganisationCharity.Value)
-        {            
+        {           
             return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
         else
@@ -611,7 +612,7 @@ public class OrganisationController : Controller
     public async Task<IActionResult> ApprovedConfirmationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.YouAreApprovedPerson, "ToBeAdded");
+        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.YouAreApprovedPerson, PagePath.ToBeAdded);
         return Ok();
     }
 
@@ -627,6 +628,23 @@ public class OrganisationController : Controller
     {
         // TO DO following & modify - once Tungsten has merged
         return Ok("not been implemented yet...WIP by Tungsten team.");
+    }
+
+    [HttpGet]
+    [Route(PagePath.Declaration)]
+    [OrganisationJourneyAccess(PagePath.Declaration)]
+    public async Task<IActionResult> Declaration()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    [Route(PagePath.DeclarationContinue)] // to do: need to call the required Path here!
+    public async Task<IActionResult> DeclarationContinue()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.Declaration, PagePath.ToDoPath);
+        return Ok();
     }
 
     public IActionResult RedirectToStart()

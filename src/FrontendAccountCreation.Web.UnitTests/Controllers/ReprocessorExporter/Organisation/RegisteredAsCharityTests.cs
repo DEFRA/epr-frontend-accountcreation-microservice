@@ -1,4 +1,11 @@
-﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
+﻿using FrontendAccountCreation;
+using FrontendAccountCreation.Web;
+using FrontendAccountCreation.Web.UnitTests;
+using FrontendAccountCreation.Web.UnitTests.Controllers;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
+
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 using System.Net;
 using FluentAssertions;
@@ -6,13 +13,11 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Errors;
-using FrontendAccountCreation.Web.Controllers.Home;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 
 [TestClass]
@@ -113,7 +118,7 @@ public class RegisteredAsCharityTests : OrganisationTestBase
 
         // Assert       
         result.Should().BeOfType<RedirectToActionResult>();
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotAffected));        
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotAffected));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }

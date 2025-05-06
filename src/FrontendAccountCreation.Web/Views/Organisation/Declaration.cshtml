@@ -1,0 +1,41 @@
+﻿@using FrontendAccountCreation.Web.Constants
+
+@{
+    ViewData["Title"] = Localizer["RegisteredAsCharity.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<div class="govuk-width-container">
+	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
+				<fieldset class="govuk-fieldset">
+					<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+						<h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
+							@Localizer["Declaration.Title"]
+						</h1>
+					</legend>
+				</fieldset>
+
+				<p class="govuk-body">@Localizer["Declaration.Statement"].Value</p>
+
+				<div class="govuk-warning-text">
+					<span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+					<strong class="govuk-warning-text__text">
+						<span class="govuk-visually-hidden">Warning</span>
+						@Localizer["Declaration.Information"].Value
+					</strong>
+				</div>
+
+				<form asp-controller="Organisation" method="get">
+					<div class="govuk-button-group">
+						<button class="govuk-button" data-module="govuk-button" asp-action="DeclarationContinue">
+							@Localizer["Declaration.Confirm"]
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</main>
+</div>
