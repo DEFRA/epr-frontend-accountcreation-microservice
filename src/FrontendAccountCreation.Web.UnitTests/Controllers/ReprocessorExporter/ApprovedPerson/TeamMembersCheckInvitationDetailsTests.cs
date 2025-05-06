@@ -22,7 +22,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         {
             Journey = new List<string>
             {
-               "Pagebefore", // replace when page is developed
+               "PageBefore", // Todo: replace when page is developed
                 PagePath.TeamMemberRoleInOrganisation,
             },
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession(),
@@ -93,10 +93,10 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         List<ReExCompanyTeamMember?> teamMembers = [];
         ReExCompanyTeamMember jack = new() { Id = Guid.NewGuid(), FullName = "Jack Dors" };
         ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid(), FullName = "Jill Dors" };
-        ReExCompanyTeamMember nobby = new() { Id = Guid.NewGuid() };
+        ReExCompanyTeamMember nobody = new() { Id = Guid.NewGuid() };
         teamMembers.Add(jack);
         teamMembers.Add(jill);
-        teamMembers.Add(nobby);
+        teamMembers.Add(nobody);
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
         // Act
@@ -107,7 +107,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         ViewResult viewResult = (ViewResult)result;
         viewResult.Model.Should().BeOfType<List<ReExCompanyTeamMember>>();
 
-        // nobby has empty full name, hence excluded
+        // nobody has empty full name, hence excluded
         ((List<ReExCompanyTeamMember>) viewResult.Model).Count.Should().Be(2);
 
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
