@@ -19,9 +19,7 @@ using Microsoft.Identity.Web;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Reflection;
 using System.Text.Json;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
