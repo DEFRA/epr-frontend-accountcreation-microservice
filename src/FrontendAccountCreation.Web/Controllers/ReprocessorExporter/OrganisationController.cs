@@ -649,7 +649,7 @@ public class OrganisationController : Controller
     }
 
     private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-    string controllerName,  string actionName, string currentPagePath, string? nextPagePath)
+    string controllerName, string actionName, string currentPagePath, string? nextPagePath)
     {
         session.IsUserChangingDetails = false;
         await SaveSession(session, currentPagePath, nextPagePath);

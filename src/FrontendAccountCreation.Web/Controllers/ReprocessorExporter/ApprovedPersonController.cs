@@ -108,7 +108,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 members.Add(new ReExCompanyTeamMember { Id = queryStringId, Role = model.RoleInOrganisation });
                 companiesHouseSession.TeamMembers = members;
                 session.ReExCompaniesHouseSession = companiesHouseSession;
-
             }
 
             session.IsUserChangingDetails = false;
@@ -124,7 +123,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 // go back to check their invitation detials
                 return RedirectToAction(nameof(TeamMemberDetails), new { id = queryStringId });
             }
-
         }
 
         [HttpGet]
@@ -202,7 +200,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
-
         }
 
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
@@ -230,6 +227,5 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // this also cover if current page not found (index = -1) then it clears all pages
             session.Journey = session.Journey.Take(index + 1).ToList();
         }
-
     }
 }
