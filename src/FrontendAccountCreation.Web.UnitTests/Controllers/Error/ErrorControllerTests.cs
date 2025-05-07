@@ -102,7 +102,6 @@ public class ErrorControllerTests
         var result = errorController.Error((int)HttpStatusCode.InternalServerError);
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
         result.ViewName.Should().Be(expectedViewName);
     }
 
@@ -131,6 +130,19 @@ public class ErrorControllerTests
         // Assert
         result.Should().BeOfType<ViewResult>();
         _httpResponse!.VerifySet(r => r.StatusCode = expectedStatusCode);
+    }
+
+    [TestMethod]
+    public void ErrorReEx_ReturnsTheDefaultView()
+    {
+        // Arrange
+        var errorController = CreateErrorController();
+
+        // Act
+        var result = errorController.ErrorReEx(null);
+
+        // Assert
+        result.ViewName.Should().BeNull();
     }
 
     [TestMethod]
