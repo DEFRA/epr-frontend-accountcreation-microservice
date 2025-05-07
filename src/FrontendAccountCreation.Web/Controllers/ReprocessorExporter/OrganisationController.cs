@@ -380,18 +380,8 @@ public class OrganisationController : Controller
                 PagePath.CannotCreateAccount);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(AddApprovedPerson), PagePath.RoleInOrganisation,
-                PagePath.ManageAccountPerson);
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "The 'Manage Account Person' page hasn't been built. It will be built in a future story.")]
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public async Task<IActionResult> AddApprovedPerson()
-    {
-        throw new NotImplementedException(
-            "The 'Manage Account Person' page hasn't been built. It will be built in a future story.");
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
+                PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]
@@ -672,6 +662,16 @@ public class OrganisationController : Controller
         await SaveSession(session, currentPagePath, nextPagePath);
 
         return RedirectToAction(actionName);
+    }
+
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+    string controllerName, string actionName, string currentPagePath, string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        var contNameWOCont = controllerName.Replace("Controller", string.Empty);
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName, contNameWOCont);
     }
 
     private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)

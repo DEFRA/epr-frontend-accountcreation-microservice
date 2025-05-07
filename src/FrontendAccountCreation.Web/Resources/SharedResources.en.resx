@@ -162,4 +162,10 @@
   <data name="EprForPackaging" xml:space="preserve">
     <value>EPR for packaging: reprocessors and exporters</value>
   </data>
+  <data name="CompanySecretary" xml:space="preserve">
+    <value>Company Secretary</value>
+  </data>
+  <data name="Director" xml:space="preserve">
+    <value>Director</value>
+  </data>
 </root>
