@@ -652,9 +652,10 @@ public class OrganisationController : Controller
     string controllerName, string actionName, string currentPagePath, string? nextPagePath)
     {
         session.IsUserChangingDetails = false;
+        var contNameWOCont = controllerName.Replace("Controller", string.Empty);
         await SaveSession(session, currentPagePath, nextPagePath);
 
-        return RedirectToAction(actionName, controllerName);
+        return RedirectToAction(actionName, contNameWOCont);
     }
 
     private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
