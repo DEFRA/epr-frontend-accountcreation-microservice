@@ -14,9 +14,10 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
     [Route(PagePath.Error)]
     public ViewResult Error(int? statusCode)
     {
-        string generalErrorPage = PagePath.Error;
-        string pageNotFoundPage = PagePath.PageNotFound;
+        string generalErrorPage = ViewNames.Error;
+        string pageNotFoundPage = ViewNames.PageNotFound;
 
+        //todo: go by exceptionhandler present or passed status code?
         var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
         if (exceptionHandler != null)
         {
@@ -27,7 +28,7 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
 
             if (controllerName != null && reExControllerNames.IsAllowed(controllerName))
             {
-                generalErrorPage = PagePath.ErrorReEx;
+                generalErrorPage = ViewNames.ErrorReEx;
             }
         }
         else
@@ -35,7 +36,7 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
             var statusCodeReExecuteFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             if (statusCodeReExecuteFeature?.OriginalPath.Contains("re-ex", StringComparison.OrdinalIgnoreCase) == true)
             {
-                pageNotFoundPage = PagePath.PageNotFoundReEx;
+                pageNotFoundPage = ViewNames.PageNotFoundReEx;
             }
         }
 
@@ -54,6 +55,17 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
     public ViewResult ErrorReEx(int? statusCode)
     {
         Response.StatusCode = statusCode ?? (int)HttpStatusCode.InternalServerError;
+
+        return View(new ErrorViewModel());
+    }
+
+    /// <summary>
+    /// Use if you want to redirect the user directly to the ReEx "page not found" page.
+    /// </summary>
+    [Route(PagePath.PageNotFoundReEx)]
+    public ViewResult PageNotFoundReEx()
+    {
+        Response.StatusCode = (int)HttpStatusCode.NotFound;
 
         return View(new ErrorViewModel());
     }
