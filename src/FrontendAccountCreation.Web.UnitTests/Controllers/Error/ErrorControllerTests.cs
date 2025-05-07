@@ -133,6 +133,23 @@ public class ErrorControllerTests
         _httpResponse!.VerifySet(r => r.StatusCode = expectedStatusCode);
     }
 
+    [TestMethod]
+    [DataRow(null, 500)]
+    [DataRow(500, 500)]
+    [DataRow(400, 400)]
+    public void ErrorReEx_GivenAStatusCode_ReturnsTheStatusCode(int? passedStatusCode, int expectedStatusCode)
+    {
+        // Arrange
+        var errorController = CreateErrorController();
+
+        // Act
+        var result = errorController.ErrorReEx(passedStatusCode);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        _httpResponse!.VerifySet(r => r.StatusCode = expectedStatusCode);
+    }
+
     private ErrorController CreateErrorController()
     {
         var errorController = new ErrorController(_allowList!);
