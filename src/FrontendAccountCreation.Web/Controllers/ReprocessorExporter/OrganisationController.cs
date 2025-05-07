@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -16,10 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Reflection;
 using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -54,8 +51,6 @@ public class OrganisationController : Controller
         _logger = logger;
     }
 
-    //todo: how do we handle feature flag for first page? manually?
-
     [HttpGet]
     [Route("")]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
@@ -64,7 +59,7 @@ public class OrganisationController : Controller
     {
         if (_deploymentRoleOptions.IsRegulator())
         {
-            return RedirectToAction("ErrorReEx", "Error", new
+            return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
             {
                 statusCode = (int)HttpStatusCode.Forbidden
             });
