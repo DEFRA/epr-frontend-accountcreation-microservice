@@ -17,7 +17,8 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
         string generalErrorPage = ViewNames.Error;
         string pageNotFoundPage = ViewNames.PageNotFound;
 
-        //todo: go by exceptionhandler present or passed status code?
+        // we could either look at whether exceptionhandler is present or by the passed status code
+        // but this way works irrespective of the passed status code
         var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
         if (exceptionHandler != null)
         {

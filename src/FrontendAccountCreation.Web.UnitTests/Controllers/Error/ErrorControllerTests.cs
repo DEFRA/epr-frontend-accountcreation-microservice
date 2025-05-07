@@ -20,9 +20,6 @@ public class ErrorControllerTests
     private Mock<IExceptionHandlerPathFeature>? _exceptionHandlerPathFeature;
     private Mock<IStatusCodeReExecuteFeature>? _statusCodeReExecuteFeature;
 
-    //todo: add to story about auth error page (and how to show it (create & cancel))
-    //todo: add to story about generic page not found would need to be handled by 2 separate web apps with different config
-
     [TestInitialize]
     public void Setup()
     {
