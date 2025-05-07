@@ -14,11 +14,10 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
     [Route(PagePath.Error)]
     public ViewResult Error(int? statusCode)
     {
-        var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-
-        string pageNotFoundPage = PagePath.PageNotFound;
         string generalErrorPage = PagePath.Error;
+        string pageNotFoundPage = PagePath.PageNotFound;
 
+        var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
         if (exceptionHandler != null)
         {
             // exceptionHandler is null for 404's
@@ -30,8 +29,6 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
             {
                 generalErrorPage = PagePath.ErrorReEx;
             }
-
-            Response.StatusCode = 200;
         }
         else
         {
@@ -40,11 +37,11 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
             {
                 pageNotFoundPage = PagePath.PageNotFoundReEx;
             }
-
-            Response.StatusCode = 404;
         }
 
         var errorView = statusCode == (int?)HttpStatusCode.NotFound ? pageNotFoundPage : generalErrorPage;
+
+        Response.StatusCode = statusCode ?? (int)HttpStatusCode.InternalServerError;
 
         return View(errorView, new ErrorViewModel());
     }
@@ -56,8 +53,7 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
     [Route(PagePath.ErrorReEx)]
     public ViewResult ErrorReEx(int? statusCode)
     {
-        //todo: return 200 always?
-        Response.StatusCode = statusCode ?? 200;
+        Response.StatusCode = statusCode ?? (int)HttpStatusCode.InternalServerError;
 
         return View(new ErrorViewModel());
     }
