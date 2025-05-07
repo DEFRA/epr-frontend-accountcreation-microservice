@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using FluentAssertions;
 using System.Net;
@@ -80,10 +79,10 @@ public class ErrorControllerTests
     }
 
     [TestMethod]
-    [DataRow("User", "error-reex")]
-    [DataRow("Organisation", "error-reex")]
-    [DataRow("Account", "error")]
-    [DataRow("AccountCreation", "error")]
+    [DataRow("User", "ErrorReEx")]
+    [DataRow("Organisation", "ErrorReEx")]
+    [DataRow("Account", "Error")]
+    [DataRow("AccountCreation", "Error")]
     public void Error_NotPageNotFoundGivenSourceController_CorrectViewIsReturned(string controllerName, string expectedViewName)
     {
         // Arrange
@@ -125,10 +124,9 @@ public class ErrorControllerTests
         var errorController = CreateErrorController();
 
         // Act
-        var result = errorController.Error(passedStatusCode);
+        errorController.Error(passedStatusCode);
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
         _httpResponse!.VerifySet(r => r.StatusCode = expectedStatusCode);
     }
 
@@ -155,11 +153,36 @@ public class ErrorControllerTests
         var errorController = CreateErrorController();
 
         // Act
-        var result = errorController.ErrorReEx(passedStatusCode);
+        errorController.ErrorReEx(passedStatusCode);
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
         _httpResponse!.VerifySet(r => r.StatusCode = expectedStatusCode);
+    }
+
+    [TestMethod]
+    public void PageNotFoundReEx_ReturnsTheDefaultView()
+    {
+        // Arrange
+        var errorController = CreateErrorController();
+
+        // Act
+        var result = errorController.PageNotFoundReEx();
+
+        // Assert
+        result.ViewName.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void PageNotFoundReEx_Returns404()
+    {
+        // Arrange
+        var errorController = CreateErrorController();
+
+        // Act
+        errorController.PageNotFoundReEx();
+
+        // Assert
+        _httpResponse!.VerifySet(r => r.StatusCode = (int)HttpStatusCode.NotFound);
     }
 
     private ErrorController CreateErrorController()
