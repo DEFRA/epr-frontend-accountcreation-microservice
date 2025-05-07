@@ -1,7 +1,9 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Core.Utilities;
 
+[ExcludeFromCodeCoverage(Justification = "Sonar isn't picking up that this code is covered by the tests in AllowListTests.cs")]
 public class AllowList<T>
 {
     private readonly ImmutableHashSet<T> _allowList;
