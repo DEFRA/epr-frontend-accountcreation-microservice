@@ -14,10 +14,7 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
     [Route(PagePath.Error)]
     public ViewResult Error(int? statusCode)
     {
-        var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();//<IExceptionHandlerFeature>();
-
-        //todo: is there another pagenot found somewhere else
-        // update content on pagenotfound page
+        var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
         string pageNotFoundPage = PagePath.PageNotFound;
         string generalErrorPage = PagePath.Error;
@@ -33,19 +30,21 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
             {
                 generalErrorPage = PagePath.ErrorReEx;
             }
+
+            Response.StatusCode = 200;
         }
         else
         {
             var statusCodeReExecuteFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            if (statusCodeReExecuteFeature?.OriginalPath.Contains("re-ex") == true)
+            if (statusCodeReExecuteFeature?.OriginalPath.Contains("re-ex", StringComparison.OrdinalIgnoreCase) == true)
             {
                 pageNotFoundPage = PagePath.PageNotFoundReEx;
             }
+
+            Response.StatusCode = 404;
         }
 
         var errorView = statusCode == (int?)HttpStatusCode.NotFound ? pageNotFoundPage : generalErrorPage;
-
-        Response.StatusCode = 200;
 
         return View(errorView, new ErrorViewModel());
     }
@@ -57,6 +56,7 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
     [Route(PagePath.ErrorReEx)]
     public ViewResult ErrorReEx(int? statusCode)
     {
+        //todo: return 200 always?
         Response.StatusCode = statusCode ?? 200;
 
         return View(new ErrorViewModel());
