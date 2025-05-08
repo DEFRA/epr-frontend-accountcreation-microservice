@@ -83,8 +83,10 @@ app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
 
 if (app.Environment.IsDevelopment())
 {
+#pragma warning disable S4507
     IdentityModelEventSource.ShowPII = true;
     app.UseDeveloperExceptionPage();
+#pragma warning restore S4507
 }
 else
 {
