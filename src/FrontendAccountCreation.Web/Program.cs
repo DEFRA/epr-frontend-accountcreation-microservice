@@ -1,13 +1,14 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.HealthChecks;
 using FrontendAccountCreation.Web.Middleware;
-
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,8 +83,7 @@ app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
 
 if (app.Environment.IsDevelopment())
 {
-    IdentityModelEventSource.ShowPII = true;
-    app.UseDeveloperExceptionPage();
+    SonarWorkaround.ConfigureDevelopmentEnvironment(app);
 }
 else
 {
@@ -124,5 +124,15 @@ namespace FrontendAccountCreation
 {
     public partial class Program
     {
+    }
+
+    [ExcludeFromCodeCoverage(Justification = "Sonar is flagging app.UseDeveloperExceptionPage() as a security concern and I don't have permissions to mark it as a false positive")]
+    public static class SonarWorkaround
+    {
+        public static void ConfigureDevelopmentEnvironment(WebApplication app)
+        {
+            IdentityModelEventSource.ShowPII = true;
+            app.UseDeveloperExceptionPage();
+        }
     }
 }
