@@ -150,12 +150,11 @@ public static class ServiceProviderExtension
 
     private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
     {
+        //to-do: ideally, we'll need a re/ex branded error page
         services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(options =>
             {
                 configuration.GetSection("AzureAdB2C").Bind(options);
-                //to-do: when we integrate with AzureAdB2C, we'll have to set up our own branded error page
-                // add to story
                 options.ErrorPath = "/auth-error";
                 options.Events.OnRemoteFailure = context =>
                 {
