@@ -37,8 +37,8 @@ public class RegisteredAsCharityTests : OrganisationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = (RedirectToActionResult)result;
 
-        redirectResult.ControllerName.Should().Be(nameof(ErrorController.Error));
-        redirectResult.ActionName.Should().Be(PagePath.Error);
+        redirectResult.ControllerName.Should().Be("Error");
+        redirectResult.ActionName.Should().Be("ErrorReEx");
         redirectResult.RouteValues.Should().ContainKey("statusCode");
         redirectResult.RouteValues["statusCode"].Should().Be((int)HttpStatusCode.Forbidden);
     }

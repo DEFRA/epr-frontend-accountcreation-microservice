@@ -42,7 +42,7 @@ public class ReExJourneyAccessCheckerMiddlewareTests
     }
 
     [TestMethod]
-    [DataRow(PagePath.TelephoneNumber, PagePath.PageNotFound)]
+    [DataRow(PagePath.TelephoneNumber, "/page-not-found-reex")]
     [DataRow(PagePath.TelephoneNumber, PagePath.PageNotFound, PagePath.PageNotFound)]
     public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLs_WhenInvokeCalled_ThenRedirectedToExpectedPage
         (string pageUrl, string expectedPage, params string[] visitedUrls)
