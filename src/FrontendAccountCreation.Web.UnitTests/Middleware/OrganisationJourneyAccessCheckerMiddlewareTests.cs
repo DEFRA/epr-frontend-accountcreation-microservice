@@ -39,8 +39,7 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
 
     [TestMethod]
     [DataRow(PagePath.NotAffected, "/page-not-found-reex")]
-    //todo:
-    [DataRow(PagePath.NotAffected, PagePath.PageNotFound, PagePath.PageNotFound)]
+    [DataRow(PagePath.IsTradingNameDifferent, PagePath.RegisteredAsCharity, PagePath.RegisteredAsCharity)]
     public async Task GivenAccessRequiredPage_WhichIsNotPartOfTheVisitedURLs_WhenInvokeCalled_ThenRedirectedToExpectedPage
         (string pageUrl, string expectedPage, params string[] visitedUrls)
     {
