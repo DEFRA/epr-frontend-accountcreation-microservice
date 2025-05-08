@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Services.Dto.Company;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 
 namespace FrontendAccountCreation.Core.Sessions.ReEx;
 
@@ -11,4 +12,8 @@ public class ReExCompaniesHouseSession
     public bool IsComplianceScheme { get; set; }
 
     public List<ReExCompanyTeamMember?> TeamMembers { get; set; }
+
+    public bool? IsPartnership { get; set; }
+
+    public ReExPartnership? Partnership { get; set; }
 }
