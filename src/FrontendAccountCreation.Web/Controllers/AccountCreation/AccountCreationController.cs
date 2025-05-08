@@ -26,7 +26,7 @@ using ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text.Json;
 
-public class AccountCreationController : Controller
+public partial class AccountCreationController : Controller
 {
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
@@ -508,7 +508,7 @@ public class AccountCreationController : Controller
 
         var invitedApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
 
-        if (invitedApprovedUser.IsInvitationTokenInvalid) 
+        if (invitedApprovedUser.IsInvitationTokenInvalid)
         {
             return RedirectToAction(nameof(InvalidToken));
         }
@@ -529,9 +529,10 @@ public class AccountCreationController : Controller
 
         return RedirectToAction(nameof(InviteeFullName));
     }
-    
+
     [HttpGet]
-    public IActionResult InvalidToken() {
+    public IActionResult InvalidToken()
+    {
         var callbackUrl = Url.Action(action: "SignedOutInvalidToken", controller: "Home", values: null, protocol: Request.Scheme);
         return SignOut(
              new AuthenticationProperties()
@@ -1234,6 +1235,8 @@ public class AccountCreationController : Controller
     {
         ClearRestOfJourney(session, currentPagePath);
 
+        // back link was not working as expected until line below was added
+        session.Journey.AddIfNotExists(currentPagePath);
         session.Journey.AddIfNotExists(nextPagePath);
 
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
