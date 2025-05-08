@@ -130,7 +130,7 @@
 	</ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Views\LimitedPartnership\" />
+      <Folder Include="Resources\Views\LimitedPartnership\" />
     </ItemGroup>
   
      <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">
