@@ -80,13 +80,12 @@ var app = builder.Build();
 
 app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
 
-//todo: put back as was
-//if (app.Environment.IsDevelopment())
-//{
-//    IdentityModelEventSource.ShowPII = true;
-//    app.UseDeveloperExceptionPage();
-//}
-//else
+if (app.Environment.IsDevelopment())
+{
+    IdentityModelEventSource.ShowPII = true;
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/error");
 }
