@@ -2,6 +2,7 @@
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
@@ -108,8 +109,7 @@ public class UserController : Controller
     [ReprocessorExporterJourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession();
         _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
         SetBackLink(session, PagePath.TelephoneNumber);
@@ -126,7 +126,7 @@ public class UserController : Controller
     [ReprocessorExporterJourneyAccess(PagePath.TelephoneNumber)]
     public async Task<IActionResult> ReExAccountTelephoneNumber(ReExAccountTelephoneNumberViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession();
 
         SetBackLink(session, PagePath.TelephoneNumber);
 
@@ -154,7 +154,7 @@ public class UserController : Controller
     [ReprocessorExporterJourneyAccess(PagePath.Success)]
     public async Task<IActionResult> Success()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession();
 
         var viewModel = new SuccessViewModel
         {
