@@ -83,7 +83,8 @@ app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
 
 if (app.Environment.IsDevelopment())
 {
-    SonarWorkaround.ConfigureDevelopmentEnvironment(app);
+    IdentityModelEventSource.ShowPII = true;
+    app.UseDeveloperExceptionPage();
 }
 else
 {
@@ -124,15 +125,5 @@ namespace FrontendAccountCreation
 {
     public partial class Program
     {
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "Sonar is flagging app.UseDeveloperExceptionPage() as a security concern and I don't have permissions to mark it as a false positive")]
-    public static class SonarWorkaround
-    {
-        public static void ConfigureDevelopmentEnvironment(WebApplication app)
-        {
-            IdentityModelEventSource.ShowPII = true;
-            app.UseDeveloperExceptionPage();
-        }
     }
 }
