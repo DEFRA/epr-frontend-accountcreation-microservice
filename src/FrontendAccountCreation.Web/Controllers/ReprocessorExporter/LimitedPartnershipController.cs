@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public LimitedPartnershipController(ISessionManager<OrganisationSession> sessionManager)
         {
             _sessionManager = sessionManager;
+        }
+
+        [HttpGet]
+        [Route(PagePath.LimitedPartnershipNamesOfPartners)]
+        public async Task<IActionResult> NamesOfPartners()
+        {
+            return View();
         }
     }
 }

@@ -40,13 +40,16 @@ public static class PagePath
     public const string ToBeAdded = "to-be-added"; // To DO: replace or remove with required one
     public const string ToDoPath = "to-do-path"; // To DO: replace or remove with required one
 
-    //Approve person paths
+    // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
     public const string TeamMemberRoleInOrganisation = "check-companies-house-role";
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
 
-    // Non journey paths
+    // Limited partnership paths
+    public const string LimitedPartnershipNamesOfPartners = "placeholder-mames-of-partners"; // To DO: replace with correct endpoint
+
+    // Non journey paths 
     public const string Accessibility = "accessibility";
     public const string SignedOut = "signed-out";
     public const string Error = "error";
