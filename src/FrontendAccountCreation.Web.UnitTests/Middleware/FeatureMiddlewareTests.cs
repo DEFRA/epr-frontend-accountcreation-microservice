@@ -85,7 +85,7 @@ public class FeatureMiddlewareTests
         await _middleware.Invoke(_httpContextMock.Object);
 
         // Assert
-        _httpResponseMock.Verify(x => x.Redirect(PagePath.PageNotFound), Times.Once);
+        _httpResponseMock.Verify(x => x.Redirect("/page-not-found-reex"), Times.Once);
     }
 
     private void SetupEndpointMock(params object[] attributes)

@@ -13,7 +13,7 @@ public class FeatureMiddleware(RequestDelegate next, IFeatureManager featureMana
 
         if (!await IsPageEnabled(attribute))
         {
-            httpContext.Response.Redirect(PagePath.PageNotFound);
+            httpContext.Response.Redirect(PagePath.PageNotFoundReEx);
 
             return;
         }
