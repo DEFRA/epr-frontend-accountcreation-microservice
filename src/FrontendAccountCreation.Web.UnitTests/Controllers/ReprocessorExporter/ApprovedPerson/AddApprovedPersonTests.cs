@@ -100,7 +100,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Assert
             result.Should().BeOfType<RedirectToActionResult>();
             var redirect = (RedirectToActionResult)result;
-            redirect.ActionName.Should().Be(nameof(OrganisationController.YouAreApprovedPerson));
+            redirect.ActionName.Should().Be(nameof(ApprovedPersonController.YouAreApprovedPerson));
         }
 
 

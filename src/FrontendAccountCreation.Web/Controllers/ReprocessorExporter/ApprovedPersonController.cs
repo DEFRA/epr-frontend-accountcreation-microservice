@@ -1,7 +1,9 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.AddAnApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -30,6 +33,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             if (!ModelState.IsValid)
@@ -37,13 +41,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
-                return RedirectToAction("YouAreApprovedPerson"); // need to re-visit with correct URL
+                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
-
-            if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
+            else if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
             {
+                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
                 return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }
 
@@ -160,8 +166,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            var companiesHouseSession = session.ReExCompaniesHouseSession;
-            var index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
+            var index = session.ReExCompaniesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
 
             if (index is >= 0)
             {
@@ -185,7 +190,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.TeamMembersCheckInvitationDetails)]
         public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
         {
-            OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
             // if id is supplied, remove the team member
             if (id.HasValue)
@@ -202,13 +207,33 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
         }
 
+        [HttpGet]
+        [Route(PagePath.YouAreApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
+        public async Task<IActionResult> YouAreApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            return View();
+        }
+
+        [HttpGet]
+        [Route(PagePath.CheckYourDetails)]
+        [ExcludeFromCodeCoverage] // <--- TO DO - remove when implementing
+        public async Task<IActionResult> CheckYourDetails()
+        {
+            // var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            // await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.CheckYourDetails, PagePath.CheckYourDetails);
+            return Ok("Check-Your-Details not been implemented yet...!");
+        }
+
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-            string actionName, string currentPagePath, string? nextPagePath)
+            string actionName, string currentPagePath, string? nextPagePath, string? controllerName = null)
         {
             session.IsUserChangingDetails = false;
             await SaveSession(session, currentPagePath, nextPagePath);
 
-            return RedirectToAction(actionName);
+            return !string.IsNullOrWhiteSpace(controllerName) ? RedirectToAction(actionName, controllerName) : RedirectToAction(actionName);
         }
 
         private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
