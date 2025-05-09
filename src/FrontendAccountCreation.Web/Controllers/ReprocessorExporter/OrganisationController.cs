@@ -583,23 +583,6 @@ public class OrganisationController : Controller
         return View();
     }
 
-    [HttpGet]
-    [Route(PagePath.YouAreApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
-    public async Task<IActionResult> YouAreApprovedPerson()
-    {
-        return View();
-    }
-
-    [HttpGet]
-    [Route(PagePath.ApprovedPersonContinue)]
-    public async Task<IActionResult> ApprovedConfirmationContinue()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.YouAreApprovedPerson, PagePath.ToBeAdded);
-        return Ok();
-    }
-
     [ExcludeFromCodeCoverage]
     public void NotImplementedMethod()
     {
