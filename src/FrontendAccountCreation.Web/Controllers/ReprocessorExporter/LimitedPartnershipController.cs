@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
@@ -125,6 +126,39 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             // this also cover if current page not found (index = -1) then it clears all pages
             session.Journey = session.Journey.Take(index + 1).ToList();
+        }
+
+        [HttpGet]
+        [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.AddAnApprovedPerson)]
+        public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
+            {
+                return RedirectToAction("YouAreApprovedPerson"); // need to re-visit with correct URL
+            }
+
+            if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
+            {
+                return RedirectToAction("TeamMemberRoleInOrganisation"); // need to re-visit with correct URL
+            }
+
+            // I-will-Invite-an-Approved-Person-Later
+            return RedirectToAction("CheckYourDetails", "AccountCreation"); // need to re-visit with correct URL
         }
     }
 }
