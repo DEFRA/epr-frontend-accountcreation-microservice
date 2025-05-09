@@ -2,7 +2,9 @@
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.AccountCreation;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 
@@ -200,6 +202,28 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
+        }
+
+        [HttpGet]
+        [Route(PagePath.AddNotApprovedPerson)]
+        public async Task<IActionResult> AddNotApprovedPerson()
+        {
+            
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.AddNotApprovedPerson)]
+        public async Task<IActionResult> AddNotApprovedPerson(AddNotApprovedPersonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            return model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString()
+                ? RedirectToAction(nameof(TeamMemberRoleInOrganisation))
+                : RedirectToAction("CheckYourDetails", "AccountCreation");
         }
 
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
