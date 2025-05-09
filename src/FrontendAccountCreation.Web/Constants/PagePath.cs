@@ -49,6 +49,7 @@ public static class PagePath
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "placeholder-mames-of-partners"; // To DO: replace with correct endpoint
+    public const string LimitedPartnershipAddApprovedPerson = "limited-partnership-add-approved-person"; // need to re-visit
 
     // Non journey paths 
     public const string Accessibility = "accessibility";
