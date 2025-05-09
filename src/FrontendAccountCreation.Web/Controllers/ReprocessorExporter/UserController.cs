@@ -59,14 +59,7 @@ public class UserController : Controller
         var userExists = await _facadeService.DoesAccountAlreadyExistAsync();
         if (userExists)
         {
-            if (string.IsNullOrEmpty(_urlOptions.ExistingUserRedirectUrl))
-            {
-                return RedirectToAction("ReExUserAlreadyExists");
-            }
-            else
-            {
-                return Redirect(_urlOptions.ExistingUserRedirectUrl);
-            }
+          return RedirectToAction("ReExUserAlreadyExists");
         }
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new ReExAccountCreationSession
