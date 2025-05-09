@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FrontendAccountCreation.Web.Constants;
 
+[ExcludeFromCodeCoverage]
 public static class PagePath
 {
     // Journey paths
@@ -50,8 +53,11 @@ public static class PagePath
     public const string SignedOut = "signed-out";
     public const string Error = "error";
     public const string AError = "auth-error";
+    public const string ErrorReEx = "error-reex";
     public const string Culture = "culture";
+    //to-do: this page path doesn't exist, but if you redirect to it, you'll get "page not found" as the path doesn't exist :-)
     public const string PageNotFound = "PageNotFound";
+    public const string PageNotFoundReEx = "/page-not-found-reex";
     public const string AcknowledgeCookieAcceptance = "acknowledge-cookie-acceptance";
     public const string UpdateCookieAcceptance = "update-cookie-acceptance";
 }

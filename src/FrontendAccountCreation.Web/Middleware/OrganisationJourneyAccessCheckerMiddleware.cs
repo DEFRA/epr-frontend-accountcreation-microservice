@@ -25,7 +25,7 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
             }
             else if (sessionValue.Journey.Count == 0)
             {
-                pageToRedirect = PagePath.PageNotFound;
+                pageToRedirect = PagePath.PageNotFoundReEx;
             }
             else if (!sessionValue.Journey.Contains(attribute.PagePath))
             {
