@@ -20,4 +20,14 @@ public class LimitedPartnershipPersonOrCompanyViewModel
 
     [RegularExpression("True|true", ErrorMessage = "Must be a company or a person but not both")]
     public bool IsPersonOrCompanyButNotBoth => ((IsPerson && !IsCompany) || (IsCompany && !IsPerson));
+
+    public static implicit operator LimitedPartnershipPersonOrCompanyViewModel(ReExLimitedPartnershipPersonOrCompany partner)
+    {
+        return new LimitedPartnershipPersonOrCompanyViewModel
+        {
+            Id = partner.Id,
+            PersonName = partner.IsPerson? partner.Name : null,
+            CompanyName = !partner.IsPerson ? partner.Name: null
+        };
+    }
 }

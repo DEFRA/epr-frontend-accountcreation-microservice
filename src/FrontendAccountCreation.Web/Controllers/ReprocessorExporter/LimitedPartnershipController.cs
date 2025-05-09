@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -21,15 +22,36 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> NamesOfPartners()
         {
             LimitedPartnershipPartnersViewModel model = new();
-            var partnerList = new List<LimitedPartnershipPersonOrCompanyViewModel>();
 
-            LimitedPartnershipPersonOrCompanyViewModel person = new LimitedPartnershipPersonOrCompanyViewModel();
-            partnerList.Add(person);
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            ReExLimitedPartnership? ltdPartnershipSession = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
+            model.ExpectsIndividualPartners = ltdPartnershipSession?.HasIndividualPartners ?? true;
+            model.ExpectsCompanyPartners = ltdPartnershipSession?.HasCompanyPartners ?? true;
 
-            LimitedPartnershipPersonOrCompanyViewModel person2 = new LimitedPartnershipPersonOrCompanyViewModel();
-            partnerList.Add(person2);
-            model.Partners = partnerList;
+            List<ReExLimitedPartnershipPersonOrCompany>? partnersSession = ltdPartnershipSession?.Partners;
+            List<LimitedPartnershipPersonOrCompanyViewModel> partnerList = [];
+            if (partnersSession != null)
+            {
+                partnerList = partnersSession.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item)
+                    .Where(x => ((x.IsPerson && model.ExpectsIndividualPartners) ||
+                        (x.IsCompany && model.ExpectsCompanyPartners))).ToList();
+            }
 
+            if (partnerList.Count.Equals(0))
+            {
+                LimitedPartnershipPersonOrCompanyViewModel partner = new()
+                {
+                    Id = Guid.NewGuid()
+                };
+                partnerList.Add(partner);
+                LimitedPartnershipPersonOrCompanyViewModel partner2 = new()
+                {
+                    Id = Guid.NewGuid()
+                };
+                partnerList.Add(partner2);
+            }
+
+            model.Partners = partnerList; 
             return View(model);
         }
 
