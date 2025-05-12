@@ -1,15 +1,9 @@
 ﻿using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
-using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 namespace FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 
 public class ReExLimitedPartnership
 {
-    public bool HasIndividualPartners { get; set; }
-
-    public bool HasCompanyPartners { get; set; }
-
-    public List<ReExLimitedPartnershipPersonOrCompany>? Partners { get; set; }
-
+    public ReExLimitedPartnershipSummary? PartnershipSummary { get; set; }
     public List<ReExLimitedPartnershipApprovedPerson>? PartnershipApprovedPersons { get; set; }
 }
