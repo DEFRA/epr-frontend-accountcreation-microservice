@@ -1,5 +1,12 @@
-﻿@{
+﻿@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@model LimitedPartnershipPartnersViewModel;
+
+@{
     ViewData["Title"] = Localizer["NamesOfPartners.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
 <div class="govuk-width-container ">
@@ -8,61 +15,70 @@
 
         <div class="govuk-grid-row ">
             <div class="govuk-grid-column-two-thirds">
-                <h1 class="govuk-heading-l">What are the names of all partners in your limited partnership?</h1>
+                <h1 class="govuk-heading-l">@Localizer["NamesOfPartners.WhatAreTheNames"]</h1>
 
-                <div id="waste-hint" class="govuk-hint">
-                    This means any company entity partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.
-                </div>
-
-                <div data-module="moj-add-another">
+                <div class="govuk-hint">@Localizer["NamesOfPartners.ThisMeansAnyCompany"]</div>
+                <hr>
+                <br>
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+                <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                     <form method="post">
+                        @Html.HiddenFor(m => m.ExpectsCompanyPartners)
+                        @Html.HiddenFor(m => m.ExpectsIndividualPartners)
+                        @for (int i = 0; i < Model.Partners.Count(); ++i)
+                        {
+                            <fieldset class="govuk-fieldset">
+                                <p></p>
+                                <div class="govuk-form-group">
+                                    @Html.HiddenFor(m => m.Partners[i].Id)
 
-                        <fieldset class="govuk-fieldset moj-add-another__item">
-                            <hr>
-                            <br>
-                            <p></p>
-                            <div class="govuk-form-group">
-                                <label class="govuk-label govuk-!-font-weight-bold" for="person[0][first_name]">
-                                    Company partner name
-                                </label>
-                                <input class="govuk-input" id="person[0][first_name]" name="person[0][first_name]" type="text" data-name="person[%index%][first_name]" data-id="person[%index%][first_name]">
+                                    @if (Model.ExpectsCompanyPartners)
+                                    {
+                                        <!-- Company partner name -->
+                                        @Html.LabelFor(m => m.Partners[i].CompanyName, @Localizer["NamesOfPartners.CompanyName"].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
+                                        @Html.EditorFor(m => m.Partners[i].CompanyName, new { htmlAttributes = new { @class = "govuk-input" } })
+                                    }
 
-                                <br><p></p><br>
-                                <p><STRONG>Or</STRONG></p>
-                                <label class="govuk-label govuk-!-font-weight-bold" for="person[0][first_name]">
-                                    Individual partner’s first name
-                                </label>
+                                    @if (Model.ExpectsCompanyPartners && Model.ExpectsIndividualPartners)
+                                    {
+                                        <br /><br />
+                                        <p class="govuk-body"><strong>@Localizer["NamesOfPartners.Or"]</strong></p>
+                                    }
 
-                                <input class="govuk-input" id="person[0][first_name]" name="person[0][first_name]" type="text" data-name="person[%index%][first_name]" data-id="person[%index%][first_name]">
-                            </div>
+                                    @if (Model.ExpectsIndividualPartners)
+                                    {
+                                        <!-- Individual partner’s full name -->
+                                        @Html.LabelFor(m => m.Partners[i].PersonName, @Localizer["NamesOfPartners.PersonName"].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
+                                        @Html.EditorFor(m => m.Partners[i].PersonName, new { htmlAttributes = new { @class = "govuk-input" } })
+                                    }
 
+                                    <br /><br />
 
-                            <div class="govuk-form-group">
-                                <label class="govuk-label govuk-!-font-weight-bold" for="person[0][first_name]">
-                                    Individual partner’s last name
-                                </label>
-                                <input class="govuk-input" id="person[0][first_name]" name="person[0][first_name]" type="text" data-name="person[%index%][first_name]" data-id="person[%index%][first_name]">
+                                    @if (Model.Partners.Count > 1)
+                                    {
+                                        <!-- remove partner -->
+                                        <div class="govuk-!-text-align-right">
+                                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="@Model.Partners[i].Id" type="submit">
+                                                @SharedLocalizer["Remove"]
+                                            </button>
+                                        </div>
+                                    }
+                                    <hr>
+                                </div>
+                            </fieldset>
+                        }
 
-                            </div>
+                        <div class="govuk-button-group">
 
-                        </fieldset>
-                        <hr>
-                        <br>
-
-                        <div class="moj-button-action">
-
-                            <button type="submit" class="govuk-button govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4" data-module="govuk-button">
-                                Add another partner
+                            <!-- Add another partner-->
+                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="add" type="submit">
+                                @Localizer["NamesOfPartners.AddAnotherPartner"]
                             </button>
-
-                        </div>
-
-                        <div class="moj-button-action">
-
-                            <div class="govuk-button-group">
-                                <a href="check-partner-companies-both" class="govuk-button" type="submit">Continue</a>
-                            </div>
-
+ 
+                            <!-- save partners -->
+                            <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="save" type="submit">
+                                @SharedLocalizer["Continue"]
+                            </button>
                         </div>
 
                     </form>

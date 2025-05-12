@@ -2,4 +2,5 @@
 
 public class ReExLimitedPartnership
 {
+    public ReExLimitedPartnershipSummary? PartnershipSummary { get; set; }
 }

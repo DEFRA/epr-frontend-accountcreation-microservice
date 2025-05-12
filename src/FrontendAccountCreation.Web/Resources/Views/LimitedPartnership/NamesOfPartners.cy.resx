@@ -16,7 +16,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TeamMemberRoleInOrganisation.Title" xml:space="preserve">
+  <data name="NamesOfPartners.Title" xml:space="preserve">
     <value>[Welsh]What are the names of all partners in your limited partnership?</value>
+  </data>
+  <data name="NamesOfPartners.WhatAreTheNames" xml:space="preserve">
+    <value>[Welsh]What are the names of all partners in your limited partnership?</value>
+  </data>
+  <data name="NamesOfPartners.ThisMeansAnyCompany" xml:space="preserve">
+    <value>[Welsh]This means any company entity partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
+  </data>
+  <data name="NamesOfPartners.CompanyName" xml:space="preserve">
+    <value>[Welsh]Company partner name</value>
+  </data>
+  <data name="NamesOfPartners.Or" xml:space="preserve">
+    <value>[Welsh]Or</value>
+  </data>
+  <data name="NamesOfPartners.PersonName" xml:space="preserve">
+    <value>[Welsh]Individual partner’s full name</value>
+  </data>
+  <data name="NamesOfPartners.AddAnotherPartner" xml:space="preserve">
+    <value>[Welsh]Add another partner</value>
   </data>
 </root>
