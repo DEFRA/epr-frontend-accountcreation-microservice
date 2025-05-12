@@ -117,58 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Back" xml:space="preserve">
-    <value>Back</value>
+  <data name="AddNotApprovedPerson.BulletAccreditation" xml:space="preserve">
+    <value>apply for accreditation</value>
   </data>
-  <data name="Continue" xml:space="preserve">
-    <value>Continue</value>
+  <data name="AddNotApprovedPerson.BulletSubmit" xml:space="preserve">
+    <value>submit and verify data returns</value>
   </data>
-  <data name="SkipToMainContent" xml:space="preserve">
-    <value>Skip to main content</value>
+  <data name="AddNotApprovedPerson.CompanySecretary" xml:space="preserve">
+    <value>company secretary</value>
   </data>
-  <data name="ApplicationTitle" xml:space="preserve">
-    <value>Report packaging data</value>
+  <data name="AddNotApprovedPerson.Director" xml:space="preserve">
+    <value>director</value>
   </data>
-  <data name="No" xml:space="preserve">
-    <value>No</value>
+  <data name="AddNotApprovedPerson.InsetText" xml:space="preserve">
+    <value>An approved person may delegate their function to another person (a delegate) at a later stage - subject to regulator approval.</value>
   </data>
-  <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
+  <data name="AddNotApprovedPerson.IntroInstruction" xml:space="preserve">
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
-  <data name="Change" xml:space="preserve">
-    <value>Change</value>
+  <data name="AddNotApprovedPerson.IntroText1" xml:space="preserve">
+    <value>You should invite an 'approved person' who needs to be invited to take on tasks on behalf of the organisation.</value>
   </data>
-  <data name="Or" xml:space="preserve">
-    <value>or</value>
+  <data name="AddNotApprovedPerson.IntroText2" xml:space="preserve">
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to:</value>
   </data>
-  <data name="English" xml:space="preserve">
-    <value>English</value>
+  <data name="AddNotApprovedPerson.IntroText3" xml:space="preserve">
+    <value>More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
   </data>
-  <data name="Cymraeg" xml:space="preserve">
-    <value>Cymraeg</value>
+  <data name="AddNotApprovedPerson.InviteOptionsLegend" xml:space="preserve">
+    <value>Invite approved person options</value>
   </data>
-  <data name="Welsh" xml:space="preserve">
-    <value>Cymraeg</value>
+  <data name="AddNotApprovedPerson.InviteAnotherApprovedPerson" xml:space="preserve">
+    <value>I will invite an eligible person to be an approved person</value>
   </data>
-  <data name="GovUKTitle" xml:space="preserve">
-    <value>GOV.UK</value>
+  <data name="AddNotApprovedPerson.InviteApprovedPersonLater" xml:space="preserve">
+    <value>I will invite an approved person later</value>
   </data>
-  <data name="Header.SignIn" xml:space="preserve">
-    <value>Sign in</value>
+  <data name="AddNotApprovedPerson.OptionError" xml:space="preserve">
+    <value>Select an option</value>
   </data>
-  <data name="Header.SignOut" xml:space="preserve">
-    <value>Sign out</value>
+  <data name="AddNotApprovedPerson.RolesHeading" xml:space="preserve">
+    <value>Roles eligible to be an approved person</value>
   </data>
-  <data name="EprForPackaging" xml:space="preserve">
-    <value>EPR for packaging: reprocessors and exporters</value>
+  <data name="AddNotApprovedPerson.RolesInstruction" xml:space="preserve">
+    <value>Either of these roles can be an approved person</value>
   </data>
-  <data name="CompanySecretary" xml:space="preserve">
-    <value>Company Secretary</value>
+  <data name="AddNotApprovedPerson.SelectOptionText" xml:space="preserve">
+    <value>Select an option to proceed.</value>
   </data>
-  <data name="Director" xml:space="preserve">
-    <value>Director</value>
+  <data name="AddNotApprovedPerson.Title" xml:space="preserve">
+    <value>Add an approved person </value>
   </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+  <data name="AddNotApprovedPerson.UserHeading" xml:space="preserve">
+    <value>Invite users in your team</value>
   </data>
 </root>
