@@ -1,6 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
