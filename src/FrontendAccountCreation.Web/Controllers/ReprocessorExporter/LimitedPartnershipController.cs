@@ -6,9 +6,11 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
+    [ExcludeFromCodeCoverage]
     [Route("re-ex/organisation")]
     public partial class LimitedPartnershipController : Controller
     {
