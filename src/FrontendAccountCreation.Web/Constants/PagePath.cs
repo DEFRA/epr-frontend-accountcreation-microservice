@@ -48,7 +48,7 @@ public static class PagePath
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
 
     // Limited partnership paths
-    public const string LimitedPartnershipNamesOfPartners = "placeholder-mames-of-partners"; // To DO: replace with correct endpoint
+    public const string LimitedPartnershipNamesOfPartners = "name-all-partners";
 
     // Non journey paths 
     public const string Accessibility = "accessibility";
