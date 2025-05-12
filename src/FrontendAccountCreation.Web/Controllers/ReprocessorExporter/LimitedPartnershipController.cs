@@ -5,6 +5,7 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -35,7 +36,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 partnerList = partnersSession.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item)
                     .Where(x => (
-                            (!x.IsPersonOrCompanyButNotBoth) ||  
+                            (!x.IsPersonOrCompanyButNotBoth) ||
                             (x.IsPerson && model.ExpectsIndividualPartners) ||
                             (x.IsCompany && model.ExpectsCompanyPartners)
                                 )).ToList();
@@ -50,55 +51,86 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 partnerList.Add(newPartner);
             }
 
-            model.Partners = partnerList; 
+            model.Partners = partnerList;
             return View(model);
         }
 
+        /// <summary>
+        /// Save partner details to session
+        /// </summary>
+        /// <param name="model">View model</param>
+        /// <param name="command">'save' to update partners and continue, 'add' to add new partner, any Guid removes the corresponding item from the model.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route(PagePath.LimitedPartnershipNamesOfPartners)]
         public async Task<IActionResult> NamesOfPartners(LimitedPartnershipPartnersViewModel model, string command)
         {
+            // when command is a Guid its an instruction to remove that item from the model, so do so before validating
+            if (Guid.TryParse(command, out Guid removedId))
+            {
+                model.Partners.RemoveAll(x => x.Id == removedId);
+                ModelState.Clear();
+                if (!TryValidateModel(model, nameof(LimitedPartnershipPartnersViewModel)))
+                {
+                    return View(model);
+                }
+            }
 
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
+            ReExPartnership partnershipSession = companiesHouseSession.Partnership ?? new();
+            ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
+
+            List<ReExLimitedPartnershipPersonOrCompany> partners = await GetPartners(model);
             if (command == "add")
             {
-                OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-                ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
-                ReExPartnership partnershipSession = companiesHouseSession.Partnership ?? new();
-                ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
-
-                List<ReExLimitedPartnershipPersonOrCompany> partnersSession = new();
-                foreach (var partner in model.Partners)
-                {
-                    ReExLimitedPartnershipPersonOrCompany sessionPartner = new()
-                    {
-                        Id = partner.Id,
-                        IsPerson = partner.IsPerson,
-                        Name = partner.IsPerson ? partner.PersonName : partner.CompanyName
-                    };
-                    partnersSession.Add(sessionPartner);
-                }
                 ReExLimitedPartnershipPersonOrCompany newPartner = new()
                 {
                     Id = Guid.NewGuid()
                 };
-                partnersSession.Add(newPartner);
 
-                ltdPartnershipSession.Partners = partnersSession;
-                ltdPartnershipSession.HasCompanyPartners = model.ExpectsCompanyPartners;
-                ltdPartnershipSession.HasIndividualPartners = model.ExpectsIndividualPartners;
-                partnershipSession.LimitedPartnership = ltdPartnershipSession;
-                companiesHouseSession.Partnership = partnershipSession;
-                session.ReExCompaniesHouseSession = companiesHouseSession;
-
-                return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipNamesOfPartners);
+                partners.Add(newPartner);
             }
 
-            return RedirectToAction("AddApprovedPerson", "ApprovedPerson");
+            // refresh limited partnership session from the view model
+            ltdPartnershipSession.Partners = partners;
+            ltdPartnershipSession.HasCompanyPartners = model.ExpectsCompanyPartners;
+            ltdPartnershipSession.HasIndividualPartners = model.ExpectsIndividualPartners;
+
+            partnershipSession.LimitedPartnership = ltdPartnershipSession;
+            companiesHouseSession.Partnership = partnershipSession;
+            session.ReExCompaniesHouseSession = companiesHouseSession;
+
+            if (command == "save")
+            {
+                return RedirectToAction("AddApprovedPerson", "ApprovedPerson");
+            }
+            else
+            {
+                return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipNamesOfPartners);
+            }
+        }
+
+        private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetPartners(LimitedPartnershipPartnersViewModel model)
+        {
+            List<ReExLimitedPartnershipPersonOrCompany> partnersSession = new();
+            foreach (var partner in model.Partners)
+            {
+                ReExLimitedPartnershipPersonOrCompany sessionPartner = new()
+                {
+                    Id = partner.Id,
+                    IsPerson = partner.IsPerson,
+                    Name = partner.IsPerson ? partner.PersonName : partner.CompanyName
+                };
+                partnersSession.Add(sessionPartner);
+            }
+
+            return partnersSession;
         }
 
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,

@@ -59,7 +59,7 @@
                                     {
                                         <!-- remove partner -->
                                         <div class="govuk-!-text-align-right">
-                                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="NamesOfPartners" name="command" value="remove" type="submit">
+                                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="NamesOfPartners" name="command" value="@Model.Partners[i].Id" type="submit">
                                                 @Localizer["NamesOfPartners.Remove"]
                                             </button>
                                         </div>
