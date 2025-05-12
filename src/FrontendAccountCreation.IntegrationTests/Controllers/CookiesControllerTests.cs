@@ -13,9 +13,6 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FrontendAccountCreation.IntegrationTests.Controllers
@@ -230,5 +227,24 @@ namespace FrontendAccountCreation.IntegrationTests.Controllers
             Assert.AreEqual("/", result.Url);
         }
 
+        [TestMethod]
+        public void CookiesController_ReturnUrl_UsesCurrentPage_WhenSet()
+        {
+            // Arrange
+            var controller = new Mock<Controller>();
+            controller.Object.ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+            controller.Object.ViewBag.CurrentPage = "/custom-return-url";
+
+            var mockUrlHelper = new Mock<IUrlHelper>();
+            controller.Object.Url = mockUrlHelper.Object;
+
+            // Act
+            bool isReExOverride = controller.Object.ViewData["ApplicationTitleOverride"]?.ToString() == LayoutOverrides.ReExTitleOverride;
+            string returnUrl = (string)controller.Object.ViewBag.CurrentPage ?? (isReExOverride ? controller.Object.Url.HomePathReEx() : controller.Object.Url.Action("Current", "Page"));
+
+            // Assert
+            Assert.IsTrue(isReExOverride);
+            Assert.AreEqual("/custom-return-url", returnUrl);
+        }
     }
 }

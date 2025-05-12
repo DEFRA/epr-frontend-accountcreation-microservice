@@ -1,8 +1,6 @@
 ﻿namespace FrontendAccountCreation.Web.UnitTests.Extensions;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Moq;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -40,5 +38,35 @@ public class UrlHelperExtensionTests
 
         // Assert
         result.Should().Be("/AccountCreation");
+    }
+
+    [TestMethod]
+    public void HomePathReEx_ReturnsCorrectPath()
+    {
+        // Arrange
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper.Setup(x => x.Action(It.Is<UrlActionContext>(uac => uac.Action == "ReExAccountFullName" && uac.Controller == "User")))
+                     .Returns("/User/ReExAccountFullName");
+
+        // Act
+        var result = mockUrlHelper.Object.HomePathReEx();
+
+        // Assert
+        result.Should().Be("/User/ReExAccountFullName");
+    }
+
+    [TestMethod]
+    public void CurrentPathReEx_ReturnsExpectedUrl()
+    {
+        // Arrange
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper.Setup(x => x.Action(It.Is<UrlActionContext>(uac => uac.Action == null && uac.Controller == "User")))
+                     .Returns("/User");
+
+        // Act
+        var result = mockUrlHelper.Object.CurrentPathReEx();
+
+        // Assert
+        Assert.AreEqual("/User", result);
     }
 }
