@@ -1,101 +1,229 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using FrontendAccountCreation.Web.ViewModels.LimitedPartnership;
 using Microsoft.AspNetCore.Mvc;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
 
-namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+
+[Route("re-ex/organisation")]
+public partial class LimitedPartnershipController : Controller
 {
-    [Route("re-ex/organisation")]
-    public partial class LimitedPartnershipController : Controller
+    private readonly ISessionManager<OrganisationSession> _sessionManager;
+
+    public LimitedPartnershipController(ISessionManager<OrganisationSession> sessionManager)
     {
-        private readonly ISessionManager<OrganisationSession> _sessionManager;
+        _sessionManager = sessionManager;
+    }
 
-        public LimitedPartnershipController(ISessionManager<OrganisationSession> sessionManager)
+    [HttpGet]
+    [Route(PagePath.LimitedPartnershipNamesOfPartners)]
+    public async Task<IActionResult> NamesOfPartners()
+    {
+        LimitedPartnershipPartnersViewModel model = new();
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        ReExLimitedPartnership? ltdPartnershipSession =
+            session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
+        model.ExpectsIndividualPartners = ltdPartnershipSession?.HasIndividualPartners ?? true;
+        model.ExpectsCompanyPartners = ltdPartnershipSession?.HasCompanyPartners ?? true;
+
+        List<ReExLimitedPartnershipPersonOrCompany>? partnersSession = ltdPartnershipSession?.Partners;
+        List<LimitedPartnershipPersonOrCompanyViewModel> partnerList = [];
+        if (partnersSession != null)
         {
-            _sessionManager = sessionManager;
+            partnerList = partnersSession.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item)
+                .Where(x => (
+                    (!x.IsPersonOrCompanyButNotBoth) ||
+                    (x.IsPerson && model.ExpectsIndividualPartners) ||
+                    (x.IsCompany && model.ExpectsCompanyPartners)
+                )).ToList();
         }
 
-        [HttpGet]
-        [Route(PagePath.LimitedPartnershipNamesOfPartners)]
-        public async Task<IActionResult> NamesOfPartners()
+        if (partnerList.Count.Equals(0))
         {
-            return View();
-        }
-
-        [HttpGet]
-        [Route(PagePath.TeamMemberRoleInOrganisation)]
-        public async Task<IActionResult> OrganisationRole([FromQuery] Guid? id)
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
-            // show previously selected team member role
-            if (id.HasValue)
+            LimitedPartnershipPersonOrCompanyViewModel newPartner = new()
             {
-                int? index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
-                if (index != null && index.GetValueOrDefault(-1) >= 0)
-                {
-                    OrganisationRoleViewModel viewModel = new OrganisationRoleViewModel
-                    {
-                        RoleInOrganisation = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.TeamMembers[index.Value]?.Role
-                    };
-                    return View(viewModel);
-                }
-            }
-
-            return View();
+                Id = Guid.NewGuid()
+            };
+            partnerList.Add(newPartner);
         }
 
-        [HttpPost]
-        [Route(PagePath.TeamMemberRoleInOrganisation)]
-        public async Task<IActionResult> RoleInOrganisation(OrganisationRoleViewModel model)
+        model.Partners = partnerList;
+        return View(model);
+    }
+
+    /// <summary>
+    /// Save partner details to session
+    /// </summary>
+    /// <param name="model">View model</param>
+    /// <param name="command">'save' to update partners and continue, 'add' to add new partner, any Guid removes the corresponding item from the model.</param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route(PagePath.LimitedPartnershipNamesOfPartners)]
+    public async Task<IActionResult> NamesOfPartners(LimitedPartnershipPartnersViewModel model, string command)
+    {
+        // when command is a Guid its an instruction to remove that item from the model, so do so before validating
+        if (Guid.TryParse(command, out Guid removedId))
         {
-            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            if (!ModelState.IsValid)
+            model.Partners.RemoveAll(x => x.Id == removedId);
+            ModelState.Clear();
+            if (!TryValidateModel(model, nameof(LimitedPartnershipPartnersViewModel)))
             {
                 return View(model);
             }
-
-            ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
-            int? index = companiesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model?.Id));
-            Guid queryStringId;
-            bool isExistingMember = false;
-
-            if (index != null && index.GetValueOrDefault(-1) >= 0)
-            {
-                // found existing team member, set their role
-                queryStringId = model.Id.Value;
-                isExistingMember = true;
-                session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role = model.RoleInOrganisation;
-
-            }
-            else
-            {
-                // add new team member
-                queryStringId = Guid.NewGuid();
-
-                List<LimitedPartnershipTeamMember> members = companiesHouseSession.TeamMembers ?? new();
-                members.Add(new LimitedPartnershipTeamMember { Id = queryStringId, Role = model.RoleInOrganisation });
-                companiesHouseSession.TeamMembers = members;
-                session.ReExCompaniesHouseSession = companiesHouseSession;
-            }
-
-            session.IsUserChangingDetails = false;
-            await SaveSession(session, PagePath.TeamMemberRoleInOrganisation, PagePath.TeamMemberDetails);
-
-            if (isExistingMember)
-            {
-                // move to enter team member details: full name, email, telephone
-                return RedirectToAction(nameof(TeamMembersCheckInvitationDetails));
-            }
-            else
-            {
-                // go back to check their invitation detials
-                return RedirectToAction(nameof(TeamMemberDetails), new { id = queryStringId });
-            }
         }
 
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
+        ReExPartnership partnershipSession = companiesHouseSession.Partnership ?? new();
+        ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
+
+        List<ReExLimitedPartnershipPersonOrCompany> partners = await GetPartners(model);
+        if (command == "add")
+        {
+            ReExLimitedPartnershipPersonOrCompany newPartner = new()
+            {
+                Id = Guid.NewGuid()
+            };
+
+            partners.Add(newPartner);
+        }
+
+        // refresh limited partnership session from the view model
+        ltdPartnershipSession.Partners = partners;
+        ltdPartnershipSession.HasCompanyPartners = model.ExpectsCompanyPartners;
+        ltdPartnershipSession.HasIndividualPartners = model.ExpectsIndividualPartners;
+
+        partnershipSession.LimitedPartnership = ltdPartnershipSession;
+        companiesHouseSession.Partnership = partnershipSession;
+        session.ReExCompaniesHouseSession = companiesHouseSession;
+
+        if (command == "save")
+        {
+            return RedirectToAction("AddApprovedPerson", "ApprovedPerson");
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(NamesOfPartners),
+                PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipNamesOfPartners);
+        }
+    }
+
+    [HttpGet]
+    [Route(PagePath.ApprovedPersonPartnershipRole)]
+    public async Task<IActionResult> ApprovedPersonPartnershipRole([FromQuery] Guid id)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var approvedPersons = session!.ReExCompaniesHouseSession?.Partnership!.LimitedPartnership!
+            .PartnershipApprovedPersons;
+        var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(id));
+
+        if (index is >= 0)
+        {
+            var viewModel = new LimitedPartnershipApprovedPersonRoleViewModel
+            {
+                RoleInOrganisation = approvedPersons![index.Value].Role
+            };
+            return View(viewModel);
+        }
+
+        return View();
+    }
+
+    [HttpPost]
+    [Route(PagePath.ApprovedPersonPartnershipRole)]
+    public async Task<IActionResult> ApprovedPersonPartnershipRole(LimitedPartnershipApprovedPersonRoleViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        var approvedPersons = session!.ReExCompaniesHouseSession!.Partnership!.LimitedPartnership!
+            .PartnershipApprovedPersons;
+        
+        var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(model.Id));
+        approvedPersons![index.Value].Role = model.RoleInOrganisation!.Value;
+
+        if (model.RoleInOrganisation == ReExLimitedPartnershipRoles.None)
+        {
+            await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+            return RedirectToAction(nameof(PersonCanNotBeInvited));
+        }
+
+        await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipDetails);
+        return RedirectToAction(nameof(ApprovedPersonDetails), new { id = model.Id });
+    }
+
+    [HttpGet]
+    [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
+    public IActionResult PersonCanNotBeInvited()
+    {
+        // Placeholder action to satisfy RedirectToAction
+        return Ok(); 
+    }
+
+    [HttpGet]
+    [Route(PagePath.ApprovedPersonPartnershipDetails)]
+    public IActionResult ApprovedPersonDetails(Guid id)
+    {
+        // Placeholder action to satisfy RedirectToAction with id
+        return Ok(); 
+    }
+
+    private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetPartners(
+        LimitedPartnershipPartnersViewModel model)
+    {
+        List<ReExLimitedPartnershipPersonOrCompany> partnersSession = new();
+        foreach (var partner in model.Partners)
+        {
+            ReExLimitedPartnershipPersonOrCompany sessionPartner = new()
+            {
+                Id = partner.Id,
+                IsPerson = partner.IsPerson,
+                Name = partner.IsPerson ? partner.PersonName : partner.CompanyName
+            };
+            partnersSession.Add(sessionPartner);
+        }
+
+        return partnersSession;
+    }
+
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+        string actionName, string currentPagePath, string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName);
+    }
+
+    private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
+    {
+        ClearRestOfJourney(session, currentPagePath);
+
+        session.Journey.AddIfNotExists(nextPagePath);
+
+        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+    }
+
+    private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
+    {
+        var index = session.Journey.IndexOf(currentPagePath);
+
+        // this also cover if current page not found (index = -1) then it clears all pages
+        session.Journey = session.Journey.Take(index + 1).ToList();
     }
 }
