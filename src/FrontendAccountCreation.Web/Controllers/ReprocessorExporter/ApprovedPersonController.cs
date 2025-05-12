@@ -129,10 +129,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             else
             {
                 //go back to check their invitation detials
-                return await SaveSessionAndRedirect(session, nameof(TeamMemberDetails),
-                    $"{PagePath.TeamMemberRoleInOrganisation}",
-                    $"{PagePath.TeamMemberDetails}?id={queryStringId}",
-                    new { id = queryStringId });
+            return await SaveSessionAndRedirect(session, nameof(TeamMemberDetails),
+                $"{PagePath.TeamMemberRoleInOrganisation}",
+                $"{PagePath.TeamMemberDetails}?id={queryStringId}",
+                new { id = queryStringId });
             }
         }
 
