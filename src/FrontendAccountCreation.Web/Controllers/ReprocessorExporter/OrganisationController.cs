@@ -104,7 +104,7 @@ public class OrganisationController : Controller
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
         if (session.IsTheOrganisationCharity.Value)
-        {           
+        {
             return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
         else
@@ -144,7 +144,7 @@ public class OrganisationController : Controller
         {
             Journey = [PagePath.RegisteredWithCompaniesHouse]
         };
-        
+
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.RegisteredWithCompaniesHouse);
@@ -326,13 +326,14 @@ public class OrganisationController : Controller
             SetBackLink(session, PagePath.IsPartnership);
             return View(model);
         }
-                   
+
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
         if (session.IsOrganisationAPartnership == true)
         {
             // TODO: No option ending up same YES pagePath - to be confirmed
-            return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.PartnershipType), PagePath.IsPartnership,
+                PagePath.PartnershipType                );
         }
         return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
     }
