@@ -168,4 +168,7 @@
   <data name="Director" xml:space="preserve">
     <value>Cyfarwyddwr</value>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>[Welsh]Remove</value>
+  </data>
 </root>

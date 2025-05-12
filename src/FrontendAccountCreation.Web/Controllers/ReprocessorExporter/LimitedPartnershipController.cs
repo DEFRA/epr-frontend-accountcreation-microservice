@@ -5,7 +5,6 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -23,6 +22,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.LimitedPartnershipNamesOfPartners)]
         public async Task<IActionResult> NamesOfPartners()
         {
+            // TODO: set back link when page becomes available
+
             LimitedPartnershipPartnersViewModel model = new();
 
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -72,20 +73,21 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 ModelState.Clear();
                 if (!TryValidateModel(model, nameof(LimitedPartnershipPartnersViewModel)))
                 {
+                    // TODO: set back link when page becomes available
                     return View(model);
                 }
             }
-
-            if (!ModelState.IsValid)
+            else if (!ModelState.IsValid)
             {
+                // TODO: set back link when page becomes available
                 return View(model);
             }
 
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
             ReExPartnership partnershipSession = companiesHouseSession.Partnership ?? new();
-            ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
 
+            // obtain partners from the view model
             List<ReExLimitedPartnershipPersonOrCompany> partners = await GetPartners(model);
             if (command == "add")
             {
@@ -98,9 +100,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             // refresh limited partnership session from the view model
-            ltdPartnershipSession.Partners = partners;
-            ltdPartnershipSession.HasCompanyPartners = model.ExpectsCompanyPartners;
-            ltdPartnershipSession.HasIndividualPartners = model.ExpectsIndividualPartners;
+            ReExLimitedPartnership ltdPartnershipSession = new()
+            {
+                Partners = partners,
+                HasCompanyPartners = model.ExpectsCompanyPartners,
+                HasIndividualPartners = model.ExpectsIndividualPartners
+            };
 
             partnershipSession.LimitedPartnership = ltdPartnershipSession;
             companiesHouseSession.Partnership = partnershipSession;
@@ -108,11 +113,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (command == "save")
             {
+                // TODO: swap this with SaveSessionAndRedirect() to correct page path
+                await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
                 return RedirectToAction("AddApprovedPerson", "ApprovedPerson");
             }
             else
             {
-                return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipNamesOfPartners);
+                return await SaveSessionAndRedirect(
+                    session,
+                    nameof(NamesOfPartners),
+                    PagePath.LimitedPartnershipNamesOfPartners,
+                    PagePath.LimitedPartnershipNamesOfPartners);
             }
         }
 
