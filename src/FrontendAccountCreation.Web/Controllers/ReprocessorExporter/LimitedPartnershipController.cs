@@ -162,10 +162,15 @@ public partial class LimitedPartnershipController : Controller
 
         var approvedPersons = session!.ReExCompaniesHouseSession!.Partnership!.LimitedPartnership!
             .PartnershipApprovedPersons;
+       
+        var index = approvedPersons.FindIndex(x => x.Id == model.Id);
 
-        var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(model.Id));
-        approvedPersons![index.Value].Role = model.RoleInOrganisation!.Value;
-
+        if (index == -1)
+        {
+            // fallback: ID not found, do not throw
+            return RedirectToAction(nameof(ApprovedPersonDetails), new { id = model.Id });
+        }
+        approvedPersons![index].Role = model.RoleInOrganisation!.Value;
         if (model.RoleInOrganisation == ReExLimitedPartnershipRoles.None)
         {
             await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
