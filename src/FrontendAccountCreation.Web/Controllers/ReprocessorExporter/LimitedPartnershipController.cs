@@ -1,11 +1,11 @@
 ﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -27,24 +27,24 @@ public partial class LimitedPartnershipController : Controller
 
         LimitedPartnershipPartnersViewModel model = new();
 
-            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            ReExLimitedPartnership ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
-            ReExLimitedPartnershipSummary? ltdPartnershipSummarySession = ltdPartnershipSession?.PartnershipSummary;
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        ReExLimitedPartnership ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
+        ReExLimitedPartnershipSummary? ltdPartnershipSummarySession = ltdPartnershipSession?.PartnershipSummary;
 
-            model.ExpectsIndividualPartners = ltdPartnershipSummarySession?.HasIndividualPartners ?? true;
-            model.ExpectsCompanyPartners = ltdPartnershipSummarySession?.HasCompanyPartners ?? true;
+        model.ExpectsIndividualPartners = ltdPartnershipSummarySession?.HasIndividualPartners ?? true;
+        model.ExpectsCompanyPartners = ltdPartnershipSummarySession?.HasCompanyPartners ?? true;
 
-            List<ReExLimitedPartnershipPersonOrCompany>? partnersSession = ltdPartnershipSummarySession?.Partners;
-            List<LimitedPartnershipPersonOrCompanyViewModel> partnerList = [];
-            if (partnersSession != null)
-            {
-                partnerList = partnersSession.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item)
-                    .Where(x => (
-                            (!x.IsPersonOrCompanyButNotBoth) ||
-                            (x.IsPerson && model.ExpectsIndividualPartners) ||
-                            (x.IsCompany && model.ExpectsCompanyPartners)
-                                )).ToList();
-            }
+        List<ReExLimitedPartnershipPersonOrCompany>? partnersSession = ltdPartnershipSummarySession?.Partners;
+        List<LimitedPartnershipPersonOrCompanyViewModel> partnerList = [];
+        if (partnersSession != null)
+        {
+            partnerList = partnersSession.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item)
+                .Where(x => (
+                        (!x.IsPersonOrCompanyButNotBoth) ||
+                        (x.IsPerson && model.ExpectsIndividualPartners) ||
+                        (x.IsCompany && model.ExpectsCompanyPartners)
+                            )).ToList();
+        }
 
         if (partnerList.Count.Equals(0))
         {
@@ -86,11 +86,11 @@ public partial class LimitedPartnershipController : Controller
             return View(model);
         }
 
-            // Organisation > Company > Partnership > Limited Partnership > Partnership Summary
-            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession ?? new();
-            ReExPartnership partnershipSession = companySession.Partnership ?? new();
-            ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
+        // Organisation > Company > Partnership > Limited Partnership > Partnership Summary
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession ?? new();
+        ReExPartnership partnershipSession = companySession.Partnership ?? new();
+        ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
 
         // obtain partners from the view model
         List<ReExLimitedPartnershipPersonOrCompany> partners = await GetPartners(model);
@@ -104,18 +104,18 @@ public partial class LimitedPartnershipController : Controller
             partners.Add(newPartner);
         }
 
-            // refresh limited partnership session from the view model
-            ReExLimitedPartnershipSummary ltdPartnershipSummarySession = new()
-            {
-                Partners = partners,
-                HasCompanyPartners = model.ExpectsCompanyPartners,
-                HasIndividualPartners = model.ExpectsIndividualPartners
-            };
+        // refresh limited partnership session from the view model
+        ReExLimitedPartnershipSummary ltdPartnershipSummarySession = new()
+        {
+            Partners = partners,
+            HasCompanyPartners = model.ExpectsCompanyPartners,
+            HasIndividualPartners = model.ExpectsIndividualPartners
+        };
 
-            ltdPartnershipSession.PartnershipSummary = ltdPartnershipSummarySession;
-            partnershipSession.LimitedPartnership = ltdPartnershipSession;
-            companySession.Partnership = partnershipSession;
-            session.ReExCompaniesHouseSession = companySession;
+        ltdPartnershipSession.PartnershipSummary = ltdPartnershipSummarySession;
+        partnershipSession.LimitedPartnership = ltdPartnershipSession;
+        companySession.Partnership = partnershipSession;
+        session.ReExCompaniesHouseSession = companySession;
 
         if (command == "save")
         {
