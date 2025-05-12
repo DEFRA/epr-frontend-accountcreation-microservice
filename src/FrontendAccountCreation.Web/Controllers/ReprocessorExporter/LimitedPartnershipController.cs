@@ -7,7 +7,6 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
-using FrontendAccountCreation.Web.ViewModels;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -152,32 +151,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return partnersSession;
         }
 
-        private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-            string actionName, string currentPagePath, string? nextPagePath)
-        {
-            session.IsUserChangingDetails = false;
-            await SaveSession(session, currentPagePath, nextPagePath);
-
-            return RedirectToAction(actionName);
-        }
-
-        private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
-        {
-            ClearRestOfJourney(session, currentPagePath);
-
-            session.Journey.AddIfNotExists(nextPagePath);
-
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-        }
-
-        private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
-        {
-            var index = session.Journey.IndexOf(currentPagePath);
-
-            // this also cover if current page not found (index = -1) then it clears all pages
-            session.Journey = session.Journey.Take(index + 1).ToList();
-        }
-
         [HttpGet]
         [Route(PagePath.PartnershipType)]
         public async Task<IActionResult> PartnershipType()
@@ -202,10 +175,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
             {
-                session.ReExCompaniesHouseSession.Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
-                    LimitedPartnership = new Core.Sessions.ReEx.Partnership.ReExLimitedPartnership()
+                    LimitedPartnership = new ReExLimitedPartnership()
                 };
 
                 return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
@@ -213,10 +186,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             else //TODO LimitedLiabilityPartnership
             //if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership)
             { 
-                session.ReExCompaniesHouseSession.Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
-                    LimitedPartnership = new Core.Sessions.ReEx.Partnership.ReExLimitedPartnership()
+                    LimitedPartnership = new ReExLimitedPartnership()
                 };
 
                 return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
@@ -244,48 +217,26 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             session.ReExCompaniesHouseSession.IsPartnership = true;
 
-            if (model.isIndividualPartners == true && model.isCompanyPartners == true)
+            if (model.isIndividualPartners || model.isCompanyPartners)
             {
-                //TODO 
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+                {
+                    IsLimitedPartnership = true,
+                    LimitedPartnership = new ReExLimitedPartnership
+                    {
+                        PartnershipSummary = new ReExLimitedPartnershipSummary
+                        {
+                            HasIndividualPartners = model.isIndividualPartners,
+                            HasCompanyPartners = model.isCompanyPartners
+                        }
+                    }
+                };
             }
-            else if (model.isIndividualPartners == true && model.isCompanyPartners == false)
-            {
-                //TODO 
-            }
-            else if (model.isIndividualPartners == false && model.isCompanyPartners == true)
-            {
-                //TODO 
-            }
-
-            session.ReExCompaniesHouseSession.Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership
-            {
-                IsLimitedPartnership = true,
-                LimitedPartnership = new Core.Sessions.ReEx.Partnership.ReExLimitedPartnership()
-            };
 
             return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipRole);
         }
 
-        [HttpPost]
-        [Route(PagePath.LimitedPartnershipRole)]
-        public async Task<IActionResult> LimitedPartnershipRole(LimitedPartnershipRoleViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            session.ReExCompaniesHouseSession.IsPartnership = true;
-
-            session.ReExCompaniesHouseSession.Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership
-            {
-                IsLimitedPartnership = true,
-                LimitedPartnership = new Core.Sessions.ReEx.Partnership.ReExLimitedPartnership()
-            };
-
-            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipRole);
-        }
+        
 
         [HttpGet]
         [Route(PagePath.LimitedPartnershipRole)]
@@ -309,7 +260,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-        string actionName, string currentPagePath, string? nextPagePath)
+            string actionName, string currentPagePath, string? nextPagePath)
         {
             session.IsUserChangingDetails = false;
             await SaveSession(session, currentPagePath, nextPagePath);
@@ -333,5 +284,31 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // this also cover if current page not found (index = -1) then it clears all pages
             session.Journey = session.Journey.Take(index + 1).ToList();
         }
+
+        //private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+        //string actionName, string currentPagePath, string? nextPagePath)
+        //{
+        //    session.IsUserChangingDetails = false;
+        //    await SaveSession(session, currentPagePath, nextPagePath);
+
+        //    return RedirectToAction(actionName);
+        //}
+
+        //private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
+        //{
+        //    ClearRestOfJourney(session, currentPagePath);
+
+        //    session.Journey.AddIfNotExists(nextPagePath);
+
+        //    await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        //}
+
+        //private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
+        //{
+        //    var index = session.Journey.IndexOf(currentPagePath);
+
+        //    // this also cover if current page not found (index = -1) then it clears all pages
+        //    session.Journey = session.Journey.Take(index + 1).ToList();
+        //}
     }
 }

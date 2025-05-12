@@ -13,77 +13,7 @@
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
-
-                <form asp-controller="LimitedPartnership" asp-action="LimitedPartnershipRole" method="post">
-                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                    @Localizer["LimitedPartnershipRole.Question"]
-                                </h1>
-                            </legend>
-
-                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
-
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoIndividualPartner"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.IndividualPartner)"
-                                           gov-first-option="true">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.IndividualPartner)"
-                                           gov-first-option="true">
-                                        @Localizer["LimitedPartnershipRole.IndividualPartner"]
-                                    </label>
-                                </div>
-                                
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoCompanyDirector"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.CompanyDirector)">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.CompanyDirector)">
-                                        @Localizer["LimitedPartnershipRole.CompanyDirector"]
-                                    </label>
-                                </div>
-                                
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.CompanySecretary)">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.CompanySecretary)">
-                                        @Localizer["LimitedPartnershipRole.CompanySecretary"]
-                                    </label>
-                                </div>
-                                
-                                <div class="govuk-radios__divider">@SharedLocalizer["Or"]</div>
-                                
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoNone"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.None)">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(LimitedPartnershipRole.None)">
-                                        @Localizer["LimitedPartnershipRole.None"]
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    <button class="govuk-button" data-module="govuk-button">
-                        @SharedLocalizer["Continue"]
-                    </button>
-                </form>
-            </div>
+            TODO
         </div>
     </main>
 </div>
