@@ -7,6 +7,6 @@ public class LimitedPartnershipApprovedPersonRoleViewModel
 {
     public Guid Id { get; set; }
 
-    [Required(ErrorMessage = "PartnerRole.ErrorMessage")]
+    [Required(ErrorMessage = "PartnershipApprovedPersonRole.ErrorMessage")]
     public ReExLimitedPartnershipRoles? RoleInOrganisation { get; set; }
 }

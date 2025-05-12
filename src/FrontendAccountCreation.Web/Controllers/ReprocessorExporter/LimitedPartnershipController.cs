@@ -133,7 +133,7 @@ public partial class LimitedPartnershipController : Controller
     public async Task<IActionResult> ApprovedPersonPartnershipRole([FromQuery] Guid id)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        var approvedPersons = session!.ReExCompaniesHouseSession?.Partnership!.LimitedPartnership!
+        var approvedPersons = session?.ReExCompaniesHouseSession?.Partnership!.LimitedPartnership!
             .PartnershipApprovedPersons;
         var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(id));
 

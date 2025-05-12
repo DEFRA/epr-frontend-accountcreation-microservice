@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="PartnershipApprovedPersonRole.CompanySecretary" xml:space="preserve">
+    <value>[Welsh]Compant Secretary within an organisation partner</value>
+  </data>
+  <data name="PartnershipApprovedPersonRole.Director" xml:space="preserve">
+    <value>[Welsh]Director within an organisation partner</value>
+  </data>
+  <data name="PartnershipApprovedPersonRole.ErrorMessage" xml:space="preserve">
+    <value>[Welsh]Please select an option</value>
+  </data>
   <data name="PartnershipApprovedPersonRole.Title" xml:space="preserve">
-    <value>Individual partner’s full name</value>
+    <value>[Welsh]Partnership approved person role</value>
   </data>
   <data name="PartnershipApprovedPersonRole.WhatIsTheirRole" xml:space="preserve">
     <value>[Welsh]What role do they have within the limited partnership, as registered on Companies House?</value>

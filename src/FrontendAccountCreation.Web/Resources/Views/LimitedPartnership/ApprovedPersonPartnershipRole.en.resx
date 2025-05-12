@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="PartnershipApprovedPersonRole.CompanySecretary" xml:space="preserve">
+    <value>Compant Secretary within an organisation partner</value>
+  </data>
+  <data name="PartnershipApprovedPersonRole.Director" xml:space="preserve">
+    <value>Director within an organisation partner</value>
+  </data>
+  <data name="PartnershipApprovedPersonRole.ErrorMessage" xml:space="preserve">
+    <value>Please select an option</value>
+  </data>
   <data name="PartnershipApprovedPersonRole.Title" xml:space="preserve">
     <value>Partnership approved person role</value>
   </data>

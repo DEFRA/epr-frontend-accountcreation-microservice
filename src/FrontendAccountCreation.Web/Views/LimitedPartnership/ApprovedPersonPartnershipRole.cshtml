@@ -6,7 +6,7 @@
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipApprovedPersonRoleViewModel;
 
 @{
-    ViewData["Title"] = Localizer["PartnershipApprovedPerson.Title"];
+    ViewData["Title"] = Localizer["PartnershipApprovedPersonRole.Title"];
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
@@ -23,7 +23,7 @@
                         <fieldset class="govuk-fieldset" aria-describedby="role-hint">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                    @Localizer["PartnershipApprovedPerson.WhatIsTheirRole"]
+                                    @Localizer["PartnershipApprovedPersonRole.WhatIsTheirRole"]
                                 </h1>
                             </legend>
 
@@ -45,7 +45,7 @@
                                            gov-for="RoleInOrganisation"
                                            gov-value="@nameof(ReExLimitedPartnershipRoles.Director)">
                                     <label class="govuk-label govuk-radios__label" for="rdoDirector">
-                                        @SharedLocalizer["Director"]
+                                        @Localizer["PartnershipApprovedPersonRole.Director"]
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item">
@@ -53,7 +53,7 @@
                                            gov-for="RoleInOrganisation"
                                            gov-value="@nameof(ReExLimitedPartnershipRoles.CompanySecretary)">
                                     <label class="govuk-label govuk-radios__label" for="rdoCompanySecretary">
-                                        @SharedLocalizer["CompanySecretary"]
+                                        @Localizer["PartnershipApprovedPersonRole.CompanySecretary"]
                                     </label>
                                 </div>
                                 <div class="govuk-radios__divider">@SharedLocalizer["Or"]</div>
