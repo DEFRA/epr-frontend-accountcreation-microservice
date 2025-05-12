@@ -128,10 +128,6 @@
         <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs,**/loadingspinner.js</Value>
       </SonarQubeSetting>
 	</ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Resources\Views\LimitedPartnership\" />
-    </ItemGroup>
   
      <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">
        <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
