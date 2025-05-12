@@ -236,8 +236,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipRole);
         }
 
-        
-
         [HttpGet]
         [Route(PagePath.LimitedPartnershipRole)]
         public async Task<IActionResult> LimitedPartnershipRole()
@@ -284,31 +282,5 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // this also cover if current page not found (index = -1) then it clears all pages
             session.Journey = session.Journey.Take(index + 1).ToList();
         }
-
-        //private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-        //string actionName, string currentPagePath, string? nextPagePath)
-        //{
-        //    session.IsUserChangingDetails = false;
-        //    await SaveSession(session, currentPagePath, nextPagePath);
-
-        //    return RedirectToAction(actionName);
-        //}
-
-        //private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
-        //{
-        //    ClearRestOfJourney(session, currentPagePath);
-
-        //    session.Journey.AddIfNotExists(nextPagePath);
-
-        //    await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-        //}
-
-        //private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
-        //{
-        //    var index = session.Journey.IndexOf(currentPagePath);
-
-        //    // this also cover if current page not found (index = -1) then it clears all pages
-        //    session.Journey = session.Journey.Take(index + 1).ToList();
-        //}
     }
 }
