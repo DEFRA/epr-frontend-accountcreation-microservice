@@ -168,4 +168,7 @@
   <data name="Director" xml:space="preserve">
     <value>Director</value>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
 </root>

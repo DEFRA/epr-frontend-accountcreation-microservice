@@ -4,7 +4,6 @@ using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using FrontendAccountCreation.Web.ViewModels.LimitedPartnership;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
 
@@ -24,6 +23,8 @@ public partial class LimitedPartnershipController : Controller
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
     public async Task<IActionResult> NamesOfPartners()
     {
+        // TODO: set back link when page becomes available
+
         LimitedPartnershipPartnersViewModel model = new();
 
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -74,20 +75,21 @@ public partial class LimitedPartnershipController : Controller
             ModelState.Clear();
             if (!TryValidateModel(model, nameof(LimitedPartnershipPartnersViewModel)))
             {
+                // TODO: set back link when page becomes available
                 return View(model);
             }
         }
-
-        if (!ModelState.IsValid)
+        else if (!ModelState.IsValid)
         {
+            // TODO: set back link when page becomes available
             return View(model);
         }
 
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         ReExCompaniesHouseSession companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
         ReExPartnership partnershipSession = companiesHouseSession.Partnership ?? new();
-        ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
 
+        // obtain partners from the view model
         List<ReExLimitedPartnershipPersonOrCompany> partners = await GetPartners(model);
         if (command == "add")
         {
@@ -100,9 +102,12 @@ public partial class LimitedPartnershipController : Controller
         }
 
         // refresh limited partnership session from the view model
-        ltdPartnershipSession.Partners = partners;
-        ltdPartnershipSession.HasCompanyPartners = model.ExpectsCompanyPartners;
-        ltdPartnershipSession.HasIndividualPartners = model.ExpectsIndividualPartners;
+        ReExLimitedPartnership ltdPartnershipSession = new()
+        {
+            Partners = partners,
+            HasCompanyPartners = model.ExpectsCompanyPartners,
+            HasIndividualPartners = model.ExpectsIndividualPartners
+        };
 
         partnershipSession.LimitedPartnership = ltdPartnershipSession;
         companiesHouseSession.Partnership = partnershipSession;
@@ -153,13 +158,14 @@ public partial class LimitedPartnershipController : Controller
 
         var approvedPersons = session!.ReExCompaniesHouseSession!.Partnership!.LimitedPartnership!
             .PartnershipApprovedPersons;
-        
+
         var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(model.Id));
         approvedPersons![index.Value].Role = model.RoleInOrganisation!.Value;
 
         if (model.RoleInOrganisation == ReExLimitedPartnershipRoles.None)
         {
-            await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+            await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
+                PagePath.ApprovedPersonPartnershipCanNotBeInvited);
             return RedirectToAction(nameof(PersonCanNotBeInvited));
         }
 
@@ -172,7 +178,7 @@ public partial class LimitedPartnershipController : Controller
     public IActionResult PersonCanNotBeInvited()
     {
         // Placeholder action to satisfy RedirectToAction
-        return Ok(); 
+        return Ok();
     }
 
     [HttpGet]
@@ -180,7 +186,7 @@ public partial class LimitedPartnershipController : Controller
     public IActionResult ApprovedPersonDetails(Guid id)
     {
         // Placeholder action to satisfy RedirectToAction with id
-        return Ok(); 
+        return Ok();
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetPartners(
