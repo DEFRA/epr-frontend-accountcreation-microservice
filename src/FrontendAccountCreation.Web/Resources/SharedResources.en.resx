@@ -171,4 +171,10 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="IndividualPartner" xml:space="preserve">
+    <value>Individual Partner</value>
+  </data>
+  <data name="NoneOfTheAbove" xml:space="preserve">
+    <value>None of the above</value>
+  </data>
 </root>

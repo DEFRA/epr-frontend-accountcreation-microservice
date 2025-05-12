@@ -4,7 +4,6 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 
@@ -126,14 +125,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     PagePath.TeamMembersCheckInvitationDetails
                     );
             }
-            else
-            {
-                //go back to check their invitation detials
+
+            //go back to check their invitation details
             return await SaveSessionAndRedirect(session, nameof(TeamMemberDetails),
                 $"{PagePath.TeamMemberRoleInOrganisation}",
                 $"{PagePath.TeamMemberDetails}?id={queryStringId}",
                 new { id = queryStringId });
-            }
         }
 
         [HttpGet]
