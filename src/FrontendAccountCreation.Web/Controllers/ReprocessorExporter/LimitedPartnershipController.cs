@@ -209,34 +209,41 @@ public partial class LimitedPartnershipController : Controller
         return Ok();
     }
 
-    [HttpGet]   
+    [HttpGet]
     [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
     public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(Guid id)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.PartnershipType);
         return View();
     }
 
     [HttpPost]
     [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
-    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(AddApprovedPersonViewModel model)
+    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(LimitedPartnershipAddApprovedPersonViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.PartnershipType);
             return View(model);
         }
 
         if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
         {
-            return RedirectToAction("YouAreApprovedPerson"); 
+            //return RedirectToAction(nameof(YouAreApprovedPerson));
+            return RedirectToAction("YouAreApprovedPerson");
         }
-
-        if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
+        else if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
         {
             return RedirectToAction("TeamMemberRoleInOrganisation");
         }
-
-        // I-will-Invite-an-Approved-Person-Later
-        return RedirectToAction("CheckYourDetails", "AccountCreation"); 
+        else
+        {
+            // I-will-Invite-an-Approved-Person-Later
+            return RedirectToAction("CheckYourDetails", "AccountCreation");
+        }
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetPartners(
