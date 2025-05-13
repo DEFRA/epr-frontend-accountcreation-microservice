@@ -232,20 +232,12 @@ public partial class LimitedPartnershipController : Controller
             return View(model);
         }
 
-        if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
-        {
-            //return RedirectToAction(nameof(YouAreApprovedPerson));
-            return RedirectToAction("YouAreApprovedPerson");
-        }
-        else if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
-        {
-            return RedirectToAction("TeamMemberRoleInOrganisation");
-        }
-        else
-        {
-            // I-will-Invite-an-Approved-Person-Later
-            return RedirectToAction("CheckYourDetails", "AccountCreation");
-        }
+        return model.InviteUserOption switch
+        {    
+            "BeAnApprovedPerson" => RedirectToAction("YouAreApprovedPerson"),
+            "InviteAnotherPerson" => RedirectToAction("TeamMemberRoleInOrganisation"),
+            _ => RedirectToAction("CheckYourDetails", "AccountCreation") // "InviteLater"
+        };
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetPartners(

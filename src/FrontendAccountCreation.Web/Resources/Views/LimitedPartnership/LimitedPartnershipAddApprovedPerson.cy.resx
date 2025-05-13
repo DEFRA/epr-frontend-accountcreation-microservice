@@ -154,7 +154,7 @@
     <value>[Welsh]I will invite an approved person later</value>
   </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>[Welsh]Select an option</value>
+    <value>[Welsh]Select whether to be an approved person, invite someone else to be one or do this later</value>
   </data>
   <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
     <value>[Welsh]Roles eligible to be an approved person</value>
