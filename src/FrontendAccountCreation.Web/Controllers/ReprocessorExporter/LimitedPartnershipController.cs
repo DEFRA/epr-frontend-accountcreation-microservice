@@ -160,22 +160,24 @@ public partial class LimitedPartnershipController : Controller
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        var approvedPersons = session!.ReExCompaniesHouseSession!.Partnership!.LimitedPartnership!
+        var approvedPersons = session?.ReExCompaniesHouseSession?.Partnership!.LimitedPartnership!
             .PartnershipApprovedPersons;
+       
+        var index = approvedPersons?.FindIndex(x => x.Id == model.Id);
 
-        var index = approvedPersons.FindIndex(x => x.Id == model.Id);
-
-        if (index == -1)
+        if (index is null or -1)
         {
-            // fallback: ID not found, do not throw
-            return RedirectToAction(nameof(ApprovedPersonDetails), new { id = model.Id });
+            return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
         }
-        approvedPersons![index].Role = model.RoleInOrganisation!.Value;
+
+        approvedPersons![index.Value].Role = model.RoleInOrganisation!.Value;
+
         if (model.RoleInOrganisation == ReExLimitedPartnershipRoles.None)
         {
             await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
                 PagePath.ApprovedPersonPartnershipCanNotBeInvited);
-            return RedirectToAction(nameof(PersonCanNotBeInvited));
+
+            return RedirectToAction(nameof(PersonCanNotBeInvited),new { id = model.Id });
         }
 
         await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipDetails);
@@ -184,10 +186,16 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpGet]
     [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-    public IActionResult PersonCanNotBeInvited()
+    public IActionResult PersonCanNotBeInvited([FromQuery] Guid id)
     {
-        // Placeholder action to satisfy RedirectToAction
-        return Ok();
+        return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel{Id = id});
+    }
+
+    [HttpPost]
+    [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
+    public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+    {
+        return RedirectToAction("CheckYourDetails", "AccountCreation");
     }
 
     [HttpGet]
