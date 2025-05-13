@@ -165,12 +165,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.PartnershipType)]
         public async Task<IActionResult> PartnershipType(PartnershipTypeRequestViewModel model)
         {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            
             if (!ModelState.IsValid)
             {
+                SetBackLink(session, PagePath.PartnershipType);
                 return View(model);
             }
 
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            
             session.ReExCompaniesHouseSession.IsPartnership = true;
 
             if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
@@ -183,13 +186,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
                 return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
             }
-            else //TODO LimitedLiabilityPartnership
+            else
             //if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership)
             { 
                 session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership()
                 };
 
                 return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
@@ -209,12 +211,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.LimitedPartnershipType)]
         public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
         {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
             if (!ModelState.IsValid)
             {
+                SetBackLink(session, PagePath.LimitedPartnershipType);
                 return View(model);
             }
-
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            
             session.ReExCompaniesHouseSession.IsPartnership = true;
 
             if (model.isIndividualPartners || model.isCompanyPartners)
@@ -235,7 +239,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipRole);
         }
-
+        
         [HttpGet]
         [Route(PagePath.LimitedPartnershipRole)]
         public async Task<IActionResult> LimitedPartnershipRole()
