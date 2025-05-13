@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
@@ -206,6 +207,36 @@ public partial class LimitedPartnershipController : Controller
     {
         // Placeholder action to satisfy RedirectToAction with id
         return Ok();
+    }
+
+    [HttpGet]   
+    [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
+    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(Guid id)
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
+    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(AddApprovedPersonViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
+        {
+            return RedirectToAction("YouAreApprovedPerson"); 
+        }
+
+        if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
+        {
+            return RedirectToAction("TeamMemberRoleInOrganisation");
+        }
+
+        // I-will-Invite-an-Approved-Person-Later
+        return RedirectToAction("CheckYourDetails", "AccountCreation"); 
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetPartners(
