@@ -27,27 +27,27 @@ public class OrganisationController : Controller
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
-    private readonly ICompanyService _companyService;
-    private readonly IOrganisationMapper _organisationMapper;
-    private readonly ILogger<OrganisationController> _logger;
-    private readonly ExternalUrlsOptions _urlOptions;
+    private readonly IReExAccountMapper _reExAccountMapper;
+    private readonly ILogger<OrganisationController> _logger;    
+    private readonly ExternalUrlsOptions _urlOptions;    
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
+    private readonly ServiceKeysOptions _serviceKeyOptions;
 
     public OrganisationController(
          ISessionManager<OrganisationSession> sessionManager,
          IFacadeService facadeService,
-         ICompanyService companyService,
-         IOrganisationMapper organisationMapper,
+         IReExAccountMapper reExAccountMapper,
          IOptions<ExternalUrlsOptions> urlOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
+         IOptions<ServiceKeysOptions> serviceKeyOptions,
          ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
-        _companyService = companyService;
-        _organisationMapper = organisationMapper;
+        _reExAccountMapper = reExAccountMapper;
         _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
+        _serviceKeyOptions = serviceKeyOptions.Value;
         _logger = logger;
     }
 
@@ -612,6 +612,10 @@ public class OrganisationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.Declaration, PagePath.ToDoPath);
+
+        // Post related data
+        var reExOrganisation = _reExAccountMapper.CreateReExOrganisationModel(session);
+        await _facadeService.PostReprocessorExporterCreateOrganisationAsync(reExOrganisation, _serviceKeyOptions.ReprocessorExporter);
         return Ok();
     }
 

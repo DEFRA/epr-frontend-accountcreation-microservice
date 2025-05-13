@@ -357,7 +357,7 @@ public class FacadeServiceTests
                 ItExpr.Is<HttpRequestMessage>(
                     req => req.Method == HttpMethod.Post
                            && req.RequestUri != null
-                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-accounts")),
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
@@ -381,7 +381,7 @@ public class FacadeServiceTests
                 ItExpr.Is<HttpRequestMessage>(
                     req => req.Method == HttpMethod.Post
                            && req.RequestUri != null
-                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-accounts")),
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
@@ -396,7 +396,7 @@ public class FacadeServiceTests
             ItExpr.Is<HttpRequestMessage>(
                 req => req.Method == HttpMethod.Post
                        && req.RequestUri != null
-                       && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-accounts")),
+                       && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
 
             ItExpr.IsAny<CancellationToken>());
     }
@@ -417,7 +417,7 @@ public class FacadeServiceTests
                 ItExpr.Is<HttpRequestMessage>(
                     req => req.Method == HttpMethod.Post
                            && req.RequestUri != null
-                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-accounts")),
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
@@ -443,7 +443,7 @@ public class FacadeServiceTests
                 ItExpr.Is<HttpRequestMessage>(
                     req => req.Method == HttpMethod.Post
                            && req.RequestUri != null
-                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-accounts")),
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
@@ -454,6 +454,116 @@ public class FacadeServiceTests
         // Act & Assert
         var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
         Assert.AreEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_HappyPath_Returns_Success_ByNotThrowingError()
+    {
+        // Arrange
+        var organisationModel = new ReExOrganisationModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-org")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK
+            });
+
+        Func<Task> act = async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(organisationModel, ServiceKey);
+
+        // Act & Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_HappyPath_When_Related_EndpointCalled()
+    {
+        // Arrange
+        var orgModel = new ReExOrganisationModel();
+        var url = "http://example/api/v1/reprocessor-exporter-org";
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith(url)),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK
+            }).Verifiable();
+
+        // Act
+        await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey);
+
+        // Assert
+        _mockHandler.Protected().Verify("SendAsync", Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(
+                req => req.Method == HttpMethod.Post
+                       && req.RequestUri != null
+                       && req.RequestUri.ToString().StartsWith(url)),
+            ItExpr.IsAny<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_Returns_NonConflictError_500HttpRequestExceptionExceptionThrown()
+    {
+        // Arrange
+        var account = new ReExOrganisationModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-org")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Content = new StringContent("")
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(account, ServiceKey));
+        exception.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_Throws_ProblemException()
+    {
+        // Arrange
+        var orgModel = new ReExOrganisationModel();
+        var apiResponse = new ProblemDetails
+        {
+            Detail = "detail",
+            Type = "type"
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-org")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Conflict,
+                Content = new StringContent(JsonSerializer.Serialize(apiResponse))
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey));
+        Assert.IsNotNull(exception.ProblemDetails);
+        Assert.AreEqual(apiResponse.Detail, exception.ProblemDetails.Detail);
+        Assert.AreEqual(apiResponse.Type, exception.ProblemDetails.Type);
     }
 
     [TestMethod]
