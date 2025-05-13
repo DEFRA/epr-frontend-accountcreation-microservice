@@ -27,29 +27,23 @@
                             <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" 
-                                           id="chkIndividualPartners"
+                                           id="hasIndividualPartners"
                                            type="checkbox"
-                                           gov-for="isIndividualPartners"
-                                           gov-value="true"
-                                           name="isIndividualPartners">
+                                           asp-for="hasIndividualPartners"
+                                           name="hasIndividualPartners">
                                     <label class="govuk-label govuk-checkboxes__label"
-                                           gov-for="isIndividualPartners"
-                                           gov-value="true"
-                                           for="chkIndividualPartners">
+                                           for="hasIndividualPartners">
                                         @Localizer["LimitedPartnershipType.IndividualPartners"]
                                     </label>
                                 </div>
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" 
-                                           id="chkCompanyPartners"
+                                           id="hasCompanyPartners"
                                            type="checkbox"
-                                           gov-for="isCompanyPartners"
-                                           gov-value="true"
-                                           name="isCompanyPartners">
+                                           asp-for="hasCompanyPartners"
+                                           name="hasCompanyPartners">
                                     <label class="govuk-label govuk-checkboxes__label"
-                                           gov-for="isCompanyPartners"
-                                           gov-value="true"
-                                           for="chkCompanyPartners">
+                                           for="hasCompanyPartners">
                                         @Localizer["LimitedPartnershipType.CompanyPartners"]
                                     </label>
                                 </div>

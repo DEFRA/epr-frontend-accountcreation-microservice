@@ -8,6 +8,9 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.ViewModels;
+using FrontendAccountCreation.Core.Sessions;
+using System.Reflection;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -25,11 +28,12 @@ public partial class LimitedPartnershipController : Controller
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
     public async Task<IActionResult> NamesOfPartners()
     {
-        // TODO: set back link when page becomes available
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
 
         LimitedPartnershipPartnersViewModel model = new();
 
-        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        
         ReExLimitedPartnership ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
         ReExLimitedPartnershipSummary? ltdPartnershipSummarySession = ltdPartnershipSession?.PartnershipSummary;
 
@@ -164,7 +168,7 @@ public partial class LimitedPartnershipController : Controller
 
         var approvedPersons = session?.ReExCompaniesHouseSession?.Partnership!.LimitedPartnership!
             .PartnershipApprovedPersons;
-       
+
         var index = approvedPersons?.FindIndex(x => x.Id == model.Id);
 
         if (index is null or -1)
@@ -179,7 +183,7 @@ public partial class LimitedPartnershipController : Controller
             await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
                 PagePath.ApprovedPersonPartnershipCanNotBeInvited);
 
-            return RedirectToAction(nameof(PersonCanNotBeInvited),new { id = model.Id });
+            return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
         }
 
         await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipDetails);
@@ -190,7 +194,7 @@ public partial class LimitedPartnershipController : Controller
     [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
     public IActionResult PersonCanNotBeInvited([FromQuery] Guid id)
     {
-        return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel{Id = id});
+        return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
     }
 
     [HttpPost]
@@ -224,105 +228,131 @@ public partial class LimitedPartnershipController : Controller
         }
 
         return partnersSession;
+    }
+
+    [HttpGet]
+    [Route(PagePath.PartnershipType)]
+    public async Task<IActionResult> PartnershipType()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.PartnershipType);
+
+        bool? isPartnership = session.ReExCompaniesHouseSession?.IsPartnership;
+
+        dynamic limitedPartnership = null;
+        if (isPartnership.HasValue)
+        {
+            limitedPartnership = isPartnership.Value
+                ? Core.Sessions.PartnershipType.LimitedPartnership
+                : Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
         }
 
-        [HttpGet]
-        [Route(PagePath.PartnershipType)]
-        public async Task<IActionResult> PartnershipType()
+        return View(new PartnershipTypeRequestViewModel
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            isLimitedPartnership = limitedPartnership
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.PartnershipType)]
+    public async Task<IActionResult> PartnershipType(PartnershipTypeRequestViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
             SetBackLink(session, PagePath.PartnershipType);
-
-            return View();
+            return View(model);
         }
 
-        [HttpPost]
-        [Route(PagePath.PartnershipType)]
-        public async Task<IActionResult> PartnershipType(PartnershipTypeRequestViewModel model)
+        if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            
-            if (!ModelState.IsValid)
-            {
-                SetBackLink(session, PagePath.PartnershipType);
-                return View(model);
-            }
-            
             session.ReExCompaniesHouseSession.IsPartnership = true;
 
-            if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
+            if (session.ReExCompaniesHouseSession.Partnership != null)
             {
-                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
-                {
-                    IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership()
-                };
-            }
-
-            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
-        }
-
-        [HttpGet]
-        [Route(PagePath.LimitedPartnershipType)]
-        public async Task<IActionResult> LimitedPartnershipType()
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.LimitedPartnershipType);
-            return View();
-        }
-
-        [HttpPost]
-        [Route(PagePath.LimitedPartnershipType)]
-        public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-            if (!ModelState.IsValid)
-            {
-                SetBackLink(session, PagePath.LimitedPartnershipType);
-                return View(model);
-            }
-            
-            session.ReExCompaniesHouseSession.IsPartnership = true;
-
-            if (model.isIndividualPartners || model.isCompanyPartners)
-            {
-                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
-                {
-                    IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership
-                    {
-                        PartnershipSummary = new ReExLimitedPartnershipSummary
-                        {
-                            HasIndividualPartners = model.isIndividualPartners,
-                            HasCompanyPartners = model.isCompanyPartners
-                        }
-                    }
-                };
-            }
-
-            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipRole);
-        }
-        
-        [HttpGet]
-        [Route(PagePath.LimitedPartnershipRole)]
-        public async Task<IActionResult> LimitedPartnershipRole()
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.LimitedPartnershipType);
-            return View();
-        }
-
-        private void SetBackLink(OrganisationSession session, string currentPagePath)
-        {
-            if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
-            {
-                ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+                session.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership = true;
             }
             else
             {
-                ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+                {
+                    IsLimitedPartnership = true,
+                };
             }
+        }
+
+        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedPartnershipType)]
+    public async Task<IActionResult> LimitedPartnershipType()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.LimitedPartnershipType);
+
+        bool? isPartnership = session.ReExCompaniesHouseSession?.IsPartnership;
+        //session.ReExCompaniesHouseSession.IsPartnership
+
+        bool hasIndividualPartners = false;
+        bool hasCompanyPartners = false;
+        if (session.ReExCompaniesHouseSession.Partnership != null && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null)
+        {
+            hasIndividualPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.PartnershipSummary.HasIndividualPartners;
+            hasCompanyPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.PartnershipSummary.HasCompanyPartners;
+        }
+
+        return View(new LimitedPartnershipTypeRequestViewModel
+        {
+            hasCompanyPartners = hasCompanyPartners,
+            hasIndividualPartners = hasIndividualPartners
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.LimitedPartnershipType)]
+    public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.LimitedPartnershipType);
+            return View(model);
+        }
+
+        session.ReExCompaniesHouseSession.IsPartnership = true;
+
+        if (model.hasIndividualPartners || model.hasCompanyPartners)
+        {
+            session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+            {
+                IsLimitedPartnership = true,
+                LimitedPartnership = new ReExLimitedPartnership
+                {
+                    PartnershipSummary = new ReExLimitedPartnershipSummary
+                    {
+                        HasIndividualPartners = model.hasIndividualPartners,
+                        HasCompanyPartners = model.hasCompanyPartners
+                    }
+                }
+            };
+        }
+
+        return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipNamesOfPartners);
+    }
+
+    private void SetBackLink(OrganisationSession session, string currentPagePath)
+    {
+        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+        {
+            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+        }
+        else
+        {
+            ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+        }
     }
 
     private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,

@@ -2,9 +2,20 @@
 
 namespace FrontendAccountCreation.Web.ViewModels.AccountCreation;
 
-public class LimitedPartnershipTypeRequestViewModel
+public class LimitedPartnershipTypeRequestViewModel : IValidatableObject
 {
-    public bool isIndividualPartners { get; set; }
-    public bool isCompanyPartners { get; set; }
+    public bool hasIndividualPartners { get; set; }
+    public bool hasCompanyPartners { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (!hasIndividualPartners && !hasCompanyPartners)
+        {
+            yield return new ValidationResult(
+                "LimitedPartnershipType.ErrorMessage",
+                new[] { nameof(hasIndividualPartners) }  // Only attach to one field to avoid duplicate messages
+            );
+        }
+    }
 }
 
