@@ -6,7 +6,9 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+
 using FrontendAccountCreation.Core.Extensions;
+
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -69,62 +71,87 @@ public partial class LimitedPartnershipController : Controller
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
     public async Task<IActionResult> NamesOfPartners(LimitedPartnershipPartnersViewModel model, string command)
     {
-        // when command is a Guid its an instruction to remove that item from the model, so do so before validating
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        // when command is a Guid its an instruction to remove that item from the model,
+        // so do so before validating
         if (Guid.TryParse(command, out Guid removedId))
         {
             model.Partners.RemoveAll(x => x.Id == removedId);
+            await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             ModelState.Clear();
-            if (!TryValidateModel(model, nameof(LimitedPartnershipPartnersViewModel)))
-            {
-                // TODO: set back link when page becomes available
-                return View(model);
-            }
-        }
-        else if (!ModelState.IsValid)
-        {
-            // TODO: set back link when page becomes available
+
+            SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
             return View(model);
         }
 
-        // Organisation > Company > Partnership > Limited Partnership > Partnership Summary
-        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession ?? new();
-        ReExPartnership partnershipSession = companySession.Partnership ?? new();
+        if (!ModelState.IsValid)
+        {
+            ModelState.Clear();
+            string errorMessage = OverrideValidationErrorMessage(model);
+            ModelState.AddModelError(nameof(model.Partners), errorMessage);
 
-        // obtain partners from the view model
-        List<ReExLimitedPartnershipPersonOrCompany> partners = await GetPartners(model);
+            SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
+            return View(model);
+        }
+
         if (command == "add")
         {
-            ReExLimitedPartnershipPersonOrCompany newPartner = new()
+            LimitedPartnershipPersonOrCompanyViewModel newPartner = new()
             {
                 Id = Guid.NewGuid()
             };
-
-            partners.Add(newPartner);
+            model.Partners.Add(newPartner);
+            await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            
+            SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
+            return View(model);
         }
 
-        // refresh limited partnership session from the view model
-        ReExLimitedPartnership ltdPartnershipSession = new()
-        {
-            Partners = partners,
-            HasCompanyPartners = model.ExpectsCompanyPartners,
-            HasIndividualPartners = model.ExpectsIndividualPartners
-        };
+        await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
 
-        partnershipSession.LimitedPartnership = ltdPartnershipSession;
-        companySession.Partnership = partnershipSession;
-        session.ReExCompaniesHouseSession = companySession;
+        // TODO: there is a missing page between here and LimitedPartnershipRole
+        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole),
+            PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
 
-        if (command == "save")
+        async Task SyncSessionWithModel(bool hasCompanyPartners, bool hasIndividualPartners, List<ReExLimitedPartnershipPersonOrCompany> partners)
         {
-            // TODO: there is a missing page between here and LimitedPartnershipRole
-            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole),
-                PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
+            // Organisation > Company > Partnership > Limited Partnership
+            ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession ?? new();
+            ReExPartnership partnershipSession = companySession.Partnership ?? new();
+
+            // refresh limited partnership session from the view model
+            ReExLimitedPartnership ltdPartnershipSession = new()
+            {
+                Partners = partners,
+                HasCompanyPartners = hasCompanyPartners,
+                HasIndividualPartners = hasIndividualPartners
+            };
+
+            partnershipSession.LimitedPartnership = ltdPartnershipSession;
+            companySession.Partnership = partnershipSession;
+            session.ReExCompaniesHouseSession = companySession;
         }
-        else
+
+        static string OverrideValidationErrorMessage(LimitedPartnershipPartnersViewModel model)
         {
-            return await SaveSessionAndRedirect(session, nameof(NamesOfPartners),
-                PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipNamesOfPartners);
+            string errorMessage = "ValidationError_Both";
+            if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)
+            {
+                errorMessage = "ValidationError_Both";
+            }
+            else if (model.ExpectsCompanyPartners)
+            {
+                errorMessage = "ValidationError_Company";
+            }
+            else if (model.ExpectsIndividualPartners)
+            {
+                errorMessage = "ValidationError_Individual";
+            }
+
+            return string.Concat("NamesOfPartners.", errorMessage);
         }
     }
 
@@ -133,7 +160,7 @@ public partial class LimitedPartnershipController : Controller
     public async Task<IActionResult> ApprovedPersonPartnershipRole([FromQuery] Guid id)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        
+
         // please check this is correct Ehsan
         var approvedPersons = session?.ReExCompaniesHouseSession?.TeamMembers?.ToList();
         var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(id));
@@ -164,7 +191,7 @@ public partial class LimitedPartnershipController : Controller
 
         // please check this is correct Ehsan
         var approvedPersons = session?.ReExCompaniesHouseSession?.TeamMembers;
-       
+
         var index = approvedPersons?.FindIndex(x => x.Id == model.Id);
 
         if (index is null or -1)
@@ -180,7 +207,7 @@ public partial class LimitedPartnershipController : Controller
             await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
                 PagePath.ApprovedPersonPartnershipCanNotBeInvited);
 
-            return RedirectToAction(nameof(PersonCanNotBeInvited),new { id = model.Id });
+            return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
         }
 
         await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipDetails);
@@ -191,7 +218,7 @@ public partial class LimitedPartnershipController : Controller
     [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
     public IActionResult PersonCanNotBeInvited([FromQuery] Guid id)
     {
-        return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel{Id = id});
+        return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
     }
 
     [HttpPost]
@@ -209,11 +236,11 @@ public partial class LimitedPartnershipController : Controller
         return Ok();
     }
 
-    private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetPartners(
-        LimitedPartnershipPartnersViewModel model)
+    private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
+        List<LimitedPartnershipPersonOrCompanyViewModel> partners)
     {
-        List<ReExLimitedPartnershipPersonOrCompany> partnersSession = new();
-        foreach (var partner in model.Partners)
+        List<ReExLimitedPartnershipPersonOrCompany> partnersSession = [];
+        foreach (var partner in partners)
         {
             ReExLimitedPartnershipPersonOrCompany sessionPartner = new()
             {
@@ -225,102 +252,102 @@ public partial class LimitedPartnershipController : Controller
         }
 
         return partnersSession;
-        }
+    }
 
-        [HttpGet]
-        [Route(PagePath.PartnershipType)]
-        public async Task<IActionResult> PartnershipType()
+    [HttpGet]
+    [Route(PagePath.PartnershipType)]
+    public async Task<IActionResult> PartnershipType()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.PartnershipType);
+
+        return View();
+    }
+
+    [HttpPost]
+    [Route(PagePath.PartnershipType)]
+    public async Task<IActionResult> PartnershipType(PartnershipTypeRequestViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.PartnershipType);
-
-            return View();
+            return View(model);
         }
 
-        [HttpPost]
-        [Route(PagePath.PartnershipType)]
-        public async Task<IActionResult> PartnershipType(PartnershipTypeRequestViewModel model)
+        session.ReExCompaniesHouseSession.IsPartnership = true;
+
+        if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            
-            if (!ModelState.IsValid)
+            session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
             {
-                SetBackLink(session, PagePath.PartnershipType);
-                return View(model);
-            }
-            
-            session.ReExCompaniesHouseSession.IsPartnership = true;
-
-            if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
-            {
-                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
-                {
-                    IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership()
-                };
-            }
-
-            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
+                IsLimitedPartnership = true,
+                LimitedPartnership = new ReExLimitedPartnership()
+            };
         }
 
-        [HttpGet]
-        [Route(PagePath.LimitedPartnershipType)]
-        public async Task<IActionResult> LimitedPartnershipType()
+        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedPartnershipType)]
+    public async Task<IActionResult> LimitedPartnershipType()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.LimitedPartnershipType);
+        return View();
+    }
+
+    [HttpPost]
+    [Route(PagePath.LimitedPartnershipType)]
+    public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.LimitedPartnershipType);
-            return View();
+            return View(model);
         }
 
-        [HttpPost]
-        [Route(PagePath.LimitedPartnershipType)]
-        public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
+        session.ReExCompaniesHouseSession.IsPartnership = true;
+
+        if (model.isIndividualPartners || model.isCompanyPartners)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-            if (!ModelState.IsValid)
+            session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
             {
-                SetBackLink(session, PagePath.LimitedPartnershipType);
-                return View(model);
-            }
-            
-            session.ReExCompaniesHouseSession.IsPartnership = true;
-
-            if (model.isIndividualPartners || model.isCompanyPartners)
-            {
-                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+                IsLimitedPartnership = true,
+                LimitedPartnership = new ReExLimitedPartnership
                 {
-                    IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership
-                    {
-                        HasIndividualPartners = model.isIndividualPartners,
-                        HasCompanyPartners = model.isCompanyPartners
-                    }
-                };
-            }
-
-            return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
-        }
-        
-        [HttpGet]
-        [Route(PagePath.LimitedPartnershipRole)]
-        public async Task<IActionResult> LimitedPartnershipRole()
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.LimitedPartnershipType);
-            return View();
+                    HasIndividualPartners = model.isIndividualPartners,
+                    HasCompanyPartners = model.isCompanyPartners
+                }
+            };
         }
 
-        private void SetBackLink(OrganisationSession session, string currentPagePath)
+        return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedPartnershipRole)]
+    public async Task<IActionResult> LimitedPartnershipRole()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.LimitedPartnershipType);
+        return View();
+    }
+
+    private void SetBackLink(OrganisationSession session, string currentPagePath)
+    {
+        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
         {
-            if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
-            {
-                ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
-            }
-            else
-            {
-                ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-            }
+            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+        }
+        else
+        {
+            ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+        }
     }
 
     private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
