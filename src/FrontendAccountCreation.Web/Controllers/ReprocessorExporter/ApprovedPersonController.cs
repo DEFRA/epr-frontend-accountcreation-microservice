@@ -44,7 +44,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
-                return RedirectToAction("YouAreApprovedPerson"); // need to re-visit with correct URL
+                return RedirectToAction("YouAreApprovedPerson"); 
             }
 
             if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
@@ -54,7 +54,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             // I-will-Invite-an-Approved-Person-Later
-            return RedirectToAction("CheckYourDetails", "AccountCreation"); // need to re-visit with correct URL
+            return RedirectToAction("CheckYourDetails", "AccountCreation"); 
         }
 
         [HttpGet]
