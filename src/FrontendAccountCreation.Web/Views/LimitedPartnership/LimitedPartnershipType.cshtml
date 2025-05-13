@@ -1,0 +1,67 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+
+@model LimitedPartnershipTypeRequestViewModel
+@{
+    ViewData["Title"] = Localizer["LimitedPartnershipType.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container ">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row ">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+                <form asp-controller="LimitedPartnership" asp-action="LimitedPartnershipType" method="post">
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-fieldset__heading">
+                                    @Localizer["LimitedPartnershipType.Title"]
+                                </h1>
+                            </legend>
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" 
+                                           id="chkIndividualPartners"
+                                           type="checkbox"
+                                           gov-for="isIndividualPartners"
+                                           gov-value="true"
+                                           name="isIndividualPartners">
+                                    <label class="govuk-label govuk-checkboxes__label"
+                                           gov-for="isIndividualPartners"
+                                           gov-value="true"
+                                           for="chkIndividualPartners">
+                                        @Localizer["LimitedPartnershipType.IndividualPartners"]
+                                    </label>
+                                </div>
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" 
+                                           id="chkCompanyPartners"
+                                           type="checkbox"
+                                           gov-for="isCompanyPartners"
+                                           gov-value="true"
+                                           name="isCompanyPartners">
+                                    <label class="govuk-label govuk-checkboxes__label"
+                                           gov-for="isCompanyPartners"
+                                           gov-value="true"
+                                           for="chkCompanyPartners">
+                                        @Localizer["LimitedPartnershipType.CompanyPartners"]
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

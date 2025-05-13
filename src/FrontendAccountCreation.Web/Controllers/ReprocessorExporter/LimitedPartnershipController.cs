@@ -6,6 +6,8 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -222,6 +224,105 @@ public partial class LimitedPartnershipController : Controller
         }
 
         return partnersSession;
+        }
+
+        [HttpGet]
+        [Route(PagePath.PartnershipType)]
+        public async Task<IActionResult> PartnershipType()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.PartnershipType);
+
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.PartnershipType)]
+        public async Task<IActionResult> PartnershipType(PartnershipTypeRequestViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.PartnershipType);
+                return View(model);
+            }
+            
+            session.ReExCompaniesHouseSession.IsPartnership = true;
+
+            if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
+            {
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+                {
+                    IsLimitedPartnership = true,
+                    LimitedPartnership = new ReExLimitedPartnership()
+                };
+            }
+
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
+        }
+
+        [HttpGet]
+        [Route(PagePath.LimitedPartnershipType)]
+        public async Task<IActionResult> LimitedPartnershipType()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.LimitedPartnershipType);
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.LimitedPartnershipType)]
+        public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.LimitedPartnershipType);
+                return View(model);
+            }
+            
+            session.ReExCompaniesHouseSession.IsPartnership = true;
+
+            if (model.isIndividualPartners || model.isCompanyPartners)
+            {
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+                {
+                    IsLimitedPartnership = true,
+                    LimitedPartnership = new ReExLimitedPartnership
+                    {
+                        PartnershipSummary = new ReExLimitedPartnershipSummary
+                        {
+                            HasIndividualPartners = model.isIndividualPartners,
+                            HasCompanyPartners = model.isCompanyPartners
+                        }
+                    }
+                };
+            }
+
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipRole);
+        }
+        
+        [HttpGet]
+        [Route(PagePath.LimitedPartnershipRole)]
+        public async Task<IActionResult> LimitedPartnershipRole()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.LimitedPartnershipType);
+            return View();
+        }
+
+        private void SetBackLink(OrganisationSession session, string currentPagePath)
+        {
+            if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+            {
+                ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+            }
+            else
+            {
+                ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+            }
     }
 
     private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
