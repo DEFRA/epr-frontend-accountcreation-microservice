@@ -29,14 +29,14 @@ public class ApprovedPersonPartnershipRoleTests : LimitedPartnershipTestBase
                 {
                     LimitedPartnership = new ReExLimitedPartnership
                     {
-                        PartnershipApprovedPersons = new List<ReExLimitedPartnershipApprovedPerson>
-                        {
-                            new()
-                            {
-                                Id = _approvedPersonId,
-                                Role = ReExLimitedPartnershipRoles.Director
-                            }
-                        }
+                        //PartnershipApprovedPersons = new List<ReExLimitedPartnershipApprovedPerson>
+                        //{
+                        //    new()
+                        //    {
+                        //        Id = _approvedPersonId,
+                        //        Role = ReExLimitedPartnershipRoles.Director
+                        //    }
+                        //}
                     }
                 }
             }

@@ -1,9 +1,10 @@
-﻿@using FrontendAccountCreation.Core.Sessions;
+﻿﻿@using FrontendAccountCreation.Core.Sessions;
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
+@using FrontendAccountCreation.Web;
 
-@model AddApprovedPersonViewModel;
+@model LimitedPartnershipAddApprovedPersonViewModel;
 
 @{
     ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
@@ -17,7 +18,7 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="ApprovedPerson" method="post">
+                <form asp-controller="LimitedPartnership" asp-action="LimitedPartnershipAddApprovedPerson" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                             @Localizer["AddAnApprovedPerson.Title"]
@@ -41,16 +42,17 @@
                         </p>
 
                         <div class="section">
-                            <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.RolesHeading"]</h3>
+                            <h3 class="govuk-heading-m">@Localizer["AddAnApprovedPerson.RolesHeading"]</h3>
                             <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
                             <ul class="govuk-list govuk-list--bullet">
+                                <li>@Localizer["AddAnApprovedPerson.Individual"]</li>
                                 <li>@Localizer["AddAnApprovedPerson.Director"]</li>
                                 <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
                             </ul>
                         </div>
 
                         <div class="section">
-                            <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.UserHeading"]</h3>
+                            <h3 class="govuk-heading-m">@Localizer["AddAnApprovedPerson.UserHeading"]</h3>
                             <p class="govuk-body">@Localizer["AddAnApprovedPerson.SelectOptionText"]</p>
                         </div>
 

@@ -55,4 +55,13 @@
   <data name="NamesOfPartners.AddAnotherPartner" xml:space="preserve">
     <value>[Welsh]Add another partner</value>
   </data>
+  <data name="NamesOfPartners.ValidationError_Individual" xml:space="preserve">
+    <value>[Welsh]Enter the full name of an individual partner</value>
+  </data>
+  <data name="NamesOfPartners.ValidationError_Company" xml:space="preserve">
+    <value>[Welsh]Enter a company partner name</value>
+  </data>
+  <data name="NamesOfPartners.ValidationError_Both" xml:space="preserve">
+    <value>[Welsh]Enter a company partner name or the full name of an individual partner</value>
+  </data>
 </root>
