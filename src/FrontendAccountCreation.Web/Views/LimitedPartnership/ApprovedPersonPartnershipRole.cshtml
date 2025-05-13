@@ -1,0 +1,81 @@
+﻿@using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipApprovedPersonRoleViewModel;
+
+@{
+    ViewData["Title"] = Localizer["PartnershipApprovedPersonRole.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
+
+                        <fieldset class="govuk-fieldset" aria-describedby="role-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                                    @Localizer["PartnershipApprovedPersonRole.WhatIsTheirRole"]
+                                </h1>
+                            </legend>
+
+                            @Html.HiddenFor(x => x.Id)
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoIndividualPartner"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(ReExLimitedPartnershipRoles.IndividualPartner)">
+                                    <label class="govuk-label govuk-radios__label" for="rdoIndividualPartner">
+                                        @SharedLocalizer["IndividualPartner"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoDirector"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(ReExLimitedPartnershipRoles.Director)">
+                                    <label class="govuk-label govuk-radios__label" for="rdoDirector">
+                                        @Localizer["PartnershipApprovedPersonRole.Director"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(ReExLimitedPartnershipRoles.CompanySecretary)">
+                                    <label class="govuk-label govuk-radios__label" for="rdoCompanySecretary">
+                                        @Localizer["PartnershipApprovedPersonRole.CompanySecretary"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__divider">@SharedLocalizer["Or"]</div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoNone"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(ReExLimitedPartnershipRoles.None)">
+                                    <label class="govuk-label govuk-radios__label" for="rdoNone">
+                                        @SharedLocalizer["NoneOfTheAbove"]
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="ApprovedPersonPartnershipRole" type="submit">
+                            @SharedLocalizer["Continue"]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

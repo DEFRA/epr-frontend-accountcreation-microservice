@@ -16,13 +16,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NamesOfPartners.Title" xml:space="preserve">
+  <data name="NamesOfPartners.Title_Individual" xml:space="preserve">
+    <value>Name Individual Partners</value>
+  </data>
+  <data name="NamesOfPartners.Title_Company" xml:space="preserve">
+    <value>Name Company Partners</value>
+  </data>
+  <data name="NamesOfPartners.Title_Both" xml:space="preserve">
+    <value>Name All Partners</value>
+  </data>
+  <data name="NamesOfPartners.H1_Individual" xml:space="preserve">
+    <value>What are the names of all individual partners in your limited partnership?</value>
+  </data>
+  <data name="NamesOfPartners.H1_Company" xml:space="preserve">
+    <value>What are the names of company partners in your limited partnership?</value>
+  </data>
+  <data name="NamesOfPartners.H1_Both" xml:space="preserve">
     <value>What are the names of all partners in your limited partnership?</value>
   </data>
-  <data name="NamesOfPartners.WhatAreTheNames" xml:space="preserve">
-    <value>What are the names of all partners in your limited partnership?</value>
+  <data name="NamesOfPartners.Hint_Individual" xml:space="preserve">
+    <value>This means individual partners, who are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
-  <data name="NamesOfPartners.ThisMeansAnyCompany" xml:space="preserve">
+  <data name="NamesOfPartners.Hint_Company" xml:space="preserve">
+    <value>This means any company entity partners within your limited partnership, as registered on Companies House.</value>
+  </data>
+  <data name="NamesOfPartners.Hint_Both" xml:space="preserve">
     <value>This means any company entity partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.CompanyName" xml:space="preserve">
