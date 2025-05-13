@@ -34,7 +34,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
-        public async Task<IActionResult> AddApprovedPerson(LimitedPartnershipAddApprovedPersonViewModel model)
+        public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
