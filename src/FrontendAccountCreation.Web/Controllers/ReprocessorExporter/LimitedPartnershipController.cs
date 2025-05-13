@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
@@ -105,7 +106,7 @@ public partial class LimitedPartnershipController : Controller
             model.Partners.Add(newPartner);
             await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-            
+
             SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
             return View(model);
         }
@@ -234,6 +235,35 @@ public partial class LimitedPartnershipController : Controller
     {
         // Placeholder action to satisfy RedirectToAction with id
         return Ok();
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
+    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(Guid id)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.PartnershipType);
+        return View();
+    }
+
+    [HttpPost]
+    [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
+    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(LimitedPartnershipAddApprovedPersonViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.PartnershipType);
+            return View(model);
+        }
+
+        return model.InviteUserOption switch
+        {
+            "BeAnApprovedPerson" => RedirectToAction("YouAreApprovedPerson"),
+            "InviteAnotherPerson" => RedirectToAction("TeamMemberRoleInOrganisation"),
+            _ => RedirectToAction("CheckYourDetails", "AccountCreation") // "InviteLater"
+        };
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
