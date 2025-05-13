@@ -31,12 +31,10 @@ public partial class LimitedPartnershipController : Controller
         LimitedPartnershipPartnersViewModel model = new();
 
         ReExLimitedPartnership ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
-        ReExLimitedPartnershipSummary? ltdPartnershipSummarySession = ltdPartnershipSession?.PartnershipSummary;
+        model.ExpectsIndividualPartners = ltdPartnershipSession?.HasIndividualPartners ?? true;
+        model.ExpectsCompanyPartners = ltdPartnershipSession?.HasCompanyPartners ?? true;
 
-        model.ExpectsIndividualPartners = ltdPartnershipSummarySession?.HasIndividualPartners ?? true;
-        model.ExpectsCompanyPartners = ltdPartnershipSummarySession?.HasCompanyPartners ?? true;
-
-        List<ReExLimitedPartnershipPersonOrCompany>? partnersSession = ltdPartnershipSummarySession?.Partners;
+        List<ReExLimitedPartnershipPersonOrCompany>? partnersSession = ltdPartnershipSession?.Partners;
         List<LimitedPartnershipPersonOrCompanyViewModel> partnerList = [];
         if (partnersSession != null)
         {
@@ -92,7 +90,6 @@ public partial class LimitedPartnershipController : Controller
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession ?? new();
         ReExPartnership partnershipSession = companySession.Partnership ?? new();
-        ReExLimitedPartnership ltdPartnershipSession = partnershipSession.LimitedPartnership ?? new();
 
         // obtain partners from the view model
         List<ReExLimitedPartnershipPersonOrCompany> partners = await GetPartners(model);
@@ -107,14 +104,13 @@ public partial class LimitedPartnershipController : Controller
         }
 
         // refresh limited partnership session from the view model
-        ReExLimitedPartnershipSummary ltdPartnershipSummarySession = new()
+        ReExLimitedPartnership ltdPartnershipSession = new()
         {
             Partners = partners,
             HasCompanyPartners = model.ExpectsCompanyPartners,
             HasIndividualPartners = model.ExpectsIndividualPartners
         };
 
-        ltdPartnershipSession.PartnershipSummary = ltdPartnershipSummarySession;
         partnershipSession.LimitedPartnership = ltdPartnershipSession;
         companySession.Partnership = partnershipSession;
         session.ReExCompaniesHouseSession = companySession;
@@ -137,15 +133,17 @@ public partial class LimitedPartnershipController : Controller
     public async Task<IActionResult> ApprovedPersonPartnershipRole([FromQuery] Guid id)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        var approvedPersons = session?.ReExCompaniesHouseSession?.Partnership!.LimitedPartnership!
-            .PartnershipApprovedPersons;
+        
+        // please check this is correct Ehsan
+        var approvedPersons = session?.ReExCompaniesHouseSession?.TeamMembers?.ToList();
         var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(id));
 
         if (index is >= 0)
         {
             var viewModel = new LimitedPartnershipApprovedPersonRoleViewModel
             {
-                RoleInOrganisation = approvedPersons![index.Value].Role
+                // please check this is correct Ehsan
+                RoleInOrganisation = (ReExLimitedPartnershipRoles?)approvedPersons![index.Value].Role
             };
             return View(viewModel);
         }
@@ -164,8 +162,8 @@ public partial class LimitedPartnershipController : Controller
 
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        var approvedPersons = session?.ReExCompaniesHouseSession?.Partnership!.LimitedPartnership!
-            .PartnershipApprovedPersons;
+        // please check this is correct Ehsan
+        var approvedPersons = session?.ReExCompaniesHouseSession?.TeamMembers;
        
         var index = approvedPersons?.FindIndex(x => x.Id == model.Id);
 
@@ -174,7 +172,8 @@ public partial class LimitedPartnershipController : Controller
             return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
         }
 
-        approvedPersons![index.Value].Role = model.RoleInOrganisation!.Value;
+        // please check this is correct Ehsan
+        approvedPersons![index.Value].Role = (ReExTeamMemberRole?)model.RoleInOrganisation!.Value;
 
         if (model.RoleInOrganisation == ReExLimitedPartnershipRoles.None)
         {
@@ -294,11 +293,8 @@ public partial class LimitedPartnershipController : Controller
                     IsLimitedPartnership = true,
                     LimitedPartnership = new ReExLimitedPartnership
                     {
-                        PartnershipSummary = new ReExLimitedPartnershipSummary
-                        {
-                            HasIndividualPartners = model.isIndividualPartners,
-                            HasCompanyPartners = model.isCompanyPartners
-                        }
+                        HasIndividualPartners = model.isIndividualPartners,
+                        HasCompanyPartners = model.isCompanyPartners
                     }
                 };
             }
