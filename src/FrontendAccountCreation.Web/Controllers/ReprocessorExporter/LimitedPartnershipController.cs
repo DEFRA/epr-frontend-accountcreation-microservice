@@ -26,11 +26,11 @@ public partial class LimitedPartnershipController : Controller
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
     public async Task<IActionResult> NamesOfPartners()
     {
-        // TODO: set back link when page becomes available
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
 
         LimitedPartnershipPartnersViewModel model = new();
 
-        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         ReExLimitedPartnership ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
         ReExLimitedPartnershipSummary? ltdPartnershipSummarySession = ltdPartnershipSession?.PartnershipSummary;
 
@@ -122,7 +122,9 @@ public partial class LimitedPartnershipController : Controller
 
         if (command == "save")
         {
-            return RedirectToAction("AddApprovedPerson", "ApprovedPerson");
+            // TODO: there is a missing page between here and LimitedPartnershipRole
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole),
+                PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
         }
         else
         {
@@ -339,7 +341,7 @@ public partial class LimitedPartnershipController : Controller
                 };
             }
 
-            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipRole);
+            return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
         }
         
         [HttpGet]
