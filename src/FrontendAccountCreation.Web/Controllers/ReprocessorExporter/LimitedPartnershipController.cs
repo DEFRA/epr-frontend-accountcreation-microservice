@@ -172,7 +172,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 SetBackLink(session, PagePath.PartnershipType);
                 return View(model);
             }
-
             
             session.ReExCompaniesHouseSession.IsPartnership = true;
 
@@ -183,9 +182,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     IsLimitedPartnership = true,
                     LimitedPartnership = new ReExLimitedPartnership()
                 };
-
-                return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
             }
+
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
         }
 
         [HttpGet]
