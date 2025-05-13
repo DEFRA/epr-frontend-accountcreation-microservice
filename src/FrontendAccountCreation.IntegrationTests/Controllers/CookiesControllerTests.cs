@@ -3,7 +3,6 @@ using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Cookies;
 using FrontendAccountCreation.Web.Cookies;
-using FrontendAccountCreation.Web.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -13,9 +12,6 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FrontendAccountCreation.IntegrationTests.Controllers
@@ -229,6 +225,5 @@ namespace FrontendAccountCreation.IntegrationTests.Controllers
             Assert.AreEqual("LocalRedirectResult", result.GetType().Name);
             Assert.AreEqual("/", result.Url);
         }
-
     }
 }

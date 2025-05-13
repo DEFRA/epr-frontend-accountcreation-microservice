@@ -12,6 +12,8 @@
 
     string applicationTitle = ViewData["ApplicationTitleOverride"] as string ?? "ApplicationTitle";
     string headerPartial = ViewData["HeaderOverride"] as string ?? "_Header";
+    bool   isReExOverride = ViewData["ApplicationTitleOverride"]?.ToString() == LayoutOverrides.ReExTitleOverride;
+    string returnUrl = (string)ViewBag.CurrentPage ?? (isReExOverride ? Url.CurrentPathReEx() : Url.CurrentPath());
 }
 
 <!DOCTYPE html>
@@ -67,7 +69,7 @@
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
-    @await Component.InvokeAsync("CookieBanner", new { returnUrl = ((string)ViewBag.CurrentPage ?? Url.CurrentPath()) })
+    @await Component.InvokeAsync("CookieBanner", new { returnUrl })
 
     <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">@SharedLocalizer["SkipToMainContent"].Value</a>
     
