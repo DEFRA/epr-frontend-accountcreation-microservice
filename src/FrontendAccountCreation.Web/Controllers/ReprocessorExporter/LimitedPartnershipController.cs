@@ -186,16 +186,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
                 return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
             }
-            else
-            //if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership)
-            { 
-                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
-                {
-                    IsLimitedPartnership = true,
-                };
-
-                return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
-            }
         }
 
         [HttpGet]
