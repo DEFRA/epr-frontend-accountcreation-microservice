@@ -178,6 +178,19 @@ public partial class LimitedPartnershipController : Controller
         return View(model);
     }
 
+    /// <summary>
+    /// This method is here to redirect to the next page.
+    /// Alternatively one might just get the next page, but that would not update session navigation.
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
+    public async Task<IActionResult> CheckNamesOfPartners()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
+    }
+
     [HttpGet]
     [Route(PagePath.ApprovedPersonPartnershipRole)]
     public async Task<IActionResult> ApprovedPersonPartnershipRole([FromQuery] Guid id)

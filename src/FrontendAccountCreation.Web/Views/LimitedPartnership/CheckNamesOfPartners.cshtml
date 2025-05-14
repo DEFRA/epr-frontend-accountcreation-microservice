@@ -74,64 +74,18 @@
                 }
             </div>
 
-            <!--
-            <table class="govuk-table">
-                <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header govuk-table__header"></th>
-                        <th scope="col" class="govuk-table__header govuk-table__header"></th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric"></th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric"></th>
-                    </tr>
-                </thead>
+            <form method="post">
 
-                <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-table__cell">Full name</th>
-                        <td class="govuk-table__cell govuk-table__cell">Frankie Bridger<a class="govuk-link" href="#">
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a class="govuk-link" href="name-all-partners-change">
-                                Change<span class="govuk-visually-hidden"> </span>
-                            </a>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a class="govuk-link" href="check-partners-remove">
-                                Remove<span class="govuk-visually-hidden"> </span>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-table__cell">Full name</th>
-                        <td class="govuk-table__cell govuk-table__cell">Rekha Patel<a class="govuk-link" href="#">
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a class="govuk-link" href="name-all-partners-change-2">
-                                Change<span class="govuk-visually-hidden"> </span>
-                            </a>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a class="govuk-link" href="check-partners-remove-2">
-                                Remove<span class="govuk-visually-hidden"> </span>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            -->
-
-            <form action="partner-you" method="post" novalidate>
-                <input type="hidden" name="answers-checked" value="true">
-                <input type="hidden" name="waste-data-reprocesser" value="true">
-
-                <!-- goes to check your details -->
-                @Html.ActionLink(@SharedLocalizer["Continue"].Value, nameof(LimitedPartnershipController.LimitedPartnershipRole), "LimitedPartnership", null,
+@*                 @Html.ActionLink(@SharedLocalizer["Continue"].Value, nameof(LimitedPartnershipController.LimitedPartnershipRole), "LimitedPartnership", null,
                          new
                          {
                              @class = "govuk-button"
-                         })
+                         }) *@
 
-@*                 <button class="govuk-button" data-module="govuk-button">
-                    Continue
-                </button> *@
+                <!-- goes to partnership role -->
+                <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.CheckNamesOfPartners)" type="submit">
+                    @SharedLocalizer["Continue"]
+                </button>
             </form>
         </div>
 
