@@ -1,13 +1,7 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
-using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -30,18 +24,12 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             {
                 ReExCompaniesHouseSession = new ReExCompaniesHouseSession
                 {
-                    Partnership = new ReExPartnership
+                    TeamMembers = new List<ReExCompanyTeamMember>
                     {
-                        LimitedPartnership = new ReExLimitedPartnership
+                        new()
                         {
-                            PartnershipApprovedPersons = new List<ReExLimitedPartnershipApprovedPerson>
-                        {
-                            new()
-                            {
-                                Id = _approvedPersonId,
-                                Role = ReExLimitedPartnershipRoles.Director
-                            }
-                        }
+                            Id = _approvedPersonId,
+                            Role = ReExTeamMemberRole.Director
                         }
                     }
                 }

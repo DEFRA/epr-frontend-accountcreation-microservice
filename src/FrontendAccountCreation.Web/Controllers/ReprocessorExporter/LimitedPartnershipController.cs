@@ -1,19 +1,11 @@
 ﻿using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
-using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-
-using FrontendAccountCreation.Core.Extensions;
-
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
-using FrontendAccountCreation.Web.ViewModels;
-using FrontendAccountCreation.Core.Sessions;
-using System.Reflection;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -174,7 +166,6 @@ public partial class LimitedPartnershipController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        // please check this is correct Ehsan
         var approvedPersons = session?.ReExCompaniesHouseSession?.TeamMembers?.ToList();
         var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(id));
 
@@ -182,8 +173,7 @@ public partial class LimitedPartnershipController : Controller
         {
             var viewModel = new LimitedPartnershipApprovedPersonRoleViewModel
             {
-                // please check this is correct Ehsan
-                RoleInOrganisation = (ReExLimitedPartnershipRoles?)approvedPersons![index.Value].Role
+                RoleInOrganisation = approvedPersons![index.Value].Role
             };
             return View(viewModel);
         }
@@ -212,19 +202,21 @@ public partial class LimitedPartnershipController : Controller
             return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
         }
 
-        // please check this is correct Ehsan
-        approvedPersons![index.Value].Role = (ReExTeamMemberRole?)model.RoleInOrganisation!.Value;
+        approvedPersons![index.Value].Role = model.RoleInOrganisation!.Value;
 
-        if (model.RoleInOrganisation == ReExLimitedPartnershipRoles.None)
+        switch (model.RoleInOrganisation)
         {
-            await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
-                PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+            case ReExTeamMemberRole.IndividualPartner:
+            case ReExTeamMemberRole.PartnerDirector:
+            case ReExTeamMemberRole.PartnerCompanySecretary:
+                await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipDetails);
+                return RedirectToAction(nameof(ApprovedPersonDetails), new { id = model.Id });
+            default:
+                await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
+                    PagePath.ApprovedPersonPartnershipCanNotBeInvited);
 
-            return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
+                return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
         }
-
-        await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipDetails);
-        return RedirectToAction(nameof(ApprovedPersonDetails), new { id = model.Id });
     }
 
     [HttpGet]

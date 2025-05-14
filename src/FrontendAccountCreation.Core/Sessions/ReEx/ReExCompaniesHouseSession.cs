@@ -11,7 +11,7 @@ public class ReExCompaniesHouseSession
 
     public bool IsComplianceScheme { get; set; }
 
-    public List<ReExCompanyTeamMember?> TeamMembers { get; set; }
+    public List<ReExCompanyTeamMember>? TeamMembers { get; set; }
 
     public bool? IsPartnership { get; set; }
 
