@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="YouAreApprovedPerson.Description" xml:space="preserve">
-    <value>As an inividual named on Companies House you are now an 'approved person' for your organisation.</value>
+    <value>Fel unigolyn sydd wedi'i enwi ar Dŷ'r Cwmnïau rydych chi nawr yn 'berson a gymeradwywyd' ar gyfer eich sefydliad.</value>
   </data>
   <data name="YouAreApprovedPerson.Header" xml:space="preserve">
-    <value>You are now an approved person</value>
+    <value>Rydych chi nawr yn berson a gymeradwywyd</value>
   </data>
   <data name="YouAreApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another approved person</value>
+    <value>Gwahodd person a gymeradwywyd arall</value>
   </data>
   <data name="YouAreApprovedPerson.Item1" xml:space="preserve">
-    <value>continue to add your organisation</value>
+    <value>parhau i ychwanegu'ch sefydliad</value>
   </data>
   <data name="YouAreApprovedPerson.Item2" xml:space="preserve">
-    <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
+    <value>gwahodd pobl eraill yn eich sefydliad i fod yn berson a gymeradwywyd, o blith y rolau sy'n gymwys</value>
   </data>
-  <data name="YouAreApprovedPerson.Ttitle" xml:space="preserve">
-    <value>Approved person</value>
+  <data name="YouAreApprovedPerson.Title" xml:space="preserve">
+    <value>Person cymeradwy</value>
   </data>
   <data name="YouAreApprovedPerson.YouCanNow" xml:space="preserve">
-    <value>You can now:</value>
+    <value>Nawr rydych chi'n gallu:</value>
   </data>
 </root>
