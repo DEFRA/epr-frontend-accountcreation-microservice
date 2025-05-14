@@ -117,7 +117,7 @@ public partial class LimitedPartnershipController : Controller
         await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
 
         return await SaveSessionAndRedirect(session, nameof(CheckNamesOfPartners),
-            PagePath.LimitedPartnershipNamesOfPartners, "check-partners");
+            PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipCheckNamesOfPartners);
 
         async Task SyncSessionWithModel(
             bool hasCompanyPartners,
@@ -162,10 +162,23 @@ public partial class LimitedPartnershipController : Controller
     }
 
     [HttpGet]
-    [Route("check-partners")]
-    public async Task<IActionResult> CheckNamesOfPartners()
+    [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
+    public async Task<IActionResult> CheckNamesOfPartners([FromQuery] Guid? id)
     {
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        // if id is supplied, remove the partner
+        if (id.HasValue)
+        {
+            int? index = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.FindIndex(0, x => x.Id.Equals(id));
+            if (index != null && index.GetValueOrDefault(-1) >= 0)
+            {
+                session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners.RemoveAt(index.Value);
+            }
+        }
+
+        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        SetBackLink(session, PagePath.LimitedPartnershipCheckNamesOfPartners);
 
         // there is no validation on this page, so work directly on the session
         List<ReExLimitedPartnershipPersonOrCompany> model = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners ?? new(); 

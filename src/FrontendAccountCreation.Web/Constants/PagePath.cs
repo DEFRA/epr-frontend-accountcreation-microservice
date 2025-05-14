@@ -49,6 +49,7 @@ public static class PagePath
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-entity-individual-partner-names";
+    public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-entity-corporate-partner-names";
     public const string LimitedPartnershipAddApprovedPerson = "limited-partnership-add-approved-person";
     public const string ApprovedPersonPartnershipRole = "approved-person-partnership-role";
     public const string ApprovedPersonPartnershipDetails = "approved-person-partnership-details";

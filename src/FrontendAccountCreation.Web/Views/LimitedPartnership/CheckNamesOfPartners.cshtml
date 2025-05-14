@@ -1,5 +1,13 @@
-﻿@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
+
+@{
+    ViewData["Title"] = "Check individual partner names in your limited partnership";
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
 @model List<ReExLimitedPartnershipPersonOrCompany>
 
 <div class="govuk-width-container ">
@@ -38,15 +46,15 @@
                                 @Html.DisplayFor(x => x[counter].Name)
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "ApprovedPerson", new { id = Model[i].Id })">
+                                <a class="govuk-link" href="@Url.Action(nameof(LimitedPartnershipController.NamesOfPartners), "LimitedPartnership", new { id = Model[i].Id })">
                                     @SharedLocalizer["Change"]
-                                    <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.Role"].Value.ToLower()</span>
+                                    <span class="govuk-visually-hidden"> partner name</span>
                                 </a>
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "Remove", new { id = Model[i].Id })">
+                                        <a class="govuk-link" href="@Url.Action(nameof(LimitedPartnershipController.CheckNamesOfPartners), "LimitedPartnership", new { id = Model[i].Id })">
                                     @SharedLocalizer["Remove"]
-                                    <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.Role"].Value.ToLower()</span>
+                                    <span class="govuk-visually-hidden"> partner</span>
                                 </a>
                             </dd>
                         </div>
