@@ -358,9 +358,6 @@ public partial class LimitedPartnershipController : Controller
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.LimitedPartnershipType);
 
-        bool? isPartnership = session.ReExCompaniesHouseSession?.IsPartnership;
-        //session.ReExCompaniesHouseSession.IsPartnership
-
         bool hasIndividualPartners = false;
         bool hasCompanyPartners = false;
         if (session.ReExCompaniesHouseSession.Partnership != null && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null)
@@ -411,9 +408,38 @@ public partial class LimitedPartnershipController : Controller
     public async Task<IActionResult> LimitedPartnershipRole()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.LimitedPartnershipType);
-        return View();
+        SetBackLink(session, PagePath.LimitedPartnershipRole);
+
+        dynamic limitedPartnershipRole = null;
+        if (session.ReExCompaniesHouseSession.RoleInOrganisation != null)
+        {
+            limitedPartnershipRole = session.ReExCompaniesHouseSession.RoleInOrganisation;
+        }
+
+        return View(new LimitedPartnershipRoleViewModel
+        {
+            LimitedPartnershipRole = limitedPartnershipRole
+        });
     }
+
+    [HttpPost]
+    [Route(PagePath.LimitedPartnershipRole)]
+    public async Task<IActionResult> LimitedPartnershipRole(LimitedPartnershipRoleViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.LimitedPartnershipType);
+            return View(model);
+        }
+
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.LimitedPartnershipRole;
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
+                    PagePath.LimitedPartnershipRole, PagePath.AddAnApprovedPerson);
+    }
+
     private void SetBackLink(OrganisationSession session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
@@ -433,6 +459,16 @@ public partial class LimitedPartnershipController : Controller
         await SaveSession(session, currentPagePath, nextPagePath);
 
         return RedirectToAction(actionName);
+    }
+
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+    string controllerName, string actionName, string currentPagePath, string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        var contNameWOCont = controllerName.Replace("Controller", string.Empty);
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName, contNameWOCont);
     }
 
     private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
