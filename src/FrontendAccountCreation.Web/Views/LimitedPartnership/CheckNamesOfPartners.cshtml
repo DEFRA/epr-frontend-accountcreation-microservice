@@ -1,4 +1,7 @@
 ﻿@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@model List<ReExLimitedPartnershipPersonOrCompany>
+
 <div class="govuk-width-container ">
 
     <div class="govuk-grid-row">
@@ -6,8 +9,54 @@
             <br>
 
             <h1 class="govuk-heading-l">Check individual partner names in your limited partnership</h1>
-            <br>
+            <div class="govuk-summary-card">
+                <div class="govuk-summary-card__title-wrapper">
+                    <p class="govuk-body"></p>
+                </div>
 
+            @{
+                int counter = 0;
+            }
+            @foreach (var group in Model.GroupBy(p => p.IsPerson))
+            {
+                bool.TryParse(group.Key.ToString(), out bool isPerson);
+                string subHeaderText = isPerson ? "Individual Partners" : "Company partners";
+                <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4">@subHeaderText</h2>
+                <hr />
+                
+                var partnersPerType = group.ToList();
+                <div class="govuk-summary-card__content">
+                    <dl class="govuk-summary-list">
+
+                    @for (int i = 0; i < partnersPerType.Count; i++, counter++)
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                @Html.DisplayFor(x => x[counter].Id)
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @Html.DisplayFor(x => x[counter].Name)
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "ApprovedPerson", new { id = Model[i].Id })">
+                                    @SharedLocalizer["Change"]
+                                    <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.Role"].Value.ToLower()</span>
+                                </a>
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "Remove", new { id = Model[i].Id })">
+                                    @SharedLocalizer["Remove"]
+                                    <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.Role"].Value.ToLower()</span>
+                                </a>
+                            </dd>
+                        </div>
+                    }
+                    </dl>
+                </div>
+            }
+            </div>
+
+            <!--
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -49,6 +98,7 @@
                     </tr>
                 </tbody>
             </table>
+            -->
 
             <form action="partner-you" method="post" novalidate>
                 <input type="hidden" name="answers-checked" value="true">

@@ -165,7 +165,12 @@ public partial class LimitedPartnershipController : Controller
     [Route("check-partners")]
     public async Task<IActionResult> CheckNamesOfPartners()
     {
-        return View();
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        // there is no validation on this page, so work directly on the session
+        List<ReExLimitedPartnershipPersonOrCompany> model = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners ?? new(); 
+
+        return View(model);
     }
 
     [HttpGet]
