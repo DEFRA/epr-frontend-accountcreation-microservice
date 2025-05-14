@@ -75,14 +75,6 @@
             </div>
 
             <form method="post">
-
-@*                 @Html.ActionLink(@SharedLocalizer["Continue"].Value, nameof(LimitedPartnershipController.LimitedPartnershipRole), "LimitedPartnership", null,
-                         new
-                         {
-                             @class = "govuk-button"
-                         }) *@
-
-                <!-- goes to partnership role -->
                 <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.CheckNamesOfPartners)" type="submit">
                     @SharedLocalizer["Continue"]
                 </button>

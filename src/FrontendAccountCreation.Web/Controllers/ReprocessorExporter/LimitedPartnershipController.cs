@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -21,6 +22,7 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpGet]
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipNamesOfPartners)]
     public async Task<IActionResult> NamesOfPartners()
     {
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -65,6 +67,7 @@ public partial class LimitedPartnershipController : Controller
     /// <returns></returns>
     [HttpPost]
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipNamesOfPartners)]
     public async Task<IActionResult> NamesOfPartners(LimitedPartnershipPartnersViewModel model, string command)
     {
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -155,6 +158,7 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpGet]
     [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     public async Task<IActionResult> CheckNamesOfPartners([FromQuery] Guid? id)
     {
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -179,12 +183,12 @@ public partial class LimitedPartnershipController : Controller
     }
 
     /// <summary>
-    /// This method is here to redirect to the next page.
     /// Alternatively one might just get the next page, but that would not update session navigation.
     /// </summary>
     /// <returns></returns>
     [HttpPost]
     [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     public async Task<IActionResult> CheckNamesOfPartners()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();

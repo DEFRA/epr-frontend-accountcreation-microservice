@@ -1,4 +1,5 @@
 ﻿@using FrontendAccountCreation.Core.Sessions;
+@using FrontendAccountCreation.Web.Constants
 @using FrontendAccountCreation.Web.Controllers.AccountCreation
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
@@ -8,6 +9,9 @@
 
 @{
     ViewData["Title"] = Localizer["TeamMemberRoleInOrganisation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+    
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
