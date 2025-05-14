@@ -34,14 +34,6 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
                     {
                         LimitedPartnership = new ReExLimitedPartnership
                         {
-                            PartnershipApprovedPersons = new List<ReExLimitedPartnershipApprovedPerson>
-                        {
-                            new()
-                            {
-                                Id = _approvedPersonId,
-                                Role = ReExLimitedPartnershipRoles.Director
-                            }
-                        }
                         }
                     }
                 }

@@ -57,8 +57,9 @@ public static class PagePath
     public const string PartnershipType= "partnership-type";
     public const string LimitedPartnershipType = "limited-partnership-type";
     public const string LimitedPartnershipRole = "limited-partnership-role";
+    public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
     // Non journey paths 
-    public const string Accessibility = "accessibility";
+    public const string Accessibility = "accessibility";    
     public const string SignedOut = "signed-out";
     public const string Error = "error";
     public const string AError = "auth-error";

@@ -239,6 +239,30 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 : RedirectToAction("CheckYourDetails", "AccountCreation");
         }
 
+        [HttpGet]
+        [Route(PagePath.LimitedPartnershipYouAreApprovedPerson)]    
+        public async Task<IActionResult> LimitedPartnershipYouAreApprovedPerson()
+        {
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+           // SetBackLink(session, PagePath.LimitedPartnershipYouAreApprovedPerson);
+
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.LimitedPartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> LimitedPartnershipYouAreApprovedPerson(YouAreApprovedPersonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+           // SetBackLink(session, PagePath.LimitedPartnershipYouAreApprovedPerson);
+            return View(model); // TODO: Redirect to correct URL
+        }
+
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
             string actionName, string currentPagePath, string? nextPagePath, object? routeValues = null)
         {
@@ -266,6 +290,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             // this also cover if current page not found (index = -1) then it clears all pages
             session.Journey = session.Journey.Take(index + 1).ToList();
+        }
+
+        private void SetBackLink(OrganisationSession session, string currentPagePath)
+        {
+            if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+            {
+                ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+            }
+            else
+            {
+                ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+            }
         }
     }
 }
