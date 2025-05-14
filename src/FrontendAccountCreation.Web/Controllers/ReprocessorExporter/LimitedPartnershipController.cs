@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Core.Extensions;
 
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
+using FrontendAccountCreation.Web.ViewModels;
+using FrontendAccountCreation.Core.Sessions;
+using System.Reflection;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -300,7 +303,20 @@ public partial class LimitedPartnershipController : Controller
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.PartnershipType);
 
-        return View();
+        bool? isPartnership = session.ReExCompaniesHouseSession?.IsPartnership;
+
+        dynamic limitedPartnership = null;
+        if (isPartnership.HasValue)
+        {
+            limitedPartnership = isPartnership.Value
+                ? Core.Sessions.PartnershipType.LimitedPartnership
+                : Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+        }
+
+        return View(new PartnershipTypeRequestViewModel
+        {
+            isLimitedPartnership = limitedPartnership
+        });
     }
 
     [HttpPost]
@@ -315,15 +331,21 @@ public partial class LimitedPartnershipController : Controller
             return View(model);
         }
 
-        session.ReExCompaniesHouseSession.IsPartnership = true;
-
         if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
         {
-            session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+            session.ReExCompaniesHouseSession.IsPartnership = true;
+
+            if (session.ReExCompaniesHouseSession.Partnership != null)
             {
-                IsLimitedPartnership = true,
-                LimitedPartnership = new ReExLimitedPartnership()
-            };
+                session.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership = true;
+            }
+            else
+            {
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+                {
+                    IsLimitedPartnership = true,
+                };
+            }
         }
 
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
@@ -335,7 +357,23 @@ public partial class LimitedPartnershipController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.LimitedPartnershipType);
-        return View();
+
+        bool? isPartnership = session.ReExCompaniesHouseSession?.IsPartnership;
+        //session.ReExCompaniesHouseSession.IsPartnership
+
+        bool hasIndividualPartners = false;
+        bool hasCompanyPartners = false;
+        if (session.ReExCompaniesHouseSession.Partnership != null && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null)
+        {
+            hasIndividualPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners;
+            hasCompanyPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners;
+        }
+
+        return View(new LimitedPartnershipTypeRequestViewModel
+        {
+            hasCompanyPartners = hasCompanyPartners,
+            hasIndividualPartners = hasIndividualPartners
+        });
     }
 
     [HttpPost]
@@ -352,20 +390,20 @@ public partial class LimitedPartnershipController : Controller
 
         session.ReExCompaniesHouseSession.IsPartnership = true;
 
-        if (model.isIndividualPartners || model.isCompanyPartners)
+        if (model.hasIndividualPartners || model.hasCompanyPartners)
         {
             session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
             {
                 IsLimitedPartnership = true,
                 LimitedPartnership = new ReExLimitedPartnership
                 {
-                    HasIndividualPartners = model.isIndividualPartners,
-                    HasCompanyPartners = model.isCompanyPartners
+                    HasIndividualPartners = model.hasIndividualPartners,
+                    HasCompanyPartners = model.hasCompanyPartners
                 }
             };
         }
 
-        return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
+        return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipNamesOfPartners);
     }
 
     [HttpGet]
@@ -376,7 +414,6 @@ public partial class LimitedPartnershipController : Controller
         SetBackLink(session, PagePath.LimitedPartnershipType);
         return View();
     }
-
     private void SetBackLink(OrganisationSession session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
