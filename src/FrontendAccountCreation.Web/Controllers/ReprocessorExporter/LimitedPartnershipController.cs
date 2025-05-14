@@ -177,7 +177,7 @@ public partial class LimitedPartnershipController : Controller
         SetBackLink(session, PagePath.LimitedPartnershipCheckNamesOfPartners);
 
         // there is no validation on this page, so work directly on the session
-        List<ReExLimitedPartnershipPersonOrCompany> model = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners ?? new(); 
+        List<ReExLimitedPartnershipPersonOrCompany> model = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners ?? new();
 
         return View(model);
     }
@@ -413,7 +413,7 @@ public partial class LimitedPartnershipController : Controller
 
         session.ReExCompaniesHouseSession.IsPartnership = true;
 
-        if (model.hasIndividualPartners || model.hasCompanyPartners)
+        if (session.ReExCompaniesHouseSession.Partnership == null)
         {
             session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
             {
@@ -424,6 +424,19 @@ public partial class LimitedPartnershipController : Controller
                     HasCompanyPartners = model.hasCompanyPartners
                 }
             };
+        }
+        else
+        {
+            var partnership = session.ReExCompaniesHouseSession.Partnership;
+            partnership.IsLimitedPartnership = true;
+
+            if (partnership.LimitedPartnership == null)
+            {
+                partnership.LimitedPartnership = new ReExLimitedPartnership();
+            }
+
+            partnership.LimitedPartnership.HasIndividualPartners = model.hasIndividualPartners;
+            partnership.LimitedPartnership.HasCompanyPartners = model.hasCompanyPartners;
         }
 
         return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipNamesOfPartners);
