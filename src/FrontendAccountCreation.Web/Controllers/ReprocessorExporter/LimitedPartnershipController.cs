@@ -113,11 +113,13 @@ public partial class LimitedPartnershipController : Controller
 
         await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
 
-        // TODO: there is a missing page between here and LimitedPartnershipRole
-        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipRole),
-            PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipRole);
+        return await SaveSessionAndRedirect(session, nameof(CheckNamesOfPartners),
+            PagePath.LimitedPartnershipNamesOfPartners, "check-partners");
 
-        async Task SyncSessionWithModel(bool hasCompanyPartners, bool hasIndividualPartners, List<ReExLimitedPartnershipPersonOrCompany> partners)
+        async Task SyncSessionWithModel(
+            bool hasCompanyPartners,
+            bool hasIndividualPartners,
+            List<ReExLimitedPartnershipPersonOrCompany> partners)
         {
             // Organisation > Company > Partnership > Limited Partnership
             ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession ?? new();
@@ -154,6 +156,13 @@ public partial class LimitedPartnershipController : Controller
 
             return string.Concat("NamesOfPartners.", errorMessage);
         }
+    }
+
+    [HttpGet]
+    [Route("check-partners")]
+    public async Task<IActionResult> CheckNamesOfPartners()
+    {
+        return View();
     }
 
     [HttpGet]
