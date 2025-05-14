@@ -101,4 +101,29 @@ public class AddNotApprovedPersonTests : ApprovedPersonTestBase
         redirect.ActionName.Should().Be("CheckYourDetails");
         redirect.ControllerName.Should().Be("AccountCreation");
     }
+
+    [TestMethod]
+    public async Task Get_LimitedPartnershipYouAreApprovedPerson_ReturnsView()
+    {
+        // Act
+        var result = await _systemUnderTest.LimitedPartnershipYouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+    }
+
+    [TestMethod]
+    public async Task Post_LimitedPartnershipYouAreApprovedPerson_ModelStateInvalid_ReturnsViewWithModel()
+    {
+        // Arrange
+        var model = new YouAreApprovedPersonViewModel();
+        _systemUnderTest.ModelState.AddModelError("Field", "Required");
+
+        // Act
+        var result = await _systemUnderTest.LimitedPartnershipYouAreApprovedPerson(model);
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        viewResult.Model.Should().Be(model);
+    }
 }
