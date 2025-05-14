@@ -17,7 +17,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NamesOfPartners.Title_Individual" xml:space="preserve">
-    <value>[Welsh]Name Individual Partners</value>
+    <value>[Welsh]Name Corporate Partners</value>
   </data>
   <data name="NamesOfPartners.Title_Company" xml:space="preserve">
     <value>[Welsh]Name Company Partners</value>
@@ -26,7 +26,7 @@
     <value>[Welsh]Name All Partners</value>
   </data>
   <data name="NamesOfPartners.H1_Individual" xml:space="preserve">
-    <value>[Welsh]What are the names of all individual partners in your limited partnership?</value>
+    <value>[Welsh]What are the names of all corporate partners in your limited partnership?</value>
   </data>
   <data name="NamesOfPartners.H1_Company" xml:space="preserve">
     <value>[Welsh]What are the names of company partners in your limited partnership?</value>
@@ -35,13 +35,13 @@
     <value>[Welsh]What are the names of all partners in your limited partnership?</value>
   </data>
   <data name="NamesOfPartners.Hint_Individual" xml:space="preserve">
-    <value>[Welsh]This means individual partners, who are listed as partners within your limited partnership, as registered on Companies House.</value>
+    <value>[Welsh]This means corporate partners, who are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.Hint_Company" xml:space="preserve">
     <value>[Welsh]This means any company entity partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.Hint_Both" xml:space="preserve">
-    <value>[Welsh]This means any company entity partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
+    <value>[Welsh]This means any company entity partners and corporate partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.CompanyName" xml:space="preserve">
     <value>[Welsh]Company partner name</value>
@@ -50,18 +50,18 @@
     <value>[Welsh]Or</value>
   </data>
   <data name="NamesOfPartners.PersonName" xml:space="preserve">
-    <value>[Welsh]Individual partner’s full name</value>
+    <value>[Welsh]Corporate partner’s full name</value>
   </data>
   <data name="NamesOfPartners.AddAnotherPartner" xml:space="preserve">
     <value>[Welsh]Add another partner</value>
   </data>
   <data name="NamesOfPartners.ValidationError_Individual" xml:space="preserve">
-    <value>[Welsh]Enter the full name of an individual partner</value>
+    <value>[Welsh]Enter the full name of an corporate partner</value>
   </data>
   <data name="NamesOfPartners.ValidationError_Company" xml:space="preserve">
     <value>[Welsh]Enter a company partner name</value>
   </data>
   <data name="NamesOfPartners.ValidationError_Both" xml:space="preserve">
-    <value>[Welsh]Enter a company partner name or the full name of an individual partner</value>
+    <value>[Welsh]Enter a company partner name or the full name of an corporate partner</value>
   </data>
 </root>
