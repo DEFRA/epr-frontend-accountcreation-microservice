@@ -333,7 +333,7 @@ public class OrganisationController : Controller
         {
             // TODO: No option ending up same YES pagePath - to be confirmed
             return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.PartnershipType), PagePath.IsPartnership,
-                PagePath.PartnershipType                );
+                PagePath.PartnershipType);
         }
         return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
     }
