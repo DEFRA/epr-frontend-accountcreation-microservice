@@ -49,6 +49,7 @@ public static class PagePath
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-entity-individual-partner-names";
+    public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-entity-corporate-partner-names";
     public const string LimitedPartnershipAddApprovedPerson = "limited-partnership-add-approved-person";
     public const string ApprovedPersonPartnershipRole = "approved-person-partnership-role";
     public const string ApprovedPersonPartnershipDetails = "approved-person-partnership-details";
@@ -56,8 +57,9 @@ public static class PagePath
     public const string PartnershipType= "partnership-type";
     public const string LimitedPartnershipType = "limited-partnership-type";
     public const string LimitedPartnershipRole = "limited-partnership-role";
+    public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
     // Non journey paths 
-    public const string Accessibility = "accessibility";
+    public const string Accessibility = "accessibility";    
     public const string SignedOut = "signed-out";
     public const string Error = "error";
     public const string AError = "auth-error";
