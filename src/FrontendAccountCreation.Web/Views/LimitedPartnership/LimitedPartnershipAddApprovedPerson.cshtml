@@ -3,11 +3,14 @@
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
 @using FrontendAccountCreation.Web;
+@using FrontendAccountCreation.Web.Constants
 
 @model LimitedPartnershipAddApprovedPersonViewModel;
 
 @{
     ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
