@@ -1,4 +1,4 @@
-﻿@using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons
+﻿@using FrontendAccountCreation.Core.Sessions.ReEx
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using Microsoft.AspNetCore.Mvc.TagHelpers
@@ -35,7 +35,7 @@
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" type="radio" id="rdoIndividualPartner"
                                            gov-for="RoleInOrganisation"
-                                           gov-value="@nameof(ReExLimitedPartnershipRoles.IndividualPartner)">
+                                           gov-value="@nameof(ReExTeamMemberRole.IndividualPartner)">
                                     <label class="govuk-label govuk-radios__label" for="rdoIndividualPartner">
                                         @SharedLocalizer["IndividualPartner"]
                                     </label>
@@ -43,7 +43,7 @@
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" type="radio" id="rdoDirector"
                                            gov-for="RoleInOrganisation"
-                                           gov-value="@nameof(ReExLimitedPartnershipRoles.Director)">
+                                           gov-value="@nameof(ReExTeamMemberRole.PartnerDirector)">
                                     <label class="govuk-label govuk-radios__label" for="rdoDirector">
                                         @Localizer["PartnershipApprovedPersonRole.Director"]
                                     </label>
@@ -51,7 +51,7 @@
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
                                            gov-for="RoleInOrganisation"
-                                           gov-value="@nameof(ReExLimitedPartnershipRoles.CompanySecretary)">
+                                           gov-value="@nameof(ReExTeamMemberRole.PartnerCompanySecretary)">
                                     <label class="govuk-label govuk-radios__label" for="rdoCompanySecretary">
                                         @Localizer["PartnershipApprovedPersonRole.CompanySecretary"]
                                     </label>
@@ -60,7 +60,7 @@
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" type="radio" id="rdoNone"
                                            gov-for="RoleInOrganisation"
-                                           gov-value="@nameof(ReExLimitedPartnershipRoles.None)">
+                                           gov-value="none">
                                     <label class="govuk-label govuk-radios__label" for="rdoNone">
                                         @SharedLocalizer["NoneOfTheAbove"]
                                     </label>

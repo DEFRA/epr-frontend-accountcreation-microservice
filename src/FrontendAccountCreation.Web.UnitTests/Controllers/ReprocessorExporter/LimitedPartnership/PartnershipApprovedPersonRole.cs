@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
-using FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ApprovedPersons;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,18 +24,12 @@ public class ApprovedPersonPartnershipRoleTests : LimitedPartnershipTestBase
         {
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
-                Partnership = new ReExPartnership
+                TeamMembers = new List<ReExCompanyTeamMember>
                 {
-                    LimitedPartnership = new ReExLimitedPartnership
+                    new()
                     {
-                        //PartnershipApprovedPersons = new List<ReExLimitedPartnershipApprovedPerson>
-                        //{
-                        //    new()
-                        //    {
-                        //        Id = _approvedPersonId,
-                        //        Role = ReExLimitedPartnershipRoles.Director
-                        //    }
-                        //}
+                        Id = _approvedPersonId,
+                        Role = ReExTeamMemberRole.PartnerDirector
                     }
                 }
             }
@@ -53,7 +46,7 @@ public class ApprovedPersonPartnershipRoleTests : LimitedPartnershipTestBase
 
         result.Should().BeOfType<ViewResult>();
         var model = ((ViewResult)result).Model.Should().BeOfType<LimitedPartnershipApprovedPersonRoleViewModel>().Subject;
-        model.RoleInOrganisation.Should().Be(ReExLimitedPartnershipRoles.Director);
+        model.RoleInOrganisation.Should().Be(ReExTeamMemberRole.PartnerDirector);
     }
 
     [TestMethod]
@@ -83,7 +76,7 @@ public class ApprovedPersonPartnershipRoleTests : LimitedPartnershipTestBase
         var model = new LimitedPartnershipApprovedPersonRoleViewModel
         {
             Id = _approvedPersonId,
-            RoleInOrganisation = ReExLimitedPartnershipRoles.None
+            RoleInOrganisation = ReExTeamMemberRole.Director
         };
 
         var result = await _systemUnderTest.ApprovedPersonPartnershipRole(model);
@@ -98,7 +91,7 @@ public class ApprovedPersonPartnershipRoleTests : LimitedPartnershipTestBase
         var model = new LimitedPartnershipApprovedPersonRoleViewModel
         {
             Id = _approvedPersonId,
-            RoleInOrganisation = ReExLimitedPartnershipRoles.CompanySecretary
+            RoleInOrganisation = ReExTeamMemberRole.PartnerCompanySecretary
         };
 
         var result = await _systemUnderTest.ApprovedPersonPartnershipRole(model);
@@ -113,7 +106,7 @@ public class ApprovedPersonPartnershipRoleTests : LimitedPartnershipTestBase
         var model = new LimitedPartnershipApprovedPersonRoleViewModel
         {
             Id = Guid.NewGuid(),
-            RoleInOrganisation = ReExLimitedPartnershipRoles.CompanySecretary
+            RoleInOrganisation = ReExTeamMemberRole.PartnerCompanySecretary
         };
 
         var result = await _systemUnderTest.ApprovedPersonPartnershipRole(model);
