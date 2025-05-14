@@ -239,6 +239,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 : RedirectToAction("CheckYourDetails", "AccountCreation");
         }
 
+        [HttpGet]
+        [Route(PagePath.LimitedPartnershipYouAreApprovedPerson)]    
+        public async Task<IActionResult> LimitedPartnershipYouAreApprovedPerson()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.LimitedPartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> LimitedPartnershipYouAreApprovedPerson(YouAreApprovedPersonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            return View(); // TODO: Redirect to correct URL
+        }
+
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
             string actionName, string currentPagePath, string? nextPagePath, object? routeValues = null)
         {

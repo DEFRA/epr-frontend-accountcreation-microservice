@@ -1,0 +1,48 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+
+@{
+    ViewData["Title"] = Localizer["YouAreApprovedPerson.Title"];
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <fieldset class="govuk-fieldset">
+                    <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
+                        @Localizer["YouAreApprovedPerson.Title"]
+                    </h1>
+
+                </fieldset>
+
+                <p class="govuk-body">@Localizer["YouAreApprovedPerson.Description"]</p>
+
+                <p class="govuk-body">@Localizer["YouAreApprovedPerson.YouCanNow"]:</p>
+
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>
+                        @Localizer["YouAreApprovedPerson.Item1"]
+                    <li>
+                            @Localizer["YouAreApprovedPerson.Item2"]
+                    </li>
+                </ul>
+
+                <form asp-controller="ApprovedPerson" method="post">
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" data-module="govuk-button" asp-action="LimitedPartnershipYouAreApprovedPerson">
+                            @SharedLocalizer["Continue"]
+                        </button>
+
+                        <a asp-action="InviteOtherApprovedPerson" class="govuk-link">
+                            @Localizer["YouAreApprovedPerson.InviteLink"]
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
