@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ReExUserAlreadyExists.Title" xml:space="preserve">
-    <value>(Welsh) User already exists</value>
+    <value>Y defnyddiwr yn bodoli'n barod</value>
   </data>
   <data name="ReExUserAlreadyExists.Description" xml:space="preserve">
-    <value>(Welsh) You have already created an account for this service.</value>
+    <value>Rydych chi eisoes wedi creu cyfrif ar gyfer y gwasanaeth yma.</value>
   </data>
   <data name="ReExUserAlreadyExists.Header" xml:space="preserve">
-    <value>(Welsh) User already exists</value>
+    <value>Y defnyddiwr yn bodoli'n barod</value>
   </data>
 </root>

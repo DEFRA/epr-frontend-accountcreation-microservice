@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Declaration.Title" xml:space="preserve">
-    <value>[Welsh]Declaration</value>
+    <value>Datganiad</value>
   </data>
   <data name="Declaration.Statement" xml:space="preserve">
-    <value>[Welsh]By confirming your details, you agree that the organisational information you've given is complete and correct.</value>
+    <value>Drwy gadarnhau'ch manylion, rydych chi'n cytuno bod yr wybodaeth sefydliadol rydych chi wedi'i rhoi yn gyflawn ac yn gywir.</value>
   </data>
   <data name="Declaration.Information" xml:space="preserve">
-    <value>[Welsh]You could face enforcement action if you give false or deliberately misleading information.</value>
+    <value>Gallech wynebu camau gorfodi os byddwch chi'n rhoi gwybodaeth ffug neu wybodaeth sy'n fwriadol yn gamarweiniol.</value>
   </data>
   <data name="Declaration.Confirm" xml:space="preserve">
-    <value>[Welsh]Confirm and add organisation</value>
+    <value>Cadarnhau ac ychwanegu sefydliad</value>
   </data>
 </root>
