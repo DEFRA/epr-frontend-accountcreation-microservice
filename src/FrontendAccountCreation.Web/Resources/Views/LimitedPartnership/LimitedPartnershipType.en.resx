@@ -23,7 +23,7 @@
     <value>Which type of partners are in your limited partnership?</value>
   </data>
   <data name="LimitedPartnershipType.IndividualPartners" xml:space="preserve">
-    <value>Individual partners</value>
+    <value>Corporate partners</value>
   </data>
   <data name="LimitedPartnershipType.CompanyPartners" xml:space="preserve">
     <value>Company partners</value>

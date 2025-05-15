@@ -23,7 +23,7 @@
     <value>[Welsh]Which type of partners are in your limited partnership?</value>
   </data>
   <data name="LimitedPartnershipType.IndividualPartners" xml:space="preserve">
-    <value>[Welsh]Individual partners</value>
+    <value>[Welsh]Corporate partners</value>
   </data>
   <data name="LimitedPartnershipType.CompanyPartners" xml:space="preserve">
     <value>[Welsh]Company partners</value>
