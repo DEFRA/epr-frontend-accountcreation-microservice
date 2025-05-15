@@ -2,10 +2,10 @@
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership;
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
 [TestClass]
-public class PersonCanNotBeInvitedTests : LimitedPartnershipTestBase
+public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
 {
     private Guid _testId;
 

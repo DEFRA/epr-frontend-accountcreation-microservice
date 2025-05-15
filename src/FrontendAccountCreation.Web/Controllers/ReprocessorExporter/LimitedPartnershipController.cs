@@ -197,20 +197,6 @@ public partial class LimitedPartnershipController : Controller
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
     }
 
-    [HttpGet]
-    [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-    public IActionResult PersonCanNotBeInvited([FromQuery] Guid id)
-    {
-        return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
-    }
-
-    [HttpPost]
-    [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-    public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
-    {
-        return RedirectToAction("CheckYourDetails", "AccountCreation");
-    }
-
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
         List<LimitedPartnershipPersonOrCompanyViewModel> partners)
     {
