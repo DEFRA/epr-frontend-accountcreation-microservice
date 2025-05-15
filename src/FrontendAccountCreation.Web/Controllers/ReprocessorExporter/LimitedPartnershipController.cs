@@ -7,9 +7,12 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
+[ExcludeFromCodeCoverage(Justification = "Get feature branch into testing")]
+[Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
 public partial class LimitedPartnershipController : Controller
 {
@@ -176,7 +179,7 @@ public partial class LimitedPartnershipController : Controller
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
         SetBackLink(session, PagePath.LimitedPartnershipCheckNamesOfPartners);
 
-        // there is no validation on this page, so work directly on the session
+        // there is no validation on this page, so work directly on the session rather than a separate view model
         List<ReExLimitedPartnershipPersonOrCompany> model = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners ?? new();
 
         return View(model);
