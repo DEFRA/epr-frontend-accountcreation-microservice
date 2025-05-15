@@ -481,7 +481,7 @@ public partial class LimitedPartnershipController : Controller
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.LimitedPartnershipType);
+            SetBackLink(session, PagePath.LimitedPartnershipRole);
             return View(model);
         }
 
