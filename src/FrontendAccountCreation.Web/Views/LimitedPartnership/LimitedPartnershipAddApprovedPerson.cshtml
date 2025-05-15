@@ -24,39 +24,39 @@
                 <form asp-controller="LimitedPartnership" asp-action="LimitedPartnershipAddApprovedPerson" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                            @Localizer["AddAnApprovedPerson.Title"]
+                            @Localizer["LimitedPartnershipAddApprovedPerson.Title"]
                         </h1>
 
-                        <p class="govuk-body">@Localizer["AddAnApprovedPerson.Introtext1"]</p>
+                        <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.Introtext1"]</p>
 
-                        <p class="govuk-body">@Localizer["AddAnApprovedPerson.IntroInstruction"]:</p>
+                        <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.IntroInstruction"]:</p>
 
                         <ul class="govuk-list govuk-list--bullet">
-                            <li>@Localizer["AddAnApprovedPerson.BulletAccreditation"]</li>
-                            <li>@Localizer["AddAnApprovedPerson.BulletSubmit"]</li>
+                            <li>@Localizer["LimitedPartnershipAddApprovedPerson.BulletAccreditation"]</li>
+                            <li>@Localizer["LimitedPartnershipAddApprovedPerson.BulletSubmit"]</li>
                         </ul>
 
                         <p class="govuk-inset-text">
-                            @Localizer["AddAnApprovedPerson.IntroText2"]
+                            @Localizer["LimitedPartnershipAddApprovedPerson.IntroText2"]
                         </p>
 
                         <p class="govuk-body">
-                            @Localizer["AddAnApprovedPerson.IntroText3"]
+                            @Localizer["LimitedPartnershipAddApprovedPerson.IntroText3"]
                         </p>
 
                         <div class="section">
-                            <h3 class="govuk-heading-m">@Localizer["AddAnApprovedPerson.RolesHeading"]</h3>
-                            <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
+                            <h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.RolesHeading"]</h3>
+                            <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.RolesInstruction"]:</p>
                             <ul class="govuk-list govuk-list--bullet">
-                                <li>@Localizer["AddAnApprovedPerson.Individual"]</li>
-                                <li>@Localizer["AddAnApprovedPerson.Director"]</li>
-                                <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
+                                <li>@Localizer["LimitedPartnershipAddApprovedPerson.Individual"]</li>
+                                <li>@Localizer["LimitedPartnershipAddApprovedPerson.Director"]</li>
+                                <li>@Localizer["LimitedPartnershipAddApprovedPerson.CompanySecretary"]</li>
                             </ul>
                         </div>
 
                         <div class="section">
-                            <h3 class="govuk-heading-m">@Localizer["AddAnApprovedPerson.UserHeading"]</h3>
-                            <p class="govuk-body">@Localizer["AddAnApprovedPerson.SelectOptionText"]</p>
+                            <h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.UserHeading"]</h3>
+                            <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.SelectOptionText"]</p>
                         </div>
 
                         <fieldset class="govuk-fieldset">
@@ -73,7 +73,7 @@
                                     <label class="govuk-label govuk-radios__label"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
-                                        @Localizer["AddAnApprovedPerson.IAgreeToBeAnApprovedPerson"]
+                                        @Localizer["LimitedPartnershipAddApprovedPerson.IAgreeToBeAnApprovedPerson"]
                                     </label>
                                 </div>
 
@@ -84,7 +84,7 @@
                                     <label class="govuk-label govuk-radios__label"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
-                                        @Localizer["AddAnApprovedPerson.IWillInviteAnotherApprovedPerson"]
+                                        @Localizer["LimitedPartnershipAddApprovedPerson.IWillInviteAnotherApprovedPerson"]
                                     </label>
                                 </div>
 
@@ -95,7 +95,7 @@
                                     <label class="govuk-label govuk-radios__label"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.InviteLater)">
-                                        @Localizer["AddAnApprovedPerson.IWillInviteApprovedPersonLater"]
+                                        @Localizer["LimitedPartnershipAddApprovedPerson.IWillInviteApprovedPersonLater"]
                                     </label>
                                 </div>
 
