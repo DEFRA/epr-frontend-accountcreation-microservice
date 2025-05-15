@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FrontendAccountCreation.Web.Constants;
 
+[ExcludeFromCodeCoverage]
 public static class PagePath
 {
     // Journey paths
@@ -33,12 +36,11 @@ public static class PagePath
     public const string IsPartnership = "is-partnership";
     public const string PartnerOrganisation = "partner-organisation";
     public const string ManageAccountPerson = "manage-account-person";
-    public const string YouAreApprovedPerson = "person-approved";
+    public const string YouAreApprovedPerson = "approved-person";
     public const string AddApprovedPerson = "add-approved-person";
     public const string ApprovedPersonContinue = "person-approved-continue";
     public const string DeclarationContinue = "declaration-continue";
-    public const string ToBeAdded = "to-be-added"; // To DO: replace or remove with required one
-    public const string ToDoPath = "to-do-path"; // To DO: replace or remove with required one
+    public const string ToDoPath = "to-do-path"; // To DO: delete or replace with required one
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
@@ -64,8 +66,11 @@ public static class PagePath
     public const string SignedOut = "signed-out";
     public const string Error = "error";
     public const string AError = "auth-error";
+    public const string ErrorReEx = "error-reex";
     public const string Culture = "culture";
+    //to-do: this page path doesn't exist, but if you redirect to it, you'll get "page not found" as the path doesn't exist :-)
     public const string PageNotFound = "PageNotFound";
+    public const string PageNotFoundReEx = "/page-not-found-reex";
     public const string AcknowledgeCookieAcceptance = "acknowledge-cookie-acceptance";
     public const string UpdateCookieAcceptance = "update-cookie-acceptance";
 }

@@ -11,7 +11,7 @@ using Moq;
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 [TestClass]
-public class YouAreApprovedPersonTests : OrganisationTestBase
+public class YouAreApprovedPersonTests : ApprovedPersonTestBase
 {
     [TestInitialize]
     public void Setup()
@@ -33,7 +33,7 @@ public class YouAreApprovedPersonTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task ContinueCalls_ApprovedConfirmationContinue_And_Redirects_ToDesired_View()
+    public async Task ContinueCalls_CheckYourDetails_And_Redirects_ToDesired_View()
     {
         // Arrange
         var orgSessionMock = new OrganisationSession
@@ -46,8 +46,8 @@ public class YouAreApprovedPersonTests : OrganisationTestBase
             .Verifiable();
 
         // Act
-        var result = _systemUnderTest.ApprovedConfirmationContinue();
-        var okResult = (Microsoft.AspNetCore.Mvc.StatusCodeResult)result.Result;
+        var result = _systemUnderTest.CheckYourDetails();
+        var okResult = (Microsoft.AspNetCore.Mvc.OkObjectResult)result.Result;
         
         // Assert
         result.Should().NotBeNull();
@@ -57,22 +57,35 @@ public class YouAreApprovedPersonTests : OrganisationTestBase
 
     // TO DO following & modify - once Tungsten has merged
     [TestMethod]
-    public async Task InviteLink_Calls_InviteOtherApprovedPerson_And_Redirects_ToDesired_View()
+    [DataRow (null, null)]
+    [DataRow("acfa4773-20f0-4cf4-ae03-b36d96a8589a", "acfa4773-20f0-4cf4-ae03-b36d96a8589a")]
+    public async Task InviteLink_Calls_TeamMemberRoleInOrganisation_And_Redirects_ToDesired_View(string? id, string teamMemberId)
     {
         // Arrange
+        Guid memberId = !string.IsNullOrWhiteSpace(teamMemberId) ? Guid.Parse(teamMemberId) : Guid.Empty;
         var orgSessionMock = new OrganisationSession
         {
-            Journey = [PagePath.AddApprovedPerson]
+            Journey = [PagePath.AddApprovedPerson],
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers =
+                [
+                   new() { Id = memberId, Role = ReExTeamMemberRole.Director, FullName = "test", Email = "test@test.com", TelephoneNumber = "07880908087" }
+                ]
+            }
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(orgSessionMock)
             .Verifiable();
 
+        Guid? queryId = !string.IsNullOrWhiteSpace(id) ? Guid.Parse(id) : (Guid?)null;
+
         // Act
-        var result = _systemUnderTest.InviteOtherApprovedPerson();
+        var result = _systemUnderTest.TeamMemberRoleInOrganisation(queryId);
 
         // Assert
         result.Should().NotBeNull();
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 }

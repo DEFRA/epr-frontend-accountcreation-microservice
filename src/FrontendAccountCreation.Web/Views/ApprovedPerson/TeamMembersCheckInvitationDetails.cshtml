@@ -82,19 +82,20 @@
                                      })
                         </div>
                     }
+           
+                    <form asp-controller="ApprovedPerson" method="get">
+                        <div class="govuk-button-group">
+                            <!-- goes to check your details -->
+                            <button class="govuk-button" data-module="govuk-button" asp-action="CheckYourDetails">
+                                @SharedLocalizer["Continue"]
+                            </button>
 
-                    <!-- goes to check your details -->
-                    @Html.ActionLink(@SharedLocalizer["Continue"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
-                             new
-                             {
-                                 @class = "govuk-button"
-                             })
-
-                    <p class="govuk-body">
-                        <!-- goes to 'What is their role as shown on Companies House? -->
-                        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation), "ApprovedPerson")">@Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]</a>
-                    </p>
-
+                            <!-- goes to invite others -->
+                            <a asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
+                                @Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

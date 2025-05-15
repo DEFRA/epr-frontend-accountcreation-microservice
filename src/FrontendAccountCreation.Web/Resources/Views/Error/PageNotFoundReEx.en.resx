@@ -117,25 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="YouAreApprovedPerson.Description" xml:space="preserve">
-    <value>As an inividual named on Companies House you are now an 'approved person' for your organisation.</value>
+  <data name="PageNotFound.GoToTheStart" xml:space="preserve">
+    <value>Go to the start</value>
   </data>
-  <data name="YouAreApprovedPerson.Header" xml:space="preserve">
-    <value>You are now an approved person</value>
+  <data name="PageNotFound.PleaseSelect" xml:space="preserve">
+    <value>Please select ‘Go to the start’.</value>
   </data>
-  <data name="YouAreApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another approved person</value>
+  <data name="PageNotFound.TakeYouBeginningOfProcess" xml:space="preserve">
+    <value>We would like to take you to the beginning of the ‘{0}’ service.</value>
   </data>
-  <data name="YouAreApprovedPerson.Item1" xml:space="preserve">
-    <value>continue to add your organisation</value>
+  <data name="PageNotFound.Title" xml:space="preserve">
+    <value>Page not found</value>
   </data>
-  <data name="YouAreApprovedPerson.Item2" xml:space="preserve">
-    <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
+  <data name="PageNotFound.Warning" xml:space="preserve">
+    <value>There is a problem</value>
   </data>
-  <data name="YouAreApprovedPerson.Ttitle" xml:space="preserve">
-    <value>Approved person</value>
-  </data>
-  <data name="YouAreApprovedPerson.YouCanNow" xml:space="preserve">
-    <value>You can now:</value>
+  <data name="PageNotFound.YouCannotContinue" xml:space="preserve">
+    <value>You cannot continue your journey from here.</value>
   </data>
 </root>

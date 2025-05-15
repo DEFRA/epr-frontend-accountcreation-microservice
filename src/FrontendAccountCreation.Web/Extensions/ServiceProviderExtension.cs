@@ -15,6 +15,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.Distributed;
 using StackExchange.Redis;
 using System.Diagnostics.CodeAnalysis;
+using FrontendAccountCreation.Core.Utilities;
 
 namespace FrontendAccountCreation.Web.Extensions;
 
@@ -78,6 +79,10 @@ public static class ServiceProviderExtension
         services.AddScoped<ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
         services.AddScoped<ISessionManager<ReExAccountCreationSession>, SessionManager<ReExAccountCreationSession>>();
         services.AddScoped<ISessionManager<OrganisationSession>, SessionManager<OrganisationSession>>();
+
+        // add the names of the Re/Ex controllers
+        // (if we want multiple allow lists, we can name them in the service collection)
+        services.AddSingleton(AllowList<string>.Create("User", "Organisation"));
     }
 
     private static void SetTempDataCookieOptions(IServiceCollection services, IConfiguration configuration)
@@ -145,10 +150,11 @@ public static class ServiceProviderExtension
 
     private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
     {
+        //to-do: ideally, we'll need a re/ex branded error page
         services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(options =>
             {
-                configuration.GetSection("AzureAdB2C").Bind(options);               
+                configuration.GetSection("AzureAdB2C").Bind(options);
                 options.ErrorPath = "/auth-error";
                 options.Events.OnRemoteFailure = context =>
                 {

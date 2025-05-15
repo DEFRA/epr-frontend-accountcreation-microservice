@@ -146,6 +146,7 @@ public class FacadeService : IFacadeService
 
     public async Task<bool> DoesAccountAlreadyExistAsync()
     {
+        return false;
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync($"/api/persons/current");
 
