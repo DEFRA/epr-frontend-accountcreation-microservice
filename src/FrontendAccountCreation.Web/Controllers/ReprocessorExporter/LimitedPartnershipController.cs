@@ -5,7 +5,6 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using System.Diagnostics.CodeAnalysis;
 
@@ -199,64 +198,6 @@ public partial class LimitedPartnershipController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.ApprovedPersonPartnershipRole)]
-    public async Task<IActionResult> ApprovedPersonPartnershipRole([FromQuery] Guid id)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        var approvedPersons = session?.ReExCompaniesHouseSession?.TeamMembers?.ToList();
-        var index = approvedPersons?.FindIndex(0, x => x.Id.Equals(id));
-
-        if (index is >= 0)
-        {
-            var viewModel = new LimitedPartnershipApprovedPersonRoleViewModel
-            {
-                RoleInOrganisation = approvedPersons![index.Value].Role
-            };
-            return View(viewModel);
-        }
-
-        return View();
-    }
-
-    [HttpPost]
-    [Route(PagePath.ApprovedPersonPartnershipRole)]
-    public async Task<IActionResult> ApprovedPersonPartnershipRole(LimitedPartnershipApprovedPersonRoleViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        var approvedPersons = session?.ReExCompaniesHouseSession?.TeamMembers;
-
-        var index = approvedPersons?.FindIndex(x => x.Id == model.Id);
-
-        if (index is null or -1)
-        {
-            return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
-        }
-
-        approvedPersons![index.Value].Role = model.RoleInOrganisation!.Value;
-
-        switch (model.RoleInOrganisation)
-        {
-            case ReExTeamMemberRole.IndividualPartner:
-            case ReExTeamMemberRole.PartnerDirector:
-            case ReExTeamMemberRole.PartnerCompanySecretary:
-                await SaveSession(session, PagePath.ApprovedPersonPartnershipRole, PagePath.ApprovedPersonPartnershipDetails);
-                return RedirectToAction(nameof(ApprovedPersonDetails), new { id = model.Id });
-            default:
-                await SaveSession(session, PagePath.ApprovedPersonPartnershipRole,
-                    PagePath.ApprovedPersonPartnershipCanNotBeInvited);
-
-                return RedirectToAction(nameof(PersonCanNotBeInvited), new { id = model.Id });
-        }
-    }
-
-    [HttpGet]
     [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
     public IActionResult PersonCanNotBeInvited([FromQuery] Guid id)
     {
@@ -268,43 +209,6 @@ public partial class LimitedPartnershipController : Controller
     public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
     {
         return RedirectToAction("CheckYourDetails", "AccountCreation");
-    }
-
-    [HttpGet]
-    [Route(PagePath.ApprovedPersonPartnershipDetails)]
-    public IActionResult ApprovedPersonDetails(Guid id)
-    {
-        // Placeholder action to satisfy RedirectToAction with id
-        return Ok();
-    }
-
-    [HttpGet]
-    [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
-    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(Guid id)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.PartnershipType);
-        return View();
-    }
-
-    [HttpPost]
-    [Route(PagePath.LimitedPartnershipAddApprovedPerson)]
-    public async Task<IActionResult> LimitedPartnershipAddApprovedPerson(LimitedPartnershipAddApprovedPersonViewModel model)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        if (!ModelState.IsValid)
-        {
-            SetBackLink(session, PagePath.PartnershipType);
-            return View(model);
-        }
-
-        return model.InviteUserOption switch
-        {
-            "BeAnApprovedPerson" => RedirectToAction("YouAreApprovedPerson"),
-            "InviteAnotherPerson" => RedirectToAction("TeamMemberRoleInOrganisation"),
-            _ => RedirectToAction("CheckYourDetails", "AccountCreation") // "InviteLater"
-        };
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(

@@ -30,6 +30,20 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
+            var reExSession = session.ReExCompaniesHouseSession;
+
+            if (reExSession?.IsPartnership == true)
+            {
+                return reExSession.IsIneligible
+                    ? View("InEligibleAddNotApprovedPerson")
+                    : View("LimitedPartnershipAddApprovedPerson");
+            }
+
+            if (reExSession?.IsIneligible == true)
+            {
+                return View("AddNotApprovedPerson");
+            }
+
             return View();
         }
 
@@ -237,81 +251,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.CheckYourDetails, PagePath.CheckYourDetails);
             return Ok("Check-Your-Details not been implemented yet...!");
         }
-
-        [HttpGet]
-        [Route(PagePath.AddNotApprovedPerson)]
-        public async Task<IActionResult> AddNotApprovedPerson()
-        {
-
-            return View();
-        }
-
-        [HttpPost]
-        [Route(PagePath.AddNotApprovedPerson)]
-        public async Task<IActionResult> AddNotApprovedPerson(AddNotApprovedPersonViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            return model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString()
-                ? RedirectToAction(nameof(TeamMemberRoleInOrganisation))
-                : RedirectToAction("CheckYourDetails", "AccountCreation");
-        }
-
-        [HttpGet]
-        [Route(PagePath.InEligibleAddNotApprovedPerson)]
-        public async Task<IActionResult> InEligibleAddNotApprovedPerson()   
-        {
-            // SetBackLink(session, PagePath.LimitedPartnershipYouAreApprovedPerson);
-            return View();
-        }
-            
-        [HttpPost]
-        [Route(PagePath.InEligibleAddNotApprovedPerson)]
-        public async Task<IActionResult> InEligibleAddNotApprovedPerson(AddApprovedPersonViewModel model)
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-            if (!ModelState.IsValid)
-            {
-               // SetBackLink(session, PagePath.PartnershipType);
-                return View(model);
-            }
-
-            return model.InviteUserOption switch
-            {
-                "InviteAnotherPerson" => RedirectToAction("TeamMemberRoleInOrganisation"),
-                _ => RedirectToAction("CheckYourDetails", "AccountCreation") // "InviteLater"
-            };
-
-        }
-
-        [HttpGet]
-        [Route(PagePath.LimitedPartnershipYouAreApprovedPerson)]    
-        public async Task<IActionResult> LimitedPartnershipYouAreApprovedPerson()
-        {
-            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-           // SetBackLink(session, PagePath.LimitedPartnershipYouAreApprovedPerson);
-
-            return View();
-        }
-
-        [HttpPost]
-        [Route(PagePath.LimitedPartnershipYouAreApprovedPerson)]
-        public async Task<IActionResult> LimitedPartnershipYouAreApprovedPerson(YouAreApprovedPersonViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-           // SetBackLink(session, PagePath.LimitedPartnershipYouAreApprovedPerson);
-            return View(model); // TODO: Redirect to correct URL
-        }
-
+        
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
             string actionName, string currentPagePath, string? nextPagePath, string? controllerName = null, object? routeValues = null)
         {
