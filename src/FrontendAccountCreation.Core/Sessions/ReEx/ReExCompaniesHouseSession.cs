@@ -1,8 +1,10 @@
 ﻿using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Core.Sessions.ReEx;
 
+[ExcludeFromCodeCoverage(Justification = "Get feature branch into testing")]
 public class ReExCompaniesHouseSession
 {
     public Company Company { get; set; }
