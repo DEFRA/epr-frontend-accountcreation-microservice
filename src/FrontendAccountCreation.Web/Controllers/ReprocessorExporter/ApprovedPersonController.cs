@@ -240,6 +240,34 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.InEligibleAddNotApprovedPerson)]
+        public async Task<IActionResult> InEligibleAddNotApprovedPerson()   
+        {
+            // SetBackLink(session, PagePath.LimitedPartnershipYouAreApprovedPerson);
+            return View();
+        }
+            
+        [HttpPost]
+        [Route(PagePath.InEligibleAddNotApprovedPerson)]
+        public async Task<IActionResult> InEligibleAddNotApprovedPerson(AddApprovedPersonViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            if (!ModelState.IsValid)
+            {
+               // SetBackLink(session, PagePath.PartnershipType);
+                return View(model);
+            }
+
+            return model.InviteUserOption switch
+            {
+                "InviteAnotherPerson" => RedirectToAction("TeamMemberRoleInOrganisation"),
+                _ => RedirectToAction("CheckYourDetails", "AccountCreation") // "InviteLater"
+            };
+
+        }
+
+        [HttpGet]
         [Route(PagePath.LimitedPartnershipYouAreApprovedPerson)]    
         public async Task<IActionResult> LimitedPartnershipYouAreApprovedPerson()
         {
