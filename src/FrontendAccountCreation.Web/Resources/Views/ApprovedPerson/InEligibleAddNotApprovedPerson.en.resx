@@ -58,58 +58,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddAnApprovedPerson.BulletAccreditation" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.BulletAccreditation" xml:space="preserve">
     <value>apply for accreditation</value>
   </data>
-  <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.BulletSubmit" xml:space="preserve">
     <value>submit and verify data returns</value>
   </data>
-  <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.CompanySecretary" xml:space="preserve">
     <value>Company secretary within an organisation partner</value>
   </data>
-  <data name="AddAnApprovedPerson.Director" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.Director" xml:space="preserve">
     <value>Director within an organisation partner</value>
   </data>
-  <data name="AddAnApprovedPerson.IAgreeToBeAnApprovedPerson" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.IAgreeToBeAnApprovedPerson" xml:space="preserve">
     <value>I agree to be an approved person</value>
   </data>
-  <data name="AddAnApprovedPerson.Individual" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.Individual" xml:space="preserve">
     <value>Individual partner</value>
   </data>
-  <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.IntroInstruction" xml:space="preserve">
     <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
-  <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.Introtext1" xml:space="preserve">
     <value>You should invite an 'approved person' who needs to be invited to take on tasks on behalf of the organisation.</value>
   </data>
-  <data name="AddAnApprovedPerson.IntroText2" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.IntroText2" xml:space="preserve">
     <value>An approved person may delegate their functions to another person (a delegate) at a later stage - subject to regulator approval.</value>
   </data>
-  <data name="AddAnApprovedPerson.IntroText3" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.IntroText3" xml:space="preserve">
     <value>More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
   </data>
-  <data name="AddAnApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
     <value>I will invite another eligible person to be an approved person instead</value>
   </data>
-  <data name="AddAnApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
     <value>I will invite an approved person later</value>
   </data>
-  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.OptionError" xml:space="preserve">
     <value>Select an option</value>
   </data>
-  <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.RolesHeading" xml:space="preserve">
     <value>Roles eligible to be an approved person</value>
   </data>
-  <data name="AddAnApprovedPerson.RolesInstruction" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.RolesInstruction" xml:space="preserve">
     <value>Any of these roles can be an approved person</value>
   </data>
-  <data name="AddAnApprovedPerson.SelectOptionText" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.SelectOptionText" xml:space="preserve">
     <value>Select an option to proceed.</value>
   </data>
-  <data name="AddAnApprovedPerson.Title" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.Title" xml:space="preserve">
     <value>Add an approved person </value>
   </data>
-  <data name="AddAnApprovedPerson.UserHeading" xml:space="preserve">
+  <data name="InEligibleAddNotApprovedPerson.UserHeading" xml:space="preserve">
     <value>Invite users in your team</value>
   </data>
 </root>
