@@ -324,6 +324,7 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpGet]
     [Route(PagePath.PartnershipType)]
+    [OrganisationJourneyAccess(PagePath.PartnershipType)]
     public async Task<IActionResult> PartnershipType()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -347,6 +348,7 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpPost]
     [Route(PagePath.PartnershipType)]
+    [OrganisationJourneyAccess(PagePath.PartnershipType)]
     public async Task<IActionResult> PartnershipType(PartnershipTypeRequestViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -360,7 +362,6 @@ public partial class LimitedPartnershipController : Controller
         if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
         {
             session.ReExCompaniesHouseSession.IsPartnership = true;
-
             if (session.ReExCompaniesHouseSession.Partnership != null)
             {
                 session.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership = true;
@@ -373,12 +374,17 @@ public partial class LimitedPartnershipController : Controller
                 };
             }
         }
+        else
+        {
+            session.ReExCompaniesHouseSession.IsPartnership = false;
+        }
 
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
     }
 
     [HttpGet]
     [Route(PagePath.LimitedPartnershipType)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipType)]
     public async Task<IActionResult> LimitedPartnershipType()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -401,6 +407,7 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpPost]
     [Route(PagePath.LimitedPartnershipType)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipType)]
     public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -444,6 +451,7 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpGet]
     [Route(PagePath.LimitedPartnershipRole)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipRole)]
     public async Task<IActionResult> LimitedPartnershipRole()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -463,6 +471,7 @@ public partial class LimitedPartnershipController : Controller
 
     [HttpPost]
     [Route(PagePath.LimitedPartnershipRole)]
+    [OrganisationJourneyAccess(PagePath.LimitedPartnershipRole)]
     public async Task<IActionResult> LimitedPartnershipRole(LimitedPartnershipRoleViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
