@@ -43,6 +43,7 @@ public static class PagePath
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
     public const string AddNotApprovedPerson = "add-not-approved-person";
+    public const string InEligibleAddNotApprovedPerson = "ineligible-add-an-approved-person";    
     public const string TeamMemberRoleInOrganisation = "check-companies-house-role";
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";

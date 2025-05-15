@@ -126,4 +126,38 @@ public class AddNotApprovedPersonTests : ApprovedPersonTestBase
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
         viewResult.Model.Should().Be(model);
     }
+
+    [TestMethod]
+    public async Task Get_InEligibleAddNotApprovedPerson_ReturnsView()
+    {
+        // Act
+        var result = await _systemUnderTest.InEligibleAddNotApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+    }
+
+    [DataTestMethod]
+    [DataRow("InviteAnotherPerson", typeof(RedirectToActionResult), "TeamMemberRoleInOrganisation", null)]
+    [DataRow("InviteLater", typeof(RedirectToActionResult), "CheckYourDetails", "AccountCreation")]
+    public async Task Post_InEligibleAddNotApprovedPerson_ValidModel_RedirectsCorrectly(string inviteOption, Type expectedResultType, string expectedAction, string expectedController)
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel { InviteUserOption = inviteOption };
+
+        var session = new OrganisationSession();
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.InEligibleAddNotApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType(expectedResultType);
+        var redirect = result as RedirectToActionResult;
+        redirect!.ActionName.Should().Be(expectedAction);
+        redirect.ControllerName.Should().Be(expectedController);
+    }
+
 }
