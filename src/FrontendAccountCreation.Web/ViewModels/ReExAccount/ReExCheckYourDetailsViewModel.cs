@@ -22,41 +22,22 @@ public class ReExCheckYourDetailsViewModel
 
     public bool? IsTradingNameDifferent { get; set; }
 
-    public string TradingName { get; set; } 
+    public string TradingName { get; set; }
 
     public Address? BusinessAddress { get; set; }
 
     public bool IsCompaniesHouseFlow { get; set; }
-
-    public string TypeOfProducer => ProducerType switch
-    {
-        Core.Sessions.ProducerType.NonUkOrganisation => "CheckYourDetails.NonUkOrganisation",
-        Core.Sessions.ProducerType.Partnership => "CheckYourDetails.Partnership",
-        Core.Sessions.ProducerType.SoleTrader => "CheckYourDetails.SoleTrader",
-        Core.Sessions.ProducerType.UnincorporatedBody => "CheckYourDetails.UnincorporatedBody",
-        Core.Sessions.ProducerType.Other => "CheckYourDetails.Other",
-        _ => String.Empty
-    };
-
-    public string YourRole => RoleInOrganisation switch
-    {
-        Core.Sessions.RoleInOrganisation.Director => "CheckYourDetails.Director",
-        Core.Sessions.RoleInOrganisation.CompanySecretary => "CheckYourDetails.CompanySecretary",
-        Core.Sessions.RoleInOrganisation.Partner => "CheckYourDetails.Partner",
-        Core.Sessions.RoleInOrganisation.Member => "CheckYourDetails.Member",
-        _ => String.Empty
-    };
-
-    public string UkNation => Nation switch
-    {
-        Core.Sessions.Nation.England => "CheckYourDetails.England",
-        Core.Sessions.Nation.Scotland => "CheckYourDetails.Scotland",
-        Core.Sessions.Nation.Wales => "CheckYourDetails.Wales",
-        Core.Sessions.Nation.NorthernIreland => "CheckYourDetails.NorthernIreland",
-        _ => String.Empty
-    };
-
-    public string? JobTitle { get; set; }
-
+    public string TypeOfProducer => GetCheckYourDetailsKey(ProducerType);
+    public string YourRole => GetCheckYourDetailsKey(RoleInOrganisation);
+    public string UkNation => GetCheckYourDetailsKey(Nation);
     public List<ReExCompanyTeamMember> reExCompanyTeamMembers { get; set; }
+    private static string GetCheckYourDetailsKey<TEnum>(TEnum? enumValue) where TEnum : struct, Enum
+    {
+        if (enumValue == null || !Enum.IsDefined(typeof(TEnum), enumValue))
+        {
+            return string.Empty;
+        }
+
+        return $"CheckYourDetails.{enumValue}";
+    }
 }
