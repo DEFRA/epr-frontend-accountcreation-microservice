@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TradingName.ErrorMessage" xml:space="preserve">
-    <value>Enter your trading name</value>
+    <value>Enter your organisation's trading name</value>
   </data>
   <data name="TradingName.Hint" xml:space="preserve">
     <value>You may trade under your own name, or a name you have given to your business.</value>
@@ -127,7 +127,7 @@
     <value>Trading name must be 170 characters or less</value>
   </data>
   <data name="TradingName.Question" xml:space="preserve">
-    <value>What is your trading name?</value>
+    <value>What is your organisation's trading name?</value>
   </data>
   <data name="TradingName.Title" xml:space="preserve">
     <value>Trading Name</value>
