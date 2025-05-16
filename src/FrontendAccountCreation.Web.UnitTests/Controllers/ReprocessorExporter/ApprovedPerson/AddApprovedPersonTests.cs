@@ -205,4 +205,23 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var viewResult = (ViewResult)result;
         viewResult.ViewName.Should().Be("AddNotApprovedPerson");
     }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Get_NotPartnershipAndNotIneligible_ReturnsDefaultView()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+        {
+            IsPartnership = false,
+            IsIneligible = false
+        };
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.ViewName.Should().BeNull(); // default view
+    }
 }

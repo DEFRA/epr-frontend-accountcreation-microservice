@@ -32,21 +32,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var reExSession = session.ReExCompaniesHouseSession;
-
-            if (reExSession?.IsPartnership == true)
+            if (session.ReExCompaniesHouseSession?.IsPartnership == true)
             {
-                return reExSession.IsIneligible
+                return session.ReExCompaniesHouseSession.IsIneligible
                     ? View("InEligibleAddNotApprovedPerson")
                     : View("LimitedPartnershipAddApprovedPerson");
             }
 
-            if (reExSession?.IsIneligible == true)
-            {
-                return View("AddNotApprovedPerson");
-            }
-
-            return View();
+            return session.ReExCompaniesHouseSession?.IsIneligible == true ? View("AddNotApprovedPerson") : View();
         }
 
         [HttpPost]
@@ -54,12 +47,19 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
             if (!ModelState.IsValid)
             {
-                return View(model);
-            }
+                if (session.ReExCompaniesHouseSession?.IsPartnership == true)
+                {
+                    return session.ReExCompaniesHouseSession.IsIneligible
+                        ? View("InEligibleAddNotApprovedPerson", model)
+                        : View("LimitedPartnershipAddApprovedPerson", model);
+                }
 
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+                return session.ReExCompaniesHouseSession?.IsIneligible == true ? View("AddNotApprovedPerson", model) : View(model);
+            }
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
@@ -71,8 +71,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
             }
-
-            // I-will-Invite-an-Approved-Person-Later
             return RedirectToAction("CheckYourDetails", "AccountCreation"); 
         }
 
@@ -112,7 +110,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return session.ReExCompaniesHouseSession?.IsPartnership == true
+                    ? View("ApprovedPersonPartnershipRole", model)
+                    : View(model);
             }
 
             var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
