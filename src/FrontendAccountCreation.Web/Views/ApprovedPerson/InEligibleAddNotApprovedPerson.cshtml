@@ -2,11 +2,14 @@
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
+@using FrontendAccountCreation.Web.Constants
 
 @model AddApprovedPersonViewModel;
 
 @{
-    ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
+    ViewData["Title"] = Localizer["InEligibleAddNotApprovedPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
@@ -17,41 +20,42 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="ApprovedPerson" method="post">
+                <form asp-controller="ApprovedPerson" asp-action="AddApprovedPerson" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                            @Localizer["AddAnApprovedPerson.Title"]
+                            @Localizer["InEligibleAddNotApprovedPerson.Title"]
                         </h1>
 
-                        <p class="govuk-body">@Localizer["AddAnApprovedPerson.Introtext1"]</p>
+                        <p class="govuk-body">@Localizer["InEligibleAddNotApprovedPerson.Introtext1"]</p>
 
-                        <p class="govuk-body">@Localizer["AddAnApprovedPerson.IntroInstruction"]:</p>
+                        <p class="govuk-body">@Localizer["InEligibleAddNotApprovedPerson.IntroInstruction"]:</p>
 
                         <ul class="govuk-list govuk-list--bullet">
-                            <li>@Localizer["AddAnApprovedPerson.BulletAccreditation"]</li>
-                            <li>@Localizer["AddAnApprovedPerson.BulletSubmit"]</li>
+                            <li>@Localizer["InEligibleAddNotApprovedPerson.BulletAccreditation"]</li>
+                            <li>@Localizer["InEligibleAddNotApprovedPerson.BulletSubmit"]</li>
                         </ul>
 
                         <p class="govuk-inset-text">
-                            @Localizer["AddAnApprovedPerson.IntroText2"]
+                            @Localizer["InEligibleAddNotApprovedPerson.IntroText2"]
                         </p>
 
                         <p class="govuk-body">
-                            @Localizer["AddAnApprovedPerson.IntroText3"]
+                            @Localizer["InEligibleAddNotApprovedPerson.IntroText3"]
                         </p>
 
                         <div class="section">
-                            <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.RolesHeading"]</h3>
-                            <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
+                            <h3 class="govuk-heading-s">@Localizer["InEligibleAddNotApprovedPerson.RolesHeading"]</h3>
+                            <p class="govuk-body">@Localizer["InEligibleAddNotApprovedPerson.RolesInstruction"]:</p>
                             <ul class="govuk-list govuk-list--bullet">
-                                <li>@Localizer["AddAnApprovedPerson.Director"]</li>
-                                <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
+                                <li>@Localizer["InEligibleAddNotApprovedPerson.Individual"]</li>
+                                <li>@Localizer["InEligibleAddNotApprovedPerson.Director"]</li>
+                                <li>@Localizer["InEligibleAddNotApprovedPerson.CompanySecretary"]</li>
                             </ul>
                         </div>
 
                         <div class="section">
-                            <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.UserHeading"]</h3>
-                            <p class="govuk-body">@Localizer["AddAnApprovedPerson.SelectOptionText"]</p>
+                            <h3 class="govuk-heading-s">@Localizer["InEligibleAddNotApprovedPerson.UserHeading"]</h3>
+                            <p class="govuk-body">@Localizer["InEligibleAddNotApprovedPerson.SelectOptionText"]</p>
                         </div>
 
                         <fieldset class="govuk-fieldset">
@@ -62,24 +66,13 @@
                             <div class="govuk-radios" data-module="govuk-radios">
 
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoIAgreeToBeAnApprovedPerson"
-                                           gov-for="InviteUserOption"
-                                           gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="InviteUserOption"
-                                           gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
-                                        @Localizer["AddAnApprovedPerson.IAgreeToBeAnApprovedPerson"]
-                                    </label>
-                                </div>
-
-                                <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" type="radio" id="rdoIWillInviteAnotherApprovedPerson"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
                                     <label class="govuk-label govuk-radios__label"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
-                                        @Localizer["AddAnApprovedPerson.IWillInviteAnotherApprovedPerson"]
+                                        @Localizer["InEligibleAddNotApprovedPerson.IWillInviteAnotherApprovedPerson"]
                                     </label>
                                 </div>
 
@@ -90,7 +83,7 @@
                                     <label class="govuk-label govuk-radios__label"
                                            gov-for="InviteUserOption"
                                            gov-value="@nameof(InviteUserOptions.InviteLater)">
-                                        @Localizer["AddAnApprovedPerson.IWillInviteApprovedPersonLater"]
+                                        @Localizer["InEligibleAddNotApprovedPerson.IWillInviteApprovedPersonLater"]
                                     </label>
                                 </div>
 
