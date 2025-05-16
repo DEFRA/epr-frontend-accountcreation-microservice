@@ -23,7 +23,10 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         {
             Journey = new List<string>
             {
+                PagePath.IsPartnership,
+                PagePath.PartnershipType,
                 PagePath.LimitedPartnershipType,
+                PagePath.LimitedPartnershipNamesOfPartners
             },
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
@@ -148,5 +151,21 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
 
         ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners.Should().HaveCount(expectedCount);
+    }
+
+    [TestMethod]
+    public async Task NamesOfPartners_Get_UpdatesBacklink()
+    {
+        // Act
+        var result = await _systemUnderTest.NamesOfPartners();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+
+        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
+        viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
     }
 }
