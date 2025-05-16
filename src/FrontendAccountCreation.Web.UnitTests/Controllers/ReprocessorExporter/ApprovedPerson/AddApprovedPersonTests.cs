@@ -253,4 +253,19 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         viewResult.ViewName.Should().Be("LimitedPartnershipAddApprovedPerson");
         viewResult.Model.Should().Be(model);
     }
+
+    [TestMethod]
+    public async Task TeamMemberDetails_IdIsEmpty_RedirectsToTeamMemberRoleInOrganisation()
+    {
+        // Arrange
+        var emptyId = Guid.Empty;
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberDetails(emptyId);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+    }
 }
