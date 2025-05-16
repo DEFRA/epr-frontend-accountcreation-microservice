@@ -153,9 +153,6 @@
   <data name="AddNotApprovedPerson.InviteApprovedPersonLater" xml:space="preserve">
     <value>I will invite an approved person later</value>
   </data>
-  <data name="AddNotApprovedPerson.OptionError" xml:space="preserve">
-    <value>Select an option</value>
-  </data>
   <data name="AddNotApprovedPerson.RolesHeading" xml:space="preserve">
     <value>Roles eligible to be an approved person</value>
   </data>

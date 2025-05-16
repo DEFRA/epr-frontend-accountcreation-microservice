@@ -2,10 +2,10 @@
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership;
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
 [TestClass]
-public class PersonCanNotBeInvitedTests : LimitedPartnershipTestBase
+public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
 {
     private Guid _testId;
 
@@ -17,10 +17,10 @@ public class PersonCanNotBeInvitedTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public void Get_ReturnsViewWithCorrectId()
+    public async Task Get_ReturnsViewWithCorrectId()
     {
         // Act
-        var result = _systemUnderTest.PersonCanNotBeInvited(_testId);
+        var result = await _systemUnderTest.PersonCanNotBeInvited(_testId);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
