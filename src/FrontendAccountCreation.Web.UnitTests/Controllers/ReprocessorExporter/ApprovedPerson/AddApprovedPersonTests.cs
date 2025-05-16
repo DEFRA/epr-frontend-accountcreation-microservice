@@ -223,4 +223,34 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var viewResult = (ViewResult)result;
         viewResult.ViewName.Should().BeNull(); // default view
     }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_ModelInvalid_IsPartnership_ReturnsLimitedPartnershipAddApprovedPersonView()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel();
+
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                IsPartnership = true,
+                IsIneligible = false
+            }
+        };
+
+        _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        viewResult.ViewName.Should().Be("LimitedPartnershipAddApprovedPerson");
+        viewResult.Model.Should().Be(model);
+    }
 }
