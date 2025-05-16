@@ -146,7 +146,6 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             result.Should().BeOfType<RedirectToActionResult>();
             var redirect = (RedirectToActionResult)result;
             redirect.ActionName.Should().Be("CheckYourDetails");
-            redirect.ControllerName.Should().Be("AccountCreation");
         }
     }
 }

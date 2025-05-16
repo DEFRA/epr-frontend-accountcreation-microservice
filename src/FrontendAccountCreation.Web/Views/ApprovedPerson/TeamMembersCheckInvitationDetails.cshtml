@@ -53,7 +53,7 @@
                                         @Localizer["TeamMembersCheckInvitationDetails.Telephone"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        @Model[i].FullName<br/>
+                                        @($"{Model[i].FirstName} {Model[i].LastName}")<br />
                                         @Model[i].Email<br/>
                                         @Model[i].TelephoneNumber
                                     </dd>

@@ -21,10 +21,17 @@
 
                     @Html.HiddenFor(x => x.Id)
                     <div class="govuk-form-group">
-                        <label class="govuk-label" asp-for="FullName">
-                            @Localizer["TeamMemberDetails.FullName"]
+                        <label class="govuk-label" asp-for="FirstName">
+                            @Localizer["TeamMemberDetails.FirstName"]
                         </label>
-                        <input class="govuk-input" asp-for="FullName" type="text"/>
+                        <input class="govuk-input" asp-for="FirstName" type="text" />
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" asp-for="LastName">
+                            @Localizer["TeamMemberDetails.LastName"]
+                        </label>
+                        <input class="govuk-input" asp-for="LastName" type="text" />
                     </div>
 
                     <div class="govuk-form-group">
