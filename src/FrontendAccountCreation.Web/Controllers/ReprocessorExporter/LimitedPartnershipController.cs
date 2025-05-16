@@ -6,11 +6,9 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-[ExcludeFromCodeCoverage(Justification = "Get feature branch into testing")]
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
 public partial class LimitedPartnershipController : Controller
@@ -197,24 +195,6 @@ public partial class LimitedPartnershipController : Controller
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
     }
 
-    private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
-        List<LimitedPartnershipPersonOrCompanyViewModel> partners)
-    {
-        List<ReExLimitedPartnershipPersonOrCompany> partnersSession = [];
-        foreach (var partner in partners)
-        {
-            ReExLimitedPartnershipPersonOrCompany sessionPartner = new()
-            {
-                Id = partner.Id,
-                IsPerson = partner.IsPerson,
-                Name = partner.IsPerson ? partner.PersonName : partner.CompanyName
-            };
-            partnersSession.Add(sessionPartner);
-        }
-
-        return partnersSession;
-    }
-
     [HttpGet]
     [Route(PagePath.PartnershipType)]
     [OrganisationJourneyAccess(PagePath.PartnershipType)]
@@ -380,6 +360,24 @@ public partial class LimitedPartnershipController : Controller
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
                     PagePath.LimitedPartnershipRole, PagePath.AddAnApprovedPerson);
+    }
+
+    private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
+    List<LimitedPartnershipPersonOrCompanyViewModel> partners)
+    {
+        List<ReExLimitedPartnershipPersonOrCompany> partnersSession = [];
+        foreach (var partner in partners)
+        {
+            ReExLimitedPartnershipPersonOrCompany sessionPartner = new()
+            {
+                Id = partner.Id,
+                IsPerson = partner.IsPerson,
+                Name = partner.IsPerson ? partner.PersonName : partner.CompanyName
+            };
+            partnersSession.Add(sessionPartner);
+        }
+
+        return partnersSession;
     }
 
     private void SetBackLink(OrganisationSession session, string currentPagePath)
