@@ -1,26 +1,29 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
-    [ExcludeFromCodeCoverage(Justification = "Get feature branch into testing")]
     [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     [Route("re-ex/organisation")]
     public partial class ApprovedPersonController : Controller
     {
         private readonly ISessionManager<OrganisationSession> _sessionManager;
+        private readonly ExternalUrlsOptions _urlOptions;
 
-        public ApprovedPersonController(ISessionManager<OrganisationSession> sessionManager)
+        public ApprovedPersonController(ISessionManager<OrganisationSession> sessionManager,
+        IOptions<ExternalUrlsOptions> urlOptions)
         {
             _sessionManager = sessionManager;
+            _urlOptions = urlOptions.Value;
         }
 
         [HttpGet]
@@ -71,7 +74,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
             }
-            return RedirectToAction("CheckYourDetails", "AccountCreation"); 
+
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddApprovedPerson, PagePath.CheckYourDetails);
         }
 
         [HttpGet]
@@ -198,7 +202,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 var viewModel = new TeamMemberViewModel
                 {
                     Id = id,
-                    FullName = session.ReExCompaniesHouseSession.TeamMembers[index.Value].FullName,
+                    FirstName = session.ReExCompaniesHouseSession.TeamMembers[index.Value].FirstName,
+                    LastName = session.ReExCompaniesHouseSession.TeamMembers[index.Value].LastName,
                     Telephone = session.ReExCompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber,
                     Email = session.ReExCompaniesHouseSession.TeamMembers[index.Value].Email
                 };
@@ -225,7 +230,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (index is >= 0)
             {
                 // found existing team member
-                session.ReExCompaniesHouseSession.TeamMembers[index.Value].FullName = model.FullName;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].FirstName = model.FirstName;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].LastName = model.LastName;
                 session.ReExCompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber = model.Telephone;
                 session.ReExCompaniesHouseSession.TeamMembers[index.Value].Email = model.Email;
             }
@@ -261,7 +267,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FullName)).ToList());
+            return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FirstName)).ToList());
         }
 
         [HttpGet]
@@ -280,12 +286,34 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.CheckYourDetails)]
-        [ExcludeFromCodeCoverage] // <--- TO DO - remove when implementing
         public async Task<IActionResult> CheckYourDetails()
         {
-            // var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            // await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.CheckYourDetails, PagePath.CheckYourDetails);
-            return Ok("Check-Your-Details not been implemented yet...!");
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            ViewBag.MakeChangesToYourLimitedCompanyLink = _urlOptions.MakeChangesToYourLimitedCompany;
+
+            var viewModel = new ReExCheckYourDetailsViewModel
+            {
+                IsCompaniesHouseFlow = session.IsCompaniesHouseFlow,
+                IsRegisteredAsCharity = session.IsTheOrganisationCharity,
+                OrganisationType = session.OrganisationType,
+                IsTradingNameDifferent = session.IsTradingNameDifferent,
+                Nation = session.UkNation
+            };
+            if (viewModel.IsCompaniesHouseFlow)
+            {
+                viewModel.BusinessAddress = session.ReExCompaniesHouseSession.Company.BusinessAddress;
+                viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
+                viewModel.CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company.CompaniesHouseNumber;
+                viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation;
+            }
+            if (session.ReExManualInputSession != null)
+            {
+                viewModel.TradingName = session.ReExManualInputSession.TradingName;
+            }
+            viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+            _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View(viewModel);
         }
 
         [HttpGet]

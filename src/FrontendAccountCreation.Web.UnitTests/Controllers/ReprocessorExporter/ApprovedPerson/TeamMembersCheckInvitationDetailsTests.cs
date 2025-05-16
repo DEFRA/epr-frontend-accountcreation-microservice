@@ -90,8 +90,8 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
     {
         // Arrange
         List<ReExCompanyTeamMember?> teamMembers = [];
-        ReExCompanyTeamMember jack = new() { Id = Guid.NewGuid(), FullName = "Jack Dors" };
-        ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid(), FullName = "Jill Dors" };
+        ReExCompanyTeamMember jack = new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Dors" };
+        ReExCompanyTeamMember jill = new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Dors" };
         ReExCompanyTeamMember nobody = new() { Id = Guid.NewGuid() };
         teamMembers.Add(jack);
         teamMembers.Add(jill);

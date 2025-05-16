@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,55 +117,124 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TeamMemberDetails.FullName" xml:space="preserve">
-    <value>Full name</value>
+  <data name="CheckYourDetails.Title" xml:space="preserve">
+    <value>Eich manylion</value>
   </data>
-  <data name="TeamMemberDetails.Email" xml:space="preserve">
-    <value>Email</value>
+  <data name="CheckYourDetails.Header" xml:space="preserve">
+    <value>Gwiriwch eich manylion</value>
   </data>
-  <data name="TeamMemberDetails.HintEmail" xml:space="preserve">
-    <value>We ask for this so we can invite them to join your team.</value>
+  <data name="CheckYourDetails.YourOrganisation" xml:space="preserve">
+    <value>Eich sefydliad</value>
   </data>
-  <data name="TeamMemberDetails.HintTelephone" xml:space="preserve">
-    <value>We ask for this in case your regulator needs to call them directly with any queries.</value>
+  <data name="CheckYourDetails.OrganisationType" xml:space="preserve">
+    <value>Math o sefydliad</value>
   </data>
-  <data name="TeamMemberDetails.Telephone" xml:space="preserve">
-    <value>Telephone</value>
+  <data name="CheckYourDetails.CompaniesHouseNumber" xml:space="preserve">
+    <value>Rhif Tŷ’r Cwmnïau</value>
   </data>
-  <data name="TeamMemberDetails.Continue" xml:space="preserve">
-    <value>Continue</value>
+  <data name="CheckYourDetails.OrganisationDetails" xml:space="preserve">
+    <value>Manylion y sefydliad</value>
   </data>
-  <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>What are your team member’s details?</value>
+  <data name="CheckYourDetails.TradingName" xml:space="preserve">
+    <value>Enw masnachu</value>
   </data>
-  <data name="TeamMemberDetails.Header" xml:space="preserve">
-    <value>What are your team member’s details?</value>
+  <data name="CheckYourDetails.Address" xml:space="preserve">
+    <value>Cyfeiriad</value>
   </data>
-  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
-    <value>Enter a valid telephone number</value>
+  <data name="CheckYourDetails.WrongAddressAmendPrompt" xml:space="preserve">
+    <value>Os yw’r cyfeiriad yn anghywir, bydd angen ichi </value>
   </data>
-  <data name="TeamMemberDetails.FullNameError" xml:space="preserve">
-    <value>Enter full name</value>
+  <data name="CheckYourDetails.WrongAddressAmend.LinkDescription" xml:space="preserve">
+    <value>ei newid ar Dŷ’r Cwmnïau (yn agor mewn tab newydd)</value>
   </data>
-  <data name="TeamMemberDetails.EmailError" xml:space="preserve">
-    <value>Enter a valid email address</value>
+  <data name="CheckYourDetails.YourSelf" xml:space="preserve">
+    <value>Chi</value>
   </data>
-  <data name="TeamMemberDetails.FirstName" xml:space="preserve">
-    <value>First name</value>
+  <data name="CheckYourDetails.YourRole" xml:space="preserve">
+    <value>Rôl</value>
   </data>
-  <data name="TeamMemberDetails.FirstNameErrorMessage" xml:space="preserve">
-    <value>Enter your first name</value>
+  <data name="CheckYourDetails.YourName" xml:space="preserve">
+    <value>Enw</value>
   </data>
-  <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
-    <value>First name must be 50 characters or less</value>
+  <data name="CheckYourDetails.YourTelephone" xml:space="preserve">
+    <value>Ffôn</value>
   </data>
-  <data name="TeamMemberDetails.LastName" xml:space="preserve">
-    <value>Last name</value>
+  <data name="CheckYourDetails.NonUkOrganisation" xml:space="preserve">
+    <value>Sefydliad y tu allan i’r Deyrnas Unedig</value>
   </data>
-  <data name="TeamMemberDetails.LastNameErrorMessage" xml:space="preserve">
-    <value>Enter your last name</value>
+  <data name="CheckYourDetails.Partnership" xml:space="preserve">
+    <value>Partneriaeth</value>
   </data>
-  <data name="TeamMemberDetails.LastNameLengthErrorMessage" xml:space="preserve">
-    <value>Last name must be 50 characters or less</value>
+  <data name="CheckYourDetails.SoleTrader" xml:space="preserve">
+    <value>Unig fasnachwr</value>
+  </data>
+  <data name="CheckYourDetails.UnincorporatedBody" xml:space="preserve">
+    <value>Corff anghorfforedig</value>
+  </data>
+  <data name="CheckYourDetails.Other" xml:space="preserve">
+    <value>Arall</value>
+  </data>
+  <data name="CheckYourDetails.Director" xml:space="preserve">
+    <value>Cyfarwyddwr</value>
+  </data>
+  <data name="CheckYourDetails.CompanySecretary" xml:space="preserve">
+    <value>Ysgrifennydd y cwmni</value>
+  </data>
+  <data name="CheckYourDetails.Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="CheckYourDetails.Member" xml:space="preserve">
+    <value>Aelod</value>
+  </data>
+  <data name="CheckYourDetails.England" xml:space="preserve">
+    <value>Lloegr</value>
+  </data>
+  <data name="CheckYourDetails.NorthernIreland" xml:space="preserve">
+    <value>Gogledd Iwerddon</value>
+  </data>
+  <data name="CheckYourDetails.Scotland" xml:space="preserve">
+    <value>Yr Alban</value>
+  </data>
+  <data name="CheckYourDetails.UkNation" xml:space="preserve">
+    <value>Gwlad yn y Deyrnas Unedig</value>
+  </data>
+  <data name="CheckYourDetails.Wales" xml:space="preserve">
+    <value>Cymru</value>
+  </data>
+  <data name="CheckYourDetails.RegisteredCharity" xml:space="preserve">
+    <value>Elusen gofrestredig?</value>
+  </data>
+  <data name="CheckYourDetails.RegisteredWithCompaniesHouse" xml:space="preserve">
+    <value>Wedi cofrestru gyda Thŷ’r Cwmnïau?</value>
+  </data>
+  <data name="CheckYourDetails.Role" xml:space="preserve">
+    <value>Rôl</value>
+  </data>
+  <data name="CheckYourDetails.No" xml:space="preserve">
+    <value>Nage</value>
+  </data>
+  <data name="CheckYourDetails.AddedOrganisation" xml:space="preserve">
+    <value>(W)Added organisation</value>
+  </data>
+  <data name="CheckYourDetails.DifferentTradingName" xml:space="preserve">
+    <value>(W)Different trading name</value>
+  </data>
+  <data name="CheckYourDetails.TeamMembers.ApprovedPersonsAdded" xml:space="preserve">
+    <value>(W)Approved persons added</value>
+  </data>
+  <data name="CheckYourDetails.TeamMembers.Email" xml:space="preserve">
+    <value>(W) Email</value>
+  </data>
+  <data name="CheckYourDetails.TeamMembers.Invite" xml:space="preserve">
+    <value>(W)Invite</value>
+  </data>
+  <data name="CheckYourDetails.TeamMembers.Name" xml:space="preserve">
+    <value>Enw</value>
+  </data>
+  <data name="CheckYourDetails.TeamMembers.Role" xml:space="preserve">
+    <value>Rôl</value>
+  </data>
+  <data name="CheckYourDetails.TeamMembers.Telephone" xml:space="preserve">
+    <value>Ffôn</value>
   </data>
 </root>

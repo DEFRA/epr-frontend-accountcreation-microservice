@@ -239,18 +239,8 @@ public class OrganisationController : Controller
 
         session.ReExManualInputSession.TradingName = model.TradingName!;
 
-        return await SaveSessionAndRedirect(session, nameof(PartnerOrganisation), PagePath.TradingName,
-            PagePath.PartnerOrganisation);
-    }
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.PartnerOrganisation)]
-    [OrganisationJourneyAccess(PagePath.PartnerOrganisation)]
-    public Task<IActionResult> PartnerOrganisation()
-    {
-        throw new NotImplementedException(
-            "The 'partner organisation' page hasn't been built. It will be built in a future story.");
+        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
+            PagePath.IsPartnership);
     }
 
     [HttpGet]
@@ -588,9 +578,10 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.Declaration)]
-    [OrganisationJourneyAccess(PagePath.Declaration)]
     public async Task<IActionResult> Declaration()
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.Declaration);
         return View();
     }
 
