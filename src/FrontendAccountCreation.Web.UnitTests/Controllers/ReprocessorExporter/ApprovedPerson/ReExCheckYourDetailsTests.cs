@@ -137,4 +137,148 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
     }
+
+    [TestMethod]
+    [DataRow(ProducerType.NonUkOrganisation, "CheckYourDetails.NonUkOrganisation")]
+    [DataRow(ProducerType.Partnership, "CheckYourDetails.Partnership")]
+    [DataRow(ProducerType.SoleTrader, "CheckYourDetails.SoleTrader")]
+    [DataRow(ProducerType.UnincorporatedBody, "CheckYourDetails.UnincorporatedBody")]
+    [DataRow(ProducerType.Other, "CheckYourDetails.Other")]
+    [DataRow((ProducerType)999, "")]
+    public void TypeOfProducer_ShouldReturnCorrectResourceKey(ProducerType input, string expected)
+    {
+        // Arrange
+        var viewModel = new ReExCheckYourDetailsViewModel
+        {
+            ProducerType = input
+        };
+
+        // Act
+        var result = viewModel.TypeOfProducer;
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    [TestMethod]
+    [DataRow(RoleInOrganisation.Director, "CheckYourDetails.Director")]
+    [DataRow(RoleInOrganisation.CompanySecretary, "CheckYourDetails.CompanySecretary")]
+    [DataRow(RoleInOrganisation.Partner, "CheckYourDetails.Partner")]
+    [DataRow(RoleInOrganisation.Member, "CheckYourDetails.Member")]
+    [DataRow((RoleInOrganisation)999, "")]
+    public void YourRole_ShouldReturnCorrectResourceKey(RoleInOrganisation input, string expected)
+    {
+        // Arrange
+        var viewModel = new ReExCheckYourDetailsViewModel
+        {
+            RoleInOrganisation = input
+        };
+
+        // Act
+        var result = viewModel.YourRole;
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    [TestMethod]
+    [DataRow(Nation.England, "CheckYourDetails.England")]
+    [DataRow(Nation.Scotland, "CheckYourDetails.Scotland")]
+    [DataRow(Nation.Wales, "CheckYourDetails.Wales")]
+    [DataRow(Nation.NorthernIreland, "CheckYourDetails.NorthernIreland")]
+    [DataRow((Nation)999, "")]
+    public void UkNation_ShouldReturnCorrectResourceKey(Nation input, string expected)
+    {
+        // Arrange
+        var viewModel = new ReExCheckYourDetailsViewModel
+        {
+            Nation = input
+        };
+
+        // Act
+        var result = viewModel.UkNation;
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenCompaniesHouseFlow_ShouldSetBusinessAddress()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = _companiesHouseSession
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.BusinessAddress.Should().BeEquivalentTo(_companiesHouseSession.Company.BusinessAddress);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenCompaniesHouseFlow_ShouldSetCompanyName()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = _companiesHouseSession
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.CompanyName.Should().Be(_companiesHouseSession.Company.Name);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenCompaniesHouseFlow_ShouldSetCompaniesHouseNumber()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = _companiesHouseSession
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.CompaniesHouseNumber.Should().Be(_companiesHouseSession.Company.CompaniesHouseNumber);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenCompaniesHouseFlow_ShouldSetRoleInOrganisation()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = _companiesHouseSession
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.RoleInOrganisation.Should().Be(_companiesHouseSession.RoleInOrganisation);
+    }
 }
