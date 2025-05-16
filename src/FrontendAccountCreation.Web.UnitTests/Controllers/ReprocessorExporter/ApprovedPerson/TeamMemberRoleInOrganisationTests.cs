@@ -77,14 +77,14 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
 
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            TeamMembers = new List<ReExCompanyTeamMember>
-            {
+            TeamMembers =
+            [
                 new ReExCompanyTeamMember
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(), // different from invalidTeamMemberId
                     Role = ReExTeamMemberRole.Director
                 }
-            }
+            ]
         };
 
         // Act
@@ -93,7 +93,12 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeNull();
+
+        // Instead of expecting null, assert it's an empty model
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+        var model = (TeamMemberRoleInOrganisationViewModel)viewResult.Model;
+        model.Id.Should().BeNull();
+        model.RoleInOrganisation.Should().BeNull();
     }
 
     [TestMethod]
@@ -112,7 +117,9 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeNull();
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+        viewResult.Model.As<TeamMemberRoleInOrganisationViewModel>().Id.Should().BeNull();
+        viewResult.Model.As<TeamMemberRoleInOrganisationViewModel>().RoleInOrganisation.Should().BeNull();
     }
 
     [TestMethod]

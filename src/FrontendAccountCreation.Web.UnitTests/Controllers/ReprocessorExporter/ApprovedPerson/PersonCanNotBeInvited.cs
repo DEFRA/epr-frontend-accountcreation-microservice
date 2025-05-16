@@ -17,10 +17,10 @@ public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public void Get_ReturnsViewWithCorrectId()
+    public async Task Get_ReturnsViewWithCorrectId()
     {
         // Act
-        var result = _systemUnderTest.PersonCanNotBeInvited(_testId);
+        var result = await _systemUnderTest.PersonCanNotBeInvited(_testId);
 
         // Assert
         result.Should().BeOfType<ViewResult>();

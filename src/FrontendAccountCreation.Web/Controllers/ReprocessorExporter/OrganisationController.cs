@@ -371,13 +371,7 @@ public class OrganisationController : Controller
         }
         session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
         session.ReExCompaniesHouseSession.IsIneligible = model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
-
-        if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
-        {
-            return await SaveSessionAndRedirect(session, "CannotCreateAccount", PagePath.RoleInOrganisation,
-                PagePath.CannotCreateAccount);
-        }
-
+       
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
                 PagePath.AddAnApprovedPerson);
     }
@@ -590,14 +584,6 @@ public class OrganisationController : Controller
     {
         // TO DO following & modify - once Tungsten has merged
         throw new NotImplementedException("not been implemented yet...as no related user-story has been confirmed!");
-    }
-
-    [HttpGet]
-    [Route(PagePath.AddApprovedPerson)]
-    public IActionResult InviteOtherApprovedPerson()
-    {
-        // TO DO following & modify - once Tungsten has merged
-        return Ok("not been implemented yet...WIP by Tungsten team.");
     }
 
     [HttpGet]
