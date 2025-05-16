@@ -59,7 +59,7 @@ public static class PagePath
     public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-partnership-cannot-be-invited";
     public const string PartnershipType= "partnership-type";
     public const string LimitedPartnershipType = "limited-partnership-type";
-    public const string LimitedPartnershipRole = "limited-partnership-role";
+    public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
     public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
     // Non journey paths 
     public const string Accessibility = "accessibility";    
