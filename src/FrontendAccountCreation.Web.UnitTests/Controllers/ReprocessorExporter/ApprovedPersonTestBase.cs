@@ -73,7 +73,7 @@ public abstract class ApprovedPersonTestBase
         _loggerMock = new Mock<ILogger<ApprovedPersonController>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        _systemUnderTest = new ApprovedPersonController(_sessionManagerMock.Object);
+        _systemUnderTest = new ApprovedPersonController(_sessionManagerMock.Object, _urlsOptionMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;

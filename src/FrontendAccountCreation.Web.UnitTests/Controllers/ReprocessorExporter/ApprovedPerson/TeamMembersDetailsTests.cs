@@ -34,7 +34,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
                     new ReExCompanyTeamMember
                     {
                         Id = _teamMemberId,
-                        FullName = "John Smith",
+                        FirstName = "John", 
+                        LastName = "Smith",
                         TelephoneNumber = "0123456789",
                         Email = "john@example.com"
                     }
@@ -58,7 +59,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         var viewResult = (ViewResult)result;
         var model = viewResult.Model.Should().BeOfType<TeamMemberViewModel>().Subject;
 
-        model.FullName.Should().Be("John Smith");
+        model.FirstName.Should().Be("John");
+        model.LastName.Should().Be("Smith");
         model.Telephone.Should().Be("0123456789");
         model.Email.Should().Be("john@example.com");
     }
@@ -85,7 +87,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         var model = new TeamMemberViewModel
         {
             Id = _teamMemberId,
-            FullName = "Jane Doe"
+            FirstName = "Jane",
+            LastName = "Doe"
             // Missing Email and Telephone
         };
 
@@ -107,7 +110,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         var model = new TeamMemberViewModel
         {
             Id = _teamMemberId,
-            FullName = "Jane Doe",
+            FirstName = "Jane",
+            LastName = "Doe",
             Telephone = "0987654321",
             Email = "jane@example.com"
         };
@@ -118,7 +122,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var updatedMember = _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.First(x => x.Id == _teamMemberId);
-        updatedMember.FullName.Should().Be("Jane Doe");
+        updatedMember.FirstName.Should().Be("Jane");
+        updatedMember.LastName.Should().Be("Doe");
         updatedMember.TelephoneNumber.Should().Be("0987654321");
         updatedMember.Email.Should().Be("jane@example.com");
 
@@ -174,7 +179,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         var model = new TeamMemberViewModel
         {
             Id = _teamMemberId,
-            FullName = "Updated",
+            FirstName = "Updated",
+            LastName = "Updated",
             Telephone = "123456",
             Email = "update@example.com"
         };
@@ -196,7 +202,8 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         var model = new TeamMemberViewModel
         {
             Id = nonExistentId,
-            FullName = "Ghost",
+            FirstName = "Ghost",
+            LastName = "Ghost",
             Telephone = "0000",
             Email = "ghost@example.com"
         };
@@ -209,7 +216,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
 
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers
-            .Any(x => x.FullName == "Ghost").Should().BeFalse();
+            .Any(x => x.LastName == "Ghost").Should().BeFalse();
     }
 
 }
