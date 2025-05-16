@@ -3,7 +3,7 @@
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipApprovedPersonRoleViewModel;
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.TeamMemberRoleInOrganisationViewModel
 
 @{
     ViewData["Title"] = Localizer["PartnershipApprovedPersonRole.Title"];
@@ -70,7 +70,7 @@
                     </div>
                     
                     <div class="govuk-button-group">
-                        <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="ApprovedPersonPartnershipRole" type="submit">
+                        <button class="govuk-button" asp-controller="ApprovedPerson" asp-action="TeamMemberRoleInOrganisation" type="submit">
                             @SharedLocalizer["Continue"]
                         </button>
                     </div>
