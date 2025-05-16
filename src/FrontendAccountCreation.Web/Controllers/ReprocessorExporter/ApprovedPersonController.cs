@@ -75,7 +75,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
             }
 
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddApprovedPerson, PagePath.CheckYourDetails);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
         }
 
         [HttpGet]
