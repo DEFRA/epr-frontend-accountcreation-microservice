@@ -41,7 +41,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task NamesOfPartners_Get_ReturnsView()
+    public async Task NamesOfPartners_Get_WhenSessionIsEmpty_ReturnsViewWithNewEmptyPartner()
     {
         // Act
         var result = await _systemUnderTest.NamesOfPartners();
@@ -52,5 +52,59 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
 
         ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners.Should().HaveCount(1);
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[0].Id.Should().NotBeEmpty();
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[0].PersonName.Should().BeNull();
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[0].CompanyName.Should().BeNull();
+    }
+
+    [TestMethod]
+    [DataRow(false, false, 1)]
+    [DataRow(true, false, 3)]
+    [DataRow(false, true, 2)]
+    [DataRow(true, true, 5)]
+    public async Task NamesOfPartners_Get_ReturnsViewPopulatedFromSession(bool hasCompanyPartners, bool hasIndividualPartners, int expectedCount)
+    {
+        // Arrange
+        var abduls = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Abduls Skip Hire"
+        };
+
+        var biffa = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Biffa Waste Inc"
+        };
+
+        var copper = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Propper Copper Recycling"
+        };
+
+        var joanne = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Joanne Smith",
+            IsPerson = true,
+        };
+
+        var raj = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Raj Singh",
+            IsPerson = true,
+        };
+
+        List<ReExLimitedPartnershipPersonOrCompany> partners = [abduls, biffa, copper, joanne, raj];
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners = hasCompanyPartners;
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners = hasIndividualPartners;
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartners();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners.Should().HaveCount(expectedCount);
     }
 }
