@@ -168,4 +168,38 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
         viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
     }
+
+    [TestMethod]
+    public async Task NamesOfPartners_Post_WhenPartnerIdSupplied_RemovesPartnerFromSession()
+    {
+        // Arrange
+        var jack = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Id = Guid.NewGuid(),
+            Name = "Jack",
+            IsPerson = true,
+        };
+
+        var jill = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Id = Guid.NewGuid(),
+            Name = "Jill",
+            IsPerson = true,
+        };
+
+        List<ReExLimitedPartnershipPersonOrCompany> partners = [jack, jill];
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
+
+        LimitedPartnershipPartnersViewModel model = new LimitedPartnershipPartnersViewModel
+        {
+            ExpectsIndividualPartners = true,
+            Partners = partners.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item).ToList()
+        };
+
+        // Act
+        await _systemUnderTest.NamesOfPartners(model, jack.Id.ToString());
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(1);
+    }
 }
