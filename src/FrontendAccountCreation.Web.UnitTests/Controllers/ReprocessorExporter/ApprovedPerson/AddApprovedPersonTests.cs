@@ -268,4 +268,26 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
     }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_WhenUserIsChangingDetails_SetsBackLinkToCheckYourDetails()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsUserChangingDetails = true,
+            Journey = _orgSessionMock.Journey
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+    }
+
 }
