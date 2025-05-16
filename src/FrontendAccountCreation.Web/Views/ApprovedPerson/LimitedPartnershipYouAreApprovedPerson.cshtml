@@ -1,8 +1,4 @@
 ﻿@using FrontendAccountCreation.Web.Constants
-@using FrontendAccountCreation.Web.ViewModels.AccountCreation
-@using FrontendAccountCreation.Web.ViewModels.ReExAccount
-@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
-@using FrontendAccountCreation.Web.Extensions
 
 @{
     ViewData["Title"] = Localizer["LimitedPartnershipYouAreApprovedPerson.Title"];
@@ -36,11 +32,11 @@
 
                 <form asp-controller="ApprovedPerson" method="post">
                     <div class="govuk-button-group">
-                        <button class="govuk-button" data-module="govuk-button" asp-action="LimitedPartnershipYouAreApprovedPerson">
+                        <button class="govuk-button" data-module="govuk-button" asp-action="YouAreApprovedPerson">
                             @SharedLocalizer["Continue"]
                         </button>
 
-                        <a asp-action="InviteOtherApprovedPerson" class="govuk-link">
+                        <a asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
                             @Localizer["LimitedPartnershipYouAreApprovedPerson.InviteLink"]
                         </a>
                     </div>

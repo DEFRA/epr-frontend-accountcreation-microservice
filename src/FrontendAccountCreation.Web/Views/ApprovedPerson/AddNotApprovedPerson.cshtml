@@ -3,7 +3,7 @@
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
 
-@model AddNotApprovedPersonViewModel;
+@model AddApprovedPersonViewModel;
 
 @{
     ViewData["Title"] = Localizer["AddNotApprovedPerson.Title"];
@@ -17,7 +17,7 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="ApprovedPerson" asp-action="AddNotApprovedPerson" method="post">
+                <form asp-controller="ApprovedPerson" asp-action="AddApprovedPerson" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                             @Localizer["AddNotApprovedPerson.Title"]
