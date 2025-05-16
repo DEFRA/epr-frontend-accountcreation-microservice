@@ -165,7 +165,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
 
-        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Never);
         viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
     }
 
@@ -197,9 +197,20 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         };
 
         // Act
-        await _systemUnderTest.NamesOfPartners(model, jack.Id.ToString());
+        var result = await _systemUnderTest.NamesOfPartners(model, jack.Id.ToString());
 
         // Assert
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners.Should().HaveCount(1);
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[0].Id.Should().Be(jill.Id);
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[0].PersonName.Should().Be("Jill");
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+        viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
+
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(1);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Id.Should().Be(jill.Id);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Name.Should().Be("Jill");
     }
 }
