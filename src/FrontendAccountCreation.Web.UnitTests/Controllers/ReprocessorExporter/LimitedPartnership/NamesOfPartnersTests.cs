@@ -58,7 +58,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    [DataRow(false, false, 1)]
+    [DataRow(false, false, 1)] // this should not happen
     [DataRow(true, false, 3)]
     [DataRow(false, true, 2)]
     [DataRow(true, true, 5)]
@@ -93,6 +93,48 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         };
 
         List<ReExLimitedPartnershipPersonOrCompany> partners = [abduls, biffa, copper, joanne, raj];
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners = hasCompanyPartners;
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners = hasIndividualPartners;
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartners();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners.Should().HaveCount(expectedCount);
+    }
+
+    [TestMethod]
+    [DataRow(false, false, 1)] // this should not happen
+    [DataRow(true, false, 3)]
+    [DataRow(false, true, 2)]
+    [DataRow(true, true, 4)]
+    public async Task NamesOfPartners_Get_WhenGivenNewPartner_ReturnsViewPopulatedFromSession(bool hasCompanyPartners, bool hasIndividualPartners, int expectedCount)
+    {
+        // Arrange
+        var abduls = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Abduls Skip Hire"
+        };
+
+        var biffa = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Biffa Waste Inc"
+        };
+
+        var joanne = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Name = "Joanne Smith",
+            IsPerson = true,
+        };
+
+        var newbie = new ReExLimitedPartnershipPersonOrCompany();
+
+        List<ReExLimitedPartnershipPersonOrCompany> partners = [abduls, biffa, joanne, newbie];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners = hasCompanyPartners;
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners = hasIndividualPartners;
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
