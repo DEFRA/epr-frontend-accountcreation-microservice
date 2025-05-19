@@ -76,9 +76,13 @@ public partial class LimitedPartnershipController : Controller
         // so do so before validating
         if (Guid.TryParse(command, out Guid removedId))
         {
-            model.Partners.RemoveAll(x => x.Id == removedId);
-            await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            int? rowCount = model?.Partners?.RemoveAll(x => x.Id == removedId);
+            if (rowCount.GetValueOrDefault(0) > 0)
+            {
+                await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
+                await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            }
+
             ModelState.Clear();
 
             SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);

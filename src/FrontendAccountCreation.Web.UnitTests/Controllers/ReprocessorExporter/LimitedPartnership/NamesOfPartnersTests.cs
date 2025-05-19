@@ -190,7 +190,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         List<ReExLimitedPartnershipPersonOrCompany> partners = [jack, jill];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
 
-        LimitedPartnershipPartnersViewModel model = new LimitedPartnershipPartnersViewModel
+        LimitedPartnershipPartnersViewModel model = new()
         {
             ExpectsIndividualPartners = true,
             Partners = partners.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item).ToList()
@@ -212,5 +212,40 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(1);
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Id.Should().Be(jill.Id);
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Name.Should().Be("Jill");
+    }
+
+    [TestMethod]
+    [DataRow(false, false, "NamesOfPartners.ValidationError_Both")] // this should not happen
+    [DataRow(true, false, "NamesOfPartners.ValidationError_Company")]
+    [DataRow(false, true, "NamesOfPartners.ValidationError_Individual")]
+    [DataRow(true, true, "NamesOfPartners.ValidationError_Both")]
+    public async Task NamesOfPartners_Post_ModelStateInvalid_ReturnsError(bool hasCompanyPartners, bool hasIndividualPartners, string expectedError)
+    {
+        // Arrange
+        LimitedPartnershipPartnersViewModel model = new()
+        {
+            ExpectsCompanyPartners = hasCompanyPartners,
+            ExpectsIndividualPartners = hasIndividualPartners
+        };
+
+        _systemUnderTest.ModelState.AddModelError("Error", "Error Message");
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartners(model, "save");
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+
+        _systemUnderTest.ModelState.IsValid.Should().BeFalse();
+        var errors = _systemUnderTest.ModelState.Select(x => x.Value.Errors)
+                          .Where(y => y.Count > 0)
+                          .ToList();
+
+        errors.Should().NotBeEmpty();
+        errors.Count.Should().Be(1);
+        var modelErrorCollection = errors[0];
+        modelErrorCollection[0].ErrorMessage.Should().Be(expectedError);
     }
 }
