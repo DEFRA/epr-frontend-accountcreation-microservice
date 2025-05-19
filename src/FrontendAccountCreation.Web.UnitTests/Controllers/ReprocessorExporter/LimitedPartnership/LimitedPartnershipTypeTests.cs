@@ -78,6 +78,23 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
+    public async Task PartnershipType_Get_WhenIsPartnershipIsNull_ReturnsViewWithNullPartnershipType()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.IsPartnership = null;
+
+        // Act
+        var result = await _systemUnderTest.PartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as PartnershipTypeRequestViewModel;
+        model.Should().NotBeNull();
+        model!.isLimitedPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
     public async Task PartnershipType_Get_WithExistingNonPartnership_ReturnsViewWithLimitedLiability()
     {
         // Arrange
@@ -236,6 +253,52 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
             Times.Once);
     }
 
+    [TestMethod]
+    public async Task LimitedPartnershipType_Post_WithLimitedPartnershipNull_CreatesNewLimitedPartnership()
+    {
+        // Arrange
+        var model = new LimitedPartnershipTypeRequestViewModel
+        {
+            hasIndividualPartners = true,
+            hasCompanyPartners = true
+        };
+
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = new ReExPartnership
+                {
+                    IsLimitedPartnership = true,
+                    LimitedPartnership = null
+                }
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.LimitedPartnershipType(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.NamesOfPartners));
+
+        // Verify the session save
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.ReExCompaniesHouseSession.Partnership != null &&
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null &&
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners == model.hasIndividualPartners &&
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners == model.hasCompanyPartners
+            )),
+            Times.Once);
+    }
+
 
     [TestMethod]
     public async Task LimitedPartnershipType_Get_ReturnsView()
@@ -280,6 +343,32 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         var model = viewResult.Model as LimitedPartnershipTypeRequestViewModel;
         model.Should().NotBeNull();
         model!.hasIndividualPartners.Should().BeFalse();
+        model!.hasCompanyPartners.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task LimitedPartnershipType_Get_WithValidLimitedPartnership_ReturnsViewWithPopulatedModel()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+        {
+            IsLimitedPartnership = true,
+            LimitedPartnership = new ReExLimitedPartnership
+            {
+                HasIndividualPartners = true,
+                HasCompanyPartners = false
+            }
+        };
+
+        // Act
+        var result = await _systemUnderTest.LimitedPartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as LimitedPartnershipTypeRequestViewModel;
+        model.Should().NotBeNull();
+        model!.hasIndividualPartners.Should().BeTrue();
         model!.hasCompanyPartners.Should().BeFalse();
     }
 
