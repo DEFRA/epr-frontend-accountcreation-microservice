@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TradingName.ErrorMessage" xml:space="preserve">
-    <value>Rhowch eich enw masnachu</value>
+    <value>Rhowch enw masnachu eich sefydliad</value>
   </data>
   <data name="TradingName.Hint" xml:space="preserve">
     <value>Gallwch fod yn masnachu o dan eich enw chi’ch hun, neu enw rydych chi wedi’i roi i’ch busnes.</value>
@@ -127,7 +127,7 @@
     <value>Rhaid i’r enw masnachu fod yn 170 neu lai o gymeriadau</value>
   </data>
   <data name="TradingName.Question" xml:space="preserve">
-    <value>Beth yw’ch enw masnachu?</value>
+    <value>Beth yw enw masnachu eich sefydliad?</value>
   </data>
   <data name="TradingName.Title" xml:space="preserve">
     <value>Enw Masnachu</value>
