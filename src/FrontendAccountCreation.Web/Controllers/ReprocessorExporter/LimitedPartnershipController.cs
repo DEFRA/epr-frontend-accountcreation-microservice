@@ -174,10 +174,10 @@ public partial class LimitedPartnershipController : Controller
             if (index != null && index.GetValueOrDefault(-1) >= 0)
             {
                 session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners.RemoveAt(index.Value);
+                await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             }
         }
 
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
         SetBackLink(session, PagePath.LimitedPartnershipCheckNamesOfPartners);
 
         // there is no validation on this page, so work directly on the session rather than a separate view model
