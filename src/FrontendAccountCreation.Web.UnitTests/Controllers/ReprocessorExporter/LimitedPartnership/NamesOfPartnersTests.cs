@@ -248,4 +248,44 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         var modelErrorCollection = errors[0];
         modelErrorCollection[0].ErrorMessage.Should().Be(expectedError);
     }
+
+    [TestMethod]
+    public async Task NamesOfPartners_Post_Add_AppendsEmptyPartnerToSession()
+    {
+        // Arrange
+        var jill = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Id = Guid.NewGuid(),
+            Name = "Jill",
+            IsPerson = true,
+        };
+
+        List<ReExLimitedPartnershipPersonOrCompany> partners = [jill];
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
+
+        LimitedPartnershipPartnersViewModel model = new()
+        {
+            ExpectsIndividualPartners = true,
+            Partners = partners.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item).ToList()
+        };
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartners(model, "add");
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners.Should().HaveCount(2);
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[0].Id.Should().Be(jill.Id);
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[0].PersonName.Should().Be("Jill");
+        ((LimitedPartnershipPartnersViewModel)viewResult.Model).Partners[1].PersonName.Should().BeNull();
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+        viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
+
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(2);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Id.Should().Be(jill.Id);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Name.Should().Be("Jill");
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[1].Name.Should().BeNull();
+    }
 }

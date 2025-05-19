@@ -3,8 +3,8 @@
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 
 @{
-    bool hasIndividualPartners = Model.Any(x => x.IsPerson);
-    bool hasCompanyPartners = Model.Any(x => !x.IsPerson);
+    bool hasIndividualPartners = Model.Exists(x => x.IsPerson);
+    bool hasCompanyPartners = Model.Exists(x => !x.IsPerson);
     ViewData["Title"] = Localizer[GetLocalizer(hasIndividualPartners, hasCompanyPartners, "Title_Individual", "Title_Company", "Title_Both")];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
