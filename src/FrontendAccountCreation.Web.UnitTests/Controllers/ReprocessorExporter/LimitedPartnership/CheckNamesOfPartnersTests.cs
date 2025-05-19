@@ -6,6 +6,7 @@ using Moq;
 using FluentAssertions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership;
 
@@ -104,5 +105,20 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(1);
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Id.Should().Be(jill.Id);
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Name.Should().Be("Jill");
+    }
+
+    [TestMethod]
+    public async Task NamesOfPartners_Post_Save_RedirectsToCorrectPage()
+    {
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartners();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+
+        redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.LimitedPartnershipRole));
     }
 }

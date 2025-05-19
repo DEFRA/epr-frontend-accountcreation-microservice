@@ -290,7 +290,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task NamesOfPartners_Post_Save_AppendsEmptyPartnerToSession()
+    public async Task NamesOfPartners_Post_Save_UpdatesSessionAndRedirects()
     {
         // Arrange
         var jack = new ReExLimitedPartnershipPersonOrCompany
