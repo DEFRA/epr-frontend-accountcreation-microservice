@@ -198,6 +198,46 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
+    public async Task PartnershipType_Post_WithLimitedPartnershipAndNullPartnership_CreatesNewPartnership()
+    {
+        // Arrange
+        var model = new PartnershipTypeRequestViewModel
+        {
+            isLimitedPartnership = Core.Sessions.PartnershipType.LimitedPartnership
+        };
+
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = null
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.PartnershipType(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.LimitedPartnershipType));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.ReExCompaniesHouseSession.IsPartnership == true &&
+                s.ReExCompaniesHouseSession.Partnership != null &&
+                s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership == true
+            )),
+            Times.Once);
+    }
+
+
+    [TestMethod]
     public async Task LimitedPartnershipType_Get_ReturnsView()
     {
         // Act
