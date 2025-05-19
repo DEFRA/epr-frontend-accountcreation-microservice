@@ -64,4 +64,7 @@
   <data name="NamesOfPartners.ValidationError_Both" xml:space="preserve">
     <value>Enter a company partner name or the full name of an corporate partner</value>
   </data>
+  <data name="NamesOfPartners.Legend" xml:space="preserve">
+    <value>Partner names</value>
+  </data>
 </root>
