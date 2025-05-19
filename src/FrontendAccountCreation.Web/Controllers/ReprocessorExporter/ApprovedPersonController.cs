@@ -127,12 +127,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (isExistingMember)
             {
-                // move to enter team member details: full name, email, telephone
                 return RedirectToAction(nameof(TeamMembersCheckInvitationDetails));
             }
             else
             {
-                // go back to check their invitation detials
                 return RedirectToAction(nameof(TeamMemberDetails), new { id = queryStringId });
             }
         }
@@ -198,7 +196,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         /// <returns></returns>
         [HttpGet]
         [Route(PagePath.TeamMembersCheckInvitationDetails)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
+        [OrganisationJourneyAccess(PagePath.TeamMembersCheckInvitationDetails)]
         public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -212,8 +210,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     session.ReExCompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
                 }
             }
-
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+			session.Journey.AddIfNotExists(PagePath.CheckYourDetails);
+			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FirstName)).ToList());
         }
@@ -224,13 +222,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> YouAreApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+			session.Journey.AddIfNotExists(PagePath.TeamMemberRoleInOrganisation);
+			session.Journey.AddIfNotExists(PagePath.CheckYourDetails);
+			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             return View();
         }
 
         [HttpGet]
         [Route(PagePath.CheckYourDetails)]
-        public async Task<IActionResult> CheckYourDetails()
+		[OrganisationJourneyAccess(PagePath.CheckYourDetails)]
+		public async Task<IActionResult> CheckYourDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             ViewBag.MakeChangesToYourLimitedCompanyLink = _urlOptions.MakeChangesToYourLimitedCompany;
