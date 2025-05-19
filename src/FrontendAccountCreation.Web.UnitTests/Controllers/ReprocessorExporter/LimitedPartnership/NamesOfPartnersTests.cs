@@ -288,4 +288,52 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Name.Should().Be("Jill");
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[1].Name.Should().BeNull();
     }
+
+    [TestMethod]
+    public async Task NamesOfPartners_Post_Save_AppendsEmptyPartnerToSession()
+    {
+        // Arrange
+        var jack = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Id = Guid.NewGuid(),
+            Name = "Jack",
+            IsPerson = true,
+        };
+
+        var biffa = new ReExLimitedPartnershipPersonOrCompany
+        {
+            Id = Guid.NewGuid(),
+            Name = "Biffa Waste Inc",
+            IsPerson = false,
+        };
+
+        List<ReExLimitedPartnershipPersonOrCompany> partners = [jack, biffa];
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
+
+        LimitedPartnershipPartnersViewModel model = new()
+        {
+            ExpectsCompanyPartners = true,
+            ExpectsIndividualPartners = true,
+            Partners = partners.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item).ToList()
+        };
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartners(model, "save");
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(2);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Id.Should().Be(jack.Id);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Name.Should().Be("Jack");
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].IsPerson.Should().Be(true);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[1].Id.Should().Be(biffa.Id);
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[1].Name.Should().Be("Biffa Waste Inc");
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[1].IsPerson.Should().Be(false);
+
+        redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+    }
 }
