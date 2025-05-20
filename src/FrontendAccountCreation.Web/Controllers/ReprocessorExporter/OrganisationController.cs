@@ -602,8 +602,23 @@ public class OrganisationController : Controller
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.Declaration, PagePath.ToDoPath);
-        return Ok();
+        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue,
+            PagePath.Success);
+    }
+
+    [HttpGet]
+    [Route(PagePath.Success)]
+    public async Task<IActionResult> Success()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        var viewModel = new ReExOrganisationSuccessViewModel
+        {
+            CompanyName = session.ReExCompaniesHouseSession.Company.Name,
+            reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers
+        };
+
+        return View(viewModel);
     }
 
     public IActionResult RedirectToStart()
