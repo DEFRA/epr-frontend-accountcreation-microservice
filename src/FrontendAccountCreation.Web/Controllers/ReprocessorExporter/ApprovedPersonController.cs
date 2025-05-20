@@ -3,7 +3,6 @@ using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +26,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.AddAnApprovedPerson)]
-        [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -38,7 +36,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
-        [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             if (!ModelState.IsValid)
@@ -63,7 +60,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.TeamMemberRoleInOrganisation)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation([FromQuery] Guid? id)
         {
             OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -89,7 +85,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.TeamMemberRoleInOrganisation)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisation(TeamMemberRoleInOrganisationViewModel model)
         {
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -127,19 +122,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (isExistingMember)
             {
-                // move to enter team member details: full name, email, telephone
                 return RedirectToAction(nameof(TeamMembersCheckInvitationDetails));
             }
             else
             {
-                // go back to check their invitation detials
                 return RedirectToAction(nameof(TeamMemberDetails), new { id = queryStringId });
             }
         }
 
         [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails([FromQuery] Guid id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -166,7 +158,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.TeamMemberDetails)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails(TeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -198,7 +189,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         /// <returns></returns>
         [HttpGet]
         [Route(PagePath.TeamMembersCheckInvitationDetails)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -212,25 +202,40 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     session.ReExCompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
                 }
             }
-
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FirstName)).ToList());
         }
 
         [HttpGet]
         [Route(PagePath.YouAreApprovedPerson)]
-        [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
         public async Task<IActionResult> YouAreApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             return View();
         }
 
-        [HttpGet]
+		[HttpPost]
+		[Route(PagePath.YouAreApprovedPerson)]
+		public async Task<IActionResult> YouAreApprovedPerson(bool inviteApprovedPerson)
+		{
+			var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+			var nextPage = inviteApprovedPerson
+				? PagePath.TeamMemberRoleInOrganisation
+				: PagePath.CheckYourDetails;
+
+			var nextAction = inviteApprovedPerson
+				? nameof(TeamMemberRoleInOrganisation)
+				: nameof(CheckYourDetails);
+
+			return await SaveSessionAndRedirect(session, nextAction, PagePath.YouAreApprovedPerson, nextPage);
+		}
+
+		[HttpGet]
         [Route(PagePath.CheckYourDetails)]
-        public async Task<IActionResult> CheckYourDetails()
+	    public async Task<IActionResult> CheckYourDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             ViewBag.MakeChangesToYourLimitedCompanyLink = _urlOptions.MakeChangesToYourLimitedCompany;
