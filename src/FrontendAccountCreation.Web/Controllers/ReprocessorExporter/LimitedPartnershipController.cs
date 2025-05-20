@@ -219,7 +219,7 @@ public partial class LimitedPartnershipController : Controller
 
         return View(new PartnershipTypeRequestViewModel
         {
-            isLimitedPartnership = limitedPartnership
+            TypeOfPartnership = limitedPartnership
         });
     }
 
@@ -236,7 +236,7 @@ public partial class LimitedPartnershipController : Controller
             return View(model);
         }
 
-        var isLimitedPartnership = model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
+        var isLimitedPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
 
         session.ReExCompaniesHouseSession.IsPartnership = isLimitedPartnership;
 

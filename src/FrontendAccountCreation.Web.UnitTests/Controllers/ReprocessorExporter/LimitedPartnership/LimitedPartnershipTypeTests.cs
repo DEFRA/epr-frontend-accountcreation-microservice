@@ -74,7 +74,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         var viewResult = (ViewResult)result;
         var model = viewResult.Model as PartnershipTypeRequestViewModel;
         model.Should().NotBeNull();
-        model!.isLimitedPartnership.Should().Be(Core.Sessions.PartnershipType.LimitedPartnership);
+        model!.TypeOfPartnership.Should().Be(Core.Sessions.PartnershipType.LimitedPartnership);
     }
 
     [TestMethod]
@@ -91,7 +91,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         var viewResult = (ViewResult)result;
         var model = viewResult.Model as PartnershipTypeRequestViewModel;
         model.Should().NotBeNull();
-        model!.isLimitedPartnership.Should().BeNull();
+        model!.TypeOfPartnership.Should().BeNull();
     }
 
     [TestMethod]
@@ -108,7 +108,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         var viewResult = (ViewResult)result;
         var model = viewResult.Model as PartnershipTypeRequestViewModel;
         model.Should().NotBeNull();
-        model!.isLimitedPartnership.Should().Be(Core.Sessions.PartnershipType.LimitedLiabilityPartnership);
+        model!.TypeOfPartnership.Should().Be(Core.Sessions.PartnershipType.LimitedLiabilityPartnership);
     }
 
     [TestMethod]
@@ -168,7 +168,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         // Arrange
         var model = new PartnershipTypeRequestViewModel
         {
-            isLimitedPartnership = Core.Sessions.PartnershipType.LimitedPartnership
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedPartnership
         };
 
         // Act
@@ -195,7 +195,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         // Arrange
         var model = new PartnershipTypeRequestViewModel
         {
-            isLimitedPartnership = Core.Sessions.PartnershipType.LimitedLiabilityPartnership
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedLiabilityPartnership
         };
 
         // Act
@@ -220,7 +220,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         // Arrange
         var model = new PartnershipTypeRequestViewModel
         {
-            isLimitedPartnership = Core.Sessions.PartnershipType.LimitedPartnership
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedPartnership
         };
 
         var session = new OrganisationSession

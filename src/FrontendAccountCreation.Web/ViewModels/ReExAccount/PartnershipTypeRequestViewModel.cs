@@ -9,5 +9,5 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 public class PartnershipTypeRequestViewModel
 {
     [Required(ErrorMessage = "PartnershipType.ErrorMessage")]
-    public PartnershipType? isLimitedPartnership { get; set; }
+    public PartnershipType? TypeOfPartnership { get; set; }
 }
