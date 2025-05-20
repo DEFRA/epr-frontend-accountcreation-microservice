@@ -221,21 +221,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 		public async Task<IActionResult> YouAreApprovedPerson(bool inviteApprovedPerson)
 		{
 			var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-			var nextPage = inviteApprovedPerson
-				? PagePath.TeamMemberRoleInOrganisation
-				: PagePath.CheckYourDetails;
-
-			var nextAction = inviteApprovedPerson
-				? nameof(TeamMemberRoleInOrganisation)
-				: nameof(CheckYourDetails);
-
-			return await SaveSessionAndRedirect(session, nextAction, PagePath.YouAreApprovedPerson, nextPage);
+			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+			return View();
 		}
 
 		[HttpGet]
         [Route(PagePath.CheckYourDetails)]
-		public async Task<IActionResult> CheckYourDetails()
+	    public async Task<IActionResult> CheckYourDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             ViewBag.MakeChangesToYourLimitedCompanyLink = _urlOptions.MakeChangesToYourLimitedCompany;
