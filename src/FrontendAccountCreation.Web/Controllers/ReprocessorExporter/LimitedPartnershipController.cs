@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -378,6 +379,7 @@ public partial class LimitedPartnershipController : Controller
         return partnersSession;
     }
 
+    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
     private void SetBackLink(OrganisationSession session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
@@ -390,6 +392,7 @@ public partial class LimitedPartnershipController : Controller
         }
     }
 
+    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
     private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
         string actionName, string currentPagePath, string? nextPagePath)
     {
@@ -399,6 +402,7 @@ public partial class LimitedPartnershipController : Controller
         return RedirectToAction(actionName);
     }
 
+    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
     private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
     string controllerName, string actionName, string currentPagePath, string? nextPagePath)
     {
@@ -409,6 +413,7 @@ public partial class LimitedPartnershipController : Controller
         return RedirectToAction(actionName, contNameWOCont);
     }
 
+    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
     private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
     {
         ClearRestOfJourney(session, currentPagePath);
@@ -418,6 +423,7 @@ public partial class LimitedPartnershipController : Controller
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
 
+    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
     private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
     {
         var index = session.Journey.IndexOf(currentPagePath);
