@@ -38,12 +38,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (session.ReExCompaniesHouseSession?.IsPartnership == true)
             {
-                return session.ReExCompaniesHouseSession.IsIneligible
+                return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
                     ? View("InEligibleAddNotApprovedPerson")
                     : View("LimitedPartnershipAddApprovedPerson");
             }
 
-            return session.ReExCompaniesHouseSession?.IsIneligible == true ? View("AddNotApprovedPerson") : View();
+            return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson") : View();
         }
 
         [HttpPost]
@@ -57,12 +57,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 if (session.ReExCompaniesHouseSession?.IsPartnership == true)
                 {
-                    return session.ReExCompaniesHouseSession.IsIneligible
+                    return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
                         ? View("InEligibleAddNotApprovedPerson", model)
                         : View("LimitedPartnershipAddApprovedPerson", model);
                 }
 
-                return session.ReExCompaniesHouseSession?.IsIneligible == true ? View("AddNotApprovedPerson", model) : View(model);
+                return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson", model) : View(model);
             }
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())

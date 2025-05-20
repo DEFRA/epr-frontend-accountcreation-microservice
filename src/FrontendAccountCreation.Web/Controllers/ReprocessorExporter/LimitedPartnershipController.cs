@@ -355,7 +355,7 @@ public partial class LimitedPartnershipController : Controller
         }
 
         session.ReExCompaniesHouseSession.RoleInOrganisation = model.LimitedPartnershipRole;
-        session.ReExCompaniesHouseSession.IsIneligible = model.LimitedPartnershipRole == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
+        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.LimitedPartnershipRole == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
                     PagePath.LimitedPartnershipRole, PagePath.AddAnApprovedPerson);
