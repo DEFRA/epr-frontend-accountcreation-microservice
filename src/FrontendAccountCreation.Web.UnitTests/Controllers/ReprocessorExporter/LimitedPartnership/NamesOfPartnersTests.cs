@@ -301,7 +301,6 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         };
 
         List<ReExLimitedPartnershipPersonOrCompany> partners = [jack, biffa];
-        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
 
         LimitedPartnershipPartnersViewModel model = new()
         {
