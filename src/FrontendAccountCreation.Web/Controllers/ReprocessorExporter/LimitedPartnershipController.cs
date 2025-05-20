@@ -124,7 +124,7 @@ public partial class LimitedPartnershipController : Controller
             List<ReExLimitedPartnershipPersonOrCompany> partners)
         {
             // Organisation > Company > Partnership > Limited Partnership
-            ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession ?? new();
+            ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession;
             ReExPartnership partnershipSession = companySession.Partnership ?? new();
 
             // refresh limited partnership session from the view model

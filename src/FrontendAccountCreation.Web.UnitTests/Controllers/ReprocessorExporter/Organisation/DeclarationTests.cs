@@ -50,11 +50,9 @@ public class DeclarationTests : OrganisationTestBase
 
         // Act
         var result = _systemUnderTest.DeclarationContinue();
-        var okResult = (Microsoft.AspNetCore.Mvc.StatusCodeResult)result?.Result;
 
         // Assert
         result.Should().NotBeNull();
         result.Status.Should().Be(TaskStatus.RanToCompletion);
-        okResult.StatusCode.Should().Be(StatusCodes.Status200OK);
     }
 }

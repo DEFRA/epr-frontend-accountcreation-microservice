@@ -1,0 +1,72 @@
+﻿@using FrontendAccountCreation.Web.Constants
+
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.ReExOrganisationSuccessViewModel
+
+@{
+    ViewData["Title"] = Localizer["Success.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+    
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        @Localizer["Success.Success"]
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <h3 class="govuk-notification-banner__heading">
+                            @Localizer["Success.AddedOrganisation"] @Model.CompanyName
+                    </h3>
+                </div>
+            </div>
+
+            <h3 class="govuk-notification-banner__heading">
+                    @Localizer["Success.ApprovedPersonsInvite.Heading"]
+            </h3>
+            <p class="govuk-body govuk-!-margin-bottom-7">
+                    @Localizer["Success.ApprovedPersonsInvite.Paragraph"]
+            </p>
+
+                @if (Model.reExCompanyTeamMembers != null)
+                {
+                    <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+                        @for (int i = 0; i < Model.reExCompanyTeamMembers?.Count; i++)
+                        {
+                                <div class="govuk-summary-list">
+                                            @Model.reExCompanyTeamMembers[i].Email
+                                </div>
+                        }
+                    </dl>
+                }
+
+                <h3 class="govuk-notification-banner__heading">
+                    @Localizer["Success.WhatYouMustDoNext.Heading"]
+                </h3>
+                <p class="govuk-body govuk-!-margin-bottom-7">
+                    @Localizer["Success.WhatYouMustDoNext.Paragrah"]
+                </p>
+
+                <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+                    <li>@Localizer["Success.WhatYouMustDoNext.List.Item1"]</li>
+                    <li>@Localizer["Success.WhatYouMustDoNext.List.Item2"]</li>
+                </ul>
+
+                <form asp-controller="AprrovedPerson" method="get">
+                    <div class="govuk-button-group">
+                        <a asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
+                            @Localizer["Success.Continue"]
+                        </a>
+                    </div>
+                </form>
+
+        </div>
+    </div>
+    </main>
+</div>
