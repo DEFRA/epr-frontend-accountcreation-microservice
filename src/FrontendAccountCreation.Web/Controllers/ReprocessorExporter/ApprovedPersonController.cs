@@ -8,6 +8,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
@@ -336,6 +337,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return RedirectToAction("CheckYourDetails", "AccountCreation");
         }
 
+        [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
         private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
             string actionName, string currentPagePath, string? nextPagePath, string? controllerName = null, object? routeValues = null)
         {
@@ -345,6 +347,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return !string.IsNullOrWhiteSpace(controllerName) ? RedirectToAction(actionName, controllerName, routeValues) : RedirectToAction(actionName, routeValues);
         }
 
+        [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
         private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
         {
             ClearRestOfJourney(session, currentPagePath);
@@ -357,6 +360,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
         }
 
+        [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
         private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
         {
             var index = session.Journey.FindIndex(x => x.Contains(currentPagePath.Split("?")[0]));
@@ -365,6 +369,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             session.Journey = session.Journey.Take(index + 1).ToList();
         }
 
+        [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
         private void SetBackLink(OrganisationSession session, string currentPagePath)
         {
             if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
