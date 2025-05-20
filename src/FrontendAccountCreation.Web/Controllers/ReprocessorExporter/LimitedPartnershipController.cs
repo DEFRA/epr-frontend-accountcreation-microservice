@@ -236,24 +236,18 @@ public partial class LimitedPartnershipController : Controller
             return View(model);
         }
 
-        if (model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership)
+        var isLimitedPartnership = model.isLimitedPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
+
+        session.ReExCompaniesHouseSession.IsPartnership = isLimitedPartnership;
+
+        if (isLimitedPartnership)
         {
-            session.ReExCompaniesHouseSession.IsPartnership = true;
-            if (session.ReExCompaniesHouseSession.Partnership != null)
+            if (session.ReExCompaniesHouseSession.Partnership == null)
             {
-                session.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership = true;
+                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership();
             }
-            else
-            {
-                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
-                {
-                    IsLimitedPartnership = true,
-                };
-            }
-        }
-        else
-        {
-            session.ReExCompaniesHouseSession.IsPartnership = false;
+
+            session.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership = true;
         }
 
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
