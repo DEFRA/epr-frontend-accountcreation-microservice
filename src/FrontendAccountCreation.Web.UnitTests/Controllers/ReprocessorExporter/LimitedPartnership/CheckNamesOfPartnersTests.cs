@@ -100,9 +100,11 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
 
-        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(1);
-        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Id.Should().Be(jill.Id);
-        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Name.Should().Be("Jill");
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners.Should()
+            .NotBeNull().And
+            .ContainSingle().Which
+            .Should()
+            .BeEquivalentTo(jill);
     }
 
     [TestMethod]
