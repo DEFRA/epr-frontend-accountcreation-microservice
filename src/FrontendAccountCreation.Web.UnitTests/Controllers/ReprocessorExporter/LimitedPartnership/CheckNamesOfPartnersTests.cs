@@ -94,11 +94,9 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         var result = await _systemUnderTest.CheckNamesOfPartners(jack.Id);
 
         // Assert
-        var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<List<ReExLimitedPartnershipPersonOrCompany>>();
-        ((List<ReExLimitedPartnershipPersonOrCompany>)viewResult.Model).Should().HaveCount(1);
-        ((List<ReExLimitedPartnershipPersonOrCompany>)viewResult.Model)[0].Id.Should().Be(jill.Id);
-        ((List<ReExLimitedPartnershipPersonOrCompany>)viewResult.Model)[0].Name.Should().Be("Jill");
+        var viewResult = result.Should().BeOfType<ViewResult>().Which;
+        var viewModel = viewResult.Model.Should().BeOfType<List<ReExLimitedPartnershipPersonOrCompany>>().Which;
+        viewModel.Should().ContainSingle().Which.Should().BeEquivalentTo(jill);
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
 
