@@ -221,8 +221,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 		public async Task<IActionResult> YouAreApprovedPerson(bool inviteApprovedPerson)
 		{
 			var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-			return View();
+
+			var nextPage = inviteApprovedPerson
+				? PagePath.TeamMemberRoleInOrganisation
+				: PagePath.CheckYourDetails;
+
+			var nextAction = inviteApprovedPerson
+				? nameof(TeamMemberRoleInOrganisation)
+				: nameof(CheckYourDetails);
+
+			return await SaveSessionAndRedirect(session, nextAction, PagePath.YouAreApprovedPerson, nextPage);
 		}
 
 		[HttpGet]
