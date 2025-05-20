@@ -177,4 +177,10 @@
   <data name="NoneOfTheAbove" xml:space="preserve">
     <value>None of the above</value>
   </data>
+  <data name="PartnerCompanySecretary" xml:space="preserve">
+    <value>Company Secretary</value>
+  </data>
+  <data name="PartnerDirector" xml:space="preserve">
+    <value>Director</value>
+  </data>
 </root>

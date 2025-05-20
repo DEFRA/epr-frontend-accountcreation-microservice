@@ -177,4 +177,10 @@
   <data name="NoneOfTheAbove" xml:space="preserve">
     <value>Dim un o’r uchod</value>
   </data>
+  <data name="PartnerCompanySecretary" xml:space="preserve">
+    <value>[Welsh]Company Secretary</value>
+  </data>
+  <data name="PartnerDirector" xml:space="preserve">
+    <value>[Welsh]Director</value>
+  </data>
 </root>
