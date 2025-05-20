@@ -24,11 +24,11 @@
                 <form method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
 
-                        <fieldset class="govuk-fieldset" aria-describedby="role-hint">
+                        <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <span class="govuk-fieldset__heading">
+                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
                                     @Localizer["ApprovedPersonPartnershipRole.WhatIsTheirRole"]
-                                </span>
+                                </h1>
                             </legend>
 
                             @Html.HiddenFor(x => x.Id)
@@ -43,7 +43,8 @@
                                            gov-first-option="true">
                                     <label class="govuk-label govuk-radios__label"
                                            gov-for="RoleInOrganisation"
-                                           gov-value="@nameof(ReExTeamMemberRole.IndividualPartner)">
+                                           gov-value="@nameof(ReExTeamMemberRole.IndividualPartner)"
+                                           gov-first-option="true">
                                         @SharedLocalizer["IndividualPartner"]
                                     </label>
                                 </div>

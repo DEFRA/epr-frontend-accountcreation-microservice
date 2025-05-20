@@ -32,11 +32,11 @@
 
                 <form asp-controller="ApprovedPerson" method="post">
                     <div class="govuk-button-group">
-                        <button class="govuk-button" data-module="govuk-button" asp-action="YouAreApprovedPerson">
+                        <button class="govuk-button" data-module="govuk-button" asp-controller="AccountCreation" asp-action="CheckYourDetails">
                             @SharedLocalizer["Continue"]
                         </button>
 
-                        <a asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
+                        <a asp-controller="ApprovedPerson" asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
                             @Localizer["LimitedPartnershipYouAreApprovedPerson.InviteLink"]
                         </a>
                     </div>
