@@ -146,7 +146,48 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             result.Should().BeOfType<RedirectToActionResult>();
             var redirect = (RedirectToActionResult)result;
             redirect.ActionName.Should().Be("CheckYourDetails");
-            redirect.ControllerName.Should().Be("AccountCreation");
         }
-    }
+
+		[TestMethod]
+		public async Task YouAreApprovedPerson_InviteApprovedPersonTrue_RedirectsToTeamMemberRoleInOrganisation()
+		{
+			// Arrange
+			_sessionManagerMock
+				.Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+				.ReturnsAsync(new OrganisationSession());
+
+			_sessionManagerMock
+				.Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()))
+				.Returns(Task.CompletedTask);
+
+			// Act
+			var result = await _systemUnderTest.YouAreApprovedPerson(true);
+
+			// Assert
+			result.Should().BeOfType<RedirectToActionResult>();
+			var redirect = (RedirectToActionResult)result;
+			redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+		}
+
+		[TestMethod]
+		public async Task YouAreApprovedPerson_InviteApprovedPersonFalse_RedirectsToCheckYourDetails()
+		{
+			// Arrange
+			_sessionManagerMock
+				.Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+				.ReturnsAsync(new OrganisationSession());
+
+			_sessionManagerMock
+				.Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()))
+				.Returns(Task.CompletedTask);
+
+			// Act
+			var result = await _systemUnderTest.YouAreApprovedPerson(false);
+
+			// Assert
+			result.Should().BeOfType<RedirectToActionResult>();
+			var redirect = (RedirectToActionResult)result;
+			redirect.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
+		}
+	}
 }

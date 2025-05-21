@@ -97,7 +97,6 @@ public class DeclarationTests : OrganisationTestBase
 
         //Act
         var result = _systemUnderTest.DeclarationContinue();
-        var okResult = (Microsoft.AspNetCore.Mvc.StatusCodeResult)result?.Result;
 
         // Assert
         result.Should().NotBeNull();

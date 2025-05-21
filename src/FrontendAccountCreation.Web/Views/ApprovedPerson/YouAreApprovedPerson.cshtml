@@ -34,15 +34,15 @@
 					</li>
 				</ul>
 
-				<form asp-controller="ApprovedPerson" method="get">
+				<form asp-controller="ApprovedPerson" asp-action="YouAreApprovedPerson" method="post">
 					<div class="govuk-button-group">
-						<button class="govuk-button" data-module="govuk-button" asp-action="CheckYourDetails">
+						<button class="govuk-button" data-module="govuk-button" name="inviteApprovedPerson" value="false">
 							@SharedLocalizer["Continue"]
 						</button>
 
-						<a asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
+						<button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="inviteApprovedPerson" value="true">
 							@Localizer["YouAreApprovedPerson.InviteLink"]
-						</a>
+						</button>
 					</div>
 				</form>
 			</div>

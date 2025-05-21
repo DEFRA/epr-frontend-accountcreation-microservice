@@ -150,4 +150,22 @@
   <data name="TeamMemberDetails.EmailError" xml:space="preserve">
     <value>Enter a valid email address</value>
   </data>
+  <data name="TeamMemberDetails.FirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="TeamMemberDetails.FirstNameErrorMessage" xml:space="preserve">
+    <value>Enter your first name</value>
+  </data>
+  <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
+    <value>First name must be 50 characters or less</value>
+  </data>
+  <data name="TeamMemberDetails.LastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="TeamMemberDetails.LastNameErrorMessage" xml:space="preserve">
+    <value>Enter your last name</value>
+  </data>
+  <data name="TeamMemberDetails.LastNameLengthErrorMessage" xml:space="preserve">
+    <value>Last name must be 50 characters or less</value>
+  </data>
 </root>

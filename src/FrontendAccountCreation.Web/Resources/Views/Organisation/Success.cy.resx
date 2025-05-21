@@ -117,19 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TradingName.ErrorMessage" xml:space="preserve">
-    <value>Rhowch enw masnachu eich sefydliad</value>
+  <data name="Success.Title" xml:space="preserve">
+    <value>(W)Organistion added success</value>
   </data>
-  <data name="TradingName.Hint" xml:space="preserve">
-    <value>Gallwch fod yn masnachu o dan eich enw chi’ch hun, neu enw rydych chi wedi’i roi i’ch busnes.</value>
+  <data name="Success.SuccessEnrolOrganisation" xml:space="preserve">
+    <value>Llwyddiant</value>
   </data>
-  <data name="TradingName.LengthErrorMessage" xml:space="preserve">
-    <value>Rhaid i’r enw masnachu fod yn 170 neu lai o gymeriadau</value>
+  <data name="Success.AddedOrganisation" xml:space="preserve">
+    <value>(W) You've added</value>
   </data>
-  <data name="TradingName.Question" xml:space="preserve">
-    <value>Beth yw enw masnachu eich sefydliad?</value>
+  <data name="Success.WhatYouMustDoNext.Heading" xml:space="preserve">
+    <value>(W)What you must do next</value>
   </data>
-  <data name="TradingName.Title" xml:space="preserve">
-    <value>Enw Masnachu</value>
+  <data name="Success.ApprovedPersonsInvite.Paragraph" xml:space="preserve">
+    <value>(W)You have invited the following to be an approved person.</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.Heading" xml:space="preserve">
+    <value>Yr hyn mae'n rhaid ichi ei wneud ar ôl ychwanegu sefydliad</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.1.List.LeadIn" xml:space="preserve">
+    <value>I gydymffurfio â'r gyfraith:</value>
+  </data>
+  <data name="Success.WhatYouMustDoNext.List.Item1" xml:space="preserve">
+    <value>(W)packaging waste material for each UK reprocessing site</value>
+  </data>
+  <data name="Success.WhatYouMustDoNext.List.Item2" xml:space="preserve">
+    <value>(W)UK-derived packaging waste material to be exported for reprocessing out side the UK</value>
+  </data>
+  <data name="Success.WhatYouMustDoNext.Paragrah" xml:space="preserve">
+    <value>(W)Now you must apply to register each:</value>
+  </data>
+  <data name="Success.AfterAddingOrganisation.3.Paragraph" xml:space="preserve">
+    <value>Cewch ychwanegu sefydliadau o hafan y cyfrif.</value>
+  </data>
+  <data name="Success.ApprovedPersonsInviteHeading" xml:space="preserve">
+    <value>(W)Approved persons invited</value>
+  </data>
+  <data name="Success.Continue" xml:space="preserve">
+    <value>(W)Return to home</value>
   </data>
 </root>

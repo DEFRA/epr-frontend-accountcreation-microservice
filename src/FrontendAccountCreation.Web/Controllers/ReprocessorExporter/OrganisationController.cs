@@ -239,18 +239,8 @@ public class OrganisationController : Controller
 
         session.ReExManualInputSession.TradingName = model.TradingName!;
 
-        return await SaveSessionAndRedirect(session, nameof(PartnerOrganisation), PagePath.TradingName,
-            PagePath.PartnerOrganisation);
-    }
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.PartnerOrganisation)]
-    [OrganisationJourneyAccess(PagePath.PartnerOrganisation)]
-    public Task<IActionResult> PartnerOrganisation()
-    {
-        throw new NotImplementedException(
-            "The 'partner organisation' page hasn't been built. It will be built in a future story.");
+        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
+            PagePath.IsPartnership);
     }
 
     [HttpGet]
@@ -598,11 +588,12 @@ public class OrganisationController : Controller
         return Ok("not been implemented yet...WIP by Tungsten team.");
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route(PagePath.Declaration)]
-    [OrganisationJourneyAccess(PagePath.Declaration)]
     public async Task<IActionResult> Declaration()
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.Declaration);
         return View();
     }
 
@@ -611,13 +602,23 @@ public class OrganisationController : Controller
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        await SaveSessionAndRedirect(session, nameof(NotImplementedMethod), PagePath.Declaration, PagePath.ToDoPath);
+        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue,
+            PagePath.Success);
+    }
 
-        // Post related data
-        var reExOrganisation = _reExAccountMapper.CreateReExOrganisationModel(session);
-        await _facadeService.PostReprocessorExporterCreateOrganisationAsync(reExOrganisation, _serviceKeyOptions.ReprocessorExporter);
-       
-        return Ok();
+    [HttpGet]
+    [Route(PagePath.Success)]
+    public async Task<IActionResult> Success()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        var viewModel = new ReExOrganisationSuccessViewModel
+        {
+            CompanyName = session.ReExCompaniesHouseSession.Company.Name,
+            reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers
+        };
+
+        return View(viewModel);
     }
 
     public IActionResult RedirectToStart()
