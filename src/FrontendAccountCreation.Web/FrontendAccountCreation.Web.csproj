@@ -125,7 +125,7 @@
 
     <ItemGroup>
       <SonarQubeSetting Include="sonar.coverage.exclusions">
-        <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs,**/loadingspinner.js</Value>
+        <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs,**/loadingspinner.js,**/Success.cshtml</Value>
       </SonarQubeSetting>
 	</ItemGroup>
   
