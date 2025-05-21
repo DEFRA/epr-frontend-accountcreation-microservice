@@ -152,9 +152,9 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     public async Task AddApprovedPerson_Get_PartnershipAndIneligible_ReturnsInEligibleView()
     {
         // Arrange
+        _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsPartnership = true,
             IsIneligible = true
         };
 
@@ -171,9 +171,9 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     public async Task AddApprovedPerson_Get_PartnershipOnly_ReturnsLimitedPartnershipView()
     {
         // Arrange
+        _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsPartnership = true,
             IsIneligible = false
         };
 
@@ -190,9 +190,9 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     public async Task AddApprovedPerson_Get_NotPartnershipButIneligible_ReturnsAddNotApprovedPersonView()
     {
         // Arrange
+        _orgSessionMock.IsOrganisationAPartnership = false;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsPartnership = false,
             IsIneligible = true
         };
 
@@ -209,9 +209,9 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     public async Task AddApprovedPerson_Get_NotPartnershipAndNotIneligible_ReturnsDefaultView()
     {
         // Arrange
+        _orgSessionMock.IsOrganisationAPartnership = false;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsPartnership = false,
             IsIneligible = false
         };
 
@@ -232,9 +232,9 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
 
         var session = new OrganisationSession
         {
+            IsOrganisationAPartnership = true,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
-                IsPartnership = true,
                 IsIneligible = false
             }
         };

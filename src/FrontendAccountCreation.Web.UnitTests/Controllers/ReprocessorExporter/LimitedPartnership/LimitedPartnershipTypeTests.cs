@@ -33,9 +33,9 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
                 PagePath.LimitedPartnershipRole,
                 PagePath.AddAnApprovedPerson
             },
+            IsOrganisationAPartnership = true,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
-                IsPartnership = true,
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
@@ -64,7 +64,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     public async Task PartnershipType_Get_WithExistingPartnership_ReturnsViewWithCorrectType()
     {
         // Arrange
-        _orgSessionMock.ReExCompaniesHouseSession.IsPartnership = true;
+        _orgSessionMock.IsOrganisationAPartnership = true;
 
         // Act
         var result = await _systemUnderTest.PartnershipType();
@@ -81,7 +81,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     public async Task PartnershipType_Get_WhenIsPartnershipIsNull_ReturnsViewWithNullPartnershipType()
     {
         // Arrange
-        _orgSessionMock.ReExCompaniesHouseSession.IsPartnership = null;
+        _orgSessionMock.IsOrganisationAPartnership = null;
 
         // Act
         var result = await _systemUnderTest.PartnershipType();
@@ -98,7 +98,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     public async Task PartnershipType_Get_WithExistingNonPartnership_ReturnsViewWithLimitedLiability()
     {
         // Arrange
-        _orgSessionMock.ReExCompaniesHouseSession.IsPartnership = false;
+        _orgSessionMock.IsOrganisationAPartnership = false;
 
         // Act
         var result = await _systemUnderTest.PartnershipType();
@@ -182,7 +182,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.ReExCompaniesHouseSession.IsPartnership.HasValue &&
+                s.IsOrganisationAPartnership.HasValue &&
                 s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership &&
                 s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null
             )),
@@ -209,7 +209,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.ReExCompaniesHouseSession.IsPartnership == false
+                s.IsOrganisationAPartnership == false
             )),
             Times.Once);
     }
@@ -246,7 +246,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.ReExCompaniesHouseSession.IsPartnership == true &&
+                s.IsOrganisationAPartnership == true &&
                 s.ReExCompaniesHouseSession.Partnership != null &&
                 s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership == true
             )),

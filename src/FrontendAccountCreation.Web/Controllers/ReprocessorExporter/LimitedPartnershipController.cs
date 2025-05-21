@@ -2,10 +2,10 @@
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using FrontendAccountCreation.Web.Controllers.Attributes;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -208,20 +208,20 @@ public partial class LimitedPartnershipController : Controller
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.PartnershipType);
 
-        bool? isPartnership = session.ReExCompaniesHouseSession?.IsPartnership;
+        bool? isLimitedPartnership = session?.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership;
+        bool? isLimitedLiabilityPartnership = session?.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership;
 
-        dynamic limitedPartnership = null;
-        if (isPartnership.HasValue)
+        PartnershipTypeRequestViewModel model = new();
+        if (isLimitedPartnership.GetValueOrDefault(false))
         {
-            limitedPartnership = isPartnership.Value
-                ? Core.Sessions.PartnershipType.LimitedPartnership
-                : Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+            model.TypeOfPartnership = Core.Sessions.PartnershipType.LimitedPartnership;
+        }
+        else if (isLimitedLiabilityPartnership.GetValueOrDefault(false))
+        {
+            model.TypeOfPartnership = Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
         }
 
-        return View(new PartnershipTypeRequestViewModel
-        {
-            TypeOfPartnership = limitedPartnership
-        });
+        return View(model);
     }
 
     [HttpPost]
@@ -237,19 +237,10 @@ public partial class LimitedPartnershipController : Controller
             return View(model);
         }
 
-        var isLimitedPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
-
-        session.ReExCompaniesHouseSession.IsPartnership = isLimitedPartnership;
-
-        if (isLimitedPartnership)
-        {
-            if (session.ReExCompaniesHouseSession.Partnership == null)
-            {
-                session.ReExCompaniesHouseSession.Partnership = new ReExPartnership();
-            }
-
-            session.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership = true;
-        }
+        ReExPartnership partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new();
+        partnershipSession.IsLimitedPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
+        partnershipSession.IsLimitedLiabilityPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+        session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
     }
@@ -289,8 +280,6 @@ public partial class LimitedPartnershipController : Controller
             SetBackLink(session, PagePath.LimitedPartnershipType);
             return View(model);
         }
-
-        session.ReExCompaniesHouseSession.IsPartnership = true;
 
         if (session.ReExCompaniesHouseSession.Partnership == null)
         {

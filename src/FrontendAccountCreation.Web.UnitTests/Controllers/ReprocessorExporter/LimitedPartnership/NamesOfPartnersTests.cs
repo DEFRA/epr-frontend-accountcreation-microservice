@@ -21,6 +21,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         _orgSessionMock = new OrganisationSession
         {
+            IsOrganisationAPartnership = true,
             Journey = new List<string>
             {
                 PagePath.IsPartnership,
@@ -30,7 +31,6 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
             },
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
-                IsPartnership = true,
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,

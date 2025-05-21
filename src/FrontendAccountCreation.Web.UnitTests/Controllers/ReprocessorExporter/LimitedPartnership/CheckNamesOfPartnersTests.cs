@@ -28,9 +28,9 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
                 PagePath.LimitedPartnershipNamesOfPartners,
                 PagePath.LimitedPartnershipCheckNamesOfPartners
             },
+            IsOrganisationAPartnership = true,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
-                IsPartnership = true,
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,

@@ -500,9 +500,9 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         var teamMemberId = Guid.NewGuid();
         var role = ReExTeamMemberRole.PartnerDirector;
 
+        _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsPartnership = true,
             TeamMembers = new List<ReExCompanyTeamMember>
             {
                 new ReExCompanyTeamMember

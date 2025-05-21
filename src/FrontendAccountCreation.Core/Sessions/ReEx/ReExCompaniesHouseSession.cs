@@ -13,8 +13,6 @@ public class ReExCompaniesHouseSession
 
     public List<ReExCompanyTeamMember>? TeamMembers { get; set; }
 
-    public bool? IsPartnership { get; set; }
-
     public ReExPartnership? Partnership { get; set; }
 
     public bool IsIneligible { get; set; }

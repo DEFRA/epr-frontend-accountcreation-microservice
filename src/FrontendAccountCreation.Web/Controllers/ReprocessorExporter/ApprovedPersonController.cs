@@ -36,7 +36,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            if (session.ReExCompaniesHouseSession?.IsPartnership == true)
+            if (session.IsOrganisationAPartnership == true)
             {
                 return session.ReExCompaniesHouseSession.IsIneligible
                     ? View("InEligibleAddNotApprovedPerson")
@@ -55,7 +55,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (!ModelState.IsValid)
             {
-                if (session.ReExCompaniesHouseSession?.IsPartnership == true)
+                if (session.IsOrganisationAPartnership == true)
                 {
                     return session.ReExCompaniesHouseSession.IsIneligible
                         ? View("InEligibleAddNotApprovedPerson", model)
@@ -96,13 +96,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 if (index is >= 0)
                 {
                     viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Role;
-                    return session.ReExCompaniesHouseSession?.IsPartnership == true
+                    return session.IsOrganisationAPartnership == true
                         ? View("ApprovedPersonPartnershipRole", viewModel)
                         : View(viewModel);
                 }
             }
 
-            return session.ReExCompaniesHouseSession?.IsPartnership == true
+            return session.IsOrganisationAPartnership == true
                 ? View("ApprovedPersonPartnershipRole", viewModel)
                 : View(viewModel);
         }
@@ -115,7 +115,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                return session.ReExCompaniesHouseSession?.IsPartnership == true
+                return session.IsOrganisationAPartnership == true
                     ? View("ApprovedPersonPartnershipRole", model)
                     : View(model);
             }
@@ -280,7 +280,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.YouAreApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return session.ReExCompaniesHouseSession?.IsPartnership == true
+            return session.IsOrganisationAPartnership == true
                 ? View("LimitedPartnershipYouAreApprovedPerson")
                 : View();
         }

@@ -32,9 +32,9 @@ public class LimitedPartnershipRoleTests : LimitedPartnershipTestBase
                 PagePath.LimitedPartnershipRole,
                 PagePath.AddAnApprovedPerson
             },
+            IsOrganisationAPartnership = true,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
-                IsPartnership = true,
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
