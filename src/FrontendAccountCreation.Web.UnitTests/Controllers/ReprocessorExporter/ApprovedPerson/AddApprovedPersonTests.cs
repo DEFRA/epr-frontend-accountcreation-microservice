@@ -155,7 +155,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsIneligible = true
+            IsInEligibleToBeApprovedPerson = true
         };
 
         // Act
@@ -174,7 +174,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsIneligible = false
+            IsInEligibleToBeApprovedPerson = false
         };
 
         // Act
@@ -193,7 +193,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _orgSessionMock.IsOrganisationAPartnership = false;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsIneligible = true
+            IsInEligibleToBeApprovedPerson = true
         };
 
         // Act
@@ -212,7 +212,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _orgSessionMock.IsOrganisationAPartnership = false;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsIneligible = false
+            IsInEligibleToBeApprovedPerson = false
         };
 
         // Act
@@ -235,7 +235,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             IsOrganisationAPartnership = true,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
-                IsIneligible = false
+                IsInEligibleToBeApprovedPerson = false
             }
         };
 

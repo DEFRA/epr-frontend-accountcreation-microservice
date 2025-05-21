@@ -360,7 +360,7 @@ public class OrganisationController : Controller
             session.ReExCompaniesHouseSession = companiesHouseSession;
         }
         session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
-        session.ReExCompaniesHouseSession.IsIneligible = model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
+        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
        
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
                 PagePath.AddAnApprovedPerson);
