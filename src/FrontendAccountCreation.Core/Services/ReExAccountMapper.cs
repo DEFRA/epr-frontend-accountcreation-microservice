@@ -25,14 +25,36 @@ public class ReExAccountMapper : IReExAccountMapper
     {
         return new ReExOrganisationModel()
         {
-            CompanyName = reExOrganisationSession.ReExCompaniesHouseSession.Company.Name,
-            CompaniesHouseNumber = reExOrganisationSession.ReExCompaniesHouseSession.Company.CompaniesHouseNumber,
-            CompanyAddress = GetCompanyAddress(reExOrganisationSession.ReExCompaniesHouseSession.Company.BusinessAddress),
-            ValidatedWithCompaniesHouse = reExOrganisationSession.ReExCompaniesHouseSession.Company.BusinessAddress is not null,
-            OrganisationType = reExOrganisationSession.OrganisationType,
+            OrganisationId = reExOrganisationSession.ReExCompaniesHouseSession.Company?.OrganisationId ?? null,
+            OrganisationType = reExOrganisationSession.OrganisationType?.ToString(),
+            RoleInOrganisation = reExOrganisationSession.ReExCompaniesHouseSession.RoleInOrganisation?.ToString() ?? null,
+            CompanyName = reExOrganisationSession.ReExCompaniesHouseSession.Company?.Name,
+            CompaniesHouseNumber = reExOrganisationSession.ReExCompaniesHouseSession.Company?.CompaniesHouseNumber,
+            CompanyAddress = GetCompanyAddress(reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress),
+            ValidatedWithCompaniesHouse = reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress is not null,            
             Nation = reExOrganisationSession.UkNation ?? Nation.NotSet,
-            OrganisationId = reExOrganisationSession.ReExCompaniesHouseSession.Company.OrganisationId
+            InvitedApprovedPersons = GetTeamMembersModel(reExOrganisationSession.ReExCompaniesHouseSession.TeamMembers) 
         };
+    }
+
+    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(IEnumerable<ReExCompanyTeamMember> teamMembers)
+    {
+        List<ReExInvitedApprovedPerson> teamMemberModels = [];
+        
+        foreach (var member in teamMembers ?? [])
+        {
+            var memberModel = new ReExInvitedApprovedPerson()
+            {
+                Id = member.Id, 
+                FirstName = member.FullName, // TODO first/last name
+                Email = member.Email,   
+                Role = member.Role?.ToString() ?? null,
+                TelephoneNumber = member.TelephoneNumber
+            };
+
+            teamMemberModels.Add(memberModel);
+        }
+        return teamMemberModels;
     }
 
     /// <summary>

@@ -5,7 +5,14 @@ namespace FrontendAccountCreation.Core.Services.FacadeModels;
 
 public class ReExOrganisationModel
 {
-    public OrganisationType? OrganisationType { get; set; }
+    public string? OrganisationId { get; set; }
+
+    public string? OrganisationType { get; set; }
+
+    /// <summary>
+    /// Role can be Director, CompanySecretary, Partner or Member
+    /// </summary>
+    public string? RoleInOrganisation { get; set; }
 
     public string? CompaniesHouseNumber { get; set; }
 
@@ -18,5 +25,8 @@ public class ReExOrganisationModel
 
     public Nation? Nation { get; set; }
 
-    public string OrganisationId { get; set; }
+    /// <summary>
+    /// Approved persons information related to names/emails
+    /// </summary>
+    public List<ReExInvitedApprovedPerson?> InvitedApprovedPersons { get; set; }
 }

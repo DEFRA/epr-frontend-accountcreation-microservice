@@ -46,7 +46,10 @@ namespace FrontendAccountCreation.Core.UnitTests
         }
 
         [TestMethod]
-        public void CreateReExOrganisationModel_Returns_ValidModel_FromOrganisationSession()
+        [DataRow(null, null, null, null)]
+        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.Director, "Director", "Director")]
+        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.CompanySecretary, "Director", "CompanySecretary")]
+        public void CreateReExOrganisationModel_Returns_ValidModel_FromOrganisationSession(RoleInOrganisation? roleInOrg, ReExTeamMemberRole? teamMemberRole, string? expectedRole, string? expectedTeamMember)
         {
             // Arrange
             var orgSession = new OrganisationSession
@@ -72,7 +75,23 @@ namespace FrontendAccountCreation.Core.UnitTests
                             County = "London",
                             Country = "England"
                         }
-                    }
+                    },
+                    TeamMembers =
+                    [
+                        new() {
+                            FullName = "John Smith",
+                            Role = teamMemberRole,
+                            Email = "john.smith@tester.com",
+                            TelephoneNumber = "07880809087"
+                        },
+                        new() {
+                            FullName = "Jill Handerson",
+                            Role = ReExTeamMemberRole.CompanySecretary,
+                            Email = "jill.henderson.smith@tester.com",
+                            TelephoneNumber = "07880809088"
+                        }
+                    ],
+                    RoleInOrganisation = roleInOrg
                 },
                 UkNation = Nation.England                
             };
@@ -82,13 +101,31 @@ namespace FrontendAccountCreation.Core.UnitTests
 
             // Assert
             result.Should().NotBeNull();
+            result.RoleInOrganisation.Should().Be(expectedRole);
             result.CompanyName.Should().Be("ReEx Test Ltd");
             result.CompaniesHouseNumber.Should().Be("12345678");
             result.CompanyAddress.BuildingName.Should().Be("ReEx House");
             result.CompanyAddress.Street.Should().Be("High street");
             result.Nation.Should().Be(Nation.England);
             result.ValidatedWithCompaniesHouse.Should().Be(true);
-            result.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");
+            result.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");            
+           
+            // Assert collection
+            result.InvitedApprovedPersons.Should().NotBeNull();
+            result.InvitedApprovedPersons.Should().HaveCount(2);
+            result.InvitedApprovedPersons.Should().SatisfyRespectively(
+                first =>
+                {
+                    first.FullName.Should().Be("John Smith");
+                    first.Role.Should().Be(expectedTeamMember);
+                    first.Email.Should().NotBeNullOrWhiteSpace();
+                },
+                second =>
+                {
+                    second.FullName.Should().Be("Jill Handerson");
+                    second.Role.Should().Be("CompanySecretary");
+                    second.Email.Should().NotBeNullOrWhiteSpace();
+                });
         }
 
         [TestMethod]
@@ -117,6 +154,8 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.CompanyAddress.Should().BeNull();
             result.ValidatedWithCompaniesHouse.Should().Be(false);
             result.Nation.Should().Be(Nation.NotSet);
+            result.InvitedApprovedPersons.Should().NotBeNull();
+            result.InvitedApprovedPersons.Should().HaveCount(0);
         }
     }
 }
