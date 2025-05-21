@@ -120,7 +120,7 @@
   <data name="Success.Title" xml:space="preserve">
     <value>Organistion added success</value>
   </data>
-  <data name="Success.Success" xml:space="preserve">
+  <data name="Success.SuccessEnrolOrganisation" xml:space="preserve">
     <value>Success</value>
   </data>
   <data name="Success.AddedOrganisation" xml:space="preserve">
