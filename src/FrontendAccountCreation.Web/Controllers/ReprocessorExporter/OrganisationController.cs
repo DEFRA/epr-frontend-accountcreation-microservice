@@ -28,8 +28,8 @@ public class OrganisationController : Controller
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
-    private readonly ILogger<OrganisationController> _logger;    
-    private readonly ExternalUrlsOptions _urlOptions;    
+    private readonly ILogger<OrganisationController> _logger;
+    private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
     private readonly ServiceKeysOptions _serviceKeyOptions;
 
@@ -100,7 +100,7 @@ public class OrganisationController : Controller
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
         if (session.IsTheOrganisationCharity.Value)
-        {           
+        {
             return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
         else
@@ -140,7 +140,7 @@ public class OrganisationController : Controller
         {
             Journey = [PagePath.RegisteredWithCompaniesHouse]
         };
-        
+
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.RegisteredWithCompaniesHouse);
@@ -312,7 +312,7 @@ public class OrganisationController : Controller
             SetBackLink(session, PagePath.IsPartnership);
             return View(model);
         }
-                   
+
         session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
         if (session.IsOrganisationAPartnership == true)
@@ -598,12 +598,16 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.DeclarationContinue)] // to do: need to call the required Path here!
+    [Route(PagePath.DeclarationContinue)]
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue,
-            PagePath.Success);
+        
+        // Post related data
+        var reExOrganisation = _reExAccountMapper.CreateReExOrganisationModel(session);
+        await _facadeService.PostReprocessorExporterCreateOrganisationAsync(reExOrganisation, _serviceKeyOptions.ReprocessorExporter);
+
+        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue, PagePath.Success);
     }
 
     [HttpGet]

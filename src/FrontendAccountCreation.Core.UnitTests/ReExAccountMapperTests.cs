@@ -79,13 +79,15 @@ namespace FrontendAccountCreation.Core.UnitTests
                     TeamMembers =
                     [
                         new() {
-                            FullName = "John Smith",
+                            FirstName = "John",
+                            LastName = "Smith",
                             Role = teamMemberRole,
                             Email = "john.smith@tester.com",
                             TelephoneNumber = "07880809087"
                         },
                         new() {
-                            FullName = "Jill Handerson",
+                            FirstName = "Jill",
+                            LastName = "Handerson",
                             Role = ReExTeamMemberRole.CompanySecretary,
                             Email = "jill.henderson.smith@tester.com",
                             TelephoneNumber = "07880809088"
@@ -101,14 +103,14 @@ namespace FrontendAccountCreation.Core.UnitTests
 
             // Assert
             result.Should().NotBeNull();
-            result.RoleInOrganisation.Should().Be(expectedRole);
-            result.CompanyName.Should().Be("ReEx Test Ltd");
-            result.CompaniesHouseNumber.Should().Be("12345678");
-            result.CompanyAddress.BuildingName.Should().Be("ReEx House");
-            result.CompanyAddress.Street.Should().Be("High street");
-            result.Nation.Should().Be(Nation.England);
-            result.ValidatedWithCompaniesHouse.Should().Be(true);
-            result.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");            
+            result.UserRoleInOrganisation.Should().Be(expectedRole);
+            result.Company.CompanyName.Should().Be("ReEx Test Ltd");
+            result.Company.CompaniesHouseNumber.Should().Be("12345678");
+            result.Company.CompanyRegisteredAddress.BuildingName.Should().Be("ReEx House");
+            result.Company.CompanyRegisteredAddress.Street.Should().Be("High street");
+            result.Company.Nation.Should().Be(Nation.England);
+            result.Company.ValidatedWithCompaniesHouse.Should().Be(true);
+            result.Company.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");            
            
             // Assert collection
             result.InvitedApprovedPersons.Should().NotBeNull();
@@ -116,13 +118,15 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.InvitedApprovedPersons.Should().SatisfyRespectively(
                 first =>
                 {
-                    first.FullName.Should().Be("John Smith");
+                    first.FirstName.Should().Be("John");
+                    first.LastName.Should().Be("Smith");
                     first.Role.Should().Be(expectedTeamMember);
                     first.Email.Should().NotBeNullOrWhiteSpace();
                 },
                 second =>
                 {
-                    second.FullName.Should().Be("Jill Handerson");
+                    second.FirstName.Should().Be("Jill");
+                    second.LastName.Should().Be("Handerson");
                     second.Role.Should().Be("CompanySecretary");
                     second.Email.Should().NotBeNullOrWhiteSpace();
                 });
@@ -151,9 +155,9 @@ namespace FrontendAccountCreation.Core.UnitTests
 
             // Assert
             result.Should().NotBeNull();
-            result.CompanyAddress.Should().BeNull();
-            result.ValidatedWithCompaniesHouse.Should().Be(false);
-            result.Nation.Should().Be(Nation.NotSet);
+            result.Company.CompanyRegisteredAddress.Should().BeNull();
+            result.Company.ValidatedWithCompaniesHouse.Should().Be(false);
+            result.Company.Nation.Should().Be(Nation.NotSet);
             result.InvitedApprovedPersons.Should().NotBeNull();
             result.InvitedApprovedPersons.Should().HaveCount(0);
         }

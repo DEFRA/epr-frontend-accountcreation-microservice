@@ -8,6 +8,7 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -72,24 +73,27 @@ public class DeclarationTests : OrganisationTestBase
 
         var mapperObj = new ReExOrganisationModel
         {
-            CompanyName = "ReEx Test Ltd",
-            CompaniesHouseNumber = "12345678",
-            OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
-            CompanyAddress = new AddressModel
+            Company = new ReExCompanyModel()
             {
-                BuildingName = "ReEx House",
-                BuildingNumber = "14",
-                Street = "High street",
-                Town = "Lodnon",
-                Postcode = "E10 6PN",
-                Locality = "XYZ",
-                DependentLocality = "ABC",
-                County = "London",
-                Country = "England"
-            },
-            Nation = Nation.England,
-            OrganisationType = OrganisationType.CompaniesHouseCompany,
-            ValidatedWithCompaniesHouse = true
+                CompanyName = "ReEx Test Ltd",
+                CompaniesHouseNumber = "12345678",
+                OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
+                CompanyRegisteredAddress = new AddressModel
+                {
+                    BuildingName = "ReEx House",
+                    BuildingNumber = "14",
+                    Street = "High street",
+                    Town = "Lodnon",
+                    Postcode = "E10 6PN",
+                    Locality = "XYZ",
+                    DependentLocality = "ABC",
+                    County = "London",
+                    Country = "England"
+                },
+                Nation = Nation.England,
+                OrganisationType = OrganisationType.CompaniesHouseCompany.ToString(),
+                ValidatedWithCompaniesHouse = true
+            }
         };
 
         _reExAccountMapperMock.Setup(x => x.CreateReExOrganisationModel(orgSession))
@@ -101,13 +105,16 @@ public class DeclarationTests : OrganisationTestBase
         // Assert
         result.Should().NotBeNull();
         result.Status.Should().Be(TaskStatus.RanToCompletion);
-        okResult.StatusCode.Should().Be(StatusCodes.Status200OK);
+
+        result.Result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result.Result;
+        redirectResult.ActionName.Should().Be(nameof(OrganisationController.Success));
 
         _facadeServiceMock.Verify(f => f.PostReprocessorExporterCreateOrganisationAsync(
             It.Is<ReExOrganisationModel>(x =>
-                x.OrganisationType == OrganisationType.CompaniesHouseCompany
-                && x.CompaniesHouseNumber == "12345678"
-                && x.CompanyName == "ReEx Test Ltd"
-                && x.Nation == Nation.England), "Re-Ex"), Times.Once);
+                x.Company.OrganisationType == OrganisationType.CompaniesHouseCompany.ToString()
+                && x.Company.CompaniesHouseNumber == "12345678"
+                && x.Company.CompanyName == "ReEx Test Ltd"
+                && x.Company.Nation == Nation.England), "Re-Ex"), Times.Once);
     }
 }
