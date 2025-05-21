@@ -121,4 +121,39 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
 
         redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.LimitedPartnershipRole));
     }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartners_Get_WhenPartnershipIsNull_ReturnsEmptyModel()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartners((Guid?)null);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as List<ReExLimitedPartnershipPersonOrCompany>;
+        model.Should().NotBeNull();
+        model.Should().BeEmpty(); // Model is empty as Partnership is null
+    }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartners_Get_WhenLimitedPartnershipIsNull_ReturnsEmptyModel()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership = null;
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartners((Guid?)null);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as List<ReExLimitedPartnershipPersonOrCompany>;
+        model.Should().NotBeNull();
+        model.Should().BeEmpty(); // Model is empty as LimitedPartnership is null
+    }
+
 }
