@@ -46,6 +46,9 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     [TestMethod]
     public async Task NamesOfPartners_Get_WhenSessionIsEmpty_ReturnsViewWithNewEmptyPartner()
     {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership = null;
+
         // Act
         var result = await _systemUnderTest.NamesOfPartners();
 
@@ -58,6 +61,9 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         viewModel.Partners[0].Id.Should().NotBeEmpty();
         viewModel.Partners[0].PersonName.Should().BeNull();
         viewModel.Partners[0].CompanyName.Should().BeNull();
+
+        viewModel.ExpectsCompanyPartners.Should().BeTrue();
+        viewModel.ExpectsIndividualPartners.Should().BeTrue();
     }
 
     [TestMethod]
