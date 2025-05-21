@@ -130,6 +130,26 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
+    public async Task PartnershipType_Get_WithLimitedLiabilityPartnership_ReturnsViewWithCorrectType()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = new ReExPartnership
+        {
+            IsLimitedLiabilityPartnership = true
+        };
+
+        // Act
+        var result = await _systemUnderTest.PartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as PartnershipTypeRequestViewModel;
+        model.Should().NotBeNull();
+        model!.TypeOfPartnership.Should().Be(Core.Sessions.PartnershipType.LimitedLiabilityPartnership);
+    }
+
+    [TestMethod]
     public async Task PartnershipType_Post_WithInvalidModel_ReturnsViewWithModel()
     {
         // Arrange
