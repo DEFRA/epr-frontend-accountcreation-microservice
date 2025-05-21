@@ -78,10 +78,10 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task PartnershipType_Get_WhenIsPartnershipIsNull_ReturnsViewWithNullPartnershipType()
+    public async Task PartnershipType_Get_WhenPartnershipIsNull_ReturnsViewWithNullPartnershipType()
     {
         // Arrange
-        _orgSessionMock.IsOrganisationAPartnership = null;
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
 
         // Act
         var result = await _systemUnderTest.PartnershipType();
@@ -92,23 +92,6 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         var model = viewResult.Model as PartnershipTypeRequestViewModel;
         model.Should().NotBeNull();
         model!.TypeOfPartnership.Should().BeNull();
-    }
-
-    [TestMethod]
-    public async Task PartnershipType_Get_WithExistingNonPartnership_ReturnsViewWithLimitedLiability()
-    {
-        // Arrange
-        _orgSessionMock.IsOrganisationAPartnership = false;
-
-        // Act
-        var result = await _systemUnderTest.PartnershipType();
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        var model = viewResult.Model as PartnershipTypeRequestViewModel;
-        model.Should().NotBeNull();
-        model!.TypeOfPartnership.Should().Be(Core.Sessions.PartnershipType.LimitedLiabilityPartnership);
     }
 
     [TestMethod]
@@ -209,7 +192,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.IsOrganisationAPartnership == false
+                s.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership == true
             )),
             Times.Once);
     }
@@ -246,7 +229,6 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.IsOrganisationAPartnership == true &&
                 s.ReExCompaniesHouseSession.Partnership != null &&
                 s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership == true
             )),
