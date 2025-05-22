@@ -286,6 +286,24 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 : View();
         }
 
+        [HttpPost]
+        [Route(PagePath.YouAreApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
+        public async Task<IActionResult> YouAreApprovedPerson(bool inviteApprovedPerson)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            var nextPage = inviteApprovedPerson
+                ? PagePath.TeamMemberRoleInOrganisation
+                : PagePath.CheckYourDetails;
+
+            var nextAction = inviteApprovedPerson
+                ? nameof(TeamMemberRoleInOrganisation)
+                : nameof(CheckYourDetails);
+
+            return await SaveSessionAndRedirect(session, nextAction, PagePath.YouAreApprovedPerson, nextPage);
+        }
+
         [HttpGet]
         [Route(PagePath.CheckYourDetails)]
         public async Task<IActionResult> CheckYourDetails()

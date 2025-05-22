@@ -30,9 +30,9 @@
                     </li>
                 </ul>
 
-                <form asp-controller="ApprovedPerson" method="post">
+                <form asp-controller="ApprovedPerson" asp-action="YouAreApprovedPerson" method="post">
                     <div class="govuk-button-group">
-                        <button class="govuk-button" data-module="govuk-button" asp-controller="AccountCreation" asp-action="CheckYourDetails">
+                        <button class="govuk-button" data-module="govuk-button" name="inviteApprovedPerson" value="false">
                             @SharedLocalizer["Continue"]
                         </button>
 
