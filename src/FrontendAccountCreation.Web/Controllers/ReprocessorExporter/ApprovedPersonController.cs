@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
@@ -332,9 +333,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpPost]
         [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
         [OrganisationJourneyAccess(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-        public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        public async Task<IActionResult> PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
         {
-            return RedirectToAction("CheckYourDetails", "AccountCreation");
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails),
+                PagePath.ApprovedPersonPartnershipCanNotBeInvited, PagePath.CheckYourDetails);
         }
 
         [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
