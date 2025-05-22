@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
@@ -29,7 +30,24 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
             }
             else if (!sessionValue.Journey.Contains(attribute.PagePath))
             {
-                pageToRedirect = sessionValue.Journey[^1];
+                if (attribute.PagePath == PagePath.TeamMemberRoleInOrganisation)
+                {
+                    var index = sessionValue.Journey.FindIndex(x => x == attribute.PagePath);
+                    if (index != -1)
+                    {
+                        pageToRedirect = sessionValue.Journey[^1];
+                    }
+                    else
+                    {
+                        sessionValue.Journey.AddIfNotExists(PagePath.TeamMemberRoleInOrganisation);
+                        await sessionManager.SaveSessionAsync(httpContext.Session, sessionValue);
+                        pageToRedirect = PagePath.TeamMemberRoleInOrganisation;
+                    }
+                }
+                else
+                {
+                    pageToRedirect = sessionValue.Journey[^1];
+                }
             }
 
             if (!string.IsNullOrEmpty(pageToRedirect))

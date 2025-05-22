@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
@@ -173,6 +174,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     PagePath.TeamMembersCheckInvitationDetails);
             }
 
+            companiesHouseSession.TeamMembers = members;
+            session.ReExCompaniesHouseSession = companiesHouseSession;
+
+            if (isExistingMember)
+            {
+                return await SaveSessionAndRedirect(
+                    session,
+                    nameof(TeamMembersCheckInvitationDetails),
+                    $"{PagePath.TeamMemberRoleInOrganisation}?id={queryStringId}",
+                    PagePath.TeamMembersCheckInvitationDetails);
+            }
+
             return await SaveSessionAndRedirect(
                 session,
                 nameof(TeamMemberDetails),
@@ -279,7 +292,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
             return session.IsOrganisationAPartnership == true
                 ? View("LimitedPartnershipYouAreApprovedPerson")
                 : View();

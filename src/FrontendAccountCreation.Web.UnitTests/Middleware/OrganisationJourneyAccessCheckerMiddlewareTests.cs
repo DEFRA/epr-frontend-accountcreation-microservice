@@ -106,6 +106,46 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
         _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
     }
 
+    [TestMethod]
+    public async Task GivenTeamMemberRolePage_NotYetInJourney_AddsItAndRedirectsToIt()
+    {
+        // Arrange
+        const string targetPage = PagePath.TeamMemberRoleInOrganisation;
+        var session = new OrganisationSession { Journey = new List<string> { PagePath.RegisteredAsCharity } };
+
+        SetupEndpointMock(new OrganisationJourneyAccessAttribute(targetPage));
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
+
+        // Assert
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.Is<OrganisationSession>(s =>
+            s.Journey.Contains(targetPage)
+        )), Times.Once);
+
+        _httpResponseMock.Verify(x => x.Redirect(targetPage), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task GivenTeamMemberRolePage_AlreadyInJourney_DoesNotRedirect()
+    {
+        // Arrange
+        const string targetPage = PagePath.TeamMemberRoleInOrganisation;
+        var journey = new List<string> { PagePath.RegisteredAsCharity, targetPage };
+        var session = new OrganisationSession { Journey = journey };
+
+        SetupEndpointMock(new OrganisationJourneyAccessAttribute(targetPage));
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
+
+        // Assert
+        _httpResponseMock.Verify(x => x.Redirect(It.IsAny<string>()), Times.Never);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Never);
+    }
+
     private void SetupEndpointMock(params object[] attributes)
     {
         var endpoint = new Endpoint(null, new EndpointMetadataCollection(attributes), null);
