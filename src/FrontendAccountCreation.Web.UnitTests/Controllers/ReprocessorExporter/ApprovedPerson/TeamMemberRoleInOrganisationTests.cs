@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -522,5 +521,115 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         viewResult.ViewName.Should().Be("ApprovedPersonPartnershipRole");
         viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
         ((TeamMemberRoleInOrganisationViewModel)viewResult.Model!).RoleInOrganisation.Should().Be(role);
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Get_NullId_ReturnsDefaultView()
+    {
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation((Guid?)null);
+
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_GuidEmptyId_TreatedAsNew()
+    {
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = Guid.Empty,
+            RoleInOrganisation = ReExTeamMemberRole.Director
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberDetails));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_NullTeamMembers_InitialisesAndAdds()
+    {
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = null;
+
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            RoleInOrganisation = ReExTeamMemberRole.Director
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberDetails));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_NoneRole_NullId_RedirectsToCannotBeInvited()
+    {
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = null,
+            RoleInOrganisation = ReExTeamMemberRole.None
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.PersonCanNotBeInvited));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Get_InvalidId_WithPartnership_ReturnsPartnershipView()
+    {
+        _orgSessionMock.IsOrganisationAPartnership = true;
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = new List<ReExCompanyTeamMember>();
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(Guid.NewGuid());
+
+        result.Should().BeOfType<ViewResult>();
+        ((ViewResult)result).ViewName.Should().Be("ApprovedPersonPartnershipRole");
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_InvalidModel_WhenPartnership_ReturnsPartnershipView()
+    {
+        _orgSessionMock.IsOrganisationAPartnership = true;
+
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            RoleInOrganisation = null
+        };
+        _systemUnderTest.ModelState.AddModelError("RoleInOrganisation", "Required");
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<ViewResult>();
+        ((ViewResult)result).ViewName.Should().Be("ApprovedPersonPartnershipRole");
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_DuplicateIds_OnlyFirstUpdated()
+    {
+        var duplicateId = Guid.NewGuid();
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = new List<ReExCompanyTeamMember>
+    {
+        new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.Director },
+        new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.CompanySecretary }
+    };
+
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = duplicateId,
+            RoleInOrganisation = ReExTeamMemberRole.CompanySecretary
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[0].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[1].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
     }
 }

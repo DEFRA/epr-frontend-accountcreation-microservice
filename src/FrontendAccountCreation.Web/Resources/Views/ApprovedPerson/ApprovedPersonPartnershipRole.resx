@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApprovedPersonPartnershipRole.ErrorMessage" xml:space="preserve">
-    <value>[Welsh]Please select an option</value>
+    <value />
   </data>
   <data name="ApprovedPersonPartnershipRole.Title" xml:space="preserve">
-    <value>[Welsh]Partnership approved person role</value>
+    <value />
   </data>
   <data name="ApprovedPersonPartnershipRole.WhatIsTheirRole" xml:space="preserve">
-    <value>[Welsh]What role do they have within the limited partnership, as registered on Companies House?</value>
+    <value />
   </data>
   <data name="TeamMemberRoleInOrganisation.ErrorMessage" xml:space="preserve">
-    <value>[Welsh]Select their role in the organisation</value>
+    <value />
   </data>
 </root>

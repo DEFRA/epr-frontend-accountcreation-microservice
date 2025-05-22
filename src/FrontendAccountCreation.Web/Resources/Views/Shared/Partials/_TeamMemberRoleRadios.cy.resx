@@ -117,16 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApprovedPersonPartnershipRole.ErrorMessage" xml:space="preserve">
-    <value>[Welsh]Please select an option</value>
+  <data name="ApprovedPersonPartnershipRole.CompanySecretary" xml:space="preserve">
+    <value>[Welsh]Company Secretary within an organisation partner</value>
   </data>
-  <data name="ApprovedPersonPartnershipRole.Title" xml:space="preserve">
-    <value>[Welsh]Partnership approved person role</value>
+  <data name="ApprovedPersonPartnershipRole.Director" xml:space="preserve">
+    <value>[Welsh]Director within an organisation partner</value>
   </data>
-  <data name="ApprovedPersonPartnershipRole.WhatIsTheirRole" xml:space="preserve">
-    <value>[Welsh]What role do they have within the limited partnership, as registered on Companies House?</value>
+  <data name="ApprovedPersonPartnershipRole.NoneOfTheAbove" xml:space="preserve">
+    <value>[Welsh]None Of The Above</value>
   </data>
-  <data name="TeamMemberRoleInOrganisation.ErrorMessage" xml:space="preserve">
-    <value>[Welsh]Select their role in the organisation</value>
+  <data name="ApprovedPersonPartnershipRole.IndividualPartner" xml:space="preserve">
+    <value>[Welsh]Individual Partner</value>
+  </data>
+  <data name="ApprovedPersonPartnershipRole.Or" xml:space="preserve">
+    <value>[Welsh]Or</value>
   </data>
 </root>
