@@ -41,7 +41,7 @@
     <value>This means any corporate partners which are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.Hint_Both" xml:space="preserve">
-    <value>This means any comrporate entity partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
+    <value>This means any comrporate partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.CompanyName" xml:space="preserve">
     <value>Corporate partner name</value>
