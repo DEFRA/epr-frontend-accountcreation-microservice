@@ -168,4 +168,19 @@
   <data name="Director" xml:space="preserve">
     <value>Cyfarwyddwr</value>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>[Welsh]Remove</value>
+  </data>
+  <data name="IndividualPartner" xml:space="preserve">
+    <value>Partner unigol</value>
+  </data>
+  <data name="NoneOfTheAbove" xml:space="preserve">
+    <value>Dim un o’r uchod</value>
+  </data>
+  <data name="PartnerCompanySecretary" xml:space="preserve">
+    <value>Ysgrifennydd y cwmni</value>
+  </data>
+  <data name="PartnerDirector" xml:space="preserve">
+    <value>Cyfarwyddwr</value>
+  </data>
 </root>

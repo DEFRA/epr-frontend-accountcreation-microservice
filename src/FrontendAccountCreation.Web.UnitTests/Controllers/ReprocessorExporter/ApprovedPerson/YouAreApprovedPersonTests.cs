@@ -1,14 +1,11 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using global::FrontendAccountCreation.Web.Constants;
-using global::FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
 [TestClass]
 public class YouAreApprovedPersonTests : ApprovedPersonTestBase
@@ -47,7 +44,7 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
 
         // Act
         var result = _systemUnderTest.CheckYourDetails();
-        
+
         // Assert
         result.Should().NotBeNull();
         result.Status.Should().Be(TaskStatus.RanToCompletion);
@@ -55,7 +52,7 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
 
     // TO DO following & modify - once Tungsten has merged
     [TestMethod]
-    [DataRow (null, null)]
+    [DataRow(null, null)]
     [DataRow("acfa4773-20f0-4cf4-ae03-b36d96a8589a", "acfa4773-20f0-4cf4-ae03-b36d96a8589a")]
     public async Task InviteLink_Calls_TeamMemberRoleInOrganisation_And_Redirects_ToDesired_View(string? id, string teamMemberId)
     {
@@ -77,7 +74,7 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
             .ReturnsAsync(orgSessionMock)
             .Verifiable();
 
-        Guid? queryId = !string.IsNullOrWhiteSpace(id) ? Guid.Parse(id) : (Guid?)null;
+        Guid? queryId = !string.IsNullOrWhiteSpace(id) ? Guid.Parse(id) : null;
 
         // Act
         var result = _systemUnderTest.TeamMemberRoleInOrganisation(queryId);

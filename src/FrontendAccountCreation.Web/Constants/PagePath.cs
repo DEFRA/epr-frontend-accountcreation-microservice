@@ -42,14 +42,22 @@ public static class PagePath
     public const string DeclarationContinue = "declaration-continue";
     public const string ToDoPath = "to-do-path"; // To DO: delete or replace with required one
 
-    //Approve person paths
+    // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
     public const string TeamMemberRoleInOrganisation = "check-companies-house-role";
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
+    public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-cannot-be-invited";
 
-    // Non journey paths
-    public const string Accessibility = "accessibility";
+    // Limited partnership paths
+    public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
+    public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-corporate-individual-partner-names";
+    public const string PartnershipType= "partnership-type";
+    public const string LimitedPartnershipType = "limited-partnership-type";
+    public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
+    public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
+    // Non journey paths 
+    public const string Accessibility = "accessibility";    
     public const string SignedOut = "signed-out";
     public const string Error = "error";
     public const string AError = "auth-error";
