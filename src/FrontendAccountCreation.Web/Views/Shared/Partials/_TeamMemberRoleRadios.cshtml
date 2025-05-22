@@ -1,7 +1,6 @@
 ﻿@using FrontendAccountCreation.Core.Sessions.ReEx
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.TeamMemberRoleInOrganisationViewModel
 @inject IViewLocalizer Localizer
-@inject IViewLocalizer SharedLocalizer
 
 <div class="govuk-radios" data-module="govuk-radios">
     <div class="govuk-radios__item">
@@ -13,7 +12,7 @@
                gov-for="RoleInOrganisation"
                gov-value="@nameof(ReExTeamMemberRole.IndividualPartner)"
                gov-first-option="true">
-            @SharedLocalizer["IndividualPartner"]
+            @Localizer["ApprovedPersonPartnershipRole.IndividualPartner"]
         </label>
     </div>
     <div class="govuk-radios__item">
@@ -36,7 +35,9 @@
             @Localizer["ApprovedPersonPartnershipRole.CompanySecretary"]
         </label>
     </div>
-    <div class="govuk-radios__divider">@SharedLocalizer["Or"]</div>
+    <div class="govuk-radios__divider">
+        @Localizer["ApprovedPersonPartnershipRole.Or"]
+    </div>
     <div class="govuk-radios__item">
         <input class="govuk-radios__input" type="radio" id="rdoNone"
                gov-for="RoleInOrganisation"
@@ -44,7 +45,7 @@
         <label class="govuk-label govuk-radios__label"
                gov-for="RoleInOrganisation"
                gov-value="@nameof(ReExTeamMemberRole.None)">
-            @SharedLocalizer["NoneOfTheAbove"]
+            @Localizer["ApprovedPersonPartnershipRole.NoneOfTheAbove"]
         </label>
     </div>
-</div>s
+</div>
