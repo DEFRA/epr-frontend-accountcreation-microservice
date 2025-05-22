@@ -296,7 +296,6 @@ public partial class LimitedPartnershipController : Controller
         else
         {
             var partnership = session.ReExCompaniesHouseSession.Partnership;
-            partnership.IsLimitedPartnership = true;
 
             if (partnership.LimitedPartnership == null)
             {
