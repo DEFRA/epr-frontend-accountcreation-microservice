@@ -83,4 +83,78 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
         result.Should().NotBeNull();
         _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
+
+    [TestMethod]
+    public async Task Get_YouAreApprovedPerson_WhenOrganisationIsPartnership_Returns_LimitedPartnershipView()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().Be("LimitedPartnershipYouAreApprovedPerson");
+    }
+
+    [TestMethod]
+    public async Task Get_YouAreApprovedPerson_WhenOrganisationIsNotPartnership_Returns_DefaultView()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().BeNull(); // default view
+    }
+
+    [TestMethod]
+    public async Task Post_YouAreApprovedPerson_InviteApprovedPersonTrue_RedirectsToTeamMemberRole()
+    {
+        // Arrange
+        var session = new OrganisationSession();
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson(inviteApprovedPerson: true);
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+    }
+
+    [TestMethod]
+    public async Task Post_YouAreApprovedPerson_InviteApprovedPersonFalse_RedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var session = new OrganisationSession();
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson(inviteApprovedPerson: false);
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
+    }
 }
