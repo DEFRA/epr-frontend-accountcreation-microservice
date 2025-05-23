@@ -1,12 +1,15 @@
 ﻿using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.Interfaces;
-using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using Microsoft.AspNetCore.Mvc;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation;
+using FrontendAccountCreation.Web;
+using FrontendAccountCreation.Web.Controllers;
 
-namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.Controllers;
+
+namespace FrontendAccountCreation.Web.Controllers;
 
 public abstract class ControllerBase<T> : Controller where T : ILocalSession, new()
 {
@@ -29,8 +32,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         }
     }
 
-    public async Task<RedirectToActionResult> SaveSessionAndRedirect(
-        T session,
+    public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
         string? nextPagePath)
@@ -41,8 +43,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         return RedirectToAction(actionName);
     }
 
-    public async Task<RedirectToActionResult> SaveSessionAndRedirect(
-        T session,
+    public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string controllerName,
         string actionName,
         string currentPagePath,
@@ -55,18 +56,27 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         return RedirectToAction(actionName, contNameWOCont);
     }
 
+
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
         string? nextPagePath,
-        string? controllerName = null,
-        object? routeValues = null)
+        string? controllerName,
+        object? routeValues)
     {
         session.IsUserChangingDetails = false;
         await SaveSession(session, currentPagePath, nextPagePath);
 
-        return !string.IsNullOrWhiteSpace(controllerName) ? RedirectToAction(actionName, controllerName, routeValues) : RedirectToAction(actionName, routeValues);
+        if (!string.IsNullOrWhiteSpace(controllerName))
+        {
+            return RedirectToAction(actionName, controllerName, routeValues);
+        }
+        else
+        {
+            return RedirectToAction(actionName, routeValues);
+        }
     }
+
 
     public async Task SaveSession(T session, string currentPagePath, string? nextPagePath)
     {
