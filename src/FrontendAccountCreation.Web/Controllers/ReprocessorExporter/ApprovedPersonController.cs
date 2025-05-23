@@ -9,20 +9,19 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
     [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     [Route("re-ex/organisation")]
-    public partial class ApprovedPersonController : Controller
+    public partial class ApprovedPersonController : ControllerBase<OrganisationSession>
     {
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
 
-        public ApprovedPersonController(ISessionManager<OrganisationSession> sessionManager,
-        IOptions<ExternalUrlsOptions> urlOptions)
+        public ApprovedPersonController(
+            ISessionManager<OrganisationSession> sessionManager,
+            IOptions<ExternalUrlsOptions> urlOptions) : base(sessionManager)
         {
             _sessionManager = sessionManager;
             _urlOptions = urlOptions.Value;
@@ -337,7 +336,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.ApprovedPersonPartnershipCanNotBeInvited);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-            
+
             return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
         }
 

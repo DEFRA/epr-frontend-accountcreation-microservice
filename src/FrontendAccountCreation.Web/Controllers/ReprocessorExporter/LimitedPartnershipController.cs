@@ -1,4 +1,4 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Sessions.Interfaces;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
@@ -6,17 +6,16 @@ using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
-public partial class LimitedPartnershipController : Controller
+public partial class LimitedPartnershipController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
 
-    public LimitedPartnershipController(ISessionManager<OrganisationSession> sessionManager)
+    public LimitedPartnershipController(ISessionManager<OrganisationSession> sessionManager) : base(sessionManager)
     {
         _sessionManager = sessionManager;
     }
@@ -365,58 +364,5 @@ public partial class LimitedPartnershipController : Controller
         }
 
         return partnersSession;
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-    private void SetBackLink(OrganisationSession session, string currentPagePath)
-    {
-        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
-        {
-            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
-        }
-        else
-        {
-            ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-        }
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-        string actionName, string currentPagePath, string? nextPagePath)
-    {
-        session.IsUserChangingDetails = false;
-        await SaveSession(session, currentPagePath, nextPagePath);
-
-        return RedirectToAction(actionName);
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-    string controllerName, string actionName, string currentPagePath, string? nextPagePath)
-    {
-        session.IsUserChangingDetails = false;
-        var contNameWOCont = controllerName.Replace("Controller", string.Empty);
-        await SaveSession(session, currentPagePath, nextPagePath);
-
-        return RedirectToAction(actionName, contNameWOCont);
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-    private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
-    {
-        ClearRestOfJourney(session, currentPagePath);
-
-        session.Journey.AddIfNotExists(nextPagePath);
-
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-    }
-
-    [ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-    private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
-    {
-        var index = session.Journey.IndexOf(currentPagePath);
-
-        // this also cover if current page not found (index = -1) then it clears all pages
-        session.Journey = session.Journey.Take(index + 1).ToList();
     }
 }

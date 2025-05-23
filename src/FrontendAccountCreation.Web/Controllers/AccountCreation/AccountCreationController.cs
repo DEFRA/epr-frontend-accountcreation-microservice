@@ -25,8 +25,9 @@ using ViewModels;
 using ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text.Json;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-public class AccountCreationController : Controller
+public class AccountCreationController : ControllerBase<AccountCreationSession>
 {
     private const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
     private const string OrganisationMetaDataKey = "OrganisationMetaData";
@@ -46,7 +47,7 @@ public class AccountCreationController : Controller
         IAccountMapper accountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
         IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-        ILogger<AccountCreationController> logger)
+        ILogger<AccountCreationController> logger) : base(sessionManager)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
@@ -1221,44 +1222,6 @@ public class AccountCreationController : Controller
     public IActionResult RedirectToStart()
     {
         return RedirectToAction(nameof(RegisteredAsCharity));
-    }
-
-    private async Task<RedirectToActionResult> SaveSessionAndRedirect(AccountCreationSession session,
-        string actionName, string currentPagePath, string? nextPagePath)
-    {
-        session.IsUserChangingDetails = false;
-        await SaveSession(session, currentPagePath, nextPagePath);
-
-        return RedirectToAction(actionName);
-    }
-
-    private async Task SaveSession(AccountCreationSession session, string currentPagePath, string? nextPagePath)
-    {
-        ClearRestOfJourney(session, currentPagePath);
-
-        session.Journey.AddIfNotExists(nextPagePath);
-
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-    }
-
-    private static void ClearRestOfJourney(AccountCreationSession session, string currentPagePath)
-    {
-        var index = session.Journey.IndexOf(currentPagePath);
-
-        // this also cover if current page not found (index = -1) then it clears all pages
-        session.Journey = session.Journey.Take(index + 1).ToList();
-    }
-
-    private void SetBackLink(AccountCreationSession session, string currentPagePath)
-    {
-        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
-        {
-            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
-        }
-        else
-        {
-            ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-        }
     }
 
     private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??

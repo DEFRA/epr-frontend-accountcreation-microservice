@@ -1,9 +1,9 @@
-﻿namespace FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Sessions.Interfaces;
 
-public class AccountCreationSession
+namespace FrontendAccountCreation.Core.Sessions;
+
+public class AccountCreationSession : ILocalSession
 {
-    public List<string> Journey { get; set; } = new();
-
     public bool IsTheOrganisationCharity { get; set; }
 
     public OrganisationType? OrganisationType { get; set; }
@@ -26,9 +26,11 @@ public class AccountCreationSession
 
     public bool IsManualInputFlow => OrganisationType == Sessions.OrganisationType.NonCompaniesHouseCompany;
 
-    public bool IsUserChangingDetails { get; set; }
-    
     public bool IsApprovedUser { get; set; }
     
     public string OrganisationId { get; set; }
+
+    public bool IsUserChangingDetails { get; set; }
+    public List<string> Journey { get; set; } = new();
+
 }
