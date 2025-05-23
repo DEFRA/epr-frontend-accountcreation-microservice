@@ -55,4 +55,24 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
         // Assert
         _systemUnderTest.ViewData["BackLinkToDisplay"].ToString().Should().Be(expectedValue);
     }
+
+    [TestMethod]
+    [DataRow("", "")]
+    [DataRow("MyPage", "")]
+    [DataRow(PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipNamesOfPartners)]
+    [DataRow(PagePath.LimitedPartnershipNamesOfPartners, PagePath.LimitedPartnershipType)]
+    [DataRow(PagePath.LimitedPartnershipType, PagePath.PartnershipType)]
+    [DataRow(PagePath.PartnershipType, PagePath.IsPartnership)]
+    [DataRow(PagePath.IsPartnership, "")]
+    public void SetBackLink_When_IsUserChangingDetails_Is_False_Updates_ViewBag(string currentPagePath, string expectedValue)
+    {
+        // Arrange
+        _orgSessionMock.IsUserChangingDetails = false;
+
+        // Act
+        _systemUnderTest.SetBackLink(_orgSessionMock, currentPagePath);
+
+        // Assert
+        _systemUnderTest.ViewData["BackLinkToDisplay"].ToString().Should().Be(expectedValue);
+    }
 }
