@@ -48,6 +48,7 @@ public static class PagePath
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-cannot-be-invited";
+    public const string MemberPartnership = "member-partnership";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-entity-individual-partner-names";
