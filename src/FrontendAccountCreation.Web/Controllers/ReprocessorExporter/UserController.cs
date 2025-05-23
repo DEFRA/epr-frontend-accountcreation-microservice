@@ -5,6 +5,7 @@ using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -19,7 +20,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// </summary>
 [Route("re-ex/user")]
 [Feature(FeatureFlags.ReprocessorExporter)]
-public class UserController : Controller
+public class UserController : ControllerBase<ReExAccountCreationSession>
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
@@ -34,7 +35,7 @@ public class UserController : Controller
         IReExAccountMapper reExAccountMapper,
         IOptions<ExternalUrlsOptions> urlOptions,
         IOptions<ServiceKeysOptions> serviceKeyOptions,
-        ILogger<UserController> logger)
+        ILogger<UserController> logger) : base(sessionManager)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
@@ -169,34 +170,4 @@ public class UserController : Controller
     private string? GetUserEmail() => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ??
                                       // Remove when we migrate all environments to custom policy
                                       User.Claims.FirstOrDefault(claim => claim.Type == "emails")?.Value;
-
-    private async Task<RedirectToActionResult> SaveSessionAndRedirect(ReExAccountCreationSession session,
-        string actionName, string currentPagePath, string? nextPagePath)
-    {
-        await SaveSession(session, currentPagePath, nextPagePath);
-
-        return RedirectToAction(actionName);
-    }
-
-    private async Task SaveSession(ReExAccountCreationSession session, string currentPagePath, string? nextPagePath)
-    {
-        ClearRestOfJourney(session, currentPagePath);
-
-        session.Journey.AddIfNotExists(nextPagePath);
-
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-    }
-
-    private static void ClearRestOfJourney(ReExAccountCreationSession session, string currentPagePath)
-    {
-        var index = session.Journey.IndexOf(currentPagePath);
-
-        // this also cover if current page not found (index = -1) then it clears all pages
-        session.Journey = session.Journey.Take(index + 1).ToList();
-    }
-
-    private void SetBackLink(ReExAccountCreationSession session, string currentPagePath)
-    {
-        ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-    }
 }
