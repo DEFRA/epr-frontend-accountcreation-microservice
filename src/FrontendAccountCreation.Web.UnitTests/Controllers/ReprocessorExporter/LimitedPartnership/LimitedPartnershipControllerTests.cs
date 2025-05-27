@@ -175,12 +175,18 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task SaveSession_UpdatesSession()
+    public async Task SaveSession_UpdatessJourneyInSession()
     {
+        // Arrange
+        string currentPagePath = PagePath.LimitedPartnershipCheckNamesOfPartners;
+        string nextPath = "MyNextPage";
+
         // Act
-        await _systemUnderTest.SaveSession(_orgSessionMock, null, null);
+        await _systemUnderTest.SaveSession(_orgSessionMock, currentPagePath, nextPath);
 
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once());
+
+        _orgSessionMock.Journey.Should().ContainInOrder(currentPagePath, nextPath);
     }
 }
