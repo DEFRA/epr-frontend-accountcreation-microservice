@@ -25,7 +25,7 @@
 
                 <div class="govuk-hint">
                     @Localizer[GetLocalizer(Model.ExpectsIndividualPartners, Model.ExpectsCompanyPartners, "Hint_Individual", "Hint_Company", "Hint_Both")]
-                 </div>
+                </div>
                 <hr>
                 <br>
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
@@ -56,8 +56,9 @@
 
                                     @if (Model.ExpectsIndividualPartners)
                                     {
+                                        string personNameLabel = Model.ExpectsCompanyPartners ? "NamesOfPartners.IndividualPartnersFullName" : "NamesOfPartners.FullName";
                                         <!-- Individual partner’s full name -->
-                                        @Html.LabelFor(m => m.Partners[i].PersonName, @Localizer["NamesOfPartners.PersonName"].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
+                                        @Html.LabelFor(m => m.Partners[i].PersonName, @Localizer[personNameLabel].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
                                         @Html.EditorFor(m => m.Partners[i].PersonName, new { htmlAttributes = new { @class = "govuk-input" } })
                                     }
 
@@ -83,7 +84,7 @@
                             <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="add" type="submit">
                                 @Localizer["NamesOfPartners.AddAnotherPartner"]
                             </button>
- 
+
                             <!-- save partners -->
                             <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="save" type="submit">
                                 @SharedLocalizer["Continue"]
