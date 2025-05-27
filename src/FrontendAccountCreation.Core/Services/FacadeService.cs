@@ -54,6 +54,21 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
 
+        return new Company
+        {
+            CompaniesHouseNumber = companiesHouseNumber, //"01234567",
+            Name = "Dummy Company",
+            BusinessAddress = new Address
+            {
+                BuildingNumber = "10",
+                BuildingName = "Dummy Place",
+                Street = "Dummy Street",
+                Town = "Nowhere",
+                Postcode = "AB1 0CD"
+            },
+            AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
+        };
+
         var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
 
         if (response.StatusCode == HttpStatusCode.NoContent)
@@ -146,20 +161,18 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
 
-        var response = await _httpClient.PostAsJsonAsync($"/api/v1/reprocessor-exporter-org?serviceKey={serviceKey}", reExOrganisation);
+        var response = await _httpClient.PostAsJsonAsync($"api/v1/reprocessor-exporter-org?serviceKey={serviceKey}", reExOrganisation);
 
         if (!response.IsSuccessStatusCode)
         {
-            ProblemDetails? problemDetails = null;
+            ProblemDetails? problemDetails;
             try
             {
                 problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
             }
             catch (JsonException e)
             {
-                // if the response isn't a valid ProblemDetails, either this exception is thrown,
-                // or in some circumstances, null is returned.
-                // we handle both scenarios next
+                problemDetails = new ProblemDetails() { Detail = e.Message };
             }
 
             if (problemDetails != null)

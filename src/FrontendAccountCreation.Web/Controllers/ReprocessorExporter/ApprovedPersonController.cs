@@ -3,6 +3,7 @@ using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -47,12 +48,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
+                session.IsApprovedUser = true;
+                session.ServiceRole = ServiceRole.ApprovedPerson.GetEnumDescrption();
                 return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
             else if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
             {
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
-                return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddApprovedPerson, PagePath.CheckYourDetails);

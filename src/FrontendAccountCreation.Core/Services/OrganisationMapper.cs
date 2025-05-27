@@ -5,9 +5,10 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 
 namespace FrontendAccountCreation.Core.Services;
 
+// TO DO This might require in future or needs to be deleted
 public class OrganisationMapper : IOrganisationMapper
 {
-    private const string ApprovedPersonServiceRole = "Packaging.ApprovedPerson";
+    private const string ApprovedPersonServiceRole = "Re-Ex.ApprovedPerson";
 
     public AccountModel CreateOrganisationModel(OrganisationSession session, string email)
     {

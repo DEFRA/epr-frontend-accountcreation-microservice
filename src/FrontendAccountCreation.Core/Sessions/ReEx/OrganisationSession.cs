@@ -35,4 +35,9 @@ public class OrganisationSession
     public bool? IsTradingNameDifferent { get; set; }
 
     public bool? IsOrganisationAPartnership { get; set; }
+
+    /// <summary>
+    /// User's service role i.e. ApprovedPerson, Basic or Delegated
+    /// </summary>
+    public string? ServiceRole { get; set; }
 }

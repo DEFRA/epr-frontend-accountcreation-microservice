@@ -1,5 +1,4 @@
 using FrontendAccountCreation.Core.Addresses;
-using FrontendAccountCreation.Core.Services.Dto.User;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -27,9 +26,11 @@ public class ReExAccountMapper : IReExAccountMapper
         return new ReExOrganisationModel()
         {
             UserRoleInOrganisation = reExOrganisationSession.ReExCompaniesHouseSession.RoleInOrganisation?.ToString() ?? null,
+            ServiceRole = reExOrganisationSession.ServiceRole,
+            IsApprovedUser = reExOrganisationSession.IsApprovedUser,
             Company = new ReExCompanyModel()
             {
-                OrganisationId = reExOrganisationSession.ReExCompaniesHouseSession.Company?.OrganisationId ?? null,
+                OrganisationId = reExOrganisationSession.ReExCompaniesHouseSession.Company?.OrganisationId ?? string.Empty,
                 OrganisationType = reExOrganisationSession.OrganisationType?.ToString() ?? OrganisationType.NotSet.ToString(),
                 CompanyName = reExOrganisationSession.ReExCompaniesHouseSession.Company?.Name,
                 CompaniesHouseNumber = reExOrganisationSession.ReExCompaniesHouseSession.Company?.CompaniesHouseNumber,
