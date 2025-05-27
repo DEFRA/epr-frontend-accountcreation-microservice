@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation;
 using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Controllers;
+using FrontendAccountCreation.Web.Extensions;
 
 namespace FrontendAccountCreation.Web.Controllers;
 
@@ -48,10 +49,9 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         string? nextPagePath)
     {
         session.IsUserChangingDetails = false;
-        var contNameWOCont = controllerName.Replace("Controller", string.Empty);
         await SaveSession(session, currentPagePath, nextPagePath);
 
-        return RedirectToAction(actionName, contNameWOCont);
+        return RedirectToAction(actionName, controllerName.WithoutControllerSuffix());
     }
 
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
@@ -66,7 +66,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
 
         if (!string.IsNullOrWhiteSpace(controllerName))
         {
-            return RedirectToAction(actionName, controllerName, routeValues);
+            return RedirectToAction(actionName, controllerName.WithoutControllerSuffix(), routeValues);
         }
         else
         {
