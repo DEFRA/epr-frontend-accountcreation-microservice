@@ -54,21 +54,6 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
 
-        return new Company
-        {
-            CompaniesHouseNumber = companiesHouseNumber, //"01234567",
-            Name = "Dummy Company",
-            BusinessAddress = new Address
-            {
-                BuildingNumber = "10",
-                BuildingName = "Dummy Place",
-                Street = "Dummy Street",
-                Town = "Nowhere",
-                Postcode = "AB1 0CD"
-            },
-            AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
-        };
-
         var response = await _httpClient.GetAsync($"/api/companies-house?id={companiesHouseNumber}");
 
         if (response.StatusCode == HttpStatusCode.NoContent)
@@ -136,18 +121,16 @@ public class FacadeService : IFacadeService
             }
             catch (JsonException e)
             {
-                // if the response isn't a valid ProblemDetails, either this exception is thrown,
-                // or in some circumstances, null is returned.
-                // we handle both scenarios next
+                problemDetails = new ProblemDetails() { Detail = e.Message };
             }
 
             if (problemDetails != null)
             {
                 throw new ProblemResponseException(problemDetails, response.StatusCode);
-            }
-
-            response.EnsureSuccessStatusCode();
+            }            
         }
+
+        response.EnsureSuccessStatusCode();
     }
 
     /// <summary>
@@ -178,10 +161,9 @@ public class FacadeService : IFacadeService
             if (problemDetails != null)
             {
                 throw new ProblemResponseException(problemDetails, response.StatusCode);
-            }
-
-            response.EnsureSuccessStatusCode();
+            }            
         }
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser)

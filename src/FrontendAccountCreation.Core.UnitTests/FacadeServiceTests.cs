@@ -135,13 +135,14 @@ public class FacadeServiceTests
     public async Task GetCompanyByCompanyHouseNumber_ReturnsCompanyObject()
     {
         // Arrange
-        var companyHouseNumber = "001";
+        var companyHouseNumber = "12345678";
         var expectedResponse = new CompaniesHouseCompany
         {
             AccountExists = true,
             Organisation = new Organisation
             {
                 Name = "Test Org",
+                RegistrationNumber = "12345678",
                 RegisteredOffice = new RegisteredOfficeAddress
                 {
                     Postcode = "BT11 8NR",
@@ -170,6 +171,7 @@ public class FacadeServiceTests
 
         // Assert
         Assert.IsNotNull(response);
+        response.Should().NotBeNull();
         Assert.AreEqual(expected: expectedResponse.Organisation.Name, actual: response.Name);
         httpTestHandler.Dispose();
     }
@@ -452,7 +454,7 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
+        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
         Assert.AreEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
@@ -531,7 +533,7 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(account, ServiceKey));
+        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(account, ServiceKey));
         exception.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
 
