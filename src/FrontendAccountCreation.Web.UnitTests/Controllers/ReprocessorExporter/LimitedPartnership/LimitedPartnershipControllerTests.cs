@@ -1,9 +1,10 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
-using Moq;
 using Microsoft.AspNetCore.Http;
-using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership;
 
@@ -74,5 +75,29 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
 
         // Assert
         _systemUnderTest.ViewData["BackLinkToDisplay"].ToString().Should().Be(expectedValue);
+    }
+
+    [TestMethod]
+    public async Task SaveSessionAndRedirect_WhenGivenAction_Flags_IsUserChangingDetails_False()
+    {
+        // Arrange
+        _orgSessionMock.IsUserChangingDetails = true;
+
+        // Act
+        var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, string.Empty, string.Empty, null);
+
+        // Assert
+        _orgSessionMock.IsUserChangingDetails.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task SaveSessionAndRedirect_WhenGivenAction_Redirects()
+    {
+        // Act
+        var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, "myAction", string.Empty, null);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be("myAction");
     }
 }

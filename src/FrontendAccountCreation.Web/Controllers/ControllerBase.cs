@@ -7,15 +7,13 @@ using FrontendAccountCreation;
 using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Controllers;
 
-using FrontendAccountCreation.Web.Controllers;
-
 namespace FrontendAccountCreation.Web.Controllers;
 
 public abstract class ControllerBase<T> : Controller where T : ILocalSession, new()
 {
     private readonly ISessionManager<T> _sessionManager;
 
-    public ControllerBase(ISessionManager<T> sessionManager)
+    protected ControllerBase(ISessionManager<T> sessionManager)
     {
         _sessionManager = sessionManager;
     }
@@ -56,7 +54,6 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         return RedirectToAction(actionName, contNameWOCont);
     }
 
-
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
@@ -76,7 +73,6 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
             return RedirectToAction(actionName, routeValues);
         }
     }
-
 
     public async Task SaveSession(T session, string currentPagePath, string? nextPagePath)
     {
