@@ -5,6 +5,7 @@ using FrontendAccountCreation.Web.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Collections.Specialized;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership;
 
@@ -84,7 +85,7 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
         _orgSessionMock.IsUserChangingDetails = true;
 
         // Act
-        var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, string.Empty, string.Empty, null);
+        await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, string.Empty, string.Empty, null);
 
         // Assert
         _orgSessionMock.IsUserChangingDetails.Should().BeFalse();
@@ -99,5 +100,74 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
         // Assert
         var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
         redirectToActionResult.ActionName.Should().Be("myAction");
+        redirectToActionResult.ControllerName.Should().BeNull();
+        redirectToActionResult.RouteValues.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task SaveSessionAndRedirect_WhenGivenAction_AndController_Flags_IsUserChangingDetails_False()
+    {
+        // Arrange
+        _orgSessionMock.IsUserChangingDetails = true;
+
+        // Act
+        await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, string.Empty, string.Empty, string.Empty, null);
+
+        // Assert
+        _orgSessionMock.IsUserChangingDetails.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task SaveSessionAndRedirect_WhenGivenAction_AndController_Redirects()
+    {
+        // Act
+        var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, "herController", "myAction", string.Empty, null);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be("myAction");
+        redirectToActionResult.ControllerName.Should().Be("her");
+        redirectToActionResult.RouteValues.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task SaveSessionAndRedirect_WhenGivenAction_AndController_AndQueryString_Flags_IsUserChangingDetails_False()
+    {
+        // Arrange
+        _orgSessionMock.IsUserChangingDetails = true;
+
+        // Act
+        await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, string.Empty, string.Empty, null, null, null);
+
+        // Assert
+        _orgSessionMock.IsUserChangingDetails.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task SaveSessionAndRedirect_WhenGivenAction_AndBlankControllerr_AndQueryString_Redirects()
+    {
+        // Act
+        var querystring = new KeyValuePair<string, string>("x", "y") as object;
+        var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, "myAction", string.Empty, null, null, querystring);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be("myAction");
+        redirectToActionResult.ControllerName.Should().BeNull();
+        redirectToActionResult.RouteValues.Should().HaveCount(2);
+    }
+
+    [TestMethod]
+    public async Task SaveSessionAndRedirect_WhenGivenAction_AndControllerr_AndQueryString_Redirects()
+    {
+        // Act
+        var querystring = new KeyValuePair<string, string>("x", "y") as object;
+        var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, "myAction", string.Empty, null, "herController", querystring);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be("myAction");
+        redirectToActionResult.ControllerName.Should().Be("her");
+        redirectToActionResult.RouteValues.Should().HaveCount(2);
     }
 }

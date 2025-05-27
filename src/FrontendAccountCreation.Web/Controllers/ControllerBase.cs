@@ -54,6 +54,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         return RedirectToAction(actionName, controllerName.WithoutControllerSuffix());
     }
 
+    // Would like to get parameters in same order as above
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
