@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.ViewModels;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -20,6 +22,14 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
     public async Task Get_YouAreApprovedPerson_Returns_View()
     {
         // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession() { Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership() }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
 
         // Act
         var result = await _systemUnderTest.YouAreApprovedPerson();
@@ -27,6 +37,71 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
         // Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().BeNull(); // Default view
+    }
+
+    [TestMethod]
+    [DataRow(true, false, "LimitedLiabilityPartnership")]
+    [DataRow(false, true, "LimitedPartnership")]
+    [DataRow(true, true, "LimitedLiabilityPartnership")]
+    [DataRow(false, false, "NonPartnership")]
+    public async Task Get_YouAreApprovedPerson_WhenOrganisationIsPartnership_Returns_ViewWithModel(
+        bool isLimitedLiabilityPartnership, 
+        bool isLimitedPartnership,
+        string expectedPartialView)
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership
+                {
+                    IsLimitedLiabilityPartnership = isLimitedLiabilityPartnership,
+                    IsLimitedPartnership = isLimitedPartnership
+                }
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().BeNull();
+        var model = viewResult.Model as ApprovedPersonViewModel;
+        model.Should().NotBeNull();
+        model!.IsLimitedLiabilityPartnership.Should().Be(isLimitedLiabilityPartnership);
+        model.IsLimitedPartnership.Should().Be(isLimitedPartnership);
+    }
+
+    [TestMethod]
+    public async Task Get_YouAreApprovedPerson_WhenOrganisationIsNotPartnership_Returns_DefaultView()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession() { Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership() }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().BeNull();
+        viewResult.Model.Should().BeNull();
     }
 
     [TestMethod]
@@ -82,48 +157,6 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
         // Assert
         result.Should().NotBeNull();
         _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
-    }
-
-    [TestMethod]
-    public async Task Get_YouAreApprovedPerson_WhenOrganisationIsPartnership_Returns_LimitedPartnershipView()
-    {
-        // Arrange
-        var session = new OrganisationSession
-        {
-            IsOrganisationAPartnership = true
-        };
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(session);
-
-        // Act
-        var result = await _systemUnderTest.YouAreApprovedPerson();
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = result as ViewResult;
-        viewResult!.ViewName.Should().Be("LimitedPartnershipYouAreApprovedPerson");
-    }
-
-    [TestMethod]
-    public async Task Get_YouAreApprovedPerson_WhenOrganisationIsNotPartnership_Returns_DefaultView()
-    {
-        // Arrange
-        var session = new OrganisationSession
-        {
-            IsOrganisationAPartnership = false
-        };
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(session);
-
-        // Act
-        var result = await _systemUnderTest.YouAreApprovedPerson();
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = result as ViewResult;
-        viewResult!.ViewName.Should().BeNull(); // default view
     }
 
     [TestMethod]

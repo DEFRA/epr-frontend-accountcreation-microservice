@@ -7,17 +7,16 @@
 	ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 }
 
-
 @if (Model.IsLimitedLiabilityPartnership)
 {
-	@Html.Partial("LimitedLiabilityPartnershipApprovedPerson", Model)
+	@Html.Partial("LimitedLiabilityPartnershipApprovedPerson")
 }
 else if (Model.IsLimitedPartnership)
 {
-	@Html.Partial("LimitedPartnershipYouAreApprovedPerson", Model)
+	@Html.Partial("LimitedPartnershipYouAreApprovedPerson")
 }
 else
 {
-@Html.Partial("NonPartnershipApprovedPerson", Model)
+	@Html.Partial("NonPartnershipApprovedPerson")
 }
 
