@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -77,14 +76,14 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
 
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            TeamMembers = new List<ReExCompanyTeamMember>
-            {
+            TeamMembers =
+            [
                 new ReExCompanyTeamMember
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(), // different from invalidTeamMemberId
                     Role = ReExTeamMemberRole.Director
                 }
-            }
+            ]
         };
 
         // Act
@@ -93,7 +92,12 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeNull();
+
+        // Instead of expecting null, assert it's an empty model
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+        var model = (TeamMemberRoleInOrganisationViewModel)viewResult.Model;
+        model.Id.Should().BeNull();
+        model.RoleInOrganisation.Should().BeNull();
     }
 
     [TestMethod]
@@ -112,7 +116,9 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeNull();
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+        viewResult.Model.As<TeamMemberRoleInOrganisationViewModel>().Id.Should().BeNull();
+        viewResult.Model.As<TeamMemberRoleInOrganisationViewModel>().RoleInOrganisation.Should().BeNull();
     }
 
     [TestMethod]
@@ -418,5 +424,212 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 s.ReExCompaniesHouseSession.TeamMembers[0].Id == teamMemberId
             )),
             Times.Once);
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_WithNoneRole_RemovesExistingMemberAndRedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var teamMemberId = Guid.NewGuid();
+
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+        {
+            TeamMembers = new List<ReExCompanyTeamMember>
+            {
+                new ReExCompanyTeamMember
+                {
+                    Id = teamMemberId,
+                    Role = ReExTeamMemberRole.Director
+                }
+            }
+        };
+
+        var request = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = teamMemberId,
+            RoleInOrganisation = ReExTeamMemberRole.None
+        };
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.CheckYourDetails));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+                It.IsAny<ISession>(),
+                It.Is<OrganisationSession>(s =>
+                    s.ReExCompaniesHouseSession.TeamMembers.All(x => x.Id != teamMemberId)
+                )),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_WithNoneRoleAndNonExistingMember_RedirectsToCannotBeInvited()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+        {
+            TeamMembers = new List<ReExCompanyTeamMember>() // Empty list
+        };
+
+        var request = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = nonExistentId,
+            RoleInOrganisation = ReExTeamMemberRole.None
+        };
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.PersonCanNotBeInvited));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Get_WithExistingMemberAndPartnership_ReturnsPartnershipView()
+    {
+        // Arrange
+        var teamMemberId = Guid.NewGuid();
+        var role = ReExTeamMemberRole.PartnerDirector;
+
+        _orgSessionMock.IsOrganisationAPartnership = true;
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+        {
+            TeamMembers = new List<ReExCompanyTeamMember>
+            {
+                new ReExCompanyTeamMember
+                {
+                    Id = teamMemberId,
+                    Role = role
+                }
+            }
+        };
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(teamMemberId);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.ViewName.Should().Be("ApprovedPersonPartnershipRole");
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+        ((TeamMemberRoleInOrganisationViewModel)viewResult.Model!).RoleInOrganisation.Should().Be(role);
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Get_NullId_ReturnsDefaultView()
+    {
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation((Guid?)null);
+
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_GuidEmptyId_TreatedAsNew()
+    {
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = Guid.Empty,
+            RoleInOrganisation = ReExTeamMemberRole.Director
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberDetails));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_NullTeamMembers_InitialisesAndAdds()
+    {
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = null;
+
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            RoleInOrganisation = ReExTeamMemberRole.Director
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberDetails));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_NoneRole_NullId_RedirectsToCannotBeInvited()
+    {
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = null,
+            RoleInOrganisation = ReExTeamMemberRole.None
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.PersonCanNotBeInvited));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Get_InvalidId_WithPartnership_ReturnsPartnershipView()
+    {
+        _orgSessionMock.IsOrganisationAPartnership = true;
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = new List<ReExCompanyTeamMember>();
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(Guid.NewGuid());
+
+        result.Should().BeOfType<ViewResult>();
+        ((ViewResult)result).ViewName.Should().Be("ApprovedPersonPartnershipRole");
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_InvalidModel_WhenPartnership_ReturnsPartnershipView()
+    {
+        _orgSessionMock.IsOrganisationAPartnership = true;
+
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            RoleInOrganisation = null
+        };
+        _systemUnderTest.ModelState.AddModelError("RoleInOrganisation", "Required");
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<ViewResult>();
+        ((ViewResult)result).ViewName.Should().Be("ApprovedPersonPartnershipRole");
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Post_DuplicateIds_OnlyFirstUpdated()
+    {
+        var duplicateId = Guid.NewGuid();
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = new List<ReExCompanyTeamMember>
+    {
+        new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.Director },
+        new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.CompanySecretary }
+    };
+
+        var model = new TeamMemberRoleInOrganisationViewModel
+        {
+            Id = duplicateId,
+            RoleInOrganisation = ReExTeamMemberRole.CompanySecretary
+        };
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(model);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[0].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[1].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
     }
 }

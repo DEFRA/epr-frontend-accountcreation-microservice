@@ -160,8 +160,49 @@ public class OrganisationController : Controller
         }
         else
         {
-            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation);
+            return await SaveSessionAndRedirect(session, nameof(IsUkMainAddress), PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress);
         }
+    }
+
+    [HttpGet]
+    [Route(PagePath.IsUkMainAddress)]
+    [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
+    public async Task<IActionResult> IsUkMainAddress()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.IsUkMainAddress);
+
+        YesNoAnswer? isUkMainAddress = null;
+        if (session.IsUkMainAddress != null)
+        {
+            isUkMainAddress = session.IsUkMainAddress.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(new IsUkMainAddressViewModel
+        {
+            IsUkMainAddress = isUkMainAddress
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsUkMainAddress)]
+    [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
+    public async Task<IActionResult> IsUkMainAddress(IsUkMainAddressViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
+
+        if (session.IsUkMainAddress == true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress, PagePath.TradingName);
+        }
+        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
 
     [HttpGet]
@@ -318,7 +359,8 @@ public class OrganisationController : Controller
         if (session.IsOrganisationAPartnership == true)
         {
             // TODO: No option ending up same YES pagePath - to be confirmed
-            return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.PartnershipType), PagePath.IsPartnership,
+                PagePath.PartnershipType);
         }
         return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.IsPartnership, PagePath.RoleInOrganisation);
     }
@@ -359,13 +401,8 @@ public class OrganisationController : Controller
             session.ReExCompaniesHouseSession = companiesHouseSession;
         }
         session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
-
-        if (model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove)
-        {
-            return await SaveSessionAndRedirect(session, "CannotCreateAccount", PagePath.RoleInOrganisation,
-                PagePath.CannotCreateAccount);
-        }
-
+        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
+       
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
                 PagePath.AddAnApprovedPerson);
     }
@@ -581,15 +618,8 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
-    [Route(PagePath.AddApprovedPerson)]
-    public IActionResult InviteOtherApprovedPerson()
-    {
-        // TO DO following & modify - once Tungsten has merged
-        return Ok("not been implemented yet...WIP by Tungsten team.");
-    }
-
-    [HttpPost]
     [Route(PagePath.Declaration)]
+    [OrganisationJourneyAccess(PagePath.Declaration)]
     public async Task<IActionResult> Declaration()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -599,6 +629,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.DeclarationContinue)]
+    [OrganisationJourneyAccess(PagePath.DeclarationContinue)]
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -612,6 +643,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.Success)]
+    [OrganisationJourneyAccess(PagePath.Success)]
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);

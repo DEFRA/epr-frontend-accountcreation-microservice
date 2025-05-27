@@ -1,0 +1,119 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@model LimitedPartnershipPartnersViewModel;
+
+@{
+    ViewData["Title"] = Localizer[GetLocalizer(Model.ExpectsIndividualPartners, Model.ExpectsCompanyPartners, "Title_Individual", "Title_Company", "Title_Both")];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container ">
+
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+
+        <div class="govuk-grid-row ">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l">
+                    @Localizer[GetLocalizer(Model.ExpectsIndividualPartners, Model.ExpectsCompanyPartners, "H1_Individual", "H1_Company", "H1_Both")]
+                </h1>
+
+                <div class="govuk-hint">
+                    @Localizer[GetLocalizer(Model.ExpectsIndividualPartners, Model.ExpectsCompanyPartners, "Hint_Individual", "Hint_Company", "Hint_Both")]
+                 </div>
+                <hr>
+                <br>
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+                <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+                    <form method="post">
+                        @Html.HiddenFor(m => m.ExpectsCompanyPartners)
+                        @Html.HiddenFor(m => m.ExpectsIndividualPartners)
+                        @for (int i = 0; i < Model.Partners.Count; ++i)
+                        {
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-visually-hidden">@Localizer["NamesOfPartners.Legend"]</legend>
+                                <p></p>
+                                <div class="govuk-form-group">
+                                    @Html.HiddenFor(m => m.Partners[i].Id)
+
+                                    @if (Model.ExpectsCompanyPartners)
+                                    {
+                                        <!-- Company partner name -->
+                                        @Html.LabelFor(m => m.Partners[i].CompanyName, @Localizer["NamesOfPartners.CompanyName"].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
+                                        @Html.EditorFor(m => m.Partners[i].CompanyName, new { htmlAttributes = new { @class = "govuk-input" } })
+                                    }
+
+                                    @if (Model.ExpectsCompanyPartners && Model.ExpectsIndividualPartners)
+                                    {
+                                        <br /><br />
+                                        <p class="govuk-body"><strong>@Localizer["NamesOfPartners.Or"]</strong></p>
+                                    }
+
+                                    @if (Model.ExpectsIndividualPartners)
+                                    {
+                                        string personNameLabel = Model.ExpectsCompanyPartners ? "NamesOfPartners.IndividualPartnersFullName" : "NamesOfPartners.FullName";
+                                        <!-- Individual partner’s full name -->
+                                        @Html.LabelFor(m => m.Partners[i].PersonName, @Localizer[personNameLabel].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
+                                        @Html.EditorFor(m => m.Partners[i].PersonName, new { htmlAttributes = new { @class = "govuk-input" } })
+                                    }
+
+                                    <br /><br />
+
+                                    @if (Model.Partners.Count > 1)
+                                    {
+                                        <!-- remove partner -->
+                                        <div class="govuk-!-text-align-right">
+                                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="@Model.Partners[i].Id" type="submit">
+                                                @SharedLocalizer["Remove"]
+                                            </button>
+                                        </div>
+                                    }
+                                    <hr>
+                                </div>
+                            </fieldset>
+                        }
+
+                        <div class="govuk-button-group">
+
+                            <!-- Add another partner-->
+                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="add" type="submit">
+                                @Localizer["NamesOfPartners.AddAnotherPartner"]
+                            </button>
+ 
+                            <!-- save partners -->
+                            <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="save" type="submit">
+                                @SharedLocalizer["Continue"]
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@{
+    string GetLocalizer(bool isPerson, bool isCompany, string person, string company, string both)
+    {
+        string localizer = both;
+        if (isPerson && isCompany)
+        {
+            localizer = both;
+        }
+        else if (isCompany)
+        {
+            localizer = company;
+        }
+        else if (isPerson)
+        {
+            localizer = person;
+        }
+        return string.Concat("NamesOfPartners.", localizer);
+    }
+}
