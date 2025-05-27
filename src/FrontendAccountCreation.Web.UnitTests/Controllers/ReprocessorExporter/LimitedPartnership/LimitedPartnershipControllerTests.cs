@@ -5,7 +5,6 @@ using FrontendAccountCreation.Web.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Collections.Specialized;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership;
 
@@ -146,8 +145,10 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
     [TestMethod]
     public async Task SaveSessionAndRedirect_WhenGivenAction_AndBlankControllerr_AndQueryString_Redirects()
     {
-        // Act
+        // Arrange
         var querystring = new KeyValuePair<string, string>("x", "y") as object;
+
+        // Act
         var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, "myAction", string.Empty, null, null, querystring);
 
         // Assert
@@ -160,8 +161,10 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
     [TestMethod]
     public async Task SaveSessionAndRedirect_WhenGivenAction_AndControllerr_AndQueryString_Redirects()
     {
-        // Act
+        // Arrange
         var querystring = new KeyValuePair<string, string>("x", "y") as object;
+
+        // Act
         var result = await _systemUnderTest.SaveSessionAndRedirect(_orgSessionMock, "myAction", string.Empty, null, "herController", querystring);
 
         // Assert
@@ -169,5 +172,15 @@ public class LimitedPartnershipControllerTests : LimitedPartnershipTestBase
         redirectToActionResult.ActionName.Should().Be("myAction");
         redirectToActionResult.ControllerName.Should().Be("her");
         redirectToActionResult.RouteValues.Should().HaveCount(2);
+    }
+
+    [TestMethod]
+    public async Task SaveSession_UpdatesSession()
+    {
+        // Act
+        await _systemUnderTest.SaveSession(_orgSessionMock, null, null);
+
+        // Assert
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once());
     }
 }
