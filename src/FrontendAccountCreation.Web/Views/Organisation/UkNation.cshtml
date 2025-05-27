@@ -21,40 +21,6 @@
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
                 <form asp-controller="Organisation" asp-action="UkNation" method="post">
-                    @if (Model.IsManualInputFlow)
-                    {
-                        <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
-                            @Localizer["UkNation.YourUKNation"]
-                        </h1>
-                        
-                        <p class="govuk-body">@Localizer["UkNation.SoleTrader.WeNeedToKnow"].Value</p>
-                        <p class="govuk-body">@Localizer["UkNation.SoleTrader.ForUkOrganisations"].Value</p>
-                                                                                                        
-                        <div class="govuk-details">
-                            <ul>
-                                <li>
-                                @Localizer["UkNation.SoleTrader.WhereYourOrganisationIsRegistered"]
-                                <li>
-                                    @Localizer["UkNation.SoleTrader.PrincipalPlaceOfBusinessIfNotRegistered"]
-                                </li>
-                            </ul>
-                        </div>
-
-                        <p class="govuk-body">@Localizer["UkNation.SoleTrader.ForNonUkOrganisations"].Value</p>
-                                                                                                           
-                        <div class="govuk-details">
-                            <ul>
-                                <li>
-                                @Localizer["UkNation.SoleTrader.WhereYourHeadOfficeIs"]
-                                <li>
-                                @Localizer["UkNation.SoleTrader.PrincipalPlaceOfBusiness"]
-                                <li>
-                                    @Localizer["UkNation.SoleTrader.WhereYourUKBranchIs"]
-                                </li>
-                            </ul>
-                        </div>
-                    }
-
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <fieldset class="govuk-fieldset" aria-describedby="@(Model.IsCompaniesHouseFlow ? "limited-company-hint" : "")">
                             <legend class="govuk-fieldset__legend">
@@ -66,7 +32,9 @@
                                 }
                                 else if (Model.IsManualInputFlow)
                                 {
-                                    <h2 class="fieldset__heading govuk-heading-m govuk-!-margin-bottom-0">@Localizer["UkNation.SoleTrader.WhereInTheIsYourUKBusinessBased"]</h2>
+                                    <h1 class="fieldset__heading govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                        @Localizer["UkNation.SoleTrader.Question"]
+                                    </h1>
                                 }
                             </legend>
                             
@@ -74,6 +42,12 @@
                             {
                                 <div class="govuk-hint" id="limited-company-hint">
                                     @Localizer["UkNation.LimitedCompany.Hint"]
+                                </div>
+                            }
+                            @if (Model.IsManualInputFlow)
+                            {
+                                <div class="govuk-hint" id="sole-trader-hint">
+                                    @Localizer["UkNation.SoleTrader.Hint"]
                                 </div>
                             }
 
