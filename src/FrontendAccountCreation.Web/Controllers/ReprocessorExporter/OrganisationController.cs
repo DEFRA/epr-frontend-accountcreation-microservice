@@ -160,8 +160,49 @@ public class OrganisationController : Controller
         }
         else
         {
-            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation);
+            return await SaveSessionAndRedirect(session, nameof(IsUkMainAddress), PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress);
         }
+    }
+
+    [HttpGet]
+    [Route(PagePath.IsUkMainAddress)]
+    [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
+    public async Task<IActionResult> IsUkMainAddress()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.IsUkMainAddress);
+
+        YesNoAnswer? isUkMainAddress = null;
+        if (session.IsUkMainAddress != null)
+        {
+            isUkMainAddress = session.IsUkMainAddress.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(new IsUkMainAddressViewModel
+        {
+            IsUkMainAddress = isUkMainAddress
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsUkMainAddress)]
+    [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
+    public async Task<IActionResult> IsUkMainAddress(IsUkMainAddressViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
+
+        if (session.IsUkMainAddress == true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress, PagePath.TradingName);
+        }
+        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
 
     [HttpGet]

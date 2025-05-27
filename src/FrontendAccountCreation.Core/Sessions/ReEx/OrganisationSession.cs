@@ -35,4 +35,6 @@ public class OrganisationSession
     public bool? IsTradingNameDifferent { get; set; }
 
     public bool? IsOrganisationAPartnership { get; set; }
+
+    public bool? IsUkMainAddress { get; set; }
 }
