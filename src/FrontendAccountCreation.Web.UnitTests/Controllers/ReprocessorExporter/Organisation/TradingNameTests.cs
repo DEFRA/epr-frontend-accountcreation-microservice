@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -80,10 +81,11 @@ public class TradingNameTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenTradingName_ThenRedirectToPartnerOrganisation()
+    public async Task POST_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
     {
         // Arrange
         var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
+        _organisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
 
         // Act
         var result = await _systemUnderTest.TradingName(request);
@@ -92,6 +94,25 @@ public class TradingNameTests : OrganisationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_ThenRedirectToTypeOfOrganisation()
+    {
+        // Arrange
+        var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
+        _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+
+        // Act
+        var result = await _systemUnderTest.TradingName(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
             Times.Once);

@@ -280,8 +280,16 @@ public class OrganisationController : Controller
 
         session.ReExManualInputSession.TradingName = model.TradingName!;
 
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
-            PagePath.IsPartnership);
+        if (session.IsCompaniesHouseFlow)
+        {
+            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
+                PagePath.IsPartnership);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
+                PagePath.TypeOfOrganisation);
+        }
     }
 
     [HttpGet]
@@ -293,7 +301,7 @@ public class OrganisationController : Controller
 
         SetBackLink(session, PagePath.TypeOfOrganisation);
 
-        var viewModel = new TypeOfOrganisationViewModel()
+        var viewModel = new ReExTypeOfOrganisationViewModel()
         {
             ProducerType = session.ReExManualInputSession?.ProducerType
         };
@@ -304,7 +312,7 @@ public class OrganisationController : Controller
     [HttpPost]
     [Route(PagePath.TypeOfOrganisation)]
     [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
-    public async Task<IActionResult> TypeOfOrganisation(TypeOfOrganisationViewModel model)
+    public async Task<IActionResult> TypeOfOrganisation(ReExTypeOfOrganisationViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -318,8 +326,8 @@ public class OrganisationController : Controller
         session.ReExManualInputSession.ProducerType = model.ProducerType;
         session.ReExCompaniesHouseSession = null;
 
-        return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.TypeOfOrganisation,
-            PagePath.RoleInOrganisation);
+        return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.TypeOfOrganisation,
+            PagePath.UkNation);
     }
 
     [HttpGet]
@@ -570,7 +578,8 @@ public class OrganisationController : Controller
         var viewModel = new UkNationViewModel()
         {
             UkNation = session.UkNation,
-            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow,
+            IsManualInputFlow = !session.IsCompaniesHouseFlow
         };
         return View(viewModel);
     }
