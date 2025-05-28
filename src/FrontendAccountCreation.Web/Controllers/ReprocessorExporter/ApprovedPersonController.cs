@@ -336,6 +336,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
                 viewModel.CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company.CompaniesHouseNumber;
                 viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation;
+                viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
+                viewModel.LimitedPartnershipPartners =
+                    session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
             }
             if (session.ReExManualInputSession != null)
             {

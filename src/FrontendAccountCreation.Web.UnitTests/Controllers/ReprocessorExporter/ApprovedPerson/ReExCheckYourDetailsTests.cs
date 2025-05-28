@@ -3,7 +3,7 @@ using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +19,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
     private Company _company = null!;
     private ReExCompanyTeamMember _teamMember = null!;
     private string _tradingName = "Acme Ltd.";
+    private ReExPartnership _partnership = new();
 
     [TestInitialize]
     public void Setup()
@@ -46,11 +47,28 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
             FirstName = "Jane"
         };
 
+        _partnership = new ReExPartnership
+        {
+            LimitedPartnership = new ReExLimitedPartnership
+            {
+                Partners = new List<ReExLimitedPartnershipPersonOrCompany>
+                {
+                    new()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "test",
+                        IsPerson = true
+                    }
+                }
+            }
+        };
+
         _companiesHouseSession = new ReExCompaniesHouseSession
         {
             Company = _company,
             RoleInOrganisation = RoleInOrganisation.Director,
-            TeamMembers = new List<ReExCompanyTeamMember> { _teamMember }
+            TeamMembers = new List<ReExCompanyTeamMember> { _teamMember },
+            Partnership = _partnership
         };
 
         _manualInputSession = new ReExManualInputSession
@@ -69,7 +87,8 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             IsTradingNameDifferent = true,
             UkNation = Nation.England,
-            ReExCompaniesHouseSession = _companiesHouseSession
+            ReExCompaniesHouseSession = _companiesHouseSession,
+            IsOrganisationAPartnership = true
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
@@ -91,6 +110,8 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         model.OrganisationType.Should().Be(OrganisationType.CompaniesHouseCompany);
         model.IsTradingNameDifferent.Should().BeTrue();
         model.Nation.Should().Be(Nation.England);
+        model.IsOrganisationAPartnership.Should().BeTrue();
+        model.LimitedPartnershipPartners.Should().BeEquivalentTo(_partnership.LimitedPartnership.Partners);
     }
 
     [TestMethod]
