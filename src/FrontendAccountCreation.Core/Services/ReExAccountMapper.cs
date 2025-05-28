@@ -23,10 +23,9 @@ public class ReExAccountMapper : IReExAccountMapper
 
     public ReExOrganisationModel CreateReExOrganisationModel(OrganisationSession reExOrganisationSession)
     {
-        return new ReExOrganisationModel()
+        return new ReExOrganisationModel
         {
             UserRoleInOrganisation = reExOrganisationSession.ReExCompaniesHouseSession.RoleInOrganisation?.ToString() ?? null,
-            ServiceRole = reExOrganisationSession.ServiceRole,
             IsApprovedUser = reExOrganisationSession.IsApprovedUser,
             Company = new ReExCompanyModel()
             {
