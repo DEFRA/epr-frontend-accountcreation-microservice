@@ -604,7 +604,14 @@ public class OrganisationController : Controller
             return View(model);
         }
         session!.UkNation = model.UkNation;
-        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
+        if (model.IsCompaniesHouseFlow)
+        {
+            return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(BusinessAddress), PagePath.UkNation, PagePath.BusinessAddress);
+        }
     }
 
     [HttpGet]
@@ -624,6 +631,17 @@ public class OrganisationController : Controller
     {
         // TO DO following & modify - once Tungsten has merged
         throw new NotImplementedException("not been implemented yet...as no related user-story has been confirmed!");
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.BusinessAddress)]
+    [OrganisationJourneyAccess(PagePath.BusinessAddress)]
+    public async Task<IActionResult> BusinessAddress()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.BusinessAddress);
+        return View();
     }
 
     [HttpGet]

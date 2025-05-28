@@ -84,4 +84,61 @@ public class UkNationtests : OrganisationTestBase
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
         AssertBackLink(viewResult, PagePath.ConfirmCompanyDetails);
     }
+
+    [TestMethod]
+    public async Task UkNation_OrganisationIsManualInputFlow_RedirectsToBusinessAddressPageAndUpdatesSession()
+    {
+        // Arrange
+        _organisationCreationSessionMock.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        var request = new UkNationViewModel() { UkNation = Nation.Wales };
+
+        // Act
+        var result = await _systemUnderTest.UkNation(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be(nameof(OrganisationController.BusinessAddress));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.Is<OrganisationSession>(s => s.UkNation == Nation.Wales)), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task UkNation_GetRequest_ShouldSetManualFlowFlagsCorrectly()
+    {
+        // Arrange
+        _organisationCreationSessionMock.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+
+        // Act
+        var result = await _systemUnderTest.UkNation();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = (UkNationViewModel)viewResult.Model!;
+
+        model.IsCompaniesHouseFlow.Should().BeFalse();
+        model.IsManualInputFlow.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public async Task UkNation_InvalidModel_CompaniesHouseFlow_SetsCorrectErrorMessage()
+    {
+        // Arrange
+        _organisationCreationSessionMock.OrganisationType = OrganisationType.CompaniesHouseCompany;
+        var model = new UkNationViewModel();
+        _systemUnderTest.ModelState.AddModelError(nameof(UkNationViewModel.UkNation), "Required");
+
+        // Act
+        var result = await _systemUnderTest.UkNation(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<UkNationViewModel>();
+        _systemUnderTest.ModelState[nameof(UkNationViewModel.UkNation)]!.Errors
+            .First().ErrorMessage.Should().Be("UkNation.LimitedCompany.ErrorMessage");
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Never);
+    }
 }
