@@ -20,7 +20,6 @@ using Web.Sessions;
 public abstract class ApprovedPersonTestBase
 {
     protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
-
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
@@ -29,7 +28,6 @@ public abstract class ApprovedPersonTestBase
     protected Mock<ILogger<ApprovedPersonController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
-
     protected ApprovedPersonController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)
@@ -75,5 +73,4 @@ public abstract class ApprovedPersonTestBase
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;
     }
-
 }

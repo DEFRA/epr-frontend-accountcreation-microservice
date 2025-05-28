@@ -343,8 +343,7 @@ public class FacadeServiceTests
         await _facadeService.PostAccountDetailsAsync(account);
         
         // Assert
-        Assert.IsTrue(true);
-        
+        Assert.IsTrue(true);        
         httpTestHandler.Dispose();
     }
 
@@ -399,7 +398,6 @@ public class FacadeServiceTests
                 req => req.Method == HttpMethod.Post
                        && req.RequestUri != null
                        && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
-
             ItExpr.IsAny<CancellationToken>());
     }
 
@@ -686,7 +684,8 @@ public class FacadeServiceTests
         // Assert
         Assert.AreEqual(expected: true, actual: response);
         httpTestHandler.Dispose();
-    }   
+    }
+    
     [TestMethod]
     public async Task GetUserAccount_WhenStatusCodeIsOk_ReturnsUserAccountModel()
     {
@@ -769,7 +768,6 @@ public class FacadeServiceTests
     public async Task GetServiceRoleIdAsync_ReturnsInviteApprovedUserModel()
     {
         // Arrange
-        var ServiceRoleId = "1";
         var expectedResponse = new InviteApprovedUserModel
         {
             Email = "",
@@ -803,7 +801,6 @@ public class FacadeServiceTests
     public async Task GetOrganisationNameByInviteTokenAsync_Returns_ApprovedPersonOrganisationModel()
     {
         // Arrange
-        var token = "asdasd";
         var expectedResponse = new ApprovedPersonOrganisationModel
         {
             SubBuildingName = "",

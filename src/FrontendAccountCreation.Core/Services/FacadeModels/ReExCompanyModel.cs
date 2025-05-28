@@ -1,7 +1,9 @@
-﻿using FrontendAccountCreation.Core.Sessions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FrontendAccountCreation.Core.Sessions;
 
 namespace FrontendAccountCreation.Core.Services.FacadeModels;
 
+[ExcludeFromCodeCoverage]
 public class ReExCompanyModel
 {
     public string? OrganisationId { get; set; }

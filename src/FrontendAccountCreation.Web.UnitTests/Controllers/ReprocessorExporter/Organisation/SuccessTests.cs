@@ -83,9 +83,7 @@ public class SuccessTests : OrganisationTestBase
         };
 
         _reExAccountMapperMock.Setup(x => x.CreateReExOrganisationModel(orgSession))
-            .Returns(mapperObj);
-
-       
+            .Returns(mapperObj);       
 
 		// Act
 		var result = await _systemUnderTest.DeclarationContinue();        
@@ -106,10 +104,10 @@ public class SuccessTests : OrganisationTestBase
 			ReExCompaniesHouseSession = new ReExCompaniesHouseSession
 			{
 				Company = new Company { Name = "Test Ltd" },
-				TeamMembers = new List<ReExCompanyTeamMember>
-				{
-					new ReExCompanyTeamMember { FirstName = "Alice" }
-				}
+				TeamMembers =
+                [
+                    new ReExCompanyTeamMember { FirstName = "Alice" }
+				]
 			}
 		};
 
@@ -125,6 +123,6 @@ public class SuccessTests : OrganisationTestBase
 		var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
 		viewModel.CompanyName.Should().Be("Test Ltd");
 		viewModel.reExCompanyTeamMembers.Should().HaveCount(1);
-		viewModel.reExCompanyTeamMembers!.First().FirstName.Should().Be("Alice");
+		viewModel.reExCompanyTeamMembers![0].FirstName.Should().Be("Alice");
 	}
 }

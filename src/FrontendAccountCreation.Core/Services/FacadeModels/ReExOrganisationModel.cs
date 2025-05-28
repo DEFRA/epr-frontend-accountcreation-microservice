@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Core.Services.FacadeModels;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Core.Services.FacadeModels;
+
+[ExcludeFromCodeCoverage]
 public class ReExOrganisationModel
 {
     /// <summary>

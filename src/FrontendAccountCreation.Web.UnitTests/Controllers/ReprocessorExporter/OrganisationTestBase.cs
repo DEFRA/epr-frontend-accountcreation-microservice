@@ -21,7 +21,6 @@ using Web.Sessions;
 public abstract class OrganisationTestBase
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
-
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
@@ -29,10 +28,8 @@ public abstract class OrganisationTestBase
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
     protected Mock<IOptions<ServiceKeysOptions>> _serviceKeyOptionsMock = null!;
-    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;
-    
-    protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;    
-
+    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;    
+    protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected OrganisationController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)
