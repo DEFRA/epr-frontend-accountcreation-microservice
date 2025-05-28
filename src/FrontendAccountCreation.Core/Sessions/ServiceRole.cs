@@ -11,5 +11,8 @@ public enum ServiceRole
     DelegatedPerson = 1,
 
     [Description("Re-Ex.BasicUser")]
-    BasicUser = 2
+    BasicUser = 2,
+
+    [Description("Re-Ex.Admin")]
+    Admin = 3
 }
