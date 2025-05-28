@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
@@ -9,21 +8,19 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.CodeAnalysis;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
 	[Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 	[Route("re-ex/organisation")]
-	public partial class ApprovedPersonController : Controller
+    public partial class ApprovedPersonController : ControllerBase<OrganisationSession>
 	{
 		private readonly ISessionManager<OrganisationSession> _sessionManager;
 		private readonly ExternalUrlsOptions _urlOptions;
 
-		public ApprovedPersonController(ISessionManager<OrganisationSession> sessionManager,
-		IOptions<ExternalUrlsOptions> urlOptions)
+        public ApprovedPersonController(
+            ISessionManager<OrganisationSession> sessionManager,
+            IOptions<ExternalUrlsOptions> urlOptions) : base(sessionManager)
 		{
 			_sessionManager = sessionManager;
 			_urlOptions = urlOptions.Value;
@@ -432,51 +429,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 		public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
 		{
 			return RedirectToAction("CheckYourDetails", "AccountCreation");
-		}
-
-		[ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-		private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
-			string actionName, string currentPagePath, string? nextPagePath, string? controllerName = null, object? routeValues = null)
-		{
-			session.IsUserChangingDetails = false;
-			await SaveSession(session, currentPagePath, nextPagePath);
-
-			return !string.IsNullOrWhiteSpace(controllerName) ? RedirectToAction(actionName, controllerName, routeValues) : RedirectToAction(actionName, routeValues);
-		}
-
-		[ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-		private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
-		{
-			ClearRestOfJourney(session, currentPagePath);
-			if (nextPagePath == PagePath.TeamMembersCheckInvitationDetails)
-			{
-				session.Journey.AddIfNotExists(PagePath.TeamMemberDetails);
-			}
-			session.Journey.AddIfNotExists(nextPagePath);
-
-			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-		}
-
-		[ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-		private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
-		{
-			var index = session.Journey.FindIndex(x => x.Equals(currentPagePath.Split("?")[0]));
-
-			// this also cover if current page not found (index = -1) then it clears all pages
-			session.Journey = session.Journey.Take(index + 1).ToList();
-		}
-
-		[ExcludeFromCodeCoverage(Justification = "Going to be refactored into separate common classes")]
-		private void SetBackLink(OrganisationSession session, string currentPagePath)
-		{
-			if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
-			{
-				ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
-			}
-			else
-			{
-				ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
-			}
 		}
 	}
 }
