@@ -20,7 +20,6 @@ public abstract class AccountCreationTestBase
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
     protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
-
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<AccountCreationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
@@ -30,7 +29,6 @@ public abstract class AccountCreationTestBase
     protected Mock<ILogger<AccountCreationController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
-
     protected AccountCreationController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)

@@ -119,7 +119,6 @@ public class ConfirmCompanyDetailsTests : AccountCreationTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<AccountCreationSession>()), Times.Once);
     }
 
-
     [TestMethod]
     public async Task GivenFinishedPreviousPage_WhenConfirmCompanyDetailsCalled_ThenConfirmCompanyDetailsPageReturned_WithTCompaniesHouseNumberAsTheBackLink()
     {

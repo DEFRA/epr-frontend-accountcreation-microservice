@@ -1,5 +1,7 @@
+using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 
 namespace FrontendAccountCreation.Core.Services;
 
@@ -19,21 +21,66 @@ public class ReExAccountMapper : IReExAccountMapper
         };
     }
 
-    public ReExAccountModel CreateReExAccountModel(ReExAccountCreationSession session, string email)
+    public ReExOrganisationModel CreateReExOrganisationModel(OrganisationSession reExOrganisationSession)
     {
-        var person = new ReExPersonModel()
+        return new ReExOrganisationModel()
         {
-            FirstName = session.Contact.FirstName,
-            LastName = session.Contact.LastName,
-            ContactEmail = email,
-            TelephoneNumber = session.Contact.TelephoneNumber
+            UserRoleInOrganisation = reExOrganisationSession.ReExCompaniesHouseSession.RoleInOrganisation?.ToString() ?? null,
+            ServiceRole = reExOrganisationSession.ServiceRole,
+            IsApprovedUser = reExOrganisationSession.IsApprovedUser,
+            Company = new ReExCompanyModel()
+            {
+                OrganisationId = reExOrganisationSession.ReExCompaniesHouseSession.Company?.OrganisationId ?? string.Empty,
+                OrganisationType = reExOrganisationSession.OrganisationType?.ToString() ?? OrganisationType.NotSet.ToString(),
+                CompanyName = reExOrganisationSession.ReExCompaniesHouseSession.Company?.Name,
+                CompaniesHouseNumber = reExOrganisationSession.ReExCompaniesHouseSession.Company?.CompaniesHouseNumber,
+                CompanyRegisteredAddress = GetCompanyAddress(reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress),
+                ValidatedWithCompaniesHouse = reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress is not null,
+                Nation = reExOrganisationSession.UkNation ?? Nation.NotSet
+            },                        
+            InvitedApprovedPersons = GetTeamMembersModel(reExOrganisationSession.ReExCompaniesHouseSession.TeamMembers) 
         };
+    }
 
-        var account = new ReExAccountModel()
+    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(IEnumerable<ReExCompanyTeamMember> teamMembers)
+    {
+        List<ReExInvitedApprovedPerson> approvedPeople = [];
+        
+        foreach (var member in teamMembers ?? [])
         {
-            Person = person,
-        };
+            var memberModel = new ReExInvitedApprovedPerson()
+            {
+                Id = member.Id, 
+                FirstName = member.FirstName,
+                LastName = member.LastName,
+                Email = member.Email,   
+                Role = member.Role?.ToString() ?? null,
+                TelephoneNumber = member.TelephoneNumber
+            };
 
-        return account;
+            approvedPeople.Add(memberModel);
+        }
+        return approvedPeople;
+    }
+
+    /// <summary>
+    /// Gets company address
+    /// </summary>
+    /// <param name="address"></param>
+    /// <returns>mapped company address</returns>
+    private static AddressModel? GetCompanyAddress(Address address)
+    {
+        return address is null ? null : new AddressModel()
+        {
+            BuildingName = address.BuildingName,
+            BuildingNumber = address.BuildingNumber,
+            Street = address.Street,
+            Town = address.Town,
+            Country = address.Country,
+            Postcode = address.Postcode,
+            Locality = address.Locality,
+            DependentLocality = address.DependentLocality,
+            County = address.County
+        };
     }
 }
