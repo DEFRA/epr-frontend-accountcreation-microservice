@@ -26,7 +26,6 @@ public static class ServiceProviderExtension
 
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IAccountMapper, AccountMapper>();
-        services.AddSingleton<IOrganisationMapper, OrganisationMapper>();
         services.AddSingleton<IReExAccountMapper, ReExAccountMapper>();
 
         return services;

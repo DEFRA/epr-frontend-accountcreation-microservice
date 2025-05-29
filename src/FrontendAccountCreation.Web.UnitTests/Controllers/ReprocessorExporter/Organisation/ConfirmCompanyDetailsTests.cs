@@ -78,7 +78,6 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
     public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_ThenRedirectToUkNation()
     {
         // Arrange
-        _companyServiceMock.Setup(x => x.IsComplianceScheme(It.IsAny<string>())).Returns(false);
 
         // Act
         var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();
@@ -93,7 +92,6 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
     public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_ThenUpdateSession()
     {
         // Arrange
-        _companyServiceMock.Setup(x => x.IsComplianceScheme(It.IsAny<string>())).Returns(false);
 
         // Act
         var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();
@@ -119,7 +117,6 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
-
 
     [TestMethod]
     public async Task GivenFinishedPreviousPage_WhenConfirmCompanyDetailsCalled_ThenConfirmCompanyDetailsPageReturned_WithCompaniesHouseNumberAsTheBackLink()

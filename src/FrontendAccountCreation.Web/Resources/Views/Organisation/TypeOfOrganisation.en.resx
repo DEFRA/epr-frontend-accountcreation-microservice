@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,28 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CompaniesHouseNumber.ErrorMessage" xml:space="preserve">
-    <value>Enter your Companies House number</value>
+  <data name="ReExTypeOfOrganisation.Title" xml:space="preserve">
+    <value>Type of organisation</value>
   </data>
-  <data name="CompaniesHouseNumber.Hint" xml:space="preserve">
-    <value>This is also known as your company registration number. It should be 8 characters, for example: 01234567 or AC012345.</value>
+  <data name="ReExTypeOfOrganisation.Question" xml:space="preserve">
+    <value>What type of business are you adding?</value>
   </data>
-  <data name="CompaniesHouseNumber.LinkDescription" xml:space="preserve">
-    <value>Find your number on Companies House (opens in a new tab)</value>
+  <data name="TypeOfOrganisation.NonUkOrganisation" xml:space="preserve">
+    <value>Non-UK organisation</value>
   </data>
-  <data name="CompaniesHouseNumber.NotFoundError" xml:space="preserve">
-    <value>The number you entered is not on the Companies House register &lt;br /&gt; Enter a valid Companies House number</value>
+  <data name="ReExTypeOfOrganisation.Partnership" xml:space="preserve">
+    <value>A partnership under the Partnership Act 1890(often called a general partnership)</value>
   </data>
-  <data name="CompaniesHouseNumber.Question" xml:space="preserve">
-    <value>What is your Companies House number?</value>
+  <data name="ReExTypeOfOrganisation.SoleTrader" xml:space="preserve">
+    <value>An individual(for example, a sole trader)</value>
   </data>
-  <data name="CompaniesHouseNumber.Title" xml:space="preserve">
-    <value>Companies House number</value>
+  <data name="ReExTypeOfOrganisation.UnincorporatedBody" xml:space="preserve">
+    <value>Unincorporated association</value>
   </data>
-  <data name="CompaniesHouseNumber.MaxLengthErrorMessage" xml:space="preserve">
-    <value>Invalid Companies House number more than 8 character entered</value>
+  <data name="TypeOfOrganisation.Other" xml:space="preserve">
+    <value>Other</value>
   </data>
-  <data name="CompaniesHouseNumber.MinLengthErrorMessage" xml:space="preserve">
-    <value>Invalid Companies House number less than 8 character entered</value>
+  <data name="ReExTypeOfOrganisation.ErrorMessage" xml:space="preserve">
+    <value>Select the type of business you're adding</value>
   </data>
 </root>

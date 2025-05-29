@@ -18,7 +18,6 @@ public abstract class UserTestBase
 {
     protected const string BackLinkViewDataKey = "BackLinkToDisplay";
     protected const string ReExServiceKey = "ReprocessorExporter";
-
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<ReExAccountCreationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
@@ -27,7 +26,6 @@ public abstract class UserTestBase
     protected Mock<ILogger<UserController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
-
     protected UserController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)

@@ -110,7 +110,7 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
 
-        var response = await _httpClient.PostAsJsonAsync($"/api/v1/reprocessor-exporter-accounts?serviceKey={serviceKey}", account);
+        var response = await _httpClient.PostAsJsonAsync($"/api/v1/reprocessor-exporter-user-accounts?serviceKey={serviceKey}", account);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -121,18 +121,49 @@ public class FacadeService : IFacadeService
             }
             catch (JsonException e)
             {
-                // if the response isn't a valid ProblemDetails, either this exception is thrown,
-                // or in some circumstances, null is returned.
-                // we handle both scenarios next
+                problemDetails = new ProblemDetails() { Detail = e.Message };
             }
 
             if (problemDetails != null)
             {
                 throw new ProblemResponseException(problemDetails, response.StatusCode);
+            }            
+        }
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Create ReEx organisation
+    /// </summary>
+    /// <param name="reExOrganisation"></param>
+    /// <param name="serviceKey"></param>
+    /// <returns></returns>
+    /// <exception cref="ProblemResponseException"></exception>
+    public async Task PostReprocessorExporterCreateOrganisationAsync(ReExOrganisationModel reExOrganisation, string serviceKey)
+    {
+        await PrepareAuthenticatedClient();
+
+        var response = await _httpClient.PostAsJsonAsync($"api/v1/reprocessor-exporter-org?serviceKey={serviceKey}", reExOrganisation);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            ProblemDetails? problemDetails;
+            try
+            {
+                problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            }
+            catch (JsonException e)
+            {
+                problemDetails = new ProblemDetails() { Detail = e.Message };
             }
 
-            response.EnsureSuccessStatusCode();
+            if (problemDetails != null)
+            {
+                throw new ProblemResponseException(problemDetails, response.StatusCode);
+            }            
         }
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task PostEnrolInvitedUserAsync(EnrolInvitedUserModel enrolInvitedUser)
