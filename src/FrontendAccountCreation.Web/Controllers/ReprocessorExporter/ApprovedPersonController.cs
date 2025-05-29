@@ -1,15 +1,13 @@
-﻿using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -73,6 +71,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
+                session.IsApprovedUser = true;
                 return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
 
@@ -341,6 +340,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
                 viewModel.CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company.CompaniesHouseNumber;
                 viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation;
+                viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
+                viewModel.LimitedPartnershipPartners =
+                    session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
             }
             if (session.ReExManualInputSession != null)
             {

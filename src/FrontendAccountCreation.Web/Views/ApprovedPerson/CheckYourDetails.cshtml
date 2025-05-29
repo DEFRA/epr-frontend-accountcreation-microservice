@@ -154,6 +154,11 @@
                             RenderWrongAddressAmendPrompt("CheckYourDetails.WrongAddressAmend.LinkDescription");
                         }
                         
+                        @if (Model is {IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true})
+                        {
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
+                        }
+                        
                         @if (Model.IsCompaniesHouseFlow && (Model.reExCompanyTeamMembers != null))
                         {
                             <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4">@Localizer["CheckYourDetails.TeamMembers.ApprovedPersonsAdded"]</h2>
