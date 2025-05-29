@@ -3,7 +3,6 @@
 using System.Security.Claims;
 using Core.Services;
 using Core.Services.FacadeModels;
-using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
@@ -21,17 +20,14 @@ using Web.Sessions;
 public abstract class ApprovedPersonTestBase
 {
     protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
-
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
     protected Mock<ICompanyService> _companyServiceMock = null!;
-    protected Mock<IOrganisationMapper> _organisationServiceMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
     protected Mock<ILogger<ApprovedPersonController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
-
     protected ApprovedPersonController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)
@@ -40,7 +36,6 @@ public abstract class ApprovedPersonTestBase
         _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
         _companyServiceMock = new Mock<ICompanyService>();
-        _organisationServiceMock = new Mock<IOrganisationMapper>();
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
         _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
@@ -78,5 +73,4 @@ public abstract class ApprovedPersonTestBase
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;
     }
-
 }

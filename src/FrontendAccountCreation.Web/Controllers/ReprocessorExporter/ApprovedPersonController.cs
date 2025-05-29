@@ -3,6 +3,7 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
+                session.IsApprovedUser = true;
                 return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
 

@@ -1,0 +1,26 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Core.Sessions
+@using FrontendAccountCreation.Web.Constants
+
+@{
+    ViewData["Title"] = Localizer["UkNation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <form asp-controller="Organisation" asp-action="BusinessAddress" method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+                        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                            Non CompaniesHouse Flow - Business Address - In Progress
+                        </h1>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
