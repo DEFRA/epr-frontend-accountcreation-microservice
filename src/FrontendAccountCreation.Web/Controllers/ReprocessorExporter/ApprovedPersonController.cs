@@ -274,6 +274,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(session.ReExCompaniesHouseSession?.TeamMembers?.Where(x => !string.IsNullOrWhiteSpace(x.FirstName)).ToList());
         }
 
+        [HttpPost]
+        [Route(PagePath.TeamMembersCheckInvitationDetails)]
+        [OrganisationJourneyAccess(PagePath.TeamMembersCheckInvitationDetails)]
+        public async Task<IActionResult> TeamMembersCheckInvitationDetailsPost()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TeamMembersCheckInvitationDetails, PagePath.CheckYourDetails);
+        }
+
         [HttpGet]
         [Route(PagePath.YouAreApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
@@ -308,6 +317,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.CheckYourDetails)]
+        [OrganisationJourneyAccess(PagePath.CheckYourDetails)]
         public async Task<IActionResult> CheckYourDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -336,6 +346,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route(PagePath.CheckYourDetails)]
+        [OrganisationJourneyAccess(PagePath.CheckYourDetails)]
+        public async Task<IActionResult> CheckYourDetailsPost()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(OrganisationController.Declaration), PagePath.CheckYourDetails, PagePath.Declaration, nameof(OrganisationController).Replace("Controller", ""));
         }
 
         [HttpGet]

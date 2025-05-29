@@ -655,6 +655,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.Declaration)]
+    [OrganisationJourneyAccess(PagePath.Declaration)]
     public async Task<IActionResult> Declaration()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -677,6 +678,7 @@ public class OrganisationController : Controller
 
     [HttpGet]
     [Route(PagePath.Success)]
+    [OrganisationJourneyAccess(PagePath.Success)]
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
