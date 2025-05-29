@@ -350,38 +350,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
 			if (model.IsMemberPartnership == YesNoAnswer.Yes)
 			{
-				return await SaveSessionAndRedirect(session, nameof(PartnerDetails), PagePath.MemberPartnership, PagePath.PartnerDetails);
+				return await SaveSessionAndRedirect(session, "PartnerDetails", PagePath.MemberPartnership, PagePath.PartnerDetails);
 			}
 
-			return await SaveSessionAndRedirect(session, nameof(CanNotInviteThisPerson), PagePath.MemberPartnership, PagePath.CanNotInviteThisPerson);
+			return await SaveSessionAndRedirect(session, "CanNotInviteThisPerson", PagePath.MemberPartnership, PagePath.CanNotInviteThisPerson);
 		}
 
-        [HttpGet]
-        [Route(PagePath.PartnerDetails)]
-        [OrganisationJourneyAccess(PagePath.PartnerDetails)]
-        public async Task<IActionResult> PartnerDetails()
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.PartnerDetails);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
-            return View();
-        }
-
-        [HttpGet]
-        [Route(PagePath.CanNotInviteThisPerson)]
-        [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
-        public async Task<IActionResult> CanNotInviteThisPerson()
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.CanNotInviteThisPerson);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
-            return View();
-        }
-
-
-        [HttpGet]
+		[HttpGet]
 		[Route(PagePath.CheckYourDetails)]
 		public async Task<IActionResult> CheckYourDetails()
 		{
