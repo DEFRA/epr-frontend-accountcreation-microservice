@@ -37,14 +37,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            if (session.IsOrganisationAPartnership == true)
-            {
-                return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
-                    ? View("InEligibleAddNotApprovedPerson")
-                    : View("LimitedPartnershipAddApprovedPerson");
-            }
+            var model = new AddApprovedPersonViewModel { IsOrganisationAPartnership = session.IsOrganisationAPartnership, IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson };
 
-            return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson") : View();
+            //if (session.IsOrganisationAPartnership == true)
+            //{
+            //    return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
+            //        ? View("InEligibleAddNotApprovedPerson")
+            //        : View("LimitedPartnershipAddApprovedPerson");
+            //}
+
+            //return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson") : View();
+
+            return View(model); 
         }
 
         [HttpPost]
@@ -56,14 +60,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (!ModelState.IsValid)
             {
-                if (session.IsOrganisationAPartnership == true)
-                {
-                    return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
-                        ? View("InEligibleAddNotApprovedPerson", model)
-                        : View("LimitedPartnershipAddApprovedPerson", model);
-                }
+                //if (session.IsOrganisationAPartnership == true)
+                //{
+                //    return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
+                //        ? View("InEligibleAddNotApprovedPerson", model)
+                //        : View("LimitedPartnershipAddApprovedPerson", model);
+                //}
 
-                return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson", model) : View(model);
+                //return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson", model) : View(model);
+                return View(model);
             }
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())

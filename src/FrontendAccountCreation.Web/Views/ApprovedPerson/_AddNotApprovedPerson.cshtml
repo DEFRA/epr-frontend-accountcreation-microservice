@@ -1,0 +1,81 @@
+﻿@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Core.Sessions;
+@model AddApprovedPersonViewModel
+@inject IViewLocalizer Localizer
+
+<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+        @Localizer["AddNotApprovedPerson.Title"]
+    </h1>
+
+    <p class="govuk-body">
+        @Localizer["AddNotApprovedPerson.IntroText1"]
+    </p>
+
+    <p class="govuk-body">
+        @Localizer["AddNotApprovedPerson.IntroText2"]
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@Localizer["AddNotApprovedPerson.BulletAccreditation"]</li>
+        <li>@Localizer["AddNotApprovedPerson.BulletSubmit"]</li>
+    </ul>
+
+    <div class="govuk-inset-text">
+        @Localizer["AddNotApprovedPerson.InsetText"]
+    </div>
+
+    <p class="govuk-body">
+        @Localizer["AddNotApprovedPerson.IntroText3"]
+    </p>
+
+    <br />
+    <h3 class="govuk-heading-s">
+        @Localizer["AddNotApprovedPerson.RolesHeading"]
+    </h3>
+
+    <p class="govuk-body">
+        @Localizer["AddNotApprovedPerson.RolesInstruction"]
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@Localizer["AddNotApprovedPerson.Director"]</li>
+        <li>@Localizer["AddNotApprovedPerson.CompanySecretary"]</li>
+    </ul>
+
+    <h3 class="govuk-heading-s">
+        @Localizer["AddNotApprovedPerson.UserHeading"]
+    </h3>
+
+    <p class="govuk-body">
+        @Localizer["AddNotApprovedPerson.SelectOptionText"]
+    </p>
+
+    <br />
+    <fieldset class="govuk-fieldset" aria-describedby="invite-options">
+        <legend class="govuk-visually-hidden">@Localizer["AddNotApprovedPerson.InviteOptionsLegend"]</legend>
+
+        @await Html.PartialAsync("Partials/Govuk/_ErrorList", Model.ErrorsViewModel)
+
+        <div class="govuk-radios" data-module="govuk-radios">
+
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" type="radio" id="rdoInviteNow"
+                       name="InviteUserOption" value="@nameof(InviteUserOptions.InviteAnotherPerson)">
+                <label class="govuk-label govuk-radios__label" for="rdoInviteNow">
+                    @Localizer["AddNotApprovedPerson.InviteAnotherApprovedPerson"]
+                </label>
+            </div>
+
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" type="radio" id="rdoInviteLater"
+                       name="InviteUserOption" value="@nameof(InviteUserOptions.InviteLater)">
+                <label class="govuk-label govuk-radios__label" for="rdoInviteLater">
+                    @Localizer["AddNotApprovedPerson.InviteApprovedPersonLater"]
+                </label>
+            </div>
+
+        </div>
+    </fieldset>
+</div>
