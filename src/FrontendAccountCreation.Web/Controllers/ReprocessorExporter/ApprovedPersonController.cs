@@ -70,7 +70,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
                 session.IsApprovedUser = true;
-                session.ServiceRole = ServiceRole.ApprovedPerson.GetEnumDescrption();
                 return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
 

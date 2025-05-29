@@ -37,9 +37,4 @@ public class OrganisationSession
     public bool? IsOrganisationAPartnership { get; set; }
 
     public bool? IsUkMainAddress { get; set; }
-
-    /// <summary>
-    /// User's service role i.e. ApprovedPerson, Basic or Delegated
-    /// </summary>
-    public string? ServiceRole { get; set; }
 }
