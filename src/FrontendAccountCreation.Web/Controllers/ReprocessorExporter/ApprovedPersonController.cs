@@ -37,15 +37,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var model = new AddApprovedPersonViewModel { IsOrganisationAPartnership = session.IsOrganisationAPartnership, IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson };
 
-            //if (session.IsOrganisationAPartnership == true)
-            //{
-            //    return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
-            //        ? View("InEligibleAddNotApprovedPerson")
-            //        : View("LimitedPartnershipAddApprovedPerson");
-            //}
-
-            //return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson") : View();
-
             return View(model); 
         }
 
@@ -57,15 +48,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
             if (!ModelState.IsValid)
-            {
-                //if (session.IsOrganisationAPartnership == true)
-                //{
-                //    return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
-                //        ? View("InEligibleAddNotApprovedPerson", model)
-                //        : View("LimitedPartnershipAddApprovedPerson", model);
-                //}
-
-                //return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson", model) : View(model);
+            {             
                 return View(model);
             }
 

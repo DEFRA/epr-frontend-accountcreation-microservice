@@ -26,16 +26,16 @@
                         if (Model.IsOrganisationAPartnership == true)
                         {
                             if (Model.IsInEligibleToBeApprovedPerson)
-                                await Html.PartialAsync("_InEligibleAddNotApprovedPerson", Model);
+                                @await Html.PartialAsync("_InEligibleAddNotApprovedPerson", Model)
                             else
-                                await Html.PartialAsync("_LimitedPartnershipAddApprovedPerson", Model);
+                                @await Html.PartialAsync("_LimitedPartnershipAddApprovedPerson", Model)
                         }
                         else
                         {
                             if (Model.IsInEligibleToBeApprovedPerson)
-                                await Html.PartialAsync("_AddNotApprovedPerson", Model);
+                                @await Html.PartialAsync("_AddNotApprovedPerson", Model)
                             else
-                                await Html.PartialAsync("_AddApprovedPerson", Model);
+                                @await Html.PartialAsync("_AddApprovedPerson", Model)
                         }
                     }
 
