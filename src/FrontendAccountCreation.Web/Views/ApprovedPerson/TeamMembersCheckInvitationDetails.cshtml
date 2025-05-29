@@ -83,10 +83,10 @@
                         </div>
                     }
            
-                    <form asp-controller="ApprovedPerson" method="get">
+                    <form asp-controller="ApprovedPerson">
                         <div class="govuk-button-group">
                             <!-- goes to check your details -->
-                            <button class="govuk-button" data-module="govuk-button" asp-action="CheckYourDetails">
+                            <button class="govuk-button" data-module="govuk-button" asp-action="TeamMembersCheckInvitationDetailsPost">
                                 @SharedLocalizer["Continue"]
                             </button>
 
