@@ -34,6 +34,8 @@ public class OrganisationSession : ILocalSession
 
     public bool? IsOrganisationAPartnership { get; set; }
 
+    public bool? IsUkMainAddress { get; set; }
+
     public bool IsUserChangingDetails { get; set; }
 
     public List<string> Journey { get; set; } = [];

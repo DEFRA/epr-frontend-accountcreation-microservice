@@ -21,17 +21,15 @@ using Web.Sessions;
 public abstract class OrganisationTestBase
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
-
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
-    protected Mock<ICompanyService> _companyServiceMock = null!;
-    protected Mock<IOrganisationMapper> _organisationServiceMock = null!;
+    protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
-    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;
-    protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
-
+    protected Mock<IOptions<ServiceKeysOptions>> _serviceKeyOptionsMock = null!;
+    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;    
+    protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected OrganisationController _systemUnderTest = null!;
 
     protected void SetupBase(string? deploymentRole = null)
@@ -39,10 +37,10 @@ public abstract class OrganisationTestBase
         _httpContextMock = new Mock<HttpContext>();
         _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
-        _companyServiceMock = new Mock<ICompanyService>();
-        _organisationServiceMock = new Mock<IOrganisationMapper>();
+        _reExAccountMapperMock = new Mock<IReExAccountMapper>();
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
         _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
+        _serviceKeyOptionsMock = new Mock<IOptions<ServiceKeysOptions>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
@@ -70,11 +68,23 @@ public abstract class OrganisationTestBase
                 DeploymentRole = deploymentRole
             });
 
+        _serviceKeyOptionsMock.Setup(x => x.Value)
+            .Returns(new ServiceKeysOptions
+            {
+                ReprocessorExporter = "Re-Ex"
+            });
+
         _loggerMock = new Mock<ILogger<OrganisationController>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        _systemUnderTest = new OrganisationController(_sessionManagerMock.Object, _facadeServiceMock.Object, _companyServiceMock.Object,
-           _organisationServiceMock.Object, _urlsOptionMock.Object, _deploymentRoleOptionMock.Object, _loggerMock.Object);
+        _systemUnderTest = new OrganisationController(
+            _sessionManagerMock.Object, 
+            _facadeServiceMock.Object, 
+            _reExAccountMapperMock.Object,
+           _urlsOptionMock.Object, 
+           _deploymentRoleOptionMock.Object, 
+           _serviceKeyOptionsMock.Object, 
+           _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;

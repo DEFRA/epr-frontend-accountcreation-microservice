@@ -27,27 +27,27 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
-    private readonly ICompanyService _companyService;
-    private readonly IOrganisationMapper _organisationMapper;
+    private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
+    private readonly ServiceKeysOptions _serviceKeyOptions;
 
     public OrganisationController(
          ISessionManager<OrganisationSession> sessionManager,
          IFacadeService facadeService,
-         ICompanyService companyService,
-         IOrganisationMapper organisationMapper,
+         IReExAccountMapper reExAccountMapper,
          IOptions<ExternalUrlsOptions> urlOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
+         IOptions<ServiceKeysOptions> serviceKeyOptions,
          ILogger<OrganisationController> logger) : base(sessionManager)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
-        _companyService = companyService;
-        _organisationMapper = organisationMapper;
+        _reExAccountMapper = reExAccountMapper;
         _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
+        _serviceKeyOptions = serviceKeyOptions.Value;
         _logger = logger;
     }
 
@@ -160,8 +160,49 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
         else
         {
-            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.RegisteredWithCompaniesHouse, PagePath.TypeOfOrganisation);
+            return await SaveSessionAndRedirect(session, nameof(IsUkMainAddress), PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress);
         }
+    }
+
+    [HttpGet]
+    [Route(PagePath.IsUkMainAddress)]
+    [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
+    public async Task<IActionResult> IsUkMainAddress()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.IsUkMainAddress);
+
+        YesNoAnswer? isUkMainAddress = null;
+        if (session.IsUkMainAddress != null)
+        {
+            isUkMainAddress = session.IsUkMainAddress.Value ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(new IsUkMainAddressViewModel
+        {
+            IsUkMainAddress = isUkMainAddress
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.IsUkMainAddress)]
+    [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
+    public async Task<IActionResult> IsUkMainAddress(IsUkMainAddressViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
+
+        if (session.IsUkMainAddress == true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress, PagePath.TradingName);
+        }
+        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
     }
 
     [HttpGet]
@@ -239,8 +280,16 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.ReExManualInputSession.TradingName = model.TradingName!;
 
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
-            PagePath.IsPartnership);
+        if (session.IsCompaniesHouseFlow)
+        {
+            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
+                PagePath.IsPartnership);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
+                PagePath.TypeOfOrganisation);
+        }
     }
 
     [HttpGet]
@@ -252,7 +301,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         SetBackLink(session, PagePath.TypeOfOrganisation);
 
-        var viewModel = new TypeOfOrganisationViewModel()
+        var viewModel = new ReExTypeOfOrganisationViewModel()
         {
             ProducerType = session.ReExManualInputSession?.ProducerType
         };
@@ -263,7 +312,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpPost]
     [Route(PagePath.TypeOfOrganisation)]
     [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
-    public async Task<IActionResult> TypeOfOrganisation(TypeOfOrganisationViewModel model)
+    public async Task<IActionResult> TypeOfOrganisation(ReExTypeOfOrganisationViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -277,8 +326,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         session.ReExManualInputSession.ProducerType = model.ProducerType;
         session.ReExCompaniesHouseSession = null;
 
-        return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.TypeOfOrganisation,
-            PagePath.RoleInOrganisation);
+        return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.TypeOfOrganisation,
+            PagePath.UkNation);
     }
 
     [HttpGet]
@@ -529,7 +578,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         var viewModel = new UkNationViewModel()
         {
             UkNation = session.UkNation,
-            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow,
+            IsManualInputFlow = !session.IsCompaniesHouseFlow
         };
         return View(viewModel);
     }
@@ -554,7 +604,14 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
         session!.UkNation = model.UkNation;
-        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
+        if (model.IsCompaniesHouseFlow)
+        {
+            return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(BusinessAddress), PagePath.UkNation, PagePath.BusinessAddress);
+        }
     }
 
     [HttpGet]
@@ -576,9 +633,19 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         throw new NotImplementedException("not been implemented yet...as no related user-story has been confirmed!");
     }
 
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.BusinessAddress)]
+    [OrganisationJourneyAccess(PagePath.BusinessAddress)]
+    public async Task<IActionResult> BusinessAddress()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.BusinessAddress);
+        return View();
+    }
+
     [HttpGet]
     [Route(PagePath.Declaration)]
-    [OrganisationJourneyAccess(PagePath.Declaration)]
     public async Task<IActionResult> Declaration()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -588,17 +655,19 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
     [HttpGet]
     [Route(PagePath.DeclarationContinue)]
-    [OrganisationJourneyAccess(PagePath.DeclarationContinue)]
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue,
-            PagePath.Success);
+        
+        // Post related data
+        var reExOrganisation = _reExAccountMapper.CreateReExOrganisationModel(session);
+        await _facadeService.PostReprocessorExporterCreateOrganisationAsync(reExOrganisation, _serviceKeyOptions.ReprocessorExporter);
+
+        return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue, PagePath.Success);
     }
 
     [HttpGet]
     [Route(PagePath.Success)]
-    [OrganisationJourneyAccess(PagePath.Success)]
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);

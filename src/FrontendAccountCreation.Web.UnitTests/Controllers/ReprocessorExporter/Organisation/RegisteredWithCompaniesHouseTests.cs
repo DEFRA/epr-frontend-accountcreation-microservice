@@ -40,7 +40,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     [TestMethod]
     [DataRow(OrganisationType.NonCompaniesHouseCompany)]
     [DataRow(OrganisationType.CompaniesHouseCompany)]
-    public async Task RegisteredWithCompaniesHouse_OrganisationIsNotRegistered_RedirectsToTypeOfOrganisationPage_AndUpdateSession(OrganisationType orgType)
+    public async Task RegisteredWithCompaniesHouse_OrganisationIsNotRegistered_RedirectsToIsUkMainAddressPage_AndUpdateSession(OrganisationType orgType)
     {
         // Arrange
 
@@ -60,7 +60,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsUkMainAddress));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }

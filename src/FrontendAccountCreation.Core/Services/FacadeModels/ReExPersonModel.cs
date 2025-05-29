@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Core.Services.FacadeModels;
 
+[ExcludeFromCodeCoverage]
 public class ReExPersonModel
 {
     [MaxLength(50)]
