@@ -323,7 +323,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = result as RedirectToActionResult;
 
-        redirectResult!.ActionName.Should().Be("Declaration");
-        redirectResult.ControllerName.Should().Be("Organisation");
+        redirectResult!.ActionName.Should().Be("check-your-details");
+        redirectResult.ControllerName.Should().Be("Declaration");
     }
 }
