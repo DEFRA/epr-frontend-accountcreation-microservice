@@ -281,4 +281,28 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Assert
         model.RoleInOrganisation.Should().Be(_companiesHouseSession.RoleInOrganisation);
     }
+
+    [TestMethod]
+    public async Task CheckYourDetailsPost_ShouldRedirectToDeclaration()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = _companiesHouseSession
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+                           .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetailsPost();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+
+        redirectResult!.ActionName.Should().Be("Declaration");
+        redirectResult.ControllerName.Should().Be("Organisation");
+    }
 }
