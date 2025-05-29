@@ -1,10 +1,11 @@
 ﻿@using FrontendAccountCreation.Web.Constants
-@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+
 @{
-    ViewData["Title"] = Localizer["LimitedLiabilityPartnershipApprovedPerson.Title"];
+    ViewData["Title"] = Localizer["_LimitedPartnershipYouAreApprovedPerson.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 }
+
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
         <div class="govuk-grid-row">
@@ -12,29 +13,31 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
-                            @Localizer["LimitedLiabilityPartnershipApprovedPerson.Header"]
+                            @Localizer["_LimitedPartnershipYouAreApprovedPerson.Title"]
                         </h1>
                     </legend>
                 </fieldset>
 
-                <p class="govuk-body">@Localizer["LimitedLiabilityPartnershipApprovedPerson.Description"].Value</p>
+                <p class="govuk-body">@Localizer["_LimitedPartnershipYouAreApprovedPerson.Description"]</p>
 
-                <p class="govuk-body">@Localizer["LimitedLiabilityPartnershipApprovedPerson.YouCanNow"].Value</p>
+                <p class="govuk-body">@Localizer["_LimitedPartnershipYouAreApprovedPerson.YouCanNow"]:</p>
 
                 <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        @Localizer["LimitedLiabilityPartnershipApprovedPerson.Item1"]
+                        @Localizer["_LimitedPartnershipYouAreApprovedPerson.Item1"]
                     <li>
-                        @Localizer["LimitedLiabilityPartnershipApprovedPerson.Item2"]
+                            @Localizer["_LimitedPartnershipYouAreApprovedPerson.Item2"]
                     </li>
                 </ul>
+
                 <form asp-controller="ApprovedPerson" asp-action="YouAreApprovedPerson" method="post">
                     <div class="govuk-button-group">
                         <button class="govuk-button" data-module="govuk-button" name="inviteApprovedPerson" value="false">
                             @SharedLocalizer["Continue"]
                         </button>
-                        <a asp-controller="ApprovedPerson" asp-action="MemberPartnership" class="govuk-link">
-                            @Localizer["LimitedLiabilityPartnershipApprovedPerson.InviteLink"]
+
+                        <a asp-controller="ApprovedPerson" asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
+                            @Localizer["_LimitedPartnershipYouAreApprovedPerson.InviteLink"]
                         </a>
                     </div>
                 </form>

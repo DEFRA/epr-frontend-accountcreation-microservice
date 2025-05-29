@@ -117,25 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LimitedLiabilityPartnershipApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh]Approved person</value>
+  <data name="_NonPartnershipApprovedPerson.Description" xml:space="preserve">
+    <value>As an inividual named on Companies House you are now an 'approved person' for your organisation.</value>
   </data>
-  <data name="LimitedLiabilityPartnershipApprovedPerson.Header" xml:space="preserve">
-    <value>[Welsh]You are now an approved person</value>
+  <data name="_NonPartnershipApprovedPerson.Title" xml:space="preserve">
+    <value>approved-person</value>
   </data>
-  <data name="LimitedLiabilityPartnershipApprovedPerson.Description" xml:space="preserve">
-    <value>[Welsh]As an individual named on Companies House, you are now an approved person for your organisation.</value>
+  <data name="_NonPartnershipApprovedPerson.Header" xml:space="preserve">
+    <value>You are now an approved person</value>
   </data>
-  <data name="LimitedLiabilityPartnershipApprovedPerson.YouCanNow" xml:space="preserve">
-    <value>[Welsh]You can now:</value>
+  <data name="_NonPartnershipApprovedPerson.InviteLink" xml:space="preserve">
+    <value>Invite another approved person</value>
   </data>
-  <data name="LimitedLiabilityPartnershipApprovedPerson.Item1" xml:space="preserve">
-    <value>[Welsh]continue to add your organisation</value>
+  <data name="_NonPartnershipApprovedPerson.Item1" xml:space="preserve">
+    <value>continue to add your organisation</value>
   </data>
-  <data name="LimitedLiabilityPartnershipApprovedPerson.Item2" xml:space="preserve">
-    <value>[Welsh]invite additional people within your organisation to be an approved person, from the eligible roles</value>
+  <data name="_NonPartnershipApprovedPerson.Item2" xml:space="preserve">
+    <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
   </data>
-  <data name="LimitedLiabilityPartnershipApprovedPerson.InviteLink" xml:space="preserve">
-    <value>[Welsh]Invite another eligible person</value>
+  <data name="_NonPartnershipApprovedPerson.Title" xml:space="preserve">
+    <value>Approved person</value>
+  </data>
+  <data name="_NonPartnershipApprovedPerson.YouCanNow" xml:space="preserve">
+    <value>You can now:</value>
   </data>
 </root>

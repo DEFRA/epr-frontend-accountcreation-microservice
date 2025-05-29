@@ -24,7 +24,7 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
-            IsOrganisationAPartnership = false,
+            IsOrganisationAPartnership = true,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession() { Partnership = new Core.Sessions.ReEx.Partnership.ReExPartnership() }
         };
 
@@ -101,7 +101,7 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
         result.Should().BeOfType<ViewResult>();
         var viewResult = result as ViewResult;
         viewResult!.ViewName.Should().BeNull();
-        viewResult.Model.Should().BeNull();
+        viewResult.Model.Should().NotBeNull();
     }
 
     [TestMethod]

@@ -293,13 +293,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
 			var approvedPersonViewModel = new ApprovedPersonViewModel
 			{
-				IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership,
-				IsLimitedPartnership = session.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership
-			};
+                IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
+                IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false
+            };
 
-			return session.IsOrganisationAPartnership == true
-				? View(approvedPersonViewModel)
-				: View();
+			return View(approvedPersonViewModel);
 		}
 
 		[HttpPost]
