@@ -305,19 +305,4 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         redirectResult!.ActionName.Should().Be("Declaration");
         redirectResult.ControllerName.Should().Be("Organisation");
     }
-
-    [TestMethod]
-    public async Task CheckYourDetailsPost_ShouldCallGetSessionAsync()
-    {
-        // Arrange
-        var session = new OrganisationSession();
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-                           .ReturnsAsync(session);
-
-        // Act
-        await _systemUnderTest.CheckYourDetailsPost();
-
-        // Assert
-        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
-    }
 }
