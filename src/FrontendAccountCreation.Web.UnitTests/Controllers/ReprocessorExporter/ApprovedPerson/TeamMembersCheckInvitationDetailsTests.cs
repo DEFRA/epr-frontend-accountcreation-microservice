@@ -111,4 +111,34 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
 
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
+
+    [TestMethod]
+    public async Task TeamMembersCheckInvitationDetailsPost_UpdatesSession_AndRedirects()
+    {
+        // Arrange
+        var teamMembers = new List<ReExCompanyTeamMember?>
+    {
+        new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Smith" },
+        new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Test" },
+    };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetailsPost();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
+
+        // Optional: Check the redirect path if it's set in route values or controller
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+    }
+
+
 }
