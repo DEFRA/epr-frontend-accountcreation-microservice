@@ -293,11 +293,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 			SetBackLink(session, PagePath.YouAreApprovedPerson);
 			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
+			bool isPartnership = session.IsOrganisationAPartnership ?? false;
+
 			var approvedPersonViewModel = new ApprovedPersonViewModel
 			{
-                IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
-                IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false
-            };
+				IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
+				IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false)
+			};
 
 			return View(approvedPersonViewModel);
 		}
