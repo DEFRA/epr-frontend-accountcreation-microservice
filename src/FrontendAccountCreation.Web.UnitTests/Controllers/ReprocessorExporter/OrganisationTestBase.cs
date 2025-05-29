@@ -1,17 +1,19 @@
 ﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
-using System.Security.Claims;
 using Core.Services;
 using Core.Services.FacadeModels;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Moq;
+using System.Security.Claims;
 using Web.Configs;
 using Web.Sessions;
 
@@ -28,6 +30,7 @@ public abstract class OrganisationTestBase
     protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
     protected Mock<IOptions<ServiceKeysOptions>> _serviceKeyOptionsMock = null!;
+    protected Mock<IFeatureManager> _featureManagerMock = null!;
     protected Mock<ILogger<OrganisationController>> _loggerMock = null!;    
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected OrganisationController _systemUnderTest = null!;
@@ -41,6 +44,7 @@ public abstract class OrganisationTestBase
         _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
         _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
         _serviceKeyOptionsMock = new Mock<IOptions<ServiceKeysOptions>>();
+        _featureManagerMock = new Mock<IFeatureManager>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
@@ -74,6 +78,9 @@ public abstract class OrganisationTestBase
                 ReprocessorExporter = "Re-Ex"
             });
 
+        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
+            .ReturnsAsync(true);
+
         _loggerMock = new Mock<ILogger<OrganisationController>>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
@@ -83,7 +90,8 @@ public abstract class OrganisationTestBase
             _reExAccountMapperMock.Object,
            _urlsOptionMock.Object, 
            _deploymentRoleOptionMock.Object, 
-           _serviceKeyOptionsMock.Object, 
+           _serviceKeyOptionsMock.Object,
+           _featureManagerMock.Object,
            _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;

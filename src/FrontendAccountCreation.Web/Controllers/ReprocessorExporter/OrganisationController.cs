@@ -14,6 +14,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -28,6 +29,7 @@ public class OrganisationController : Controller
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
+    private readonly IFeatureManager _featureManager;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
@@ -40,11 +42,13 @@ public class OrganisationController : Controller
          IOptions<ExternalUrlsOptions> urlOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
          IOptions<ServiceKeysOptions> serviceKeyOptions,
+         IFeatureManager featureManager,
          ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
+        _featureManager = featureManager;
         _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
         _serviceKeyOptions = serviceKeyOptions.Value;
@@ -198,11 +202,19 @@ public class OrganisationController : Controller
 
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
-        if (session.IsUkMainAddress == true)
+        if (session.IsUkMainAddress != true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress, PagePath.TradingName);
+            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner),
+                PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
         }
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+
+        if (await _featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
+        {
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
+                PagePath.TradingName);
+        }
+
+        return Redirect(PagePath.PageNotFoundReEx);
     }
 
     [HttpGet]
@@ -285,11 +297,8 @@ public class OrganisationController : Controller
             return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
                 PagePath.IsPartnership);
         }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
-                PagePath.TypeOfOrganisation);
-        }
+        return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
+            PagePath.TypeOfOrganisation);
     }
 
     [HttpGet]
