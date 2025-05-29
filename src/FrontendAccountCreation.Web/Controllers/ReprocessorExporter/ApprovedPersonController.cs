@@ -308,6 +308,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.CheckYourDetails)]
+        [OrganisationJourneyAccess(PagePath.CheckYourDetails)]
         public async Task<IActionResult> CheckYourDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -336,6 +337,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route(PagePath.CheckYourDetails)]
+        [OrganisationJourneyAccess(PagePath.CheckYourDetails)]
+        public async Task<IActionResult> CheckYourDetailsPost()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(OrganisationController.Declaration), PagePath.CheckYourDetails, PagePath.Declaration, nameof(OrganisationController).Replace("Controller", ""));
         }
 
         [HttpGet]
