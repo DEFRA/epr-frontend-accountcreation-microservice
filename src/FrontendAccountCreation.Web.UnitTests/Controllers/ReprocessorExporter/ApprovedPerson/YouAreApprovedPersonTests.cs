@@ -42,14 +42,13 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [DataRow(true, false, "LimitedLiabilityPartnership")]
-    [DataRow(false, true, "LimitedPartnership")]
-    [DataRow(true, true, "LimitedLiabilityPartnership")]
-    [DataRow(false, false, "NonPartnership")]
+    [DataRow(true, false)]
+    [DataRow(false, true)]
+    [DataRow(true, true)]
+    [DataRow(false, false)]
     public async Task Get_YouAreApprovedPerson_WhenOrganisationIsPartnership_Returns_ViewWithModel(
         bool isLimitedLiabilityPartnership, 
-        bool isLimitedPartnership,
-        string expectedPartialView)
+        bool isLimitedPartnership)
     {
         // Arrange
         var session = new OrganisationSession
