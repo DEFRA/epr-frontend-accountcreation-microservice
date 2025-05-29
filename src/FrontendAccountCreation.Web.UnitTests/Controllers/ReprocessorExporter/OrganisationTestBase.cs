@@ -27,13 +27,13 @@ public abstract class OrganisationTestBase
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
     protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
-    protected Mock<IOptions<ExternalUrlsOptions>> _urlsOptionMock = null!;
     protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
-    protected Mock<IOptions<ServiceKeysOptions>> _serviceKeyOptionsMock = null!;
     protected Mock<IFeatureManager> _featureManagerMock = null!;
-    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;    
+    protected Mock<ILogger<OrganisationController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
     protected OrganisationController _systemUnderTest = null!;
+
+    protected Mock<IMultipleOptions> _multipleOptionsMock = null!;
 
     protected void SetupBase(string? deploymentRole = null)
     {
@@ -41,9 +41,8 @@ public abstract class OrganisationTestBase
         _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
         _reExAccountMapperMock = new Mock<IReExAccountMapper>();
-        _urlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
+        _multipleOptionsMock = new Mock<IMultipleOptions>();
         _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
-        _serviceKeyOptionsMock = new Mock<IOptions<ServiceKeysOptions>>();
         _featureManagerMock = new Mock<IFeatureManager>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
@@ -52,7 +51,7 @@ public abstract class OrganisationTestBase
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
             .Returns(Task.FromResult<OrganisationSession?>(new OrganisationSession()));
 
-        _urlsOptionMock.Setup(x => x.Value)
+        _multipleOptionsMock.Setup(x => x.UrlOptions)
             .Returns(new ExternalUrlsOptions
             {
                 FindAndUpdateCompanyInformation = "dummy url",
@@ -72,11 +71,11 @@ public abstract class OrganisationTestBase
                 DeploymentRole = deploymentRole
             });
 
-        _serviceKeyOptionsMock.Setup(x => x.Value)
-            .Returns(new ServiceKeysOptions
-            {
-                ReprocessorExporter = "Re-Ex"
-            });
+        _multipleOptionsMock.Setup(x => x.ServiceKeysOptions)
+           .Returns(new ServiceKeysOptions
+           {
+               ReprocessorExporter = "Re-Ex"
+           });
 
         _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
             .ReturnsAsync(true);
@@ -85,12 +84,13 @@ public abstract class OrganisationTestBase
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
         _systemUnderTest = new OrganisationController(
-            _sessionManagerMock.Object, 
-            _facadeServiceMock.Object, 
+            _sessionManagerMock.Object,
+            _facadeServiceMock.Object,
             _reExAccountMapperMock.Object,
-           _urlsOptionMock.Object, 
-           _deploymentRoleOptionMock.Object, 
-           _serviceKeyOptionsMock.Object,
+            _multipleOptionsMock.Object,
+           //_urlsOptionMock.Object, 
+           _deploymentRoleOptionMock.Object,
+           //_serviceKeyOptionsMock.Object,
            _featureManagerMock.Object,
            _loggerMock.Object);
 

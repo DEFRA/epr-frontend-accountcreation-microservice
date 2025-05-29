@@ -39,19 +39,18 @@ public class OrganisationController : Controller
          ISessionManager<OrganisationSession> sessionManager,
          IFacadeService facadeService,
          IReExAccountMapper reExAccountMapper,
-         IOptions<ExternalUrlsOptions> urlOptions,
+         IMultipleOptions multipleOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-         IOptions<ServiceKeysOptions> serviceKeyOptions,
          IFeatureManager featureManager,
          ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
-        _featureManager = featureManager;
-        _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
-        _serviceKeyOptions = serviceKeyOptions.Value;
+        _featureManager = featureManager;
+        _urlOptions = multipleOptions.UrlOptions;
+        _serviceKeyOptions = multipleOptions.ServiceKeysOptions;
         _logger = logger;
     }
 
