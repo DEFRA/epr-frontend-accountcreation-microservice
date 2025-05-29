@@ -136,9 +136,9 @@
     <value>Companies House number</value>
   </data>
   <data name="CompaniesHouseNumber.MaxLengthErrorMessage" xml:space="preserve">
-    <value>Invalid house number more than 8 character entered</value>
+    <value>Invalid Companies House number more than 8 character entered</value>
   </data>
   <data name="CompaniesHouseNumber.MinLengthErrorMessage" xml:space="preserve">
-    <value>Invalid house number less than 8 character entered</value>
+    <value>Invalid Companies House number less than 8 character entered</value>
   </data>
 </root>
