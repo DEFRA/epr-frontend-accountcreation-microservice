@@ -156,7 +156,7 @@
                         
                         @if (Model is {IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true})
                         {
-                            @await Html.PartialAsync("~/Views/ApprovedPerson/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
                         
                         @if (Model.IsCompaniesHouseFlow && (Model.reExCompanyTeamMembers != null))

@@ -9,15 +9,15 @@
 
 @if (Model.IsLimitedPartnership)
 {
-    @Html.Partial("_LimitedPartnershipYouAreApprovedPerson")
+    @Html.Partial("Partials/_LimitedPartnershipYouAreApprovedPerson")
 }
 else if (Model.IsLimitedLiabilityPartnership)
 {
-    @Html.Partial("_LimitedLiabilityPartnershipApprovedPerson")
+    @Html.Partial("Partials/_LimitedLiabilityPartnershipApprovedPerson")
 }
 else 
 {
-    @Html.Partial("_NonPartnershipApprovedPerson")
+    @Html.Partial("Partials/_NonPartnershipApprovedPerson")
 }
 
 
