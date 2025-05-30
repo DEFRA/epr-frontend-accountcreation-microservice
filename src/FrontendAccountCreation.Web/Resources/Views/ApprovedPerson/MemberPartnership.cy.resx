@@ -117,28 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="YouAreApprovedPerson.Description" xml:space="preserve">
-    <value>As an inividual named on Companies House you are now an 'approved person' for your organisation.</value>
+  <data name="MemberPartnership.Title" xml:space="preserve">
+    <value>[Welsh] Member Partnership</value>
   </data>
-  <data name="YouAreApprovedPerson.Title" xml:space="preserve">
-    <value>Approved Person</value>
+  <data name="MemberPartnership.Question" xml:space="preserve">
+    <value>[Welsh] Are they a member in the limited liability partnership?</value>
   </data>
-  <data name="YouAreApprovedPerson.Header" xml:space="preserve">
-    <value>You are now an approved person</value>
+  <data name="MemberPartnership.Description" xml:space="preserve">
+    <value>[Welsh] Any member of a limited liability partnership can be an approved person. You can still continue to add an organisation without inviting someone if you do not have a name and contact details yet.</value>
   </data>
-  <data name="YouAreApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another approved person</value>
-  </data>
-  <data name="YouAreApprovedPerson.Item1" xml:space="preserve">
-    <value>continue to add your organisation</value>
-  </data>
-  <data name="YouAreApprovedPerson.Item2" xml:space="preserve">
-    <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
-  </data>
-  <data name="YouAreApprovedPerson.Title" xml:space="preserve">
-    <value>Approved person</value>
-  </data>
-  <data name="YouAreApprovedPerson.YouCanNow" xml:space="preserve">
-    <value>You can now:</value>
+  <data name="MemberPartnership.ErrorMessage" xml:space="preserve">
+    <value>[Welsh] Select yes if they are a member of the limited liability partnership</value>
   </data>
 </root>

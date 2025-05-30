@@ -1,10 +1,10 @@
-﻿using FrontendAccountCreation.Core.Services;
+﻿using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Sessions;
@@ -14,6 +14,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -23,11 +24,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
-public class OrganisationController : ControllerBase<OrganisationSession>
+public class OrganisationController : Controller
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
+    private readonly IFeatureManager _featureManager;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
@@ -37,17 +39,18 @@ public class OrganisationController : ControllerBase<OrganisationSession>
          ISessionManager<OrganisationSession> sessionManager,
          IFacadeService facadeService,
          IReExAccountMapper reExAccountMapper,
-         IOptions<ExternalUrlsOptions> urlOptions,
+         IMultipleOptions multipleOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-         IOptions<ServiceKeysOptions> serviceKeyOptions,
-         ILogger<OrganisationController> logger) : base(sessionManager)
+         IFeatureManager featureManager,
+         ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
-        _urlOptions = urlOptions.Value;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
-        _serviceKeyOptions = serviceKeyOptions.Value;
+        _featureManager = featureManager;
+        _urlOptions = multipleOptions.UrlOptions;
+        _serviceKeyOptions = multipleOptions.ServiceKeysOptions;
         _logger = logger;
     }
 
@@ -189,20 +192,28 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
     public async Task<IActionResult> IsUkMainAddress(IsUkMainAddressViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.IsUkMainAddress);
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
-        if (session.IsUkMainAddress == true)
+        if (session.IsUkMainAddress != true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress, PagePath.TradingName);
+            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner),
+                PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
         }
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+
+        if (await _featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
+        {
+            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
+                PagePath.TradingName);
+        }
+
+        return Redirect(PagePath.PageNotFoundReEx);
     }
 
     [HttpGet]
@@ -230,12 +241,13 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
     public async Task<IActionResult> IsTradingNameDifferent(IsTradingNameDifferentViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.IsTradingNameDifferent);
             return View(model);
         }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
@@ -285,11 +297,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
                 PagePath.IsPartnership);
         }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
-                PagePath.TypeOfOrganisation);
-        }
+        return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
+            PagePath.TypeOfOrganisation);
     }
 
     [HttpGet]
@@ -690,6 +699,54 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
     #region Private Methods 
 
+    private void SetBackLink(OrganisationSession session, string currentPagePath)
+    {
+        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+        {
+            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+        }
+        else
+        {
+            ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+        }
+    }
+
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+        string actionName, string currentPagePath, string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName);
+    }
+
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+        string controllerName, string actionName, string currentPagePath, string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        var contNameWOCont = controllerName.Replace("Controller", string.Empty);
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName, contNameWOCont);
+    }
+
+    private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
+    {
+        ClearRestOfJourney(session, currentPagePath);
+
+        session.Journey.AddIfNotExists(nextPagePath);
+
+        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+    }
+
+    private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
+    {
+        var index = session.Journey.IndexOf(currentPagePath);
+
+        // this also cover if current page not found (index = -1) then it clears all pages
+        session.Journey = session.Journey.Take(index + 1).ToList();
+    }
+
     private static ModelStateDictionary DeserializeModelState(string serializedModelState)
     {
         var errorList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(serializedModelState);
@@ -717,5 +774,4 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     #endregion
-
 }

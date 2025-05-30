@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,28 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="YouAreApprovedPerson.Description" xml:space="preserve">
-    <value>As an inividual named on Companies House you are now an 'approved person' for your organisation.</value>
+  <data name="LimitedLiabilityPartnership.Title" xml:space="preserve">
+    <value>Partner you</value>
   </data>
-  <data name="YouAreApprovedPerson.Title" xml:space="preserve">
-    <value>Approved Person</value>
+  <data name="LimitedLiabilityPartnership.Question" xml:space="preserve">
+    <value>Are you a member of the limited liability partnership?</value>
   </data>
-  <data name="YouAreApprovedPerson.Header" xml:space="preserve">
-    <value>You are now an approved person</value>
-  </data>
-  <data name="YouAreApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another approved person</value>
-  </data>
-  <data name="YouAreApprovedPerson.Item1" xml:space="preserve">
-    <value>continue to add your organisation</value>
-  </data>
-  <data name="YouAreApprovedPerson.Item2" xml:space="preserve">
-    <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
-  </data>
-  <data name="YouAreApprovedPerson.Title" xml:space="preserve">
-    <value>Approved person</value>
-  </data>
-  <data name="YouAreApprovedPerson.YouCanNow" xml:space="preserve">
-    <value>You can now:</value>
+  <data name="LimitedLiabilityPartnership.ErrorMessage" xml:space="preserve">
+    <value>Select yes if you are a member of the limited liability partnership</value>
   </data>
 </root>

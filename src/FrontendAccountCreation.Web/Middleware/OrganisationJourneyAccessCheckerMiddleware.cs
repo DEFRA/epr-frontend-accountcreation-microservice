@@ -30,7 +30,8 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
             }
             else if (!sessionValue.Journey.Contains(attribute.PagePath))
             {
-                if (attribute.PagePath == PagePath.TeamMemberRoleInOrganisation)
+                if (attribute.PagePath == PagePath.TeamMemberRoleInOrganisation ||
+                    attribute.PagePath == PagePath.MemberPartnership)
                 {
                     var index = sessionValue.Journey.FindIndex(x => x == attribute.PagePath);
                     if (index != -1)
@@ -39,9 +40,9 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
                     }
                     else
                     {
-                        sessionValue.Journey.AddIfNotExists(PagePath.TeamMemberRoleInOrganisation);
+                        sessionValue.Journey.AddIfNotExists(attribute.PagePath);
                         await sessionManager.SaveSessionAsync(httpContext.Session, sessionValue);
-                        pageToRedirect = PagePath.TeamMemberRoleInOrganisation;
+                        pageToRedirect = attribute.PagePath;
                     }
                 }
                 else

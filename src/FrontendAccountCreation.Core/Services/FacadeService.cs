@@ -105,7 +105,7 @@ public class FacadeService : IFacadeService
         response.EnsureSuccessStatusCode();
     }
 
-    // possible todo: could have a generic method to do the heavy lifting and handle deserialization better
+    // possible to do: could have a generic method to do the heavy lifting and handle deserialization better
     public async Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account, string serviceKey)
     {
         await PrepareAuthenticatedClient();
@@ -144,7 +144,7 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
 
-        var response = await _httpClient.PostAsJsonAsync($"api/v1/reprocessor-exporter-org?serviceKey={serviceKey}", reExOrganisation);
+        var response = await _httpClient.PostAsJsonAsync($"/api/v1/reprocessor-exporter-org?serviceKey={serviceKey}", reExOrganisation);
 
         if (!response.IsSuccessStatusCode)
         {

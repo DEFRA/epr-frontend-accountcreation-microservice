@@ -149,8 +149,8 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task AddApprovedPerson_Get_PartnershipAndIneligible_ReturnsInEligibleView()
-    {
+    public async Task AddApprovedPerson_Get_PartnershipAndIneligible_Renders_Partail_InEligible()
+    {   
         // Arrange
         _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
@@ -162,13 +162,16 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var result = await _systemUnderTest.AddApprovedPerson();
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.ViewName.Should().Be("InEligibleAddNotApprovedPerson");
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        var model = viewResult.Model as AddApprovedPersonViewModel;
+        model.Should().NotBeNull();
+        model.IsInEligibleToBeApprovedPerson.Should().BeTrue();
+        model.IsOrganisationAPartnership.Should().BeTrue();
     }
 
     [TestMethod]
-    public async Task AddApprovedPerson_Get_PartnershipOnly_ReturnsLimitedPartnershipView()
+    public async Task AddApprovedPerson_Get_PartnershipOnly_Render_Partial_LimitedPartnership()
     {
         // Arrange
         _orgSessionMock.IsOrganisationAPartnership = true;
@@ -181,18 +184,21 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var result = await _systemUnderTest.AddApprovedPerson();
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.ViewName.Should().Be("LimitedPartnershipAddApprovedPerson");
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        var model = viewResult.Model as AddApprovedPersonViewModel;
+        model.Should().NotBeNull();
+        model.IsInEligibleToBeApprovedPerson.Should().BeFalse();
+        model.IsOrganisationAPartnership.Should().BeTrue();
     }
 
     [TestMethod]
-    public async Task AddApprovedPerson_Get_NotPartnershipButIneligible_ReturnsAddNotApprovedPersonView()
+    public async Task AddApprovedPerson_Get_NotPartnershipButIneligible_Renders_Partial_AddNotApprovedPerson()
     {
         // Arrange
         _orgSessionMock.IsOrganisationAPartnership = false;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
-        {
+        {   
             IsInEligibleToBeApprovedPerson = true
         };
 
@@ -200,9 +206,11 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var result = await _systemUnderTest.AddApprovedPerson();
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.ViewName.Should().Be("AddNotApprovedPerson");
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        var model = viewResult.Model as AddApprovedPersonViewModel;
+        model.Should().NotBeNull();
+        model.IsInEligibleToBeApprovedPerson.Should().BeTrue();
     }
 
     [TestMethod]
@@ -225,7 +233,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task AddApprovedPerson_ModelInvalid_IsPartnership_ReturnsLimitedPartnershipAddApprovedPersonView()
+    public async Task AddApprovedPerson_ModelInvalid_IsPartnership_Renders_Partial_LimitedPartnershipAddApprovedPerson()
     {
         // Arrange
         var model = new AddApprovedPersonViewModel();
@@ -249,9 +257,11 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var result = await _systemUnderTest.AddApprovedPerson(model);
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        viewResult.ViewName.Should().Be("LimitedPartnershipAddApprovedPerson");
-        viewResult.Model.Should().Be(model);
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        var modelResult = viewResult.Model as AddApprovedPersonViewModel;
+        modelResult.Should().NotBeNull();
+        modelResult.IsInEligibleToBeApprovedPerson.Should().BeFalse();
     }
 
     [TestMethod]
