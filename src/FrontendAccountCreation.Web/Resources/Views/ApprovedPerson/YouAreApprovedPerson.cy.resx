@@ -120,6 +120,9 @@
   <data name="YouAreApprovedPerson.Description" xml:space="preserve">
     <value>Fel unigolyn sydd wedi'i enwi ar Dŷ'r Cwmnïau rydych chi nawr yn 'berson a gymeradwywyd' ar gyfer eich sefydliad.</value>
   </data>
+  <data name="YouAreApprovedPerson.Title" xml:space="preserve">
+    <value>[Welsh] Approved Person</value>
+  </data>
   <data name="YouAreApprovedPerson.Header" xml:space="preserve">
     <value>Rydych chi nawr yn berson a gymeradwywyd</value>
   </data>
