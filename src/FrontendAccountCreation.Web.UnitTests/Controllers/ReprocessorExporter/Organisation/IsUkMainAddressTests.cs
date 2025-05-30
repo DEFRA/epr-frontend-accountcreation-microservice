@@ -132,7 +132,8 @@ public class IsUkMainAddressTests : OrganisationTestBase
     [TestMethod]
     [DataRow(YesNoAnswer.Yes, nameof(OrganisationController.TradingName))]
     [DataRow(YesNoAnswer.No, nameof(OrganisationController.IsOrganisationAPartner))]
-    public async Task POST_UserSelectsYesOrNo_UserIsRedirected(YesNoAnswer userAnswer, string expectedRedirect)
+    public async Task POST_SoleTraderFeatureIsEnabledAndUserSelectsYesOrNo_UserIsRedirected(
+        YesNoAnswer userAnswer, string expectedRedirect)
     {
         // Arrange
         var request = new IsUkMainAddressViewModel { IsUkMainAddress = userAnswer };
@@ -144,5 +145,23 @@ public class IsUkMainAddressTests : OrganisationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);
+    }
+
+    [TestMethod]
+    public async Task POST_SoleTraderFeatureIsDisabledAndUserSelectsYes_UserIsRedirectedToReExPageNotFound()
+    {
+        // Arrange
+        var request = new IsUkMainAddressViewModel { IsUkMainAddress = YesNoAnswer.Yes };
+
+        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _systemUnderTest.IsUkMainAddress(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectResult>();
+
+        ((RedirectResult)result).Url.Should().Be(PagePath.PageNotFoundReEx);
     }
 }
