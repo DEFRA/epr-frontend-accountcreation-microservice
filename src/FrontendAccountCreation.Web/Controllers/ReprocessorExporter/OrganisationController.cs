@@ -1,10 +1,10 @@
-﻿using FrontendAccountCreation.Core.Services;
+﻿using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Sessions;
@@ -24,7 +24,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
-public class OrganisationController : ControllerBase<OrganisationSession>
+public class OrganisationController : Controller
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
@@ -42,7 +42,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
          IMultipleOptions multipleOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
          IFeatureManager featureManager,
-         ILogger<OrganisationController> logger) : base(sessionManager)
+         ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
@@ -699,6 +699,54 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
     #region Private Methods 
 
+    private void SetBackLink(OrganisationSession session, string currentPagePath)
+    {
+        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+        {
+            ViewBag.BackLinkToDisplay = PagePath.CheckYourDetails;
+        }
+        else
+        {
+            ViewBag.BackLinkToDisplay = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+        }
+    }
+
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+        string actionName, string currentPagePath, string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName);
+    }
+
+    private async Task<RedirectToActionResult> SaveSessionAndRedirect(OrganisationSession session,
+        string controllerName, string actionName, string currentPagePath, string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        var contNameWOCont = controllerName.Replace("Controller", string.Empty);
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName, contNameWOCont);
+    }
+
+    private async Task SaveSession(OrganisationSession session, string currentPagePath, string? nextPagePath)
+    {
+        ClearRestOfJourney(session, currentPagePath);
+
+        session.Journey.AddIfNotExists(nextPagePath);
+
+        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+    }
+
+    private static void ClearRestOfJourney(OrganisationSession session, string currentPagePath)
+    {
+        var index = session.Journey.IndexOf(currentPagePath);
+
+        // this also cover if current page not found (index = -1) then it clears all pages
+        session.Journey = session.Journey.Take(index + 1).ToList();
+    }
+
     private static ModelStateDictionary DeserializeModelState(string serializedModelState)
     {
         var errorList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(serializedModelState);
@@ -726,5 +774,4 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     #endregion
-
 }
