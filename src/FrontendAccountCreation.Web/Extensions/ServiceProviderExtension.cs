@@ -70,11 +70,12 @@ public static class ServiceProviderExtension
         services.Configure<ExternalUrlsOptions>(configuration.GetSection(ExternalUrlsOptions.ConfigSection));
         services.Configure<EmailAddressOptions>(configuration.GetSection(EmailAddressOptions.ConfigSection));
         services.Configure<SiteDateOptions>(configuration.GetSection(SiteDateOptions.ConfigSection));
-        services.Configure<ServiceKeysOptions>(configuration.GetSection(ServiceKeysOptions.ConfigSection));
+        services.Configure<ServiceKeysOptions>(configuration.GetSection(ServiceKeysOptions.ConfigSection)); 
     }
 
     private static void RegisterServices(IServiceCollection services)
     {
+        services.AddSingleton<IMultipleOptions, MultipleOptions>();
         services.AddSingleton<ICookieService, CookieService>();
         services.AddScoped<ISessionManager<AccountCreationSession>, AccountCreationSessionManager>();
         services.AddScoped<ISessionManager<ReExAccountCreationSession>, SessionManager<ReExAccountCreationSession>>();
