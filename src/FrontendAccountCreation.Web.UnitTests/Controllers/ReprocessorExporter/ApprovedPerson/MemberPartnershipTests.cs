@@ -48,6 +48,7 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.PartnerDetails));
     }
 
     [TestMethod]
