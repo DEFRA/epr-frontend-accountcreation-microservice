@@ -300,4 +300,89 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         result.Should().BeOfType<ViewResult>();
     }
 
+    // New test methods to add to AddApprovedPersonTests
+
+    [TestMethod]
+    public async Task AddApprovedPerson_ModelInvalid_IsNotPartnership_Renders_AddNotApprovedPerson()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel();
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                IsInEligibleToBeApprovedPerson = true
+            }
+        };
+
+        _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        var modelResult = viewResult.Model as AddApprovedPersonViewModel;
+        modelResult.Should().NotBeNull();
+        modelResult.IsInEligibleToBeApprovedPerson.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_ModelInvalid_IsNotPartnership_NotIneligible_Renders_DefaultAddApprovedPerson()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel();
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                IsInEligibleToBeApprovedPerson = false
+            }
+        };
+
+        _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        var modelResult = viewResult.Model as AddApprovedPersonViewModel;
+        modelResult.Should().NotBeNull();
+        modelResult.IsInEligibleToBeApprovedPerson.Should().BeFalse();
+        modelResult.IsOrganisationAPartnership.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_UnknownOption_RedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = "SomeUnknownOption"
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(new OrganisationSession());
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be("CheckYourDetails");
+    }
+
 }

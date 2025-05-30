@@ -13,6 +13,10 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
         public bool IsInEligibleToBeApprovedPerson { get; set; }
 
         public ErrorsViewModel? ErrorsViewModel { get; set; }
+
+        public bool IsLimitedPartnership { get; set; }
+
+        public bool IsLimitedLiablePartnership { get; set; }
     }
 }
         

@@ -35,7 +35,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 			SetBackLink(session, PagePath.AddAnApprovedPerson);
 			await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var model = new AddApprovedPersonViewModel { IsOrganisationAPartnership = session.IsOrganisationAPartnership, IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false };
+            var model = new AddApprovedPersonViewModel
+            {
+                IsOrganisationAPartnership = session.IsOrganisationAPartnership,
+                IsInEligibleToBeApprovedPerson =
+                    session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
+				IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
+				IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false
+            };
 
             return View(model); 
 		}
@@ -49,6 +56,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (!ModelState.IsValid)
             {
+                SetBackLink(session, PagePath.AddAnApprovedPerson);
+                model.IsOrganisationAPartnership = session.IsOrganisationAPartnership;
+                model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
+                model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+                model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
                 return View(model);
             }
 
@@ -103,7 +115,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 			var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 			if (!ModelState.IsValid)
 			{
-				return session.IsOrganisationAPartnership == true
+                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
+                return session.IsOrganisationAPartnership == true
 					? View("ApprovedPersonPartnershipRole", model)
 					: View(model);
 			}

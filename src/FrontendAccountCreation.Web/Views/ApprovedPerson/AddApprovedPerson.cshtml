@@ -1,10 +1,9 @@
-﻿@using FrontendAccountCreation.Core.Sessions;
-@using FrontendAccountCreation.Web.Extensions
+﻿@using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
 @using FrontendAccountCreation.Web.Constants
 
-@model AddApprovedPersonViewModel;
+@model AddApprovedPersonViewModel
 
 @{
     ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
@@ -26,16 +25,25 @@
                         if (Model.IsOrganisationAPartnership == true)
                         {
                             if (Model.IsInEligibleToBeApprovedPerson)
+                            {
                                 @await Html.PartialAsync("Partials/_InEligibleAddNotApprovedPerson", Model)
+                            }
                             else
+                            {
                                 @await Html.PartialAsync("Partials/_LimitedPartnershipAddApprovedPerson", Model)
+                            }
+                                
                         }
                         else
                         {
                             if (Model.IsInEligibleToBeApprovedPerson)
+                            {
                                 @await Html.PartialAsync("Partials/_AddNotApprovedPerson", Model)
+                            }
                             else
+                            {
                                 @await Html.PartialAsync("Partials/_AddApprovedPerson", Model)
+                            }
                         }
                     }
 
