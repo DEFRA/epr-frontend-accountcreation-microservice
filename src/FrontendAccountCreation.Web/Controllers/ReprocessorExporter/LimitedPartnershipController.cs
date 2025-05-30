@@ -236,12 +236,14 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        ReExPartnership partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new();
+        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new();
         partnershipSession.IsLimitedPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
         partnershipSession.IsLimitedLiabilityPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
-        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
+        return partnershipSession.IsLimitedPartnership ? 
+            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType):
+            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);
     }
 
     [HttpGet]
@@ -346,6 +348,46 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
                     PagePath.LimitedPartnershipRole, PagePath.AddAnApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedLiabilityPartnership)]
+    [OrganisationJourneyAccess(PagePath.LimitedLiabilityPartnership)]
+    public async Task<IActionResult> LimitedLiabilityPartnership()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.LimitedLiabilityPartnership);
+        LimitedLiabilityPartnershipViewModel model = new()
+        {
+            IsMemberOfLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership
+                ?.LimitedLiabilityPartnership?.IsMemberOfLimitedLiabilityPartnership
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Route(PagePath.LimitedLiabilityPartnership)]
+    [OrganisationJourneyAccess(PagePath.LimitedLiabilityPartnership)]
+    public async Task<IActionResult> LimitedLiabilityPartnership(LimitedLiabilityPartnershipViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.LimitedLiabilityPartnership);
+            return View(model);
+        }
+
+        session.ReExCompaniesHouseSession.Partnership ??= new();
+        session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership ??= new();
+        session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership
+            .IsMemberOfLimitedLiabilityPartnership = model.IsMemberOfLimitedLiabilityPartnership!.Value;
+
+        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = !model.IsMemberOfLimitedLiabilityPartnership!.Value;
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
