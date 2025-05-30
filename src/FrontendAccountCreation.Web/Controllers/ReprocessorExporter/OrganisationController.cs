@@ -42,7 +42,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
          IMultipleOptions multipleOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
          IFeatureManager featureManager,
-         IOptions<ServiceKeysOptions> serviceKeyOptions,
          ILogger<OrganisationController> logger) : base(sessionManager)
     {
         _sessionManager = sessionManager;
