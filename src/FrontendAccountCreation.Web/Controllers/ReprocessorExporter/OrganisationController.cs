@@ -192,12 +192,12 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.IsUkMainAddress)]
     public async Task<IActionResult> IsUkMainAddress(IsUkMainAddressViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.IsUkMainAddress);
             return View(model);
         }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
@@ -241,12 +241,13 @@ public class OrganisationController : Controller
     [OrganisationJourneyAccess(PagePath.IsTradingNameDifferent)]
     public async Task<IActionResult> IsTradingNameDifferent(IsTradingNameDifferentViewModel model)
     {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
         if (!ModelState.IsValid)
         {
+            SetBackLink(session, PagePath.IsTradingNameDifferent);
             return View(model);
         }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
