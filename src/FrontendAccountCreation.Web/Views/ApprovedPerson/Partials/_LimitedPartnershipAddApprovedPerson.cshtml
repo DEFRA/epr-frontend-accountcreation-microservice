@@ -27,12 +27,19 @@
 
     <div class="section">
         <h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.RolesHeading"]</h3>
-        <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.RolesInstruction"]:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@Localizer["LimitedPartnershipAddApprovedPerson.Individual"]</li>
-            <li>@Localizer["LimitedPartnershipAddApprovedPerson.Director"]</li>
-            <li>@Localizer["LimitedPartnershipAddApprovedPerson.CompanySecretary"]</li>
-        </ul>
+        @if (Model.IsLimitedPartnership)
+        {
+            <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.RolesInstruction"]:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Localizer["LimitedPartnershipAddApprovedPerson.Individual"]</li>
+                <li>@Localizer["LimitedPartnershipAddApprovedPerson.Director"]</li>
+                <li>@Localizer["LimitedPartnershipAddApprovedPerson.CompanySecretary"]</li>
+            </ul>
+        }
+        else if (Model.IsLimitedLiablePartnership)
+        {
+            <p class="govuk-body">@Localizer["LimitedLiablePartnershipAddApprovedPerson.RolesInstruction"]:</p>
+        }
     </div>
 
     <div class="section">
