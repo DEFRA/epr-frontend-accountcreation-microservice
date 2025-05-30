@@ -15,7 +15,7 @@
                 @partner.Name
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="@Url.Action("CheckNamesOfPartners", "LimitedPartnership", new { id = partner.Id })">
+                <a class="govuk-link" href="@Url.Action("NamesOfPartners", "LimitedPartnership")">
                     @SharedLocalizer["Change"]
                 </a>
             </dd>
