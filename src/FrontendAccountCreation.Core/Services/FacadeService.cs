@@ -144,7 +144,7 @@ public class FacadeService : IFacadeService
     {
         await PrepareAuthenticatedClient();
 
-        var response = await _httpClient.PostAsJsonAsync($"api/v1/reprocessor-exporter-org?serviceKey={serviceKey}", reExOrganisation);
+        var response = await _httpClient.PostAsJsonAsync($"/api/v1/reprocessor-exporter-org?serviceKey={serviceKey}", reExOrganisation);
 
         if (!response.IsSuccessStatusCode)
         {
