@@ -129,10 +129,10 @@
   <data name="_NonPartnershipApprovedPerson.InviteLink" xml:space="preserve">
     <value>Gwahodd person a gymeradwywyd arall</value>
   </data>
-  <data name="_NonPartnershipApprovedPerson.Item1" xml:space="preserve">
+  <data name="_NonPartnershipApprovedPerson.Continue" xml:space="preserve">
     <value>parhau i ychwanegu'ch sefydliad</value>
   </data>
-  <data name="_NonPartnershipApprovedPerson.Item2" xml:space="preserve">
+  <data name="_NonPartnershipApprovedPerson.Invite" xml:space="preserve">
     <value>gwahodd pobl eraill yn eich sefydliad i fod yn berson a gymeradwywyd, o blith y rolau sy'n gymwys</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.Title" xml:space="preserve">

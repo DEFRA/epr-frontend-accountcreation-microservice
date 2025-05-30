@@ -129,10 +129,10 @@
   <data name="_LimitedLiabilityPartnershipApprovedPerson.YouCanNow" xml:space="preserve">
     <value>[Welsh] You can now:</value>
   </data>
-  <data name="_LimitedLiabilityPartnershipApprovedPerson.Item1" xml:space="preserve">
+  <data name="_LimitedLiabilityPartnershipApprovedPerson.Continue" xml:space="preserve">
     <value>[Welsh] continue to add your organisation</value>
   </data>
-  <data name="_LimitedLiabilityPartnershipApprovedPerson.Item2" xml:space="preserve">
+  <data name="_LimitedLiabilityPartnershipApprovedPerson.Invite" xml:space="preserve">
     <value>[Welsh] invite additional people within your organisation to be an approved person, from the eligible roles</value>
   </data>
   <data name="_LimitedLiabilityPartnershipApprovedPerson.InviteLink" xml:space="preserve">

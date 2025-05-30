@@ -64,10 +64,10 @@
   <data name="_LimitedPartnershipYouAreApprovedPerson.InviteLink" xml:space="preserve">
     <value>Invite another eligible person</value>
   </data>
-  <data name="_LimitedPartnershipYouAreApprovedPerson.Item1" xml:space="preserve">
+  <data name="_LimitedPartnershipYouAreApprovedPerson.Continue" xml:space="preserve">
     <value>continue to add your organisation</value>
   </data>
-  <data name="_LimitedPartnershipYouAreApprovedPerson.Item2" xml:space="preserve">
+  <data name="_LimitedPartnershipYouAreApprovedPerson.Invite" xml:space="preserve">
     <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
   </data>
   <data name="_LimitedPartnershipYouAreApprovedPerson.Title" xml:space="preserve">
