@@ -7,4 +7,6 @@ public class ReExPartnership
     public ReExLimitedPartnership? LimitedPartnership { get; set; }
 
     public bool IsLimitedLiabilityPartnership { get; set; }
+
+    public ReExLimitedLiabilityPartnership? LimitedLiabilityPartnership { get; set; }
 }
