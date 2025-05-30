@@ -82,7 +82,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpGet]
         [Route(PagePath.TeamMemberRoleInOrganisation)]
         [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
-        public async Task<IActionResult> TeamMemberRoleInOrganisation([FromQuery] Guid? id)
+        public async Task<IActionResult> TeamMemberRoleInOrganisation()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
@@ -90,11 +90,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             var viewModel = new TeamMemberRoleInOrganisationViewModel();
+
+            var id = GetFocusId();
             if (id.HasValue)
             {
                 var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
                 if (index is >= 0)
                 {
+                    viewModel.Id = id;
                     viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Role;
                     return session.IsOrganisationAPartnership == true
                         ? View("ApprovedPersonPartnershipRole", viewModel)
@@ -123,7 +126,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
             var members = companiesHouseSession.TeamMembers ?? new();
             var index = members.FindIndex(0, x => x.Id.Equals(model?.Id));
-            var isExistingMember = index >= 0;
+            bool isExistingMember = false;
+            if (index >= 0)
+            {
+                // check the email, but any field other than Id will do
+                isExistingMember = members[index].Email?.Length > 0;
+            }
             var queryStringId = model?.Id ?? Guid.NewGuid();
 
             if (model.RoleInOrganisation == ReExTeamMemberRole.None)
@@ -134,10 +142,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     companiesHouseSession.TeamMembers = members;
                     session.ReExCompaniesHouseSession = companiesHouseSession;
 
+                    SetFocusId(queryStringId);
                     return await SaveSessionAndRedirect(
                         session,
                         nameof(CheckYourDetails),
-                        $"{PagePath.TeamMemberRoleInOrganisation}?id={queryStringId}",
+                        PagePath.TeamMemberRoleInOrganisation,
                         PagePath.CheckYourDetails);
                 }
 
@@ -169,37 +178,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return await SaveSessionAndRedirect(
                     session,
                     nameof(TeamMembersCheckInvitationDetails),
-                    $"{PagePath.TeamMemberRoleInOrganisation}?id={queryStringId}",
+                    PagePath.TeamMemberRoleInOrganisation,
                     PagePath.TeamMembersCheckInvitationDetails);
             }
 
-            companiesHouseSession.TeamMembers = members;
-            session.ReExCompaniesHouseSession = companiesHouseSession;
-
-            if (isExistingMember)
-            {
-                return await SaveSessionAndRedirect(
-                    session,
-                    nameof(TeamMembersCheckInvitationDetails),
-                    $"{PagePath.TeamMemberRoleInOrganisation}?id={queryStringId}",
-                    PagePath.TeamMembersCheckInvitationDetails);
-            }
-
+            SetFocusId(queryStringId);
             return await SaveSessionAndRedirect(
                 session,
                 nameof(TeamMemberDetails),
-                $"{PagePath.TeamMemberRoleInOrganisation}",
-                $"{PagePath.TeamMemberDetails}",
-                null,
-                new { id = queryStringId });
+                PagePath.TeamMemberRoleInOrganisation,
+                PagePath.TeamMemberDetails);
         }
 
         [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.TeamMemberDetails)]
-        public async Task<IActionResult> TeamMemberDetails([FromQuery] Guid id)
+        public async Task<IActionResult> TeamMemberDetails()
         {
-            if (id == Guid.Empty)
+            Guid? id = GetFocusId();
+            if (!id.HasValue)
             {
                 return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }
@@ -214,7 +211,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 var viewModel = new TeamMemberViewModel
                 {
-                    Id = id,
+                    Id = id.Value,
                     FirstName = session.ReExCompaniesHouseSession.TeamMembers[index.Value].FirstName,
                     LastName = session.ReExCompaniesHouseSession.TeamMembers[index.Value].LastName,
                     Telephone = session.ReExCompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber,
@@ -262,21 +259,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpGet]
         [Route(PagePath.TeamMembersCheckInvitationDetails)]
         [OrganisationJourneyAccess(PagePath.TeamMembersCheckInvitationDetails)]
-        public async Task<IActionResult> TeamMembersCheckInvitationDetails([FromQuery] Guid? id)
+        public async Task<IActionResult> TeamMembersCheckInvitationDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.TeamMembersCheckInvitationDetails);
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-
-            // if id is supplied, remove the team member
-            if (id.HasValue)
-            {
-                int? index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
-                if (index != null && index.GetValueOrDefault(-1) >= 0)
-                {
-                    session.ReExCompaniesHouseSession.TeamMembers.RemoveAt(index.Value);
-                }
-            }
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
@@ -286,7 +272,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpPost]
         [Route(PagePath.TeamMembersCheckInvitationDetails)]
         [OrganisationJourneyAccess(PagePath.TeamMembersCheckInvitationDetails)]
-        public async Task<IActionResult> TeamMembersCheckInvitationDetailsPost()
+        public async Task<IActionResult> TeamMembersCheckInvitationDetailsPost(List<ReExCompanyTeamMember>? modelNotUsed)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TeamMembersCheckInvitationDetails, PagePath.CheckYourDetails);
