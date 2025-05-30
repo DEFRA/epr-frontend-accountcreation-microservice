@@ -35,7 +35,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var model = new AddApprovedPersonViewModel { IsOrganisationAPartnership = session.IsOrganisationAPartnership, IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson };
+            var model = new AddApprovedPersonViewModel { IsOrganisationAPartnership = session.IsOrganisationAPartnership, IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false };
 
             return View(model); 
         }

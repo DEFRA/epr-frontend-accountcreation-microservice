@@ -12,7 +12,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
 
         public bool IsInEligibleToBeApprovedPerson { get; set; }
 
-        public FrontendAccountCreation.Web.ViewModels.Shared.GovUK.ErrorsViewModel? ErrorsViewModel { get; set; }
+        public ErrorsViewModel? ErrorsViewModel { get; set; }
     }
 }
         
