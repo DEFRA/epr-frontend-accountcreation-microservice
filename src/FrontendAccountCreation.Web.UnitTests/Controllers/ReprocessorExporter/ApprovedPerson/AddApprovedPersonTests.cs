@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -300,8 +301,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         result.Should().BeOfType<ViewResult>();
     }
 
-    // New test methods to add to AddApprovedPersonTests
-
     [TestMethod]
     public async Task AddApprovedPerson_ModelInvalid_IsNotPartnership_Renders_AddNotApprovedPerson()
     {
@@ -384,5 +383,46 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be("CheckYourDetails");
     }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Get_SetsAllModelPropertiesCorrectly()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                IsInEligibleToBeApprovedPerson = true,
+                Partnership = new ReExPartnership
+                {
+                    IsLimitedPartnership = true,
+                    IsLimitedLiabilityPartnership = false
+                }
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock
+            .Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        var model = viewResult.Model as AddApprovedPersonViewModel;
+        model.Should().NotBeNull();
+        model.IsOrganisationAPartnership.Should().BeTrue();
+        model.IsInEligibleToBeApprovedPerson.Should().BeTrue();
+        model.IsLimitedPartnership.Should().BeTrue();
+        model.IsLimitedLiablePartnership.Should().BeFalse();
+    }
+
 
 }

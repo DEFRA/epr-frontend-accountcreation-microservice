@@ -236,7 +236,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 			var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 			if (!ModelState.IsValid)
 			{
-				return View(model);
+                SetBackLink(session, PagePath.TeamMemberDetails);
+                return View(model);
 			}
 
 			var index = session.ReExCompaniesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
