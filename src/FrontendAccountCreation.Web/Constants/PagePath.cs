@@ -41,7 +41,7 @@ public static class PagePath
     public const string AddApprovedPerson = "add-approved-person";
     public const string ApprovedPersonContinue = "person-approved-continue";
     public const string DeclarationContinue = "declaration-continue";
-    public const string ToDoPath = "to-do-path"; // To DO: delete or replace with required one
+    public const string PrnRedirectUrl = "/epr-prn";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
