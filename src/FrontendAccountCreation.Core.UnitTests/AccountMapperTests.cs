@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Castle.DynamicProxy;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services;
@@ -169,6 +170,43 @@ public class AccountMapperTests
         Assert.IsNotNull(accountModel);
         Assert.AreEqual("KAINOS SOFTWARE LIMITED", accountModel.Organisation.Name);
         accountModel.Organisation.Address.Should().BeEquivalentTo(expectedAddress);        
+    }
+
+    [TestMethod]
+    public void CreateAccountModel_AsCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully_When_CompanyHouseNumber_And_NameIsNull()
+    {
+        // Arrange
+        var accountCreationSession = new AccountCreationSession()
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany
+        };
+
+        var company = new Company(new CompaniesHouseCompany
+        {
+            Organisation = new Organisation
+            {
+                RegistrationNumber = null,
+                Name = null,
+                RegisteredOffice = null
+            },
+            AccountCreatedOn = null,
+        });
+
+        var companiesHouseSession = new CompaniesHouseSession
+        {
+            Company = company,
+            RoleInOrganisation = RoleInOrganisation.Partner,
+            IsComplianceScheme = true
+        };
+        accountCreationSession.CompaniesHouseSession = companiesHouseSession;
+        AccountMapper accountMapper = new();
+
+        // Act
+        AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
+
+        // Assert
+        accountModel.Organisation.Name.Should().BeNullOrEmpty();
+        accountModel.Organisation.CompaniesHouseNumber.Should().BeNullOrEmpty();
     }
 
     [TestMethod]
