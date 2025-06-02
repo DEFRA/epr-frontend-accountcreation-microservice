@@ -35,14 +35,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            if (session.IsOrganisationAPartnership == true)
+            var model = new AddApprovedPersonViewModel
             {
-                return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
-                    ? View("InEligibleAddNotApprovedPerson")
-                    : View("LimitedPartnershipAddApprovedPerson");
-            }
+                IsOrganisationAPartnership = session.IsOrganisationAPartnership,
+                IsInEligibleToBeApprovedPerson =
+                    session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
+				IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
+				IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false
+            };
 
-            return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson") : View();
+            return View(model); 
         }
 
         [HttpPost]
@@ -54,14 +56,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (!ModelState.IsValid)
             {
-                if (session.IsOrganisationAPartnership == true)
-                {
-                    return session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson
-                        ? View("InEligibleAddNotApprovedPerson", model)
-                        : View("LimitedPartnershipAddApprovedPerson", model);
-                }
-
-                return session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson == true ? View("AddNotApprovedPerson", model) : View(model);
+                SetBackLink(session, PagePath.AddAnApprovedPerson);
+                model.IsOrganisationAPartnership = session.IsOrganisationAPartnership;
+                model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
+                model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+                model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
+                return View(model);
             }
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
@@ -115,6 +115,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
+                SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
                 return session.IsOrganisationAPartnership == true
                     ? View("ApprovedPersonPartnershipRole", model)
                     : View(model);
@@ -235,6 +236,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
+                SetBackLink(session, PagePath.TeamMemberDetails);
                 return View(model);
             }
 
@@ -464,8 +466,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company.CompaniesHouseNumber;
                 viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation;
                 viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
-                viewModel.LimitedPartnershipPartners =
-                    session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
+                viewModel.LimitedPartnershipPartners = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
+                viewModel.IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+
             }
             if (session.ReExManualInputSession != null)
             {
