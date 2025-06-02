@@ -796,7 +796,32 @@ public class FacadeServiceTests
         Assert.AreEqual(expected: expectedResponse.ServiceRoleId, actual: response.ServiceRoleId);
         httpTestHandler.Dispose();
     }
-    
+
+    [TestMethod]
+    public async Task GetServiceRoleIdAsync_Returns_NoContent_Response()
+    {
+        // Arrange
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NoContent,
+            Content = new StringContent("")
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        var response = await _facadeService.GetServiceRoleIdAsync(It.IsAny<string>());
+
+        // Assert
+        Assert.IsNull(response);
+        httpTestHandler.Dispose();
+    }
+
     [TestMethod]
     public async Task GetOrganisationNameByInviteTokenAsync_Returns_ApprovedPersonOrganisationModel()
     {
@@ -839,7 +864,32 @@ public class FacadeServiceTests
         Assert.AreEqual(expected: expectedResponse.Country, actual: response.Country);
         httpTestHandler.Dispose();
     }
-    
+
+    [TestMethod]
+    public async Task GetOrganisationNameByInviteTokenAsync_Returns_NoContent_Response()
+    {
+        // Arrange
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NoContent,
+            Content = new StringContent("")
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        var response = await _facadeService.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>());
+
+        // Assert
+        Assert.IsNull(response);
+        httpTestHandler.Dispose();
+    }
+
     [TestMethod]
     public async Task PostApprovedUserAccountDetailsAsync_WithValidData_ReturnsSuccess()
     {
