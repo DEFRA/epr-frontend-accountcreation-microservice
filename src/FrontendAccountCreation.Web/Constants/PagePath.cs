@@ -41,6 +41,7 @@ public static class PagePath
     public const string AddApprovedPerson = "add-approved-person";
     public const string ApprovedPersonContinue = "person-approved-continue";
     public const string DeclarationContinue = "declaration-continue";
+    public const string NotImplemented = "not-implemented";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
