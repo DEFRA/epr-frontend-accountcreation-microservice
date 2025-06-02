@@ -389,9 +389,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 				viewModel.CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company.CompaniesHouseNumber;
 				viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation;
                 viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
-                viewModel.LimitedPartnershipPartners =
-                    session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
-			}
+                viewModel.LimitedPartnershipPartners = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
+                viewModel.IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+
+            }
 			if (session.ReExManualInputSession != null)
 			{
 				viewModel.TradingName = session.ReExManualInputSession.TradingName;
