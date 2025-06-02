@@ -317,7 +317,9 @@ public class AccountMapperTests
     }
 
     [TestMethod]
-    public void CreateAccountModel_DeclarationProperties_ShouldReturnSetValues()
+    [DataRow(true)]
+    [DataRow(false)]
+    public void CreateAccountModel_DeclarationProperties_ShouldReturnSetValues(bool isDateNull )
     {
         // Arrange
         var accountMapper = new AccountMapper();
@@ -332,7 +334,7 @@ public class AccountMapperTests
             {
                 Company = new Company
                 {
-                    AccountCreatedOn = DateTime.Now,
+                    AccountCreatedOn = isDateNull ? DateTime.Now : null,
                     BusinessAddress = new Address { BuildingName = "building name" },
                     CompaniesHouseNumber = "123",
                     Name = "unit test name",
