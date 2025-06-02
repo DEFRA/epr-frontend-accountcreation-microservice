@@ -8,6 +8,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 public partial class ApprovedPersonController
 {
     [HttpGet]
+    [Route(PagePath.TeamMemberRoleInOrganisation + "/Add")]
+    [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
+    public async Task<IActionResult> TeamMemberRoleInOrganisationAdd()
+    {
+        DeleteFocusId();
+        return RedirectToAction(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+    }
+
+    [HttpGet]
     [Route(PagePath.TeamMemberRoleInOrganisation + "/Edit")]
     [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
     public async Task<IActionResult> TeamMemberRoleInOrganisationEdit([FromQuery] Guid id)

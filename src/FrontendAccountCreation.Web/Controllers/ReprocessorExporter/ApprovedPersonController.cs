@@ -8,6 +8,7 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -184,10 +185,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> TeamMemberDetails()
         {
             Guid? id = GetFocusId();
-            if (!id.HasValue)
+			if (id.HasValue)
+			{
+                SetFocusId(id.Value);
+            }
+            else
             {
                 return RedirectToAction(nameof(TeamMemberRoleInOrganisation));
             }
+
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.TeamMemberDetails);
 
@@ -235,7 +241,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 			}
 
 			// go to check invitation details summary page for all team members
-			return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), $"{PagePath.TeamMemberDetails}?id={model.Id}",
+			return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.TeamMemberDetails,
 				PagePath.TeamMembersCheckInvitationDetails);
 		}
 

@@ -99,4 +99,6 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
 
     public void SetFocusId(Guid id) => TempData["FocusId"] = id;
 
+    public void DeleteFocusId() => TempData.Remove("FocusId");
+
 }
