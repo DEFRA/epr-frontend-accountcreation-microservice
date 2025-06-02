@@ -203,8 +203,8 @@ public class OrganisationController : Controller
 
         if (session.IsUkMainAddress != true)
         {
-            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner),
-                PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+            return await SaveSessionAndRedirect(session, nameof(NotImplemented),
+                PagePath.IsUkMainAddress, PagePath.NotImplemented);
         }
 
         if (await _featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
