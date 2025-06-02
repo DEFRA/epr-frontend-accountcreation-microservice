@@ -99,7 +99,7 @@ namespace FrontendAccountCreation.Core.UnitTests
             };
 
             // Act
-            var result = _mapper.CreateReExOrganisationModel(orgSession);
+            var result = _mapper!.CreateReExOrganisationModel(orgSession);
 
             // Assert
             result.Should().NotBeNull();
@@ -156,7 +156,7 @@ namespace FrontendAccountCreation.Core.UnitTests
             };
 
             // Act
-            var result = _mapper.CreateReExOrganisationModel(orgSession);
+            var result = _mapper!.CreateReExOrganisationModel(orgSession);
 
             // Assert
             result.Should().NotBeNull();
