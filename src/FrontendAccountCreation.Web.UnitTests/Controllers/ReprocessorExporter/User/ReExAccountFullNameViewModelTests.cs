@@ -13,6 +13,8 @@ public class ReExAccountFullNameViewModelTests
     [DataRow("John", "Smith", 0)]
     [DataRow(null, "Smith", 1)]
     [DataRow(null, null, 2)]
+    [DataRow("John12345566789012132232425262728293031323334", "Smith", 2)]
+    [DataRow("John", "Smith12345566789012132232425262728293031323334", 2)]
     public void Validate_fullname(string? firstName, string? lastName, int expectedNumberOfErrors)
     {
         // Arrange
