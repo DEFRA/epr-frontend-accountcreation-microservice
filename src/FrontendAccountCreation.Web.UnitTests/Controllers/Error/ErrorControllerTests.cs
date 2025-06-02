@@ -106,10 +106,11 @@ public class ErrorControllerTests
     [DataRow(null, 500, 500, true)]
     [DataRow("User", null, 500)]
     [DataRow("Organisation", 500, 500)]
+    [DataRow("Organisation", 500, 500, false, true)]
     [DataRow("Account", 403, 403)]
     [DataRow("User", 500, 500, true)]
     public void Error_NotPageNotFoundGivenSourceController_ReturnsSuppliedStatusCode(
-        string? controllerName, int? passedStatusCode, int expectedStatusCode, bool mockFeatureReturnAsNull = false)
+        string? controllerName, int? passedStatusCode, int expectedStatusCode, bool mockFeatureReturnAsNull = false, bool hasEmptyRouteValues = false)
     {
         // Arrange
         var returnHandlerPathFeature = mockFeatureReturnAsNull ? (IExceptionHandlerPathFeature)null : _exceptionHandlerPathFeature!.Object;
@@ -124,7 +125,7 @@ public class ErrorControllerTests
 
        _featureCollection!.Setup(f => f.Get<IExceptionHandlerPathFeature>()).Returns(returnHandlerPathFeature);
 
-        var routeValues = new RouteValueDictionary
+        var routeValues = hasEmptyRouteValues ? null : new RouteValueDictionary
         {
             { "Controller", controllerName }
         };
