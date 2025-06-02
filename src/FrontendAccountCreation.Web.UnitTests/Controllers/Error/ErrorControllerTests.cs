@@ -107,12 +107,22 @@ public class ErrorControllerTests
     [DataRow("User", null, 500)]
     [DataRow("Organisation", 500, 500)]
     [DataRow("Account", 403, 403)]
+    [DataRow("User", 500, 500, true)]
     public void Error_NotPageNotFoundGivenSourceController_ReturnsSuppliedStatusCode(
         string? controllerName, int? passedStatusCode, int expectedStatusCode, bool mockFeatureReturnAsNull = false)
     {
         // Arrange
         var returnHandlerPathFeature = mockFeatureReturnAsNull ? (IExceptionHandlerPathFeature)null : _exceptionHandlerPathFeature!.Object;
-        _featureCollection!.Setup(f => f.Get<IExceptionHandlerPathFeature>()).Returns(returnHandlerPathFeature);
+
+        if ((controllerName == "User") && mockFeatureReturnAsNull)
+        {
+            _statusCodeReExecuteFeature!.Setup(f => f.OriginalPath)
+                .Returns("somePath");
+            _featureCollection!.Setup(f => f.Get<IStatusCodeReExecuteFeature>())
+                .Returns(_statusCodeReExecuteFeature.Object);
+        }
+
+       _featureCollection!.Setup(f => f.Get<IExceptionHandlerPathFeature>()).Returns(returnHandlerPathFeature);
 
         var routeValues = new RouteValueDictionary
         {
