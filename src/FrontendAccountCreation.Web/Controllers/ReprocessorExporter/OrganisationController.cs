@@ -203,8 +203,8 @@ public class OrganisationController : Controller
 
         if (session.IsUkMainAddress != true)
         {
-            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner),
-                PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+            return await SaveSessionAndRedirect(session, nameof(NotImplemented),
+                PagePath.IsUkMainAddress, PagePath.NotImplemented);
         }
 
         if (await _featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
@@ -561,7 +561,7 @@ public class OrganisationController : Controller
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
     }
 
-    [ExcludeFromCodeCoverage]
+    [HttpGet]
     [Route(PagePath.AccountAlreadyExists)]
     [OrganisationJourneyAccess(PagePath.AccountAlreadyExists)]
     public async Task<IActionResult> AccountAlreadyExists()
@@ -636,13 +636,6 @@ public class OrganisationController : Controller
     }
 
     [ExcludeFromCodeCoverage]
-    public void NotImplementedMethod()
-    {
-        // TO DO following & modify - once Tungsten has merged
-        throw new NotImplementedException("not been implemented yet...as no related user-story has been confirmed!");
-    }
-
-    [ExcludeFromCodeCoverage]
     [HttpGet]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
@@ -690,6 +683,15 @@ public class OrganisationController : Controller
         };
 
         return View(viewModel);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NotImplemented)]
+    [OrganisationJourneyAccess(PagePath.NotImplemented)]
+    [ExcludeFromCodeCoverage]
+    public IActionResult NotImplemented()
+    {
+        return View();
     }
 
     public IActionResult RedirectToStart()

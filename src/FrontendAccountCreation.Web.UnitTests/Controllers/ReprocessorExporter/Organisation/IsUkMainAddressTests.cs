@@ -131,7 +131,7 @@ public class IsUkMainAddressTests : OrganisationTestBase
 
     [TestMethod]
     [DataRow(YesNoAnswer.Yes, nameof(OrganisationController.TradingName))]
-    [DataRow(YesNoAnswer.No, nameof(OrganisationController.IsOrganisationAPartner))]
+    [DataRow(YesNoAnswer.No, nameof(OrganisationController.NotImplemented))]
     public async Task POST_SoleTraderFeatureIsEnabledAndUserSelectsYesOrNo_UserIsRedirected(
         YesNoAnswer userAnswer, string expectedRedirect)
     {
