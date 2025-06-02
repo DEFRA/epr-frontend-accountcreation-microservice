@@ -30,11 +30,7 @@ public partial class ApprovedPersonController
         public async Task<IActionResult> TeamMemberDetailsEdit([FromQuery] Guid id)
     {
         SetFocusId(id);
-
-        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        // for navigation purposes, force team member details page to be after team member role
-        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberDetails), PagePath.TeamMemberRoleInOrganisation, PagePath.TeamMemberDetails);
+        return RedirectToAction(nameof(ApprovedPersonController.TeamMemberDetails));
     }
 
     [HttpGet]

@@ -27,9 +27,13 @@ public class OrganisationJourneyAccessCheckerMiddleware(RequestDelegate next)
             {
                 pageToRedirect = PagePath.PageNotFoundReEx;
             }
-            else if (!sessionValue.Journey.Exists(x => x.Contains(attribute.PagePath)))
+            else
             {
-                pageToRedirect = sessionValue.Journey[^1];
+                var beenHereBefore = sessionValue.WhiteList.Contains(attribute.PagePath);
+                if (!beenHereBefore && !sessionValue.Journey.Exists(x => x.Contains(attribute.PagePath)))
+                {
+                    pageToRedirect = sessionValue.Journey[^1];
+                }
             }
 
             if (!string.IsNullOrEmpty(pageToRedirect))

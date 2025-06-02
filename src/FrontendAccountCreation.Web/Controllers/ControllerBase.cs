@@ -7,6 +7,7 @@ using FrontendAccountCreation;
 using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Extensions;
+using System;
 
 namespace FrontendAccountCreation.Web.Controllers;
 
@@ -77,12 +78,17 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
 
     public async Task SaveSession(T session, string currentPagePath, string? nextPagePath)
     {
-        var index = session.Journey.FindIndex(x => x.Contains(currentPagePath.Split("?")[0]));
+        var index = session.Journey.FindIndex(x => x != null && x.Contains(currentPagePath.Split("?")[0]));
 
         // this also cover if current page not found (index = -1) then it clears all pages
         session.Journey = session.Journey.Take(index + 1).ToList();
 
         session.Journey.AddIfNotExists(nextPagePath);
+
+        if (!string.IsNullOrEmpty(currentPagePath))
+        {
+            session.WhiteList.Add(currentPagePath);
+        }
 
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }

@@ -213,8 +213,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         partnershipSession.IsLimitedLiabilityPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
-        return partnershipSession.IsLimitedPartnership ? 
-            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType):
+        return partnershipSession.IsLimitedPartnership ?
+            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType) :
             await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);
     }
 
