@@ -1,5 +1,4 @@
-﻿@using FrontendAccountCreation.Core.Sessions.ReEx
-@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Core.Sessions;
 @model AddApprovedPersonViewModel
 
@@ -27,12 +26,20 @@
 
     <div class="section">
         <h3 class="govuk-heading-s">@Localizer["InEligibleAddNotApprovedPerson.RolesHeading"]</h3>
-        <p class="govuk-body">@Localizer["InEligibleAddNotApprovedPerson.RolesInstruction"]:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@Localizer["InEligibleAddNotApprovedPerson.Individual"]</li>
-            <li>@Localizer["InEligibleAddNotApprovedPerson.Director"]</li>
-            <li>@Localizer["InEligibleAddNotApprovedPerson.CompanySecretary"]</li>
-        </ul>
+        @if (Model.IsLimitedPartnership)
+        {
+            <p class="govuk-body">@Localizer["InEligibleAddNotApprovedPerson.RolesInstruction"]:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Localizer["InEligibleAddNotApprovedPerson.Individual"]</li>
+                <li>@Localizer["InEligibleAddNotApprovedPerson.Director"]</li>
+                <li>@Localizer["InEligibleAddNotApprovedPerson.CompanySecretary"]</li>
+            </ul>
+        }
+        else if (Model.IsLimitedLiablePartnership)
+        {
+            <p class="govuk-body">@Localizer["InEligibleAddNotApprovedPerson.LimitedLiableRolesInstruction"]:</p>
+        }
+        
     </div>
 
     <div class="section">

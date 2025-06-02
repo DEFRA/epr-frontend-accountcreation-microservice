@@ -117,16 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApprovedPersonPartnershipRole.ErrorMessage" xml:space="preserve">
+  <data name="LimitedPartnershipAddApprovedPerson.BulletAccreditation" xml:space="preserve">
     <value />
   </data>
-  <data name="ApprovedPersonPartnershipRole.Title" xml:space="preserve">
+  <data name="LimitedPartnershipAddApprovedPerson.BulletSubmit" xml:space="preserve">
     <value />
   </data>
-  <data name="ApprovedPersonPartnershipRole.WhatIsTheirRole" xml:space="preserve">
+  <data name="LimitedPartnershipAddApprovedPerson.CompanySecretary" xml:space="preserve">
     <value />
   </data>
-  <data name="TeamMemberRoleInOrganisation.ErrorMessage" xml:space="preserve">
+  <data name="LimitedPartnershipAddApprovedPerson.Director" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.IAgreeToBeAnApprovedPerson" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.Individual" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.IntroInstruction" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.Introtext1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.IntroText2" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.IntroText3" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.OptionError" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.RolesHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.RolesInstruction" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedLiablePartnershipAddApprovedPerson.RolesInstruction" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.SelectOptionText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.Title" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LimitedPartnershipAddApprovedPerson.UserHeading" xml:space="preserve">
     <value />
   </data>
 </root>
