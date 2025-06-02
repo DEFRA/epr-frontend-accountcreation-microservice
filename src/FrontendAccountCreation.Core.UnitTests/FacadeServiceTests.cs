@@ -797,7 +797,6 @@ public class FacadeServiceTests
         httpTestHandler.Dispose();
     }
 
-
     [TestMethod]
     public async Task GetServiceRoleIdAsync_Returns_NoContent_Response()
     {
