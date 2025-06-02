@@ -29,7 +29,6 @@ public class OrganisationController : Controller
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
-    private readonly IFeatureManager _featureManager;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
     private readonly DeploymentRoleOptions _deploymentRoleOptions;
@@ -41,14 +40,12 @@ public class OrganisationController : Controller
          IReExAccountMapper reExAccountMapper,
          IMultipleOptions multipleOptions,
          IOptions<DeploymentRoleOptions> deploymentRoleOptions,
-         IFeatureManager featureManager,
          ILogger<OrganisationController> logger)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
         _deploymentRoleOptions = deploymentRoleOptions.Value;
-        _featureManager = featureManager;
         _urlOptions = multipleOptions.UrlOptions;
         _serviceKeyOptions = multipleOptions.ServiceKeysOptions;
         _logger = logger;
@@ -137,7 +134,9 @@ public class OrganisationController : Controller
     [HttpPost]
     [Route(PagePath.RegisteredWithCompaniesHouse)]
     [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
-    public async Task<IActionResult> RegisteredWithCompaniesHouse(RegisteredWithCompaniesHouseViewModel model)
+    public async Task<IActionResult> RegisteredWithCompaniesHouse(
+        [FromServices]IFeatureManager featureManager,
+        RegisteredWithCompaniesHouseViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
         {
@@ -159,12 +158,17 @@ public class OrganisationController : Controller
 
         if (model.IsTheOrganisationRegistered == YesNoAnswer.Yes)
         {
-            return await SaveSessionAndRedirect(session, nameof(CompaniesHouseNumber), PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber);
+            return await SaveSessionAndRedirect(session, nameof(CompaniesHouseNumber),
+                PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber);
         }
-        else
+
+        if (await featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
         {
-            return await SaveSessionAndRedirect(session, nameof(IsUkMainAddress), PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress);
+            return await SaveSessionAndRedirect(session, nameof(IsUkMainAddress), PagePath.RegisteredWithCompaniesHouse,
+                PagePath.IsUkMainAddress);
         }
+
+        return Redirect(PagePath.PageNotFoundReEx);
     }
 
     [HttpGet]
@@ -207,13 +211,8 @@ public class OrganisationController : Controller
                 PagePath.IsUkMainAddress, PagePath.NotImplemented);
         }
 
-        if (await _featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
-        {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
-                PagePath.TradingName);
-        }
-
-        return Redirect(PagePath.PageNotFoundReEx);
+        return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
+            PagePath.TradingName);
     }
 
     [HttpGet]
