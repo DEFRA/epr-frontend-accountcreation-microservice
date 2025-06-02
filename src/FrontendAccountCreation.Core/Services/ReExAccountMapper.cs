@@ -37,7 +37,7 @@ public class ReExAccountMapper : IReExAccountMapper
                 ValidatedWithCompaniesHouse = reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress is not null,
                 Nation = reExOrganisationSession.UkNation ?? Nation.NotSet
             },                        
-            InvitedApprovedPersons = GetTeamMembersModel(reExOrganisationSession.ReExCompaniesHouseSession.TeamMembers) 
+            InvitedApprovedPersons = GetTeamMembersModel(reExOrganisationSession.ReExCompaniesHouseSession.TeamMembers)
         };
     }
 

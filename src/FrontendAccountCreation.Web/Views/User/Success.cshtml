@@ -1,8 +1,11 @@
 ﻿﻿@* todo: generate css so don't have to use class="govuk-body" *@
 
 @using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Configs
+@using Microsoft.Extensions.Options
 
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.SuccessViewModel
+@inject IOptions<ExternalUrlsOptions> ExternalUrlsOptions;
 
 @{
     ViewData["Title"] = Localizer["Success.Title"];
@@ -47,13 +50,9 @@
             </ul>
 
             <p class="govuk-body">@Localizer["Success.AfterAddingOrganisation.2.Paragraph"]</p>
-            <p class="govuk-body govuk-!-margin-bottom-7">@Localizer["Success.AfterAddingOrganisation.3.Paragraph"]</p>
-            
-            @* this will point to the account home page, but it doesn't currently exist *@
-            <a href="#" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-                @Localizer["Success.Continue"]
-            </a>
-
+            <p class="govuk-body govuk-!-margin-bottom-7">@Localizer["Success.AfterAddingOrganisation.3.Paragraph"]</p>            
+          
+            <a class="govuk-link" href="@ExternalUrlsOptions.Value.PrnRedirectUrl">@Localizer["Success.Continue"]</a>
         </div>
     </div>
     </main>

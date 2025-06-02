@@ -138,16 +138,21 @@ namespace FrontendAccountCreation.Core.UnitTests
             // Arrange
             var orgSession = new OrganisationSession
             {
-                OrganisationType = OrganisationType.CompaniesHouseCompany,
+                OrganisationType = null, // OrganisationType.CompaniesHouseCompany,
                 ReExCompaniesHouseSession = new ReExCompaniesHouseSession
                 {
                     Company = new Services.Dto.Company.Company
                     {
+                        Name = null,
+                        CompaniesHouseNumber = null,
+                        OrganisationId = null,                 
                         AccountCreatedOn = DateTime.Now,
                         BusinessAddress = null
-                    }
+                    },
+                    RoleInOrganisation = null                    
                 },
-                UkNation = Nation.NotSet
+                IsApprovedUser = false,
+                UkNation = null
             };
 
             // Act
@@ -156,6 +161,8 @@ namespace FrontendAccountCreation.Core.UnitTests
             // Assert
             result.Should().NotBeNull();
             result.Company.CompanyRegisteredAddress.Should().BeNull();
+            result.Company.CompanyName.Should().BeNull();
+            result.Company.CompaniesHouseNumber.Should().BeNull();
             result.Company.ValidatedWithCompaniesHouse.Should().Be(false);
             result.Company.Nation.Should().Be(Nation.NotSet);
             result.InvitedApprovedPersons.Should().NotBeNull();
