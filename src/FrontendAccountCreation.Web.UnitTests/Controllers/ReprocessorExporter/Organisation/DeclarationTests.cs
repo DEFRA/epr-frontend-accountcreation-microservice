@@ -64,7 +64,9 @@ public class DeclarationTests : OrganisationTestBase
                     }
                 }
             },
-            UkNation = Nation.England
+            UkNation = Nation.England,
+            DeclarationFullName = "John Doe",
+            DeclarationTimestamp = DateTime.UtcNow,
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
