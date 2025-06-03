@@ -326,4 +326,32 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
     }
+
+    [TestMethod]
+    public async Task LimitedPartnershipNamesOfPartnersDelete_Get_RedirectsTo_NamesOfPartners()
+    {
+        // Arrange
+        Guid jackId = Guid.NewGuid();
+        Guid jillId = Guid.NewGuid();
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = jackId, FirstName = "Jack", LastName = "Smith" },
+            new() { Id = jillId, FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartnersDelete(jackId);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NamesOfPartners));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle(x => x.Id == jillId);
+    }
 }

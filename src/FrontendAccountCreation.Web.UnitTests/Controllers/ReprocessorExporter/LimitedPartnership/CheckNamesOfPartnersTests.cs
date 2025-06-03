@@ -158,4 +158,31 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         model.Should().BeEmpty(); // Model is empty as LimitedPartnership is null
     }
 
+    [TestMethod]
+    public async Task CheckNamesOfPartnersDelete_Get_RedirectsTo_CheckNamesOfPartners()
+    {
+        // Arrange
+        Guid jackId = Guid.NewGuid();
+        Guid jillId = Guid.NewGuid();
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = jackId, FirstName = "Jack", LastName = "Smith" },
+            new() { Id = jillId, FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(jackId);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle(x => x.Id == jillId);
+    }
 }
