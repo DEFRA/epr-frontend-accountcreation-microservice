@@ -79,6 +79,21 @@ public class CookieServiceTests
     }
 
     [TestMethod]
+    public void SetCookieAcceptance_Return_False_Without_ExistingCookie()
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        MockService(CookieName);
+
+        // Act
+        _systemUnderTest.SetCookieAcceptance(false, null, context.Response.Cookies);
+
+        // Assert
+        var cookieValue = GetCookieValueFromResponse(context.Response, CookieName);
+        cookieValue.Should().Be("False");
+    }
+
+    [TestMethod]
     public void SetCookieAcceptance_False_ResetsGACookie()
     {
         // Arrange
