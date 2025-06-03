@@ -48,9 +48,10 @@ public partial class ApprovedPersonController
     public async Task<IActionResult> MemberPartnershipAdd()
     {
         DeleteFocusId();
+
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        AddPageToWhiteList(session, PagePath.MemberPartnership);
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-        return RedirectToAction(nameof(ApprovedPersonController.MemberPartnership));
+
+        return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
+            PagePath.YouAreApprovedPerson, PagePath.MemberPartnership);
     }
 }

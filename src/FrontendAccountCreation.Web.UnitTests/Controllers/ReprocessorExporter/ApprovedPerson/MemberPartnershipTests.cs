@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
@@ -86,5 +87,16 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         result.Should().BeOfType<ViewResult>();
         var viewResult = result as ViewResult;
         viewResult!.Model.Should().Be(model);
+    }
+
+    [TestMethod]
+    public async Task MemberPartnershipAdd_Get_RedirectsTo_MemberPartnership()
+    {
+         // Act
+        var result = await _systemUnderTest.MemberPartnershipAdd();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.MemberPartnership));
     }
 }
