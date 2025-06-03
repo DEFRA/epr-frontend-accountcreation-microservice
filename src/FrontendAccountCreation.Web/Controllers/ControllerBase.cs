@@ -85,10 +85,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
 
         session.Journey.AddIfNotExists(nextPagePath);
 
-        if (!string.IsNullOrEmpty(currentPagePath))
-        {
-            session.WhiteList.Add(currentPagePath);
-        }
+        AddPageToWhiteList(session, currentPagePath);
 
         await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
@@ -101,6 +98,14 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
             return id;
         }
         return null;
+    }
+
+    public void AddPageToWhiteList(T session, string currentPagePath)
+    {
+        if (!string.IsNullOrEmpty(currentPagePath))
+        {
+            session.WhiteList.Add(currentPagePath);
+        }
     }
 
     public void SetFocusId(Guid id) => TempData["FocusId"] = id;

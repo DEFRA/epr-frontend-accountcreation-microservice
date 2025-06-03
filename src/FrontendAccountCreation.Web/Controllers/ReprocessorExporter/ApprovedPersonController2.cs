@@ -45,4 +45,15 @@ public partial class ApprovedPersonController
         return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails),
             PagePath.TeamMembersCheckInvitationDetails, null);
     }
+
+    [HttpGet]
+    [Route(PagePath.MemberPartnership + "/Add")]
+    public async Task<IActionResult> MemberPartnershipAdd()
+    {
+        DeleteFocusId();
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        AddPageToWhiteList(session, PagePath.MemberPartnership);
+        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        return RedirectToAction(nameof(ApprovedPersonController.MemberPartnership));
+    }
 }
