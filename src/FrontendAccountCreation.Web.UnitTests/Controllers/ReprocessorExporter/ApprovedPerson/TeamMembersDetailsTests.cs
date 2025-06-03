@@ -51,8 +51,11 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
     [TestMethod]
     public async Task TeamMemberDetails_Get_WithExistingTeamMember_ReturnsPopulatedView()
     {
+        // Arrange
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(_teamMemberId);
+
         // Act
-        var result = await _systemUnderTest.TeamMemberDetails(_teamMemberId);
+        var result = await _systemUnderTest.TeamMemberDetails();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -70,9 +73,10 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
     {
         // Arrange
         var invalidId = Guid.NewGuid(); // doesn't match any member
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(invalidId);
 
         // Act
-        var result = await _systemUnderTest.TeamMemberDetails(invalidId);
+        var result = await _systemUnderTest.TeamMemberDetails();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -135,9 +139,10 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
     {
         // Arrange
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = null;
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(_teamMemberId);
 
         // Act
-        var result = await _systemUnderTest.TeamMemberDetails(_teamMemberId);
+        var result = await _systemUnderTest.TeamMemberDetails();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -150,9 +155,10 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
     {
         // Arrange
         _orgSessionMock.ReExCompaniesHouseSession = null;
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(_teamMemberId);
 
         // Act
-        var result = await _systemUnderTest.TeamMemberDetails(_teamMemberId);
+        var result = await _systemUnderTest.TeamMemberDetails();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -163,8 +169,11 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
     [TestMethod]
     public async Task TeamMemberDetails_Get_CallsSaveSession()
     {
+        // Arrange
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(_teamMemberId);
+
         // Act
-        var result = await _systemUnderTest.TeamMemberDetails(_teamMemberId);
+        var result = await _systemUnderTest.TeamMemberDetails();
 
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);

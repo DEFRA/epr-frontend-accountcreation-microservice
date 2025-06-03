@@ -172,7 +172,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task NamesOfPartners_Post_WhenPartnerIdSupplied_RemovesPartnerFromSession()
+    public async Task NamesOfPartnersDelete_Get_RemovesPartnerFromSession()
     {
         // Arrange
         var jack = new ReExLimitedPartnershipPersonOrCompany
@@ -199,17 +199,13 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         };
 
         // Act
-        var result = await _systemUnderTest.NamesOfPartners(model, jack.Id.ToString());
+        var result = await _systemUnderTest.NamesOfPartnersDelete(jack.Id);
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>().Which;
-        viewModel.Partners.Should().ContainSingle();
-        viewModel.Partners[0].Id.Should().Be(jill.Id);
-        viewModel.Partners[0].PersonName.Should().Be("Jill");
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NamesOfPartners));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
-        viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
 
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(1);
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Should().BeEquivalentTo(jill);
