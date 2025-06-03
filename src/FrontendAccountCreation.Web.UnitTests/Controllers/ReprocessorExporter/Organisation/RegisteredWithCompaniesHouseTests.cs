@@ -50,7 +50,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     {
         // Arrange
         var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = YesNoAnswer.Yes };
-
+       
         // Act
         var result = await _systemUnderTest.RegisteredWithCompaniesHouse(_featureManagerMock.Object, request);
 
@@ -65,10 +65,10 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     [TestMethod]
     [DataRow(OrganisationType.NonCompaniesHouseCompany)]
     [DataRow(OrganisationType.CompaniesHouseCompany)]
+    [DataRow(OrganisationType.NotSet)]
     public async Task RegisteredWithCompaniesHouse_OrganisationIsNotRegistered_RedirectsToIsUkMainAddressPage_AndUpdateSession(OrganisationType orgType)
     {
         // Arrange
-
         var orgCreationSessionMock = new OrganisationSession
         {
             Journey = [PagePath.RegisteredWithCompaniesHouse],
@@ -77,7 +77,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(orgCreationSessionMock);
 
-        var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = YesNoAnswer.No };
+        var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = orgType == OrganisationType.NotSet ? null : YesNoAnswer.No };
 
         // Act
         var result = await _systemUnderTest.RegisteredWithCompaniesHouse(_featureManagerMock.Object, request);

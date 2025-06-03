@@ -12,7 +12,6 @@ using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
@@ -49,8 +48,15 @@ public class RegisteredAsCharityTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task Get_RegisteredAsCharity_WithOutRegulatorDeployment_IsAllowed()
+    [DataRow(true)]
+    [DataRow(false)]
+    public async Task Get_RegisteredAsCharity_WithOutRegulatorDeployment_IsAllowed(bool useNullMockSession)
     {
+        // Arrange
+        var org = useNullMockSession ? null : new OrganisationSession();
+        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
+            .Returns(Task.FromResult<OrganisationSession?>(org));
+
         // Act
         var result = await _systemUnderTest.RegisteredAsCharity();
 
