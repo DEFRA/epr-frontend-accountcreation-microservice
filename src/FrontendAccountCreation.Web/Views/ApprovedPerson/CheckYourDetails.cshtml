@@ -176,7 +176,7 @@
                                                     @SharedLocalizer[Model.reExCompanyTeamMembers[i].Role.ToString()]
                                                 </dd>
                                                 <dd class="govuk-summary-list__actions">
-                                                    <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisation", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                    <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisationEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                         @SharedLocalizer["Change"]
                                                         <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
                                                     </a>
@@ -193,7 +193,7 @@
                                                     @Model.reExCompanyTeamMembers[i].TelephoneNumber
                                                 </dd>
                                                 <dd class="govuk-summary-list__actions">
-                                                    <a class="govuk-link" href="@Url.Action("TeamMemberDetails", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                    <a class="govuk-link" href="@Url.Action("TeamMemberDetailsEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                         @SharedLocalizer["Change"]
                                                         <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.ContactDetails"]</span>
                                                     </a>

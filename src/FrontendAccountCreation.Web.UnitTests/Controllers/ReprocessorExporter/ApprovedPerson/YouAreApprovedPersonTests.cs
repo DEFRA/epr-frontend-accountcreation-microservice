@@ -149,9 +149,10 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
             .Verifiable();
 
         Guid? queryId = !string.IsNullOrWhiteSpace(id) ? Guid.Parse(id) : null;
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(queryId);
 
         // Act
-        var result = _systemUnderTest.TeamMemberRoleInOrganisation(queryId);
+        var result = _systemUnderTest.TeamMemberRoleInOrganisation();
 
         // Assert
         result.Should().NotBeNull();

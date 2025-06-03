@@ -268,11 +268,8 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     [TestMethod]
     public async Task TeamMemberDetails_IdIsEmpty_RedirectsToTeamMemberRoleInOrganisation()
     {
-        // Arrange
-        var emptyId = Guid.Empty;
-
         // Act
-        var result = await _systemUnderTest.TeamMemberDetails(emptyId);
+        var result = await _systemUnderTest.TeamMemberDetails();
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
