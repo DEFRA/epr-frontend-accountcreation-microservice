@@ -2,12 +2,9 @@
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-[ExcludeFromCodeCoverage(Justification = "Code needed for other developers, will write unit tests after merge")]
 public partial class ApprovedPersonController
 {
     [HttpGet]

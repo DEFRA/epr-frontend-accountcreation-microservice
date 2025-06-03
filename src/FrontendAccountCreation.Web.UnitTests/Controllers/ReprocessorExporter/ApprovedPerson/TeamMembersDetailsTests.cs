@@ -34,7 +34,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
                     new ReExCompanyTeamMember
                     {
                         Id = _teamMemberId,
-                        FirstName = "John", 
+                        FirstName = "John",
                         LastName = "Smith",
                         TelephoneNumber = "0123456789",
                         Email = "john@example.com"
@@ -228,4 +228,12 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
             .Any(x => x.LastName == "Ghost").Should().BeFalse();
     }
 
+    [TestMethod]
+    public async Task TeamMemberDetailsEdit_Get_RedirectsTo_TeamMemberDetails()
+    {
+        var result = await _systemUnderTest.TeamMemberDetailsEdit(Guid.NewGuid());
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberDetails));
+    }
 }
