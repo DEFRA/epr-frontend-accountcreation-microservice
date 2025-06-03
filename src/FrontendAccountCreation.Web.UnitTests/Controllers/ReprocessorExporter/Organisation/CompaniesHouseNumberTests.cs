@@ -73,6 +73,32 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
     }
 
     [TestMethod]
+    public async Task CompaniesHouseNumber_RedirectsToConfirmCompanyDetailsAndUpdateSession_WhenSession_ReExCompaniesHouseSession_IsNull()
+    {
+        // Arrange
+        var request = new ReExCompaniesHouseNumberViewModel { CompaniesHouseNumber = "1234" };
+
+        _organisationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber],
+            ReExCompaniesHouseSession = null
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.CompaniesHouseNumber(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ConfirmCompanyDetails));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+        _facadeServiceMock.Verify(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>()), Times.Once);
+    }
+
+    [TestMethod]
     public async Task CompaniesHouseNumber_CompaniesHouseNumberIsGivenButCompaniesHouseApiDown_RedirectsToCannotVerifyOrganisationPage()
     {
         // Arrange

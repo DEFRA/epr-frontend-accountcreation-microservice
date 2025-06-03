@@ -91,7 +91,6 @@ public abstract class OrganisationTestBase
            //_urlsOptionMock.Object, 
            _deploymentRoleOptionMock.Object,
            //_serviceKeyOptionsMock.Object,
-           _featureManagerMock.Object,
            _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
