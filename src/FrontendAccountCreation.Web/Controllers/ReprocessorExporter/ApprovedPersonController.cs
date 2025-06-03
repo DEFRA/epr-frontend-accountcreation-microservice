@@ -425,17 +425,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 members.RemoveAt(index);
             }
-            else
+
+            members.Add(new ReExCompanyTeamMember
             {
-                members.Add(new ReExCompanyTeamMember
-                {
-                    Id = queryStringId,
-                    FirstName = model?.FirstName,
-                    LastName = model?.LastName,
-                    TelephoneNumber = model.Telephone,
-                    Email = model?.Email,
-                });
-            }
+                Id = queryStringId,
+                FirstName = model?.FirstName,
+                LastName = model?.LastName,
+                TelephoneNumber = model.Telephone,
+                Email = model?.Email,
+            });
 
             companiesHouseSession.TeamMembers = members;
             session.ReExCompaniesHouseSession = companiesHouseSession;
