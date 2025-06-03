@@ -1,9 +1,11 @@
 ﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
+[ExcludeFromCodeCoverage(Justification = "Code needed for other developers, will write unit tests after merge")]
 public partial class LimitedPartnershipController
 {
     [HttpGet]
