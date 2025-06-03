@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Core.Services;
+﻿using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -135,7 +134,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [Route(PagePath.RegisteredWithCompaniesHouse)]
     [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
     public async Task<IActionResult> RegisteredWithCompaniesHouse(
-        [FromServices]IFeatureManager featureManager,
+        [FromServices] IFeatureManager featureManager,
         RegisteredWithCompaniesHouseViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
@@ -341,7 +340,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpGet]
     [Route(PagePath.IsPartnership)]
     [OrganisationJourneyAccess(PagePath.IsPartnership)]
-
     public async Task<IActionResult> IsOrganisationAPartner()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -418,7 +416,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
         session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation.Value;
         session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
-       
+
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
                 PagePath.AddAnApprovedPerson);
     }
@@ -660,7 +658,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        
+
         // Post related data
         var reExOrganisation = _reExAccountMapper.CreateReExOrganisationModel(session);
         await _facadeService.PostReprocessorExporterCreateOrganisationAsync(reExOrganisation, _serviceKeyOptions.ReprocessorExporter);
@@ -698,9 +696,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return RedirectToAction(nameof(RegisteredAsCharity));
     }
 
-    #region Private Methods 
+    #region Private Methods
 
-    
     private static ModelStateDictionary DeserializeModelState(string serializedModelState)
     {
         var errorList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(serializedModelState);
@@ -727,5 +724,5 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return JsonSerializer.Serialize(errorList);
     }
 
-    #endregion
+    #endregion Private Methods
 }
