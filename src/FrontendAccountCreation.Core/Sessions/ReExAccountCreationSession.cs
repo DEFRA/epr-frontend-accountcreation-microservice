@@ -7,4 +7,5 @@ public class ReExAccountCreationSession : ILocalSession
     public ReExContact? Contact { get; set; } = new();
     public bool IsUserChangingDetails { get; set; }
     public List<string> Journey { get; set; } = new();
+    public HashSet<string> WhiteList { get; set; } = [];
 }

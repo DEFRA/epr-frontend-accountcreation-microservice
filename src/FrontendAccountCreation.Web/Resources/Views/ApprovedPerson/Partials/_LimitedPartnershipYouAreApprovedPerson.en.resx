@@ -58,22 +58,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LimitedPartnershipYouAreApprovedPerson.Description" xml:space="preserve">
-    <value>[Welsh]As partner either named on Companies House or a company director or secretary within the partnership, you are now an approved person for your organisation.</value>
+  <data name="_LimitedPartnershipYouAreApprovedPerson.Description" xml:space="preserve">
+    <value>As partner either named on Companies House or a company director or secretary within the partnership, you are now an approved person for your organisation.</value>
   </data>
-  <data name="LimitedPartnershipYouAreApprovedPerson.InviteLink" xml:space="preserve">
-    <value>[Welsh]Invite another approved eligible person</value>
+  <data name="_LimitedPartnershipYouAreApprovedPerson.InviteLink" xml:space="preserve">
+    <value>Invite another eligible person</value>
   </data>
-  <data name="LimitedPartnershipYouAreApprovedPerson.Item1" xml:space="preserve">
-    <value>[Welsh]continue to add your organisation</value>
+  <data name="_LimitedPartnershipYouAreApprovedPerson.Continue" xml:space="preserve">
+    <value>continue to add your organisation</value>
   </data>
-  <data name="LimitedPartnershipYouAreApprovedPerson.Item2" xml:space="preserve">
-    <value>[Welsh]invite additional people within your organisation to be an approved person, from the eligible roles</value>
+  <data name="_LimitedPartnershipYouAreApprovedPerson.Invite" xml:space="preserve">
+    <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
   </data>
-  <data name="LimitedPartnershipYouAreApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh]You are now an approved person</value>
+  <data name="_LimitedPartnershipYouAreApprovedPerson.Title" xml:space="preserve">
+    <value>You are now an approved person</value>
   </data>
-  <data name="LimitedPartnershipYouAreApprovedPerson.YouCanNow" xml:space="preserve">
-    <value>[Welsh]You can now</value>
+  <data name="_LimitedPartnershipYouAreApprovedPerson.YouCanNow" xml:space="preserve">
+    <value>You can now</value>
   </data>
 </root>

@@ -63,7 +63,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     /// Save partner details to session
     /// </summary>
     /// <param name="model">View model</param>
-    /// <param name="command">'save' to update partners and continue, 'add' to add new partner, any Guid removes the corresponding item from the model.</param>
+    /// <param name="command">'save' to update partners and continue, 'add' to add new partner.</param>
     /// <returns></returns>
     [HttpPost]
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
@@ -71,23 +71,6 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     public async Task<IActionResult> NamesOfPartners(LimitedPartnershipPartnersViewModel model, string command)
     {
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        // when command is a Guid its an instruction to remove that item from the model,
-        // so do so before validating
-        if (Guid.TryParse(command, out Guid removedId))
-        {
-            int? rowCount = model?.Partners?.RemoveAll(x => x.Id == removedId);
-            if (rowCount.GetValueOrDefault(0) > 0)
-            {
-                await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
-                await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-            }
-
-            ModelState.Clear();
-
-            SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
-            return View(model);
-        }
 
         if (!ModelState.IsValid)
         {
@@ -163,20 +146,9 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [HttpGet]
     [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipCheckNamesOfPartners)]
-    public async Task<IActionResult> CheckNamesOfPartners([FromQuery] Guid? id)
+    public async Task<IActionResult> CheckNamesOfPartners()
     {
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        // if id is supplied, remove the partner
-        if (id.HasValue)
-        {
-            int? index = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.FindIndex(0, x => x.Id.Equals(id));
-            if (index != null && index.GetValueOrDefault(-1) >= 0)
-            {
-                session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners.RemoveAt(index.Value);
-                await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-            }
-        }
 
         SetBackLink(session, PagePath.LimitedPartnershipCheckNamesOfPartners);
 
@@ -193,7 +165,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [HttpPost]
     [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipCheckNamesOfPartners)]
-    public async Task<IActionResult> CheckNamesOfPartners()
+    public async Task<IActionResult> CheckNamesOfPartners(List<ReExLimitedPartnershipPersonOrCompany> modelNotUsed)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
@@ -236,12 +208,14 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        ReExPartnership partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new();
+        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new();
         partnershipSession.IsLimitedPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
         partnershipSession.IsLimitedLiabilityPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
-        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType);
+        return partnershipSession.IsLimitedPartnership ?
+            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType) :
+            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);
     }
 
     [HttpGet]
@@ -346,6 +320,46 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
                     PagePath.LimitedPartnershipRole, PagePath.AddAnApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedLiabilityPartnership)]
+    [OrganisationJourneyAccess(PagePath.LimitedLiabilityPartnership)]
+    public async Task<IActionResult> LimitedLiabilityPartnership()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.LimitedLiabilityPartnership);
+        LimitedLiabilityPartnershipViewModel model = new()
+        {
+            IsMemberOfLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership
+                ?.LimitedLiabilityPartnership?.IsMemberOfLimitedLiabilityPartnership
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Route(PagePath.LimitedLiabilityPartnership)]
+    [OrganisationJourneyAccess(PagePath.LimitedLiabilityPartnership)]
+    public async Task<IActionResult> LimitedLiabilityPartnership(LimitedLiabilityPartnershipViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.LimitedLiabilityPartnership);
+            return View(model);
+        }
+
+        session.ReExCompaniesHouseSession.Partnership ??= new();
+        session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership ??= new();
+        session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership
+            .IsMemberOfLimitedLiabilityPartnership = model.IsMemberOfLimitedLiabilityPartnership!.Value;
+
+        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = !model.IsMemberOfLimitedLiabilityPartnership!.Value;
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(

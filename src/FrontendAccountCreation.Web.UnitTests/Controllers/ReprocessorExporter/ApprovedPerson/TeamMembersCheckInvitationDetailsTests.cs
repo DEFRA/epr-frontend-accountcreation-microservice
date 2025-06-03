@@ -32,7 +32,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task TeamMembersCheckInvitationDetails_WhenNullTeamMemberIdNotSupplied_SessionIsUnchanged()
+    public async Task TeamMembersCheckInvitationDetails_WhenTeamMemberIdNotSupplied_SessionIsUnchanged()
     {
         // Arrange
         List<ReExCompanyTeamMember?> teamMembers = [];
@@ -43,7 +43,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
         // Act
-        await _systemUnderTest.TeamMembersCheckInvitationDetails((Guid?) null);
+        await _systemUnderTest.TeamMembersCheckInvitationDetails();
 
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(2);
@@ -59,16 +59,17 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         teamMembers.Add(jack);
         teamMembers.Add(jill);
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(Guid.NewGuid());
 
         // Act
-        await _systemUnderTest.TeamMembersCheckInvitationDetails(Guid.NewGuid());
+        await _systemUnderTest.TeamMembersCheckInvitationDetails();
 
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(2);
     }
 
     [TestMethod]
-    public async Task TeamMembersCheckInvitationDetails_WhenTeamMemberIdSupplied_RemovesTeamMemberFromSession()
+    public async Task TeamMembersCheckInvitationDetailsDelete_WhenTeamMemberIdSupplied_RemovesTeamMemberFromSession()
     {
         // Arrange
         List<ReExCompanyTeamMember?> teamMembers = [];
@@ -77,9 +78,9 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         teamMembers.Add(jack);
         teamMembers.Add(jill);
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
-        
+
         // Act
-        await _systemUnderTest.TeamMembersCheckInvitationDetails(jack.Id);
+        await _systemUnderTest.TeamMembersCheckInvitationDetailsDelete(jack.Id);
 
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(1);
@@ -99,7 +100,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
         // Act
-        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetails(null);
+        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetails();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -129,7 +130,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
             .ReturnsAsync(_orgSessionMock);
 
         // Act
-        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetailsPost();
+        IActionResult result = await _systemUnderTest.TeamMembersCheckInvitationDetailsPost(teamMembers);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();

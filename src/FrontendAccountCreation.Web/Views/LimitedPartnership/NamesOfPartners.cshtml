@@ -68,9 +68,15 @@
                                     {
                                         <!-- remove partner -->
                                         <div class="govuk-!-text-align-right">
-                                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="@Model.Partners[i].Id" type="submit">
-                                                @SharedLocalizer["Remove"]
-                                            </button>
+                                            @Html.ActionLink(@SharedLocalizer["Remove"].Value, nameof(LimitedPartnershipController.NamesOfPartnersDelete), "LimitedPartnership",
+                                                     new
+                                                     {
+                                                         @id = @Model.Partners[i].Id
+                                                     },
+                                                     new
+                                                     {
+                                                         @class = "govuk-button govuk-button--secondary"
+                                                     })
                                         </div>
                                     }
                                     <hr>
