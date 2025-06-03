@@ -2,6 +2,7 @@
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -13,7 +14,11 @@ public partial class ApprovedPersonController
     public async Task<IActionResult> TeamMemberRoleInOrganisationAdd()
     {
         DeleteFocusId();
-        return RedirectToAction(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberRoleInOrganisation),
+            PagePath.TeamMemberRoleInOrganisation, null);
     }
 
     [HttpGet]
@@ -21,7 +26,11 @@ public partial class ApprovedPersonController
     public async Task<IActionResult> TeamMemberRoleInOrganisationEdit([FromQuery] Guid id)
     {
         SetFocusId(id);
-        return RedirectToAction(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberRoleInOrganisation),
+            PagePath.TeamMemberRoleInOrganisation, null);
     }
 
     [HttpGet]
@@ -29,13 +38,19 @@ public partial class ApprovedPersonController
     public async Task<IActionResult> TeamMemberDetailsEdit([FromQuery] Guid id)
     {
         SetFocusId(id);
-        return RedirectToAction(nameof(ApprovedPersonController.TeamMemberDetails));
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberDetails),
+            PagePath.TeamMemberDetails, null);
     }
 
     [HttpGet]
     [Route(PagePath.TeamMembersCheckInvitationDetails + "/Delete")]
     public async Task<IActionResult> TeamMembersCheckInvitationDetailsDelete([FromQuery] Guid id)
     {
+        DeleteFocusId();
+
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         session?.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == id);
 
