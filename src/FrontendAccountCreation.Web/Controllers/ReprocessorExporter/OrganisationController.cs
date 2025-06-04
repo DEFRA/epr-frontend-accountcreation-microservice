@@ -652,7 +652,40 @@ public class OrganisationController : Controller
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.SoleTrader);
-        return View();
+
+        var viewModel = new SoleTraderViewModel();
+
+        //todo: helper for this common code
+        if (session.IsIndividualInCharge.HasValue)
+        {
+            viewModel.IsIndividualInCharge = session.IsIndividualInCharge == true ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.SoleTrader)]
+    [OrganisationJourneyAccess(PagePath.SoleTrader)]
+    public async Task<IActionResult> SoleTrader(SoleTraderViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.SoleTrader);
+            return View(model);
+        }
+
+        session.IsIndividualInCharge = model.IsIndividualInCharge == YesNoAnswer.Yes;
+
+        if (session.IsIndividualInCharge != true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(NotImplemented),
+                PagePath.SoleTrader, PagePath.NotImplemented);
+        }
+
+        return await SaveSessionAndRedirect(session, nameof(NotImplemented), PagePath.IsUkMainAddress,
+            PagePath.NotImplemented);
     }
 
     [HttpGet]

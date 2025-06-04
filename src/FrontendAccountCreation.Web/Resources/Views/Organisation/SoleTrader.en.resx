@@ -117,13 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SoleTrader.Hint" xml:space="preserve">
-    <value />
+  <data name="SoleTrader.Title" xml:space="preserve">
+    <value>Sole Trader</value>
   </data>
   <data name="SoleTrader.Question" xml:space="preserve">
-    <value />
+    <value>Are you the individual in charge of your business?</value>
   </data>
-  <data name="SoleTrader.Title" xml:space="preserve">
-    <value />
+  <data name="SoleTrader.Hint" xml:space="preserve">
+    <value>This means you make all the business decisions and you have the responsibility for the allocation of profits after tax.</value>
+  </data>
+  <data name="SoleTrader.ErrorMessage" xml:space="preserve">
+    <value>Select yes if you are the individual in charge of your business</value>
   </data>
 </root>

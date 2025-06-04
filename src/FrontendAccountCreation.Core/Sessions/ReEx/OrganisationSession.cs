@@ -37,4 +37,6 @@ public class OrganisationSession
     public bool? IsOrganisationAPartnership { get; set; }
 
     public bool? IsUkMainAddress { get; set; }
+
+    public bool? IsIndividualInCharge { get; set; }
 }
