@@ -7,7 +7,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 public partial class LimitedPartnershipController
 {
     [HttpGet]
-    [Route(PagePath.LimitedPartnershipNamesOfPartners + "/Delete")]
+    [Route(PagePath.LimitedPartnershipNamesOfPartnersDelete)]
     public async Task<IActionResult> NamesOfPartnersDelete([FromQuery] Guid id)
     {
         DeleteFocusId();
@@ -20,7 +20,7 @@ public partial class LimitedPartnershipController
     }
 
     [HttpGet]
-    [Route(PagePath.LimitedPartnershipCheckNamesOfPartners + "/Delete")]
+    [Route(PagePath.LimitedPartnershipCheckNamesOfPartnersDelete)]
     public async Task<IActionResult> CheckNamesOfPartnersDelete([FromQuery] Guid id)
     {
         DeleteFocusId();

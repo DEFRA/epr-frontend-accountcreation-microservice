@@ -9,7 +9,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 public partial class ApprovedPersonController
 {
     [HttpGet]
-    [Route(PagePath.TeamMemberRoleInOrganisation + "/Add")]
+    [Route(PagePath.TeamMemberRoleInOrganisationAdd)]
     [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
     public async Task<IActionResult> TeamMemberRoleInOrganisationAdd()
     {
@@ -22,7 +22,7 @@ public partial class ApprovedPersonController
     }
 
     [HttpGet]
-    [Route(PagePath.TeamMemberRoleInOrganisation + "/Edit")]
+    [Route(PagePath.TeamMemberRoleInOrganisationEdit)]
     public async Task<IActionResult> TeamMemberRoleInOrganisationEdit([FromQuery] Guid id)
     {
         SetFocusId(id);
@@ -34,7 +34,7 @@ public partial class ApprovedPersonController
     }
 
     [HttpGet]
-    [Route(PagePath.TeamMemberDetails + "/Edit")]
+    [Route(PagePath.TeamMemberDetailsEdit)]
     public async Task<IActionResult> TeamMemberDetailsEdit([FromQuery] Guid id)
     {
         SetFocusId(id);
@@ -46,7 +46,7 @@ public partial class ApprovedPersonController
     }
 
     [HttpGet]
-    [Route(PagePath.TeamMembersCheckInvitationDetails + "/Delete")]
+    [Route(PagePath.TeamMembersCheckInvitationDetailsDelete)]
     public async Task<IActionResult> TeamMembersCheckInvitationDetailsDelete([FromQuery] Guid id)
     {
         DeleteFocusId();
@@ -59,7 +59,7 @@ public partial class ApprovedPersonController
     }
 
     [HttpGet]
-    [Route(PagePath.MemberPartnership + "/Add")]
+    [Route(PagePath.MemberPartnershipAdd)]
     public async Task<IActionResult> MemberPartnershipAdd()
     {
         DeleteFocusId();
