@@ -646,6 +646,16 @@ public class OrganisationController : Controller
     }
 
     [HttpGet]
+    [Route(PagePath.SoleTrader)]
+    [OrganisationJourneyAccess(PagePath.SoleTrader)]
+    public async Task<IActionResult> SoleTrader()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.SoleTrader);
+        return View();
+    }
+
+    [HttpGet]
     [Route(PagePath.Declaration)]
     [OrganisationJourneyAccess(PagePath.Declaration)]
     public async Task<IActionResult> Declaration()
