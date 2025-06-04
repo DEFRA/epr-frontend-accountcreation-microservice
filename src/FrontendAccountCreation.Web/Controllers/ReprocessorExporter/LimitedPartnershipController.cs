@@ -144,6 +144,19 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     }
 
     [HttpGet]
+    [Route(PagePath.LimitedPartnershipNamesOfPartnersDelete)]
+    public async Task<IActionResult> NamesOfPartnersDelete([FromQuery] Guid id)
+    {
+        DeleteFocusId();
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.RemoveAll(x => x.Id == id);
+
+        return await SaveSessionAndRedirect(session, nameof(NamesOfPartners),
+            PagePath.LimitedPartnershipNamesOfPartners, null);
+    }
+
+    [HttpGet]
     [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     public async Task<IActionResult> CheckNamesOfPartners()
@@ -169,6 +182,19 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedPartnershipCheckNamesOfPartnersDelete)]
+    public async Task<IActionResult> CheckNamesOfPartnersDelete([FromQuery] Guid id)
+    {
+        DeleteFocusId();
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.RemoveAll(x => x.Id == id);
+
+        return await SaveSessionAndRedirect(session, nameof(CheckNamesOfPartners),
+            PagePath.LimitedPartnershipCheckNamesOfPartners, null);
     }
 
     [HttpGet]
