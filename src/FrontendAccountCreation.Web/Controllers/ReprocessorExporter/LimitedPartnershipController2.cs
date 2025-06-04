@@ -10,6 +10,8 @@ public partial class LimitedPartnershipController
     [Route(PagePath.LimitedPartnershipNamesOfPartners + "/Delete")]
     public async Task<IActionResult> NamesOfPartnersDelete([FromQuery] Guid id)
     {
+        DeleteFocusId();
+
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.RemoveAll(x => x.Id == id);
 
@@ -21,6 +23,8 @@ public partial class LimitedPartnershipController
     [Route(PagePath.LimitedPartnershipCheckNamesOfPartners + "/Delete")]
     public async Task<IActionResult> CheckNamesOfPartnersDelete([FromQuery] Guid id)
     {
+        DeleteFocusId();
+
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.RemoveAll(x => x.Id == id);
 
