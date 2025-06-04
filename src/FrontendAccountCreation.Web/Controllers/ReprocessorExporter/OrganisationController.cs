@@ -678,14 +678,39 @@ public class OrganisationController : Controller
 
         session.IsIndividualInCharge = model.IsIndividualInCharge == YesNoAnswer.Yes;
 
-        if (session.IsIndividualInCharge != true)
+        if (session.IsIndividualInCharge == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(NotImplemented),
-                PagePath.SoleTrader, PagePath.NotImplemented);
+            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson),
+                PagePath.SoleTrader, PagePath.ManageAccountPerson);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(NotImplemented), PagePath.IsUkMainAddress,
-            PagePath.NotImplemented);
+        return await SaveSessionAndRedirect(session, nameof(NotApprovedPerson),
+            PagePath.SoleTrader, PagePath.NotApprovedPerson);
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.ManageAccountPerson)]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
+    public async Task<IActionResult> ManageAccountPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.BusinessAddress);
+        return View();
+    }
+
+    //todo: standard placeholder page (in journey/end journey)?
+    //todo: is not-approved-person page actually a form of the approved person page?
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.NotApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.NotApprovedPerson)]
+    public async Task<IActionResult> NotApprovedPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.BusinessAddress);
+        return View();
     }
 
     [HttpGet]

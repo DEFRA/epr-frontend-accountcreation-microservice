@@ -42,6 +42,7 @@ public static class PagePath
     public const string ApprovedPersonContinue = "person-approved-continue";
     public const string DeclarationContinue = "declaration-continue";
     public const string SoleTrader = "sole-trader";
+    public const string NotApprovedPerson = "not-approved-person";
     public const string NotImplemented = "not-implemented";
 
     // Approve person paths
