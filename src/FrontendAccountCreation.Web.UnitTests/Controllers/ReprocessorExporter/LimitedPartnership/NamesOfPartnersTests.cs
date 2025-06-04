@@ -172,7 +172,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task NamesOfPartners_Post_WhenPartnerIdSupplied_RemovesPartnerFromSession()
+    public async Task NamesOfPartnersDelete_Get_RemovesPartnerFromSession()
     {
         // Arrange
         var jack = new ReExLimitedPartnershipPersonOrCompany
@@ -199,17 +199,13 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         };
 
         // Act
-        var result = await _systemUnderTest.NamesOfPartners(model, jack.Id.ToString());
+        var result = await _systemUnderTest.NamesOfPartnersDelete(jack.Id);
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>().Which;
-        viewModel.Partners.Should().ContainSingle();
-        viewModel.Partners[0].Id.Should().Be(jill.Id);
-        viewModel.Partners[0].PersonName.Should().Be("Jill");
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NamesOfPartners));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
-        viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
 
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners?.Count.Should().Be(1);
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[0].Should().BeEquivalentTo(jill);
@@ -329,5 +325,59 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners[1].Should().BeEquivalentTo(biffa);
 
         redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+    }
+
+    [TestMethod]
+    public async Task LimitedPartnershipNamesOfPartnersDelete_Get_UpdatesSession_And_RedirectsTo_NamesOfPartners()
+    {
+        // Arrange
+        Guid jackId = Guid.NewGuid();
+        Guid jillId = Guid.NewGuid();
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = jackId, FirstName = "Jack", LastName = "Smith" },
+            new() { Id = jillId, FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartnersDelete(jackId);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NamesOfPartners));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle(x => x.Id == jillId);
+    }
+
+    [TestMethod]
+    public async Task LimitedPartnershipNamesOfPartnersDelete_Get_WhenGivenUnMatchedId_RedirectsTo_NamesOfPartners()
+    {
+        // Arrange
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Smith" },
+            new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartnersDelete(Guid.NewGuid());
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NamesOfPartners));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Count.Should().Be(2);
     }
 }

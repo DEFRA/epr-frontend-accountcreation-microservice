@@ -17,31 +17,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NamesOfPartners.Title_Individual" xml:space="preserve">
-    <value>[Weslsh]Name Individual Partners</value>
+    <value>[Welsh]Name Individual Partners</value>
   </data>
   <data name="NamesOfPartners.Title_Company" xml:space="preserve">
-    <value>[Weslsh]Name Corporate Partners</value>
+    <value>[Welsh]Name Corporate Partners</value>
   </data>
   <data name="NamesOfPartners.Title_Both" xml:space="preserve">
-    <value>[Weslsh]Name All Partners</value>
+    <value>[Welsh]Name All Partners</value>
   </data>
   <data name="NamesOfPartners.H1_Individual" xml:space="preserve">
-    <value>[Weslsh]What are the names of all individual partners in your limited partnership?</value>
+    <value>[Welsh]What are the names of all individual partners in your limited partnership?</value>
   </data>
   <data name="NamesOfPartners.H1_Company" xml:space="preserve">
-    <value>[Weslsh]What are the names of corporate partners in your limited partnership?</value>
+    <value>[Welsh]What are the names of corporate partners in your limited partnership?</value>
   </data>
   <data name="NamesOfPartners.H1_Both" xml:space="preserve">
-    <value>[Weslsh]What are the names of all partners in your limited partnership?</value>
+    <value>[Welsh]What are the names of all partners in your limited partnership?</value>
   </data>
   <data name="NamesOfPartners.Hint_Individual" xml:space="preserve">
-    <value>[Weslsh]This means individual partners, who are listed as partners within your limited partnership, as registered on Companies House.</value>
+    <value>[Welsh]This means individual partners, who are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.Hint_Company" xml:space="preserve">
     <value>[Welsh]This means any corporate partners which are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.Hint_Both" xml:space="preserve">
-    <value>[Welsh]This means any comrporate partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
+    <value>[Welsh]This means any corporate partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
   <data name="NamesOfPartners.CompanyName" xml:space="preserve">
     <value>[Welsh]Corporate partner name</value>

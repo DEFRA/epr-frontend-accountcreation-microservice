@@ -49,14 +49,18 @@ public static class PagePath
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-cannot-be-invited";
+    public const string MemberPartnership = "member-partnership";
+    public const string PartnerDetails = "partner-details";
+    public const string CanNotInviteThisPerson = "cannot-invite-this-person";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
     public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-corporate-individual-partner-names";
     public const string PartnershipType= "partnership-type";
-    public const string LimitedPartnershipType = "limited-partnership-type";
+    public const string LimitedPartnershipType = "organisation-partnership-type";
     public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
     public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
+    public const string LimitedLiabilityPartnership = "partner-you";
     // Non journey paths 
     public const string Accessibility = "accessibility";    
     public const string SignedOut = "signed-out";

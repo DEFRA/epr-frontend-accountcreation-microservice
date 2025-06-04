@@ -1,7 +1,4 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Sessions;
-using FrontendAccountCreation.Web;
-using FrontendAccountCreation.Web.ViewModels;
+﻿using FrontendAccountCreation.Core.Sessions;
 using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;

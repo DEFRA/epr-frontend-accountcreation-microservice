@@ -136,10 +136,10 @@
     <value>Continue</value>
   </data>
   <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>What are your team member’s details?</value>
+    <value>Team Invite</value>
   </data>
   <data name="TeamMemberDetails.Header" xml:space="preserve">
-    <value>What are your team member’s details?</value>
+    <value>What are their details?</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
     <value>Enter a valid telephone number</value>

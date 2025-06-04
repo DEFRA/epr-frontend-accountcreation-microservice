@@ -47,7 +47,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task CheckNamesOfPartners_Get_ReturnsView()
     {
         // Act
-        var result = await _systemUnderTest.CheckNamesOfPartners((Guid?)null);
+        var result = await _systemUnderTest.CheckNamesOfPartners();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -59,7 +59,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task CheckNamesOfPartners_Get_SetsBackLink()
     {
         // Act
-        var result = await _systemUnderTest.CheckNamesOfPartners((Guid?)null);
+        var result = await _systemUnderTest.CheckNamesOfPartners();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -70,7 +70,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task CheckNamesOfPartners_Get_WhenPartnerIdSupplied_RemovesPartnerFromSession()
+    public async Task CheckNamesOfPartnersDelete_Get_RemovesPartnerFromSession()
     {
         // Arrange
         var jack = new ReExLimitedPartnershipPersonOrCompany
@@ -91,12 +91,11 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = model;
 
         // Act
-        var result = await _systemUnderTest.CheckNamesOfPartners(jack.Id);
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(jack.Id);
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        var viewModel = viewResult.Model.Should().BeOfType<List<ReExLimitedPartnershipPersonOrCompany>>().Which;
-        viewModel.Should().ContainSingle().Which.Should().BeEquivalentTo(jill);
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
 
@@ -110,8 +109,11 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
     [TestMethod]
     public async Task NamesOfPartners_Post_Save_RedirectsToCorrectPage()
     {
+        // Arrange
+        List<ReExLimitedPartnershipPersonOrCompany> modelNotUsed = new();
+
         // Act
-        var result = await _systemUnderTest.CheckNamesOfPartners();
+        var result = await _systemUnderTest.CheckNamesOfPartners(modelNotUsed);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -129,7 +131,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
 
         // Act
-        var result = await _systemUnderTest.CheckNamesOfPartners((Guid?)null);
+        var result = await _systemUnderTest.CheckNamesOfPartners();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -146,7 +148,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership = null;
 
         // Act
-        var result = await _systemUnderTest.CheckNamesOfPartners((Guid?)null);
+        var result = await _systemUnderTest.CheckNamesOfPartners();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -156,4 +158,57 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         model.Should().BeEmpty(); // Model is empty as LimitedPartnership is null
     }
 
+    [TestMethod]
+    public async Task CheckNamesOfPartnersDelete_Get_UpdatesSession_And_RedirectsTo_CheckNamesOfPartners()
+    {
+        // Arrange
+        Guid jackId = Guid.NewGuid();
+        Guid jillId = Guid.NewGuid();
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = jackId, FirstName = "Jack", LastName = "Smith" },
+            new() { Id = jillId, FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(jackId);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle(x => x.Id == jillId);
+    }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartnersDelete_Get_WhenGivenUnmatchedId_RedirectsTo_CheckNamesOfPartners()
+    {
+        // Arrange
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Smith" },
+            new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(Guid.NewGuid());
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Count.Should().Be(2);
+    }
 }
