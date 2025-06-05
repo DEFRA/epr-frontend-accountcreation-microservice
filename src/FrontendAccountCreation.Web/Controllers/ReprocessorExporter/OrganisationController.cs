@@ -614,10 +614,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         {
             return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
         }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(BusinessAddress), PagePath.UkNation, PagePath.BusinessAddress);
-        }
+        return await SaveSessionAndRedirect(session, nameof(BusinessAddress), PagePath.UkNation, PagePath.BusinessAddress);
     }
 
     [HttpGet]
@@ -632,7 +629,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return View();
     }
 
-    [ExcludeFromCodeCoverage]
     [HttpGet]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
@@ -640,7 +636,19 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.BusinessAddress);
-        return View();
+
+        var viewModel = new ReExBusinessAddressViewModel();
+
+        if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
+        {
+            viewModel.AddressLine1 = session.ReExManualInputSession.BusinessAddress.SubBuildingName;
+            viewModel.AddressLine2 = session.ReExManualInputSession.BusinessAddress.AddressSingleLine;
+            viewModel.Town = session.ReExManualInputSession.BusinessAddress.Town;
+            viewModel.County = session.ReExManualInputSession.BusinessAddress.County;
+            viewModel.Postcode = session.ReExManualInputSession.BusinessAddress.County;
+        }
+
+        return View(viewModel);
     }
 
     [HttpGet]
