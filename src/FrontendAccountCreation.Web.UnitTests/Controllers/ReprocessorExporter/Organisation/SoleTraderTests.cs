@@ -1,8 +1,6 @@
 ﻿using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using System.Linq.Expressions;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -11,7 +9,8 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
     c => c.SoleTrader(),
     (c, vm) => c.SoleTrader(vm),
     (session, val) => session.IsIndividualInCharge = val,
-    session => session.IsIndividualInCharge)
+    session => session.IsIndividualInCharge,
+    vm => vm.IsIndividualInCharge)
 {
     // Page and Journey details
     protected override string CurrentPagePath => PagePath.SoleTrader;
@@ -24,10 +23,6 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
         PagePath.TradingName, PagePath.TypeOfOrganisation, PagePath.UkNation, PagePath.BusinessAddress, // Expected backlink
         PagePath.SoleTrader // Current page
     ];
-
-    // ViewModel property access (now a single expression)
-    protected override Expression<Func<SoleTraderViewModel, YesNoAnswer?>> ViewModelYesNoPropertyExpression =>
-        vm => vm.IsIndividualInCharge;
 
     // Redirect targets
     protected override string RedirectActionNameOnYes => nameof(OrganisationController.ManageAccountPerson);

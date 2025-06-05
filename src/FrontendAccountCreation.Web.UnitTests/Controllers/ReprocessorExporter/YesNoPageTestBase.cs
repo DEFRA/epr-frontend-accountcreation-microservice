@@ -18,13 +18,13 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
     protected Func<OrganisationController, Task<IActionResult>> GetPageAction { get; }
     protected Func<OrganisationController, TViewModel, Task<IActionResult>> PostPageAction { get; }
 
-    // we could replace these 3 with a single property,
+    // we could replace these 2 with a single property,
     // but that's probably too much implementation complexity for a yes/no test base that is tied to OrganisationTestBase.
     protected Action<OrganisationSession, bool?> SetSessionValueForGetTest { get; }
     protected Func<OrganisationSession, bool?> GetSessionValueForPostTest { get; }
 
     // Expression to define the Yes/No property on the ViewModel
-    protected abstract Expression<Func<TViewModel, YesNoAnswer?>> ViewModelYesNoPropertyExpression { get; }
+    protected Expression<Func<TViewModel, YesNoAnswer?>> ViewModelYesNoPropertyExpression { get; }
 
     protected abstract string CurrentPagePath { get; }
     protected abstract string ExpectedBacklinkPagePath { get; }
@@ -48,12 +48,14 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
         Func<OrganisationController, Task<IActionResult>> getPageAction,
         Func<OrganisationController, TViewModel, Task<IActionResult>> postPageAction,
         Action<OrganisationSession, bool?> setSessionValueForGetTest,
-        Func<OrganisationSession, bool?> getSessionValueForPostTest)
+        Func<OrganisationSession, bool?> getSessionValueForPostTest,
+        Expression<Func<TViewModel, YesNoAnswer?>> viewModelYesNoPropertyExpression)
     {
         GetPageAction = getPageAction;
         PostPageAction = postPageAction;
         SetSessionValueForGetTest = setSessionValueForGetTest;
         GetSessionValueForPostTest = getSessionValueForPostTest;
+        ViewModelYesNoPropertyExpression = viewModelYesNoPropertyExpression;
 
         _lazyViewModelAccessors = new Lazy<ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>>(
             () => new ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>(ViewModelYesNoPropertyExpression)

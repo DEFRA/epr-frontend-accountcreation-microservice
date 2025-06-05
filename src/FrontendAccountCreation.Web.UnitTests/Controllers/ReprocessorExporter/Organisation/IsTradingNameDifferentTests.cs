@@ -1,9 +1,6 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web.Constants;
+﻿using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using System.Linq.Expressions;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -12,7 +9,8 @@ public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDiff
     c => c.IsTradingNameDifferent(),
     (c, vm) => c.IsTradingNameDifferent(vm),
     (session, val) => session.IsTradingNameDifferent = val,
-    session => session.IsTradingNameDifferent)
+    session => session.IsTradingNameDifferent,
+    vm => vm.IsTradingNameDifferent)
 {
     // Page and Journey details
     protected override string CurrentPagePath => PagePath.IsTradingNameDifferent;
@@ -23,10 +21,6 @@ public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDiff
         PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
         PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent
     ];
-
-    // ViewModel property access
-    protected override Expression<Func<IsTradingNameDifferentViewModel, YesNoAnswer?>> ViewModelYesNoPropertyExpression =>
-        vm => vm.IsTradingNameDifferent;
 
     // Redirect targets
     protected override string RedirectActionNameOnYes => nameof(OrganisationController.TradingName);
