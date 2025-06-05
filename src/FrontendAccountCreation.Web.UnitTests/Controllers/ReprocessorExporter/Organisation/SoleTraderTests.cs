@@ -133,22 +133,21 @@ public class SoleTraderTests : OrganisationTestBase
         viewModel!.IsIndividualInCharge.Should().BeNull();
     }
 
-    //todo:
-    //[TestMethod]
-    //[DataRow(YesNoAnswer.Yes, nameof(OrganisationController.TradingName))]
-    //[DataRow(YesNoAnswer.No, nameof(OrganisationController.NotImplemented))]
-    //public async Task POST_UserSelectsYesOrNo_UserIsRedirected(
-    //    YesNoAnswer userAnswer, string expectedRedirect)
-    //{
-    //    // Arrange
-    //    var request = new IsUkMainAddressViewModel { IsUkMainAddress = userAnswer };
+    [TestMethod]
+    [DataRow(YesNoAnswer.Yes, nameof(OrganisationController.ManageAccountPerson))]
+    [DataRow(YesNoAnswer.No, nameof(OrganisationController.NotApprovedPerson))]
+    public async Task POST_UserSelectsYesOrNo_UserIsRedirected(
+        YesNoAnswer userAnswer, string expectedRedirect)
+    {
+        // Arrange
+        var request = new SoleTraderViewModel { IsIndividualInCharge = userAnswer };
 
-    //    // Act
-    //    var result = await _systemUnderTest.IsUkMainAddress(request);
+        // Act
+        var result = await _systemUnderTest.SoleTrader(request);
 
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
 
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);
-    //}
+        ((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);
+    }
 }
