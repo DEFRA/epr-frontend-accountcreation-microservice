@@ -376,6 +376,26 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.YouAreApprovedPersonSoleTrader)]
+        //[OrganisationJourneyAccess(PagePath.YouAreApprovedPersonSoleTrader)]
+        public async Task<IActionResult> YouAreApprovedPersonSoleTrader()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.YouAreApprovedPerson);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View();
+        }
+
+        //[HttpGet]
+        //[Route(PagePath.DeclarationContinue)]
+        //public async Task<IActionResult> ApprovedPersonSoleTraderContinue()
+        //{
+        //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        //    return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue, PagePath.Success);
+        //}
+
+        [HttpGet]
         [Route(PagePath.MemberPartnership)]
         [OrganisationJourneyAccess(PagePath.MemberPartnership)]
         public async Task<IActionResult> MemberPartnership()

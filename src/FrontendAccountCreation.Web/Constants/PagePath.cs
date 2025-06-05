@@ -65,6 +65,9 @@ public static class PagePath
     public const string PartnerDetails = "partner-details";
     public const string CanNotInviteThisPerson = "cannot-invite-this-person";
 
+    // Sole Trader paths
+    public const string YouAreApprovedPersonSoleTrader = "soletrader-approved-person";
+
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
     public const string LimitedPartnershipNamesOfPartnersDelete = "organisation-enter-corporate-individual-partner-names/delete";
