@@ -4,19 +4,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Linq.Expressions;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
-public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationTestBase
-    where TController : Controller
+// supports [Parallelize(Scope = ExecutionScope.MethodLevel)], but don't want to apply that for all tests in the assembly
+public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
     where TViewModel : class, new()
 {
-    protected TController ControllerUnderTest { get; private set; }
-
     // Abstract members to be implemented by derived test classes
-    protected abstract Func<TController, Task<IActionResult>> GetPageAction { get; }
-    protected abstract Func<TController, TViewModel, Task<IActionResult>> PostPageAction { get; }
+    protected abstract Func<OrganisationController, Task<IActionResult>> GetPageAction { get; }
+    protected abstract Func<OrganisationController, TViewModel, Task<IActionResult>> PostPageAction { get; }
     protected abstract Action<OrganisationSession, bool?> SetSessionValueForGetTest { get; }
     protected abstract Func<OrganisationSession, bool?> GetSessionValueForPostTest { get; }
     protected abstract string CurrentPagePath { get; }
@@ -51,8 +50,6 @@ public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationT
     public virtual void InitializePageTest()
     {
         SetupBase();
-        ControllerUnderTest = _systemUnderTest as TController ??
-            throw new InvalidOperationException($"_systemUnderTest (from SetupBase) is not of type {typeof(TController).Name} or is null.");
         // _lazyViewModelAccessors.Value can be accessed here if needed for some initial check,
         // otherwise it will be initialized on first use of its properties/methods.
     }
@@ -69,7 +66,7 @@ public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationT
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
 
-        var result = await GetPageAction(ControllerUnderTest);
+        var result = await GetPageAction(_systemUnderTest);
 
         result.Should().NotBeNull().And.BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
@@ -86,7 +83,7 @@ public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationT
         SetSessionValueForGetTest(orgCreationSession, sessionValue);
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
 
-        var result = await GetPageAction(ControllerUnderTest);
+        var result = await GetPageAction(_systemUnderTest);
 
         result.Should().NotBeNull().And.BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
@@ -103,7 +100,7 @@ public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationT
         var requestViewModel = new TViewModel();
         SetActualViewModelYesNoAnswer(requestViewModel, userAnswer);
 
-        await PostPageAction(ControllerUnderTest, requestViewModel);
+        await PostPageAction(_systemUnderTest, requestViewModel);
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(),
             It.Is<OrganisationSession>(os => GetSessionValueForPostTest(os) == expectedSessionValue)),
@@ -115,9 +112,9 @@ public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationT
     {
         var requestViewModel = new TViewModel();
         SetActualViewModelYesNoAnswer(requestViewModel, null);
-        ControllerUnderTest.ModelState.AddModelError(ActualViewModelYesNoPropertyName, ViewModelMissingInputErrorMessage);
+        _systemUnderTest.ModelState.AddModelError(ActualViewModelYesNoPropertyName, ViewModelMissingInputErrorMessage);
 
-        await PostPageAction(ControllerUnderTest, requestViewModel);
+        await PostPageAction(_systemUnderTest, requestViewModel);
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Never);
     }
@@ -127,9 +124,9 @@ public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationT
     {
         var requestViewModel = new TViewModel();
         SetActualViewModelYesNoAnswer(requestViewModel, null);
-        ControllerUnderTest.ModelState.AddModelError(ActualViewModelYesNoPropertyName, ViewModelMissingInputErrorMessage);
+        _systemUnderTest.ModelState.AddModelError(ActualViewModelYesNoPropertyName, ViewModelMissingInputErrorMessage);
 
-        var result = await PostPageAction(ControllerUnderTest, requestViewModel);
+        var result = await PostPageAction(_systemUnderTest, requestViewModel);
 
         result.Should().NotBeNull().And.BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
@@ -147,7 +144,7 @@ public abstract class YesNoPageTestBase<TController, TViewModel> : OrganisationT
         SetActualViewModelYesNoAnswer(requestViewModel, userAnswer);
         var expectedRedirect = userAnswer == YesNoAnswer.Yes ? RedirectActionNameOnYes : RedirectActionNameOnNo;
 
-        var result = await PostPageAction(ControllerUnderTest, requestViewModel);
+        var result = await PostPageAction(_systemUnderTest, requestViewModel);
 
         result.Should().BeOfType<RedirectToActionResult>();
         ((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);

@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 [TestClass]
-public class SoleTraderTests : YesNoPageTestBase<OrganisationController, SoleTraderViewModel>
+public class SoleTraderTests : YesNoPageTestBase<SoleTraderViewModel>
 {
     // Controller and ViewModel actions
     protected override Func<OrganisationController, Task<IActionResult>> GetPageAction => ctrl => ctrl.SoleTrader();
