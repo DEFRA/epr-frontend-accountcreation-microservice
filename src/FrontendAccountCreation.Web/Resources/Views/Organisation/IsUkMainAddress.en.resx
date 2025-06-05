@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IsUkMainAddress.ErrorMessage" xml:space="preserve">
-    <value>Select if your organisation have a main address in the UK</value>
+    <value>Select if your organisation has a main address in the UK</value>
   </data>
   <data name="IsUkMainAddress.Hint" xml:space="preserve">
     <value>This means a head office or principal place of business in the UK.</value>

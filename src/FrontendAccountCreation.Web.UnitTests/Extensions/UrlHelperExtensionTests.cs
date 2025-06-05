@@ -41,7 +41,7 @@ public class UrlHelperExtensionTests
     }
 
     [TestMethod]
-    public void HomePathReEx_ReturnsCorrectPath()
+    public void HomePathReExUser_ReturnsCorrectPath()
     {
         // Arrange
         var mockUrlHelper = new Mock<IUrlHelper>();
@@ -49,14 +49,29 @@ public class UrlHelperExtensionTests
                      .Returns("/User/ReExAccountFullName");
 
         // Act
-        var result = mockUrlHelper.Object.HomePathReEx();
+        var result = mockUrlHelper.Object.HomePathReExUser();
 
         // Assert
         result.Should().Be("/User/ReExAccountFullName");
     }
 
     [TestMethod]
-    public void CurrentPathReEx_ReturnsExpectedUrl()
+    public void HomePathReExOrganisation_ReturnsCorrectPath()
+    {
+        // Arrange
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper.Setup(x => x.Action(It.Is<UrlActionContext>(uac => uac.Action == "RegisteredAsCharity" && uac.Controller == "Organisation")))
+                     .Returns("/Organisation/RegisteredAsCharity");
+
+        // Act
+        var result = mockUrlHelper.Object.HomePathReExOrganisation();
+
+        // Assert
+        result.Should().Be("/Organisation/RegisteredAsCharity");
+    }
+
+    [TestMethod]
+    public void CurrentPathReExUser_ReturnsExpectedUrl()
     {
         // Arrange
         var mockUrlHelper = new Mock<IUrlHelper>();
@@ -64,9 +79,24 @@ public class UrlHelperExtensionTests
                      .Returns("/User");
 
         // Act
-        var result = mockUrlHelper.Object.CurrentPathReEx();
+        var result = mockUrlHelper.Object.CurrentPathReExUser();
 
         // Assert
         Assert.AreEqual("/User", result);
+    }
+
+    [TestMethod]
+    public void CurrentPathReExOrganisation_ReturnsExpectedUrl()
+    {
+        // Arrange
+        var mockUrlHelper = new Mock<IUrlHelper>();
+        mockUrlHelper.Setup(x => x.Action(It.Is<UrlActionContext>(uac => uac.Action == null && uac.Controller == "Organisation")))
+                     .Returns("/Organisation");
+
+        // Act
+        var result = mockUrlHelper.Object.CurrentPathReExOrganisation();
+
+        // Assert
+        Assert.AreEqual("/Organisation", result);
     }
 }
