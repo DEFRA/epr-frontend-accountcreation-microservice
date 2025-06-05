@@ -91,10 +91,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
-        {
-            Journey = [PagePath.RegisteredAsCharity]
-        };
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
@@ -137,10 +134,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         [FromServices] IFeatureManager featureManager,
         RegisteredWithCompaniesHouseViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
-        {
-            Journey = [PagePath.RegisteredWithCompaniesHouse]
-        };
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
