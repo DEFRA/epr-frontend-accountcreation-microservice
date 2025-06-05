@@ -9,6 +9,8 @@ using FrontendAccountCreation.Web.ViewModels;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
+//todo: using ctor params would look neater and easier to implement in the derived classes
+
 // supports [Parallelize(Scope = ExecutionScope.MethodLevel)], but don't want to apply that for all tests in the assembly
 public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
     where TViewModel : class, new()
@@ -16,8 +18,13 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
     // Abstract members to be implemented by derived test classes
     protected abstract Func<OrganisationController, Task<IActionResult>> GetPageAction { get; }
     protected abstract Func<OrganisationController, TViewModel, Task<IActionResult>> PostPageAction { get; }
+
+    // we could replace these 2 and ViewModelYesNoPropertyExpression with a single property,
+    // but that's probably too much implementation complexity for a yes/no test base that is tied to
+    // OrganisationTestBase.
     protected abstract Action<OrganisationSession, bool?> SetSessionValueForGetTest { get; }
     protected abstract Func<OrganisationSession, bool?> GetSessionValueForPostTest { get; }
+
     protected abstract string CurrentPagePath { get; }
     protected abstract string ExpectedBacklinkPagePath { get; }
     protected abstract List<string> JourneyForGetBacklinkTest { get; }
