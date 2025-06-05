@@ -454,7 +454,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [OrganisationJourneyAccess(PagePath.PartnerDetails)]
         public async Task<IActionResult> PartnerDetails(PartnerDetailsViewModel model)
         {
-            DeleteFocusId();
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
@@ -470,25 +469,30 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 // check the email, but any field other than Id will do
                 isExistingMember = members[index].Email?.Length > 0;
             }
-            var queryStringId = model?.Id ?? Guid.NewGuid();
+            var id = model?.Id ?? Guid.NewGuid();
 
             if (isExistingMember)
             {
-                members.RemoveAt(index);
+                members[index].FirstName = model?.FirstName;
+                members[index].LastName = model?.LastName;
+                members[index].TelephoneNumber = model.Telephone;
+                members[index].Email = model?.Email;
             }
-
-            members.Add(new ReExCompanyTeamMember
+            else
             {
-                Id = queryStringId,
-                FirstName = model?.FirstName,
-                LastName = model?.LastName,
-                TelephoneNumber = model.Telephone,
-                Email = model?.Email,
-            });
+                members.Add(new ReExCompanyTeamMember
+                {
+                    Id = id,
+                    FirstName = model?.FirstName,
+                    LastName = model?.LastName,
+                    TelephoneNumber = model.Telephone,
+                    Email = model?.Email,
+                });
+            }
 
             companiesHouseSession.TeamMembers = members;
             session.ReExCompaniesHouseSession = companiesHouseSession;
-            SetFocusId(queryStringId);
+            SetFocusId(id);
 
             return await SaveSessionAndRedirect(
                 session,
