@@ -1,153 +1,41 @@
-﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
+using System.Linq.Expressions;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
-//todo: could have new base for yes/no page tests
 [TestClass]
-public class SoleTraderTests : OrganisationTestBase
+public class SoleTraderTests : YesNoPageTestBase<OrganisationController, SoleTraderViewModel>
 {
-    [TestInitialize]
-    public void Setup()
-    {
-        SetupBase();
-    }
+    // Controller and ViewModel actions
+    protected override Func<OrganisationController, Task<IActionResult>> GetPageAction => ctrl => ctrl.SoleTrader();
+    protected override Func<OrganisationController, SoleTraderViewModel, Task<IActionResult>> PostPageAction => (ctrl, vm) => ctrl.SoleTrader(vm);
 
-    [TestMethod]
-    public async Task GET_BackLinkIsTodo()
-    {
-        //Arrange
-        var orgCreationSession = new OrganisationSession
-        {
-            Journey =
-            [
-                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress,
-                PagePath.TradingName, PagePath.TypeOfOrganisation, PagePath.UkNation, PagePath.BusinessAddress,
-                PagePath.SoleTrader
-            ]
-        };
+    // Session property access
+    protected override Action<OrganisationSession, bool?> SetSessionValueForGetTest => (session, val) => session.IsIndividualInCharge = val;
+    protected override Func<OrganisationSession, bool?> GetSessionValueForPostTest => session => session.IsIndividualInCharge;
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
+    // Page and Journey details
+    protected override string CurrentPagePath => PagePath.SoleTrader;
+    protected override string ExpectedBacklinkPagePath => PagePath.BusinessAddress;
+    //todo: default to last, current in base if not supplied?
+    // how much value are we adding here?
+    protected override List<string> JourneyForGetBacklinkTest =>
+    [
+        PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress,
+        PagePath.TradingName, PagePath.TypeOfOrganisation, PagePath.UkNation, PagePath.BusinessAddress, // Expected backlink
+        PagePath.SoleTrader // Current page
+    ];
 
-        //Act
-        var result = await _systemUnderTest.SoleTrader();
+    // ViewModel property access (now a single expression)
+    protected override Expression<Func<SoleTraderViewModel, YesNoAnswer?>> ViewModelYesNoPropertyExpression =>
+        vm => vm.IsIndividualInCharge;
 
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        AssertBackLink(viewResult, PagePath.BusinessAddress);
-    }
-
-    [TestMethod]
-    [DataRow(true, YesNoAnswer.Yes)]
-    [DataRow(false, YesNoAnswer.No)]
-    [DataRow(null, null)]
-    public async Task GET_CorrectViewModelIsReturnedInTheView(
-        bool? isIndividualInCharge,
-        YesNoAnswer? expectedIsIndividualInChargeViewModel)
-    {
-        //Arrange
-        var orgCreationSession = new OrganisationSession
-        {
-            Journey =
-            [
-                PagePath.RegisteredAsCharity,
-                PagePath.RegisteredWithCompaniesHouse,
-                PagePath.IsUkMainAddress,
-                PagePath.TradingName
-            ],
-            IsIndividualInCharge = isIndividualInCharge
-        };
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
-
-        //Act
-        var result = await _systemUnderTest.SoleTrader();
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<SoleTraderViewModel>();
-        var viewModel = (SoleTraderViewModel?)viewResult.Model;
-        viewModel!.IsIndividualInCharge.Should().Be(expectedIsIndividualInChargeViewModel);
-    }
-
-    [TestMethod]
-    [DataRow(YesNoAnswer.Yes, true)]
-    [DataRow(YesNoAnswer.No, false)]
-    public async Task POST_UserSelectsYesOrNo_SessionUpdatedCorrectly(YesNoAnswer userAnswer, bool expectedIsIndividualInChargeInSession)
-    {
-        // Arrange
-        var request = new SoleTraderViewModel { IsIndividualInCharge = userAnswer };
-
-        // Act
-        await _systemUnderTest.SoleTrader(request);
-
-        // Assert
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(),
-            It.Is<OrganisationSession>(os => os.IsIndividualInCharge == expectedIsIndividualInChargeInSession)),
-            Times.Once);
-    }
-
-    [TestMethod]
-    public async Task POST_UserSelectsNothing_SessionNotUpdated()
-    {
-        // Arrange
-        var request = new SoleTraderViewModel { IsIndividualInCharge = null };
-        _systemUnderTest.ModelState.AddModelError("IsIndividualInCharge", "Select yes if you are the individual in charge of your business");
-
-        // Act
-        await _systemUnderTest.SoleTrader(request);
-
-        // Assert
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(),
-                It.IsAny<OrganisationSession>()),
-            Times.Never);
-    }
-
-    [TestMethod]
-    public async Task POST_UserSelectsNothing_ViewIsReturnedWithCorrectModel()
-    {
-        // Arrange
-        var request = new SoleTraderViewModel { IsIndividualInCharge = null };
-        _systemUnderTest.ModelState.AddModelError("IsIndividualInCharge", "Select yes if you are the individual in charge of your business");
-
-        // Act
-        var result = await _systemUnderTest.SoleTrader(request);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<SoleTraderViewModel>();
-        var viewModel = (SoleTraderViewModel?)viewResult.Model;
-        viewModel!.IsIndividualInCharge.Should().BeNull();
-    }
-
-    [TestMethod]
-    [DataRow(YesNoAnswer.Yes, nameof(OrganisationController.ManageAccountPerson))]
-    [DataRow(YesNoAnswer.No, nameof(OrganisationController.NotApprovedPerson))]
-    public async Task POST_UserSelectsYesOrNo_UserIsRedirected(
-        YesNoAnswer userAnswer, string expectedRedirect)
-    {
-        // Arrange
-        var request = new SoleTraderViewModel { IsIndividualInCharge = userAnswer };
-
-        // Act
-        var result = await _systemUnderTest.SoleTrader(request);
-
-        // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-
-        ((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);
-    }
+    // Redirect targets
+    protected override string RedirectActionNameOnYes => nameof(OrganisationController.ManageAccountPerson);
+    protected override string RedirectActionNameOnNo => nameof(OrganisationController.NotApprovedPerson);
 }
