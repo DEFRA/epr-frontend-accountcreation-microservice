@@ -9,8 +9,6 @@ using FrontendAccountCreation.Web.ViewModels;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
-//todo: using ctor params would look neater and easier to implement in the derived classes
-
 // supports [Parallelize(Scope = ExecutionScope.MethodLevel)], but don't want to apply that for all tests in the assembly
 public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
     where TViewModel : class, new()

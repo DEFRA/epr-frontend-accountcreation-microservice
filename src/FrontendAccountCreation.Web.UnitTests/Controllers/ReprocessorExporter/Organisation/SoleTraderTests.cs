@@ -15,8 +15,7 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
     // Page and Journey details
     protected override string CurrentPagePath => PagePath.SoleTrader;
     protected override string ExpectedBacklinkPagePath => PagePath.BusinessAddress;
-    //todo: default to last, current in base if not supplied?
-    // how much value are we adding here?
+
     protected override List<string> JourneyForGetBacklinkTest =>
     [
         PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress,
