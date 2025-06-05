@@ -3,18 +3,15 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 [TestClass]
-public class IsTradingNameDifferentTests : YesNoPageTestBase<IsTradingNameDifferentViewModel>
+public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDifferentViewModel>(
+    c => c.IsTradingNameDifferent(),
+    (c, vm) => c.IsTradingNameDifferent(vm))
 {
-    // Controller and ViewModel actions
-    protected override Func<OrganisationController, Task<IActionResult>> GetPageAction => ctrl => ctrl.IsTradingNameDifferent();
-    protected override Func<OrganisationController, IsTradingNameDifferentViewModel, Task<IActionResult>> PostPageAction => (ctrl, vm) => ctrl.IsTradingNameDifferent(vm);
-
     // Session property access
     protected override Action<OrganisationSession, bool?> SetSessionValueForGetTest => (session, val) => session.IsTradingNameDifferent = val;
     protected override Func<OrganisationSession, bool?> GetSessionValueForPostTest => session => session.IsTradingNameDifferent;

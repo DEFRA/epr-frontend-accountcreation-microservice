@@ -16,8 +16,8 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
     where TViewModel : class, new()
 {
     // Abstract members to be implemented by derived test classes
-    protected abstract Func<OrganisationController, Task<IActionResult>> GetPageAction { get; }
-    protected abstract Func<OrganisationController, TViewModel, Task<IActionResult>> PostPageAction { get; }
+    protected Func<OrganisationController, Task<IActionResult>> GetPageAction { get; }
+    protected Func<OrganisationController, TViewModel, Task<IActionResult>> PostPageAction { get; }
 
     // we could replace these 2 and ViewModelYesNoPropertyExpression with a single property,
     // but that's probably too much implementation complexity for a yes/no test base that is tied to
@@ -46,8 +46,13 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
 
     protected virtual string ViewModelMissingInputErrorMessage => $"Select yes or no for {ActualViewModelYesNoPropertyName}";
 
-    protected YesNoPageTestBase() // Constructor for Lazy initialization
+    protected YesNoPageTestBase(
+        Func<OrganisationController, Task<IActionResult>> getPageAction,
+        Func<OrganisationController, TViewModel, Task<IActionResult>> postPageAction)
     {
+        GetPageAction = getPageAction;
+        PostPageAction = postPageAction;
+
         _lazyViewModelAccessors = new Lazy<ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>>(
             () => new ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>(ViewModelYesNoPropertyExpression)
         );

@@ -3,18 +3,15 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 [TestClass]
-public class SoleTraderTests : YesNoPageTestBase<SoleTraderViewModel>
+public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
+    c => c.SoleTrader(),
+    (c, vm) => c.SoleTrader(vm))
 {
-    // Controller and ViewModel actions
-    protected override Func<OrganisationController, Task<IActionResult>> GetPageAction => ctrl => ctrl.SoleTrader();
-    protected override Func<OrganisationController, SoleTraderViewModel, Task<IActionResult>> PostPageAction => (ctrl, vm) => ctrl.SoleTrader(vm);
-
     // Session property access
     protected override Action<OrganisationSession, bool?> SetSessionValueForGetTest => (session, val) => session.IsIndividualInCharge = val;
     protected override Func<OrganisationSession, bool?> GetSessionValueForPostTest => session => session.IsIndividualInCharge;
