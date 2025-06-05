@@ -55,7 +55,6 @@ public class TradingNameTests : OrganisationTestBase
         _organisationSession.ReExManualInputSession = new ReExManualInputSession
         {
             TradingName = tradingName,
-            OrganisationId = "12345678",
             BusinessAddress = new Core.Addresses.Address()
         };
 

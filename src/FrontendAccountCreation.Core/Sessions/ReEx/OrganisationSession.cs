@@ -36,6 +36,8 @@ public class OrganisationSession : ILocalSession
 
     public bool? IsUkMainAddress { get; set; }
 
+    public bool? IsIndividualInCharge { get; set; }
+
     public bool IsUserChangingDetails { get; set; }
 
     public List<string> Journey { get; set; } = [];

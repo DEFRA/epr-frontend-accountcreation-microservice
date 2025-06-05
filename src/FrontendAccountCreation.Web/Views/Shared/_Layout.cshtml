@@ -12,8 +12,11 @@
 
     string applicationTitle = ViewData["ApplicationTitleOverride"] as string ?? "ApplicationTitle";
     string headerPartial = ViewData["HeaderOverride"] as string ?? "_Header";
-    bool   isReExOverride = ViewData["ApplicationTitleOverride"]?.ToString() == LayoutOverrides.ReExTitleOverride;
-    string returnUrl = (string)ViewBag.CurrentPage ?? (isReExOverride ? Url.CurrentPathReEx() : Url.CurrentPath());
+    string headerOverride = ViewData["HeaderOverride"]?.ToString();
+    string returnUrl = (string)ViewBag.CurrentPage
+        ?? (headerOverride == LayoutOverrides.ReExOrganisationHeaderOverride ? Url.CurrentPathReExOrganisation()
+        : headerOverride == LayoutOverrides.ReExUserHeaderOverride ? Url.CurrentPathReExUser()
+        : Url.CurrentPath());
 }
 
 <!DOCTYPE html>
