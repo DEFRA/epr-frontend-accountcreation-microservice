@@ -64,14 +64,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             });
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
-        {
-            Journey = [PagePath.RegisteredAsCharity]
-        };
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         YesNoAnswer? isTheOrganisationCharity = null;
 
-        if (session.IsTheOrganisationCharity.HasValue)
+        if (session?.IsTheOrganisationCharity.HasValue == true)
         {
             isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
         }
@@ -91,7 +88,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session)
+            ?? new OrganisationSession()
+            {
+                Journey = [PagePath.RegisteredAsCharity]
+            };
 
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
