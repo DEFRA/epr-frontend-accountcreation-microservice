@@ -1,46 +1,23 @@
 ﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@model ApprovedPersonViewModel
 @{
-	ViewData["Title"] = Localizer["YouAreApprovedPerson.Title"];
-	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-	ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+    ViewData["Title"] = Localizer["YouAreApprovedPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 }
 
-<div class="govuk-width-container">
-	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
-		<div class="govuk-grid-row">
-			<div class="govuk-grid-column-two-thirds">
-				<fieldset class="govuk-fieldset">
-					<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-						<h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
-							@Localizer["YouAreApprovedPerson.Header"]
-						</h1>
-					</legend>
-				</fieldset>
+@if (Model.IsLimitedPartnership)
+{
+    @Html.Partial("Partials/_LimitedPartnershipYouAreApprovedPerson")
+}
+else if (Model.IsLimitedLiabilityPartnership)
+{
+    @Html.Partial("Partials/_LimitedLiabilityPartnershipApprovedPerson")
+}
+else 
+{
+    @Html.Partial("Partials/_NonPartnershipApprovedPerson")
+}
 
-				<p class="govuk-body">@Localizer["YouAreApprovedPerson.Description"].Value</p>
 
-				<p class="govuk-body">@Localizer["YouAreApprovedPerson.YouCanNow"].Value</p>
-
-				<ul class="govuk-list govuk-list--bullet">
-					<li>
-						@Localizer["YouAreApprovedPerson.Item1"]
-					<li>
-						@Localizer["YouAreApprovedPerson.Item2"]
-					</li>
-				</ul>
-
-				<form asp-controller="ApprovedPerson" asp-action="YouAreApprovedPerson" method="post">
-					<div class="govuk-button-group">
-						<button class="govuk-button" data-module="govuk-button" name="inviteApprovedPerson" value="false">
-							@SharedLocalizer["Continue"]
-						</button>
-
-						<button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="inviteApprovedPerson" value="true">
-							@Localizer["YouAreApprovedPerson.InviteLink"]
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</main>
-</div>

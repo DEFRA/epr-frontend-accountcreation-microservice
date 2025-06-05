@@ -107,27 +107,6 @@ public class OrganisationJourneyAccessCheckerMiddlewareTests
     }
 
     [TestMethod]
-    public async Task GivenTeamMemberRolePage_NotYetInJourney_AddsItAndRedirectsToIt()
-    {
-        // Arrange
-        const string targetPage = PagePath.TeamMemberRoleInOrganisation;
-        var session = new OrganisationSession { Journey = new List<string> { PagePath.RegisteredAsCharity } };
-
-        SetupEndpointMock(new OrganisationJourneyAccessAttribute(targetPage));
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _middleware.Invoke(_httpContextMock.Object, _sessionManagerMock.Object);
-
-        // Assert
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.Is<OrganisationSession>(s =>
-            s.Journey.Contains(targetPage)
-        )), Times.Once);
-
-        _httpResponseMock.Verify(x => x.Redirect(targetPage), Times.Once);
-    }
-
-    [TestMethod]
     public async Task GivenTeamMemberRolePage_AlreadyInJourney_DoesNotRedirect()
     {
         // Arrange

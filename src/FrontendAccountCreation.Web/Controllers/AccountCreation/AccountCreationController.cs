@@ -510,7 +510,7 @@ public class AccountCreationController : Controller
 
         var invitedApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
 
-        if (invitedApprovedUser.IsInvitationTokenInvalid) 
+        if (invitedApprovedUser.IsInvitationTokenInvalid)
         {
             return RedirectToAction(nameof(InvalidToken));
         }
@@ -531,9 +531,10 @@ public class AccountCreationController : Controller
 
         return RedirectToAction(nameof(InviteeFullName));
     }
-    
+
     [HttpGet]
-    public IActionResult InvalidToken() {
+    public IActionResult InvalidToken()
+    {
         var callbackUrl = Url.Action(action: "SignedOutInvalidToken", controller: "Home", values: null, protocol: Request.Scheme);
         return SignOut(
              new AuthenticationProperties()

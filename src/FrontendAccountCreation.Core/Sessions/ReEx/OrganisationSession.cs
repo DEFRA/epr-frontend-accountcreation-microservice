@@ -1,9 +1,9 @@
-﻿namespace FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.Interfaces;
 
-public class OrganisationSession
+namespace FrontendAccountCreation.Core.Sessions.ReEx;
+
+public class OrganisationSession : ILocalSession
 {
-    public List<string> Journey { get; set; } = [];
-
     public bool? IsTheOrganisationCharity { get; set; }
 
     public OrganisationType? OrganisationType { get; set; }
@@ -28,8 +28,6 @@ public class OrganisationSession
 
     public bool IsCompaniesHouseFlow => OrganisationType == Sessions.OrganisationType.CompaniesHouseCompany;
 
-    public bool IsUserChangingDetails { get; set; }
-
     public bool IsApprovedUser { get; set; }
 
     public bool? IsTradingNameDifferent { get; set; }
@@ -39,4 +37,10 @@ public class OrganisationSession
     public bool? IsUkMainAddress { get; set; }
 
     public bool? IsIndividualInCharge { get; set; }
+
+    public bool IsUserChangingDetails { get; set; }
+
+    public List<string> Journey { get; set; } = [];
+
+    public HashSet<string> WhiteList { get; set; } = [];
 }

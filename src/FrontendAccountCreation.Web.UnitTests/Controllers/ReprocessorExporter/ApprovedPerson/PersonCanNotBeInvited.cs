@@ -29,17 +29,18 @@ public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task Post_RedirectsToCheckYourDetails()
+    public void Post_RedirectsToCheckYourDetails()
     {
         // Arrange
         var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = _testId };
 
         // Act
-        var result = await _systemUnderTest.PersonCanNotBeInvited(model);
+        var result = _systemUnderTest.PersonCanNotBeInvited(model);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be("CheckYourDetails");
+        redirect.ControllerName.Should().Be("AccountCreation");
     }
 }
