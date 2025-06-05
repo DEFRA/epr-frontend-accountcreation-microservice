@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web.Constants;
+﻿using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -10,12 +9,10 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 [TestClass]
 public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
     c => c.SoleTrader(),
-    (c, vm) => c.SoleTrader(vm))
+    (c, vm) => c.SoleTrader(vm),
+    (session, val) => session.IsIndividualInCharge = val,
+    session => session.IsIndividualInCharge)
 {
-    // Session property access
-    protected override Action<OrganisationSession, bool?> SetSessionValueForGetTest => (session, val) => session.IsIndividualInCharge = val;
-    protected override Func<OrganisationSession, bool?> GetSessionValueForPostTest => session => session.IsIndividualInCharge;
-
     // Page and Journey details
     protected override string CurrentPagePath => PagePath.SoleTrader;
     protected override string ExpectedBacklinkPagePath => PagePath.BusinessAddress;

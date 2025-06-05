@@ -10,12 +10,10 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 [TestClass]
 public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDifferentViewModel>(
     c => c.IsTradingNameDifferent(),
-    (c, vm) => c.IsTradingNameDifferent(vm))
+    (c, vm) => c.IsTradingNameDifferent(vm),
+    (session, val) => session.IsTradingNameDifferent = val,
+    session => session.IsTradingNameDifferent)
 {
-    // Session property access
-    protected override Action<OrganisationSession, bool?> SetSessionValueForGetTest => (session, val) => session.IsTradingNameDifferent = val;
-    protected override Func<OrganisationSession, bool?> GetSessionValueForPostTest => session => session.IsTradingNameDifferent;
-
     // Page and Journey details
     protected override string CurrentPagePath => PagePath.IsTradingNameDifferent;
     protected override string ExpectedBacklinkPagePath => PagePath.UkNation;

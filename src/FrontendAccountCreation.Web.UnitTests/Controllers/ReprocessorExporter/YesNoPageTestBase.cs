@@ -15,24 +15,22 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
     where TViewModel : class, new()
 {
-    // Abstract members to be implemented by derived test classes
     protected Func<OrganisationController, Task<IActionResult>> GetPageAction { get; }
     protected Func<OrganisationController, TViewModel, Task<IActionResult>> PostPageAction { get; }
 
-    // we could replace these 2 and ViewModelYesNoPropertyExpression with a single property,
-    // but that's probably too much implementation complexity for a yes/no test base that is tied to
-    // OrganisationTestBase.
-    protected abstract Action<OrganisationSession, bool?> SetSessionValueForGetTest { get; }
-    protected abstract Func<OrganisationSession, bool?> GetSessionValueForPostTest { get; }
+    // we could replace these 3 with a single property,
+    // but that's probably too much implementation complexity for a yes/no test base that is tied to OrganisationTestBase.
+    protected Action<OrganisationSession, bool?> SetSessionValueForGetTest { get; }
+    protected Func<OrganisationSession, bool?> GetSessionValueForPostTest { get; }
+
+    // Expression to define the Yes/No property on the ViewModel
+    protected abstract Expression<Func<TViewModel, YesNoAnswer?>> ViewModelYesNoPropertyExpression { get; }
 
     protected abstract string CurrentPagePath { get; }
     protected abstract string ExpectedBacklinkPagePath { get; }
     protected abstract List<string> JourneyForGetBacklinkTest { get; }
     protected abstract string RedirectActionNameOnYes { get; }
     protected abstract string RedirectActionNameOnNo { get; }
-
-    // Expression to define the Yes/No property on the ViewModel
-    protected abstract Expression<Func<TViewModel, YesNoAnswer?>> ViewModelYesNoPropertyExpression { get; }
 
     private readonly Lazy<ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>> _lazyViewModelAccessors;
 
@@ -48,10 +46,14 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
 
     protected YesNoPageTestBase(
         Func<OrganisationController, Task<IActionResult>> getPageAction,
-        Func<OrganisationController, TViewModel, Task<IActionResult>> postPageAction)
+        Func<OrganisationController, TViewModel, Task<IActionResult>> postPageAction,
+        Action<OrganisationSession, bool?> setSessionValueForGetTest,
+        Func<OrganisationSession, bool?> getSessionValueForPostTest)
     {
         GetPageAction = getPageAction;
         PostPageAction = postPageAction;
+        SetSessionValueForGetTest = setSessionValueForGetTest;
+        GetSessionValueForPostTest = getSessionValueForPostTest;
 
         _lazyViewModelAccessors = new Lazy<ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>>(
             () => new ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>(ViewModelYesNoPropertyExpression)
