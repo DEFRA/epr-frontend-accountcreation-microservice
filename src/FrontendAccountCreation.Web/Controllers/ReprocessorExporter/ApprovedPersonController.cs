@@ -462,7 +462,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> CheckYourDetailsPost()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            return await SaveSessionAndRedirect(session, nameof(OrganisationController.Declaration), PagePath.CheckYourDetails, PagePath.Declaration, nameof(OrganisationController).Replace("Controller", ""));
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(OrganisationController),
+                nameof(OrganisationController.Declaration),
+                PagePath.CheckYourDetails,
+                PagePath.Declaration);
         }
 
         [HttpGet]
