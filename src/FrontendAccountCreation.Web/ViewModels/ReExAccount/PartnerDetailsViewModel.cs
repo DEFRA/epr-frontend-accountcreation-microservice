@@ -14,8 +14,8 @@ public class PartnerDetailsViewModel
     public string Telephone { get; set; }
 
     [Required(ErrorMessage = "PartnerDetails.FirstNameErrorMessage")]
-    public string? FirstName { get; set; }
+    public string FirstName { get; set; }
 
     [Required(ErrorMessage = "PartnerDetails.LastNameErrorMessage")]
-    public string? LastName { get; set; }
+    public string LastName { get; set; }
 }
