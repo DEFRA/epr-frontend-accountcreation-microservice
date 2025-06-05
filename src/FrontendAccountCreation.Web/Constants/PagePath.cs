@@ -64,6 +64,7 @@ public static class PagePath
 
     public const string PartnerDetails = "partner-details";
     public const string CanNotInviteThisPerson = "cannot-invite-this-person";
+    public const string CheckPartnerInvitation = "check-partner-invitation";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
@@ -75,7 +76,6 @@ public static class PagePath
     public const string PartnershipType = "partnership-type";
     public const string LimitedPartnershipType = "organisation-partnership-type";
     public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
-    public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
     public const string LimitedLiabilityPartnership = "partner-you";
 
     // Non journey paths
