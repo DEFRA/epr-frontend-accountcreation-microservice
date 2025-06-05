@@ -659,7 +659,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var viewModel = new SoleTraderViewModel();
 
-        //todo: helper for this common code
+        //to-do: helper for this common code
         if (session.IsIndividualInCharge.HasValue)
         {
             viewModel.IsIndividualInCharge = session.IsIndividualInCharge == true ? YesNoAnswer.Yes : YesNoAnswer.No;
@@ -701,7 +701,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return PlaceholderPageGet(PagePath.ManageAccountPerson);
     }
 
-    //todo: is not-approved-person page actually a form of the approved person page?
+    //to-do: is not-approved-person page actually a form of the approved person page?
 
     [ExcludeFromCodeCoverage]
     [HttpGet]
