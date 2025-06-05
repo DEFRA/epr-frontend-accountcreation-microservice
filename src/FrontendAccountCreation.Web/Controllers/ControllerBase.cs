@@ -1,13 +1,15 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.Interfaces;
-using FrontendAccountCreation.Web.Constants;
-using Microsoft.AspNetCore.Mvc;
-using FrontendAccountCreation.Web.Sessions;
-using FrontendAccountCreation;
 using FrontendAccountCreation.Web;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Extensions;
+using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers;
 
@@ -111,5 +113,31 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         {
             session.WhiteList.Add(currentPagePath);
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    protected async Task<IActionResult> PlaceholderPageGet(string pagePath, bool interstitial = false)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, pagePath);
+        return PlaceholderPageView(pagePath, interstitial);
+    }
+
+    [ExcludeFromCodeCoverage]
+    protected async Task<IActionResult> PlaceholderPagePost(
+        string actionName, string currentPagePath, string? nextPagePath)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        return await SaveSessionAndRedirect(session, actionName, currentPagePath, nextPagePath);
+    }
+
+    [ExcludeFromCodeCoverage]
+    protected ViewResult PlaceholderPageView(string pageTitle, bool interstitial = false)
+    {
+        return View("Placeholder", new PlaceholderViewModel
+        {
+            PageTitle = pageTitle,
+            Interstitial = interstitial
+        });
     }
 }
