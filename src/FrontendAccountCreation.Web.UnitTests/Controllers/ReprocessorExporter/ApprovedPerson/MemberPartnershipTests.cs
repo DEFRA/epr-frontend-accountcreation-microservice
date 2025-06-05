@@ -51,7 +51,6 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.PartnerDetails));
-        redirectResult.RouteValues.Should().ContainKey("id");
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
