@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,10 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NotImplemented.Description" xml:space="preserve">
-    <value>Gwaith ar y gweill: bydd y dudalen hon ar gael yn nes ymlaen.</value>
+  <data name="PartnerDetails.FullName" xml:space="preserve">
+    <value>Full name</value>
   </data>
-  <data name="NotImplemented.Title" xml:space="preserve">
-    <value>Nid yw'r dudalen hon ar gael eto</value>
+  <data name="PartnerDetails.Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="PartnerDetails.HintEmail" xml:space="preserve">
+    <value>We ask for this so we can invite them to join your team.</value>
+  </data>
+  <data name="PartnerDetails.HintTelephone" xml:space="preserve">
+    <value>We ask for this in case your regulator needs to call them directly with any queries.</value>
+  </data>
+  <data name="PartnerDetails.Telephone" xml:space="preserve">
+    <value>Telephone</value>
+  </data>
+  <data name="PartnerDetails.Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="PartnerDetails.Title" xml:space="preserve">
+    <value>Team Member Details</value>
+  </data>
+  <data name="PartnerDetails.Header" xml:space="preserve">
+    <value>What are your their details?</value>
+  </data>
+  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
+    <value>Enter a valid telephone number</value>
+  </data>
+  <data name="PartnerDetails.FullNameError" xml:space="preserve">
+    <value>Enter full name</value>
+  </data>
+  <data name="PartnerDetails.EmailError" xml:space="preserve">
+    <value>Enter a valid email address</value>
+  </data>
+  <data name="PartnerDetails.FirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="PartnerDetails.FirstNameErrorMessage" xml:space="preserve">
+    <value>Enter your first name</value>
+  </data>
+  <data name="PartnerDetails.FirstNameLengthErrorMessage" xml:space="preserve">
+    <value>First name must be 50 characters or less</value>
+  </data>
+  <data name="PartnerDetails.LastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="PartnerDetails.LastNameErrorMessage" xml:space="preserve">
+    <value>Enter your last name</value>
+  </data>
+  <data name="PartnerDetails.LastNameLengthErrorMessage" xml:space="preserve">
+    <value>Last name must be 50 characters or less</value>
   </data>
 </root>

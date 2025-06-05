@@ -696,6 +696,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return RedirectToAction(nameof(RegisteredAsCharity));
     }
 
+
     #region Private Methods
 
     private static ModelStateDictionary DeserializeModelState(string serializedModelState)
