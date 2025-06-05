@@ -20,31 +20,31 @@ public class SoleTraderTests : OrganisationTestBase
         SetupBase();
     }
 
-    //todo:
-    //[TestMethod]
-    //public async Task GET_BackLinkIsTodo()
-    //{
-    //    //Arrange
-    //    var orgCreationSession = new OrganisationSession
-    //    {
-    //        Journey =
-    //        [
-    //            PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress,
-    //            PagePath.UkNation, PagePath.IsTradingNameDifferent
-    //        ]
-    //    };
+    [TestMethod]
+    public async Task GET_BackLinkIsTodo()
+    {
+        //Arrange
+        var orgCreationSession = new OrganisationSession
+        {
+            Journey =
+            [
+                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress,
+                PagePath.TradingName, PagePath.TypeOfOrganisation, PagePath.UkNation, PagePath.BusinessAddress,
+                PagePath.SoleTrader
+            ]
+        };
 
-    //    _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
 
-    //    //Act
-    //    var result = await _systemUnderTest.SoleTrader();
+        //Act
+        var result = await _systemUnderTest.SoleTrader();
 
-    //    //Assert
-    //    result.Should().NotBeNull();
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    AssertBackLink(viewResult, PagePath.RegisteredWithCompaniesHouse);
-    //}
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        AssertBackLink(viewResult, PagePath.BusinessAddress);
+    }
 
     [TestMethod]
     [DataRow(true, YesNoAnswer.Yes)]
