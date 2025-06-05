@@ -641,6 +641,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return PlaceholderPageGet(PagePath.BusinessAddress, true);
     }
 
+    [ExcludeFromCodeCoverage]
     [HttpPost]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
