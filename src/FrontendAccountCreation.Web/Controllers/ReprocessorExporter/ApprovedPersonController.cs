@@ -193,6 +193,31 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.TeamMemberRoleInOrganisationAdd)]
+        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
+        public async Task<IActionResult> TeamMemberRoleInOrganisationAdd()
+        {
+            DeleteFocusId();
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberRoleInOrganisation),
+                PagePath.TeamMemberRoleInOrganisation, null);
+        }
+
+        [HttpGet]
+        [Route(PagePath.TeamMemberRoleInOrganisationEdit)]
+        public async Task<IActionResult> TeamMemberRoleInOrganisationEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberRoleInOrganisation),
+                PagePath.TeamMemberRoleInOrganisation, null);
+        }
+
+        [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails()
@@ -259,6 +284,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 PagePath.TeamMembersCheckInvitationDetails);
         }
 
+        [HttpGet]
+        [Route(PagePath.TeamMemberDetailsEdit)]
+        public async Task<IActionResult> TeamMemberDetailsEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberDetails),
+                PagePath.TeamMemberDetails, null);
+        }
+
         /// <summary>
         /// Show team member details enetered so far
         /// </summary>
@@ -284,6 +321,19 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.TeamMembersCheckInvitationDetails, PagePath.CheckYourDetails);
+        }
+
+        [HttpGet]
+        [Route(PagePath.TeamMembersCheckInvitationDetailsDelete)]
+        public async Task<IActionResult> TeamMembersCheckInvitationDetailsDelete([FromQuery] Guid id)
+        {
+            DeleteFocusId();
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            session?.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == id);
+
+            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails),
+                PagePath.TeamMembersCheckInvitationDetails, null);
         }
 
         [HttpGet]
@@ -352,25 +402,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.IsMemberPartnership == YesNoAnswer.Yes)
             {
-                if (model.IsMemberPartnership == YesNoAnswer.Yes)
-                {
-                    var partnershipId = Guid.NewGuid();
-                    return await SaveSessionAndRedirect(
-                        session,
-                        actionName: "PartnerDetails",
-                        currentPagePath: PagePath.MemberPartnership,
-                        nextPagePath: PagePath.PartnerDetails,
-                        controllerName: "ApprovedPersonController",
-                        routeValues: new { id = partnershipId }
-                    );
-                }
+                return await SaveSessionAndRedirect(session, "PartnerDetails", PagePath.MemberPartnership, PagePath.PartnerDetails);
             }
 
             return await SaveSessionAndRedirect(session, "CanNotInviteThisPerson", PagePath.MemberPartnership, PagePath.CanNotInviteThisPerson);
         }
 
         [HttpGet]
-        [Route(PagePath.PartnerDetails)]
+        [Route(PagePath.MemberPartnershipAdd)]
+        public async Task<IActionResult> MemberPartnershipAdd()
+        {
+            DeleteFocusId();
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
+                PagePath.YouAreApprovedPerson, PagePath.MemberPartnership);
+        }
+
+        [HttpGet]
         [OrganisationJourneyAccess(PagePath.PartnerDetails)]
         public async Task<IActionResult> PartnerDetails()
         {

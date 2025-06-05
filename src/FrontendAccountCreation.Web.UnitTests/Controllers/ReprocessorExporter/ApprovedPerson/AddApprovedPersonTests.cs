@@ -156,7 +156,8 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsInEligibleToBeApprovedPerson = true
+            IsInEligibleToBeApprovedPerson = true,
+            IsComplianceScheme = true
         };
 
         // Act
@@ -178,7 +179,8 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
         {
-            IsInEligibleToBeApprovedPerson = false
+            IsInEligibleToBeApprovedPerson = false,
+            IsComplianceScheme = false
         };
 
         // Act

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -84,7 +85,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
 
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers?.Count.Should().Be(1);
-     }
+    }
 
     [TestMethod]
     public async Task TeamMembersCheckInvitationDetails_UpdatesSession_And_ReturnsView()
@@ -108,7 +109,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         viewResult.Model.Should().BeOfType<List<ReExCompanyTeamMember>>();
 
         // nobody has empty full name, hence excluded
-        ((List<ReExCompanyTeamMember>) viewResult.Model).Count.Should().Be(2);
+        ((List<ReExCompanyTeamMember>)viewResult.Model).Count.Should().Be(2);
 
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
@@ -118,10 +119,10 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
     {
         // Arrange
         var teamMembers = new List<ReExCompanyTeamMember?>
-    {
-        new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Smith" },
-        new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Test" },
-    };
+        {
+            new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Smith" },
+            new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Test" },
+        };
 
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
 
@@ -141,5 +142,57 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
+    [TestMethod]
+    public async Task TeamMembersCheckInvitationDetailsDelete_Get_UpdatesSession_And_RedirectsTo_TeamMembersCheckInvitationDetails()
+    {
+        // Arrange
+        Guid jackId = Guid.NewGuid();
+        Guid jillId = Guid.NewGuid();
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = jackId, FirstName = "Jack", LastName = "Smith" },
+            new() { Id = jillId, FirstName = "Jill", LastName = "Test" },
+        };
 
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.TeamMembersCheckInvitationDetailsDelete(jackId);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle(x => x.Id == jillId);
+    }
+
+    [TestMethod]
+    public async Task TeamMembersCheckInvitationDetailsDelete_Get_WhenGivenMismatchedId_RedirectsTo_TeamMembersCheckInvitationDetails()
+    {
+        // Arrange
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Smith" },
+            new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.TeamMembersCheckInvitationDetailsDelete(Guid.NewGuid());
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Count.Should().Be(2);
+    }
 }

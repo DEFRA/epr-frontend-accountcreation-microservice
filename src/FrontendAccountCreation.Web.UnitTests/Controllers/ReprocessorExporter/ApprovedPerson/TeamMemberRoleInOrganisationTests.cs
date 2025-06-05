@@ -644,4 +644,22 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[0].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[1].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
     }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisationAdd_Get_RedirectsTo_TeamMemberRoleInOrganisation()
+    {
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationAdd();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisationEdit_Get_RedirectsTo_TeamMemberRoleInOrganisation()
+    {
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationEdit(Guid.NewGuid());
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+    }
 }
