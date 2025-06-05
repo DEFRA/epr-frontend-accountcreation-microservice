@@ -1,8 +1,10 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
+[ExcludeFromCodeCoverage]
 public class SuccessViewModel
 {
-    //todo: user/person?
     public required string UserName { get; set; }
 }
