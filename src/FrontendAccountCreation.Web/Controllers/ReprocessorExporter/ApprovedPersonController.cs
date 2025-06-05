@@ -496,9 +496,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return await SaveSessionAndRedirect(
                 session,
-                "CheckPartnerInvitation",
+                nameof(TeamMembersCheckInvitationDetails),
                 PagePath.PartnerDetails,
-                PagePath.CheckPartnerInvitation);
+                PagePath.TeamMembersCheckInvitationDetails);
         }
 
         [HttpGet]
