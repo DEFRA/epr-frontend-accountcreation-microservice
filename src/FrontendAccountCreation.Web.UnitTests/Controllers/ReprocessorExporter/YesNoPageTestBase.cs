@@ -26,6 +26,8 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
 
     protected abstract string CurrentPagePath { get; }
     protected abstract string ExpectedBacklinkPagePath { get; }
+
+    // we could probably construct this, rather than take it as an arg
     protected abstract List<string> JourneyForGetBacklinkTest { get; }
     protected abstract string RedirectActionNameOnYes { get; }
     protected abstract string RedirectActionNameOnNo { get; }
@@ -56,27 +58,25 @@ public abstract class YesNoPageTestBase<TViewModel> : OrganisationTestBase
         ViewModelYesNoPropertyExpression = viewModelYesNoPropertyExpression;
 
         _lazyViewModelAccessors = new Lazy<ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>>(
-            () => new ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>(ViewModelYesNoPropertyExpression)
-        );
+            () => new ViewModelPropertyAccessors<TViewModel, YesNoAnswer?>(ViewModelYesNoPropertyExpression));
     }
 
     [TestInitialize]
     public virtual void InitializePageTest()
     {
         SetupBase();
-        // _lazyViewModelAccessors.Value can be accessed here if needed for some initial check,
-        // otherwise it will be initialized on first use of its properties/methods.
     }
 
     [TestMethod]
     public virtual async Task GET_BackLinkIsCorrect()
     {
-        var orgCreationSession = new OrganisationSession { Journey = JourneyForGetBacklinkTest };
-        // Basic validation (optional, for robustness)
-        if (JourneyForGetBacklinkTest == null || !JourneyForGetBacklinkTest.Any() || JourneyForGetBacklinkTest.LastOrDefault() != CurrentPagePath)
+        // Basic validation
+        if (JourneyForGetBacklinkTest == null || JourneyForGetBacklinkTest.Count == 0 || JourneyForGetBacklinkTest.LastOrDefault() != CurrentPagePath)
             throw new InvalidOperationException($"JourneyForGetBacklinkTest for {CurrentPagePath} must be provided, not empty, and end with the CurrentPagePath.");
         if (JourneyForGetBacklinkTest.Count < 2 || JourneyForGetBacklinkTest[^2] != ExpectedBacklinkPagePath)
             throw new InvalidOperationException($"JourneyForGetBacklinkTest for {CurrentPagePath} must have at least two pages, with the second to last being the ExpectedBacklinkPagePath ({ExpectedBacklinkPagePath}).");
+
+        var orgCreationSession = new OrganisationSession { Journey = JourneyForGetBacklinkTest };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
 
