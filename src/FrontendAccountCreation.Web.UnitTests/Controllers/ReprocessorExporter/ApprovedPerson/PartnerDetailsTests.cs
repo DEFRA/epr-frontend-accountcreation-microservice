@@ -162,7 +162,7 @@ public class PartnerDetailsTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("CheckPartnerInvitation");
+        redirectResult!.ActionName.Should().Be("TeamMembersCheckInvitationDetails");
         session.ReExCompaniesHouseSession.TeamMembers.Should().HaveCount(1);
         var member = session.ReExCompaniesHouseSession.TeamMembers[0];
         member.Id.Should().Be(_testId);
@@ -225,7 +225,7 @@ public class PartnerDetailsTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("CheckPartnerInvitation");
+        redirectResult!.ActionName.Should().Be("TeamMembersCheckInvitationDetails");
         session.ReExCompaniesHouseSession.TeamMembers.Should().HaveCount(1);
         var member = session.ReExCompaniesHouseSession.TeamMembers[0];
         member.Id.Should().Be(_testId);
