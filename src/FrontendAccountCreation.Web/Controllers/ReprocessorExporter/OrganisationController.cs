@@ -649,33 +649,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return PlaceholderPagePost(nameof(SoleTrader), PagePath.BusinessAddress, PagePath.SoleTrader);
     }
 
-    [ExcludeFromCodeCoverage]
-    private async Task<IActionResult> PlaceholderPageGet(string pagePath, bool interstitial = false)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, pagePath);
-        return PlaceholderPageView(pagePath, interstitial);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private async Task<IActionResult> PlaceholderPagePost(
-        string actionName, string currentPagePath, string? nextPagePath)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        return await SaveSessionAndRedirect(session, actionName, currentPagePath, nextPagePath);
-    }
-
-    //todo: base controller
-    [ExcludeFromCodeCoverage]
-    private ViewResult PlaceholderPageView(string pageTitle, bool interstitial = false)
-    {
-        return View("Placeholder", new PlaceholderViewModel
-        {
-            PageTitle = pageTitle,
-            Interstitial = interstitial
-        });
-    }
-
     [HttpGet]
     [Route(PagePath.SoleTrader)]
     [OrganisationJourneyAccess(PagePath.SoleTrader)]
