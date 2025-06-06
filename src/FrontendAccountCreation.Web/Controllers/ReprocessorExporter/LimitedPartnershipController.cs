@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers;
@@ -239,9 +240,9 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         partnershipSession.IsLimitedLiabilityPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
-        return partnershipSession.IsLimitedPartnership ?
+        return model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership ?
             await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType) :
-            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);
+            await SaveSessionAndRedirect(session, nameof(LimitedLiabilityPartnership), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);
     }
 
     [HttpGet]
@@ -381,6 +382,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership ??= new();
         session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership
             .IsMemberOfLimitedLiabilityPartnership = model.IsMemberOfLimitedLiabilityPartnership!.Value;
+
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.IsMemberOfLimitedLiabilityPartnership == true
+            ? RoleInOrganisation.Member
+            : null;
 
         session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = !model.IsMemberOfLimitedLiabilityPartnership!.Value;
 
