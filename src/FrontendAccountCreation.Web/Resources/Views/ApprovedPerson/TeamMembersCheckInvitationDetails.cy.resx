@@ -1,7 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
     </xsd:element>
   </xsd:schema>
   <resheader name="resmimetype">
@@ -17,33 +59,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TeamMembersCheckInvitationDetails.Title" xml:space="preserve">
-    <value>[Welsh]Check invitation details</value>
+    <value>Gwirio manylion y gwahoddiad</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.CheckInvitationDetails" xml:space="preserve">
-    <value>[Welsh]Check invitation details</value>
+    <value>Gwirio manylion y gwahoddiad</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Help" xml:space="preserve">
-    <value>[Welsh]Any invites created for one or more approved persons will be sent once the organisation is added.</value>
+    <value>Bydd unrhyw wahoddiadau i un neu ragor o bersonau a gymeradwywyd yn cael eu hanfon ar ôl i'r sefydliad gael ei ychwanegu.</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Role" xml:space="preserve">
-    <value>[Welsh]Role</value>
+    <value>Rôl</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Name" xml:space="preserve">
-    <value>[Welsh]Name</value>
+    <value>Enw</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Email" xml:space="preserve">
-    <value>[Welsh]Email</value>
+    <value>Ebost</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Telephone" xml:space="preserve">
-    <value>[Welsh]Telephone</value>
+    <value>Ffôn</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Remove" xml:space="preserve">
-    <value>[Welsh]Remove</value>
+    <value>Tynnu</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>[Welsh]Invite another approved person</value>
+    <value>Gwahodd person a gymeradwywyd arall</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.ContactDetails" xml:space="preserve">
-    <value>[Welsh]contact details</value>
+    <value>manylion cysylltu</value>
   </data>
 </root>

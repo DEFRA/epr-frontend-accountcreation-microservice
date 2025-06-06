@@ -1,7 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
     </xsd:element>
   </xsd:schema>
   <resheader name="resmimetype">
@@ -17,22 +59,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TeamMemberRoleInOrganisation.Title" xml:space="preserve">
-    <value>[Welsh]What is their role as shown on Companies House?</value>
+    <value>Beth yw eu rôl nhw fel mae'n cael ei dangos ar Dŷ'r Cwmnïau?</value>
   </data>
   <data name="TeamMemberRoleInOrganisation.WhatIsTheirRole" xml:space="preserve">
-    <value>[Welsh]What is their role as shown on Companies House?</value>
+    <value>Beth yw eu rôl nhw fel mae'n cael ei dangos ar Dŷ'r Cwmnïau?</value>
   </data>
   <data name="TeamMemberRoleInOrganisation.WhatIsTheirRoleAdditionalInformation" xml:space="preserve">
-    <value>[Welsh]These roles are eligible to be invited as an approved person. You can still enrol an organisation without inviting someone if you do not have a name and contact details yet.
-	</value>
+    <value>Mae'r rolau hyn yn gymwys i gael eu gwahodd fel person a gymeradwywyd. Rydych chi'n dal yn cael ymrestru sefydliad heb wahodd rhywun os nad oes gennych chi enw a manylion cysylltu eto.</value>
   </data>
   <data name="TeamMemberRoleInOrganisation.ContinueWithInvitation" xml:space="preserve">
-    <value>[Welsh]Continue with invitation</value>
+    <value>Parhau gyda gwahoddiad</value>
   </data>
   <data name="TeamMemberRoleInOrganisation.ContinueWithoutInvitation" xml:space="preserve">
-    <value>[Welsh]Continue without invitation</value>
+    <value>Parhau heb wahoddiad</value>
   </data>
   <data name="TeamMemberRoleInOrganisation.ErrorMessage" xml:space="preserve">
-    <value>[Welsh]Select their role in the organisation</value>
+    <value>Dewiswch eu rôl nhw yn y sefydliad</value>
   </data>
 </root>
