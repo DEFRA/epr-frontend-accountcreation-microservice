@@ -55,6 +55,7 @@ namespace FrontendAccountCreation.Core.UnitTests
             var orgSession = new OrganisationSession
             {
                 OrganisationType = OrganisationType.CompaniesHouseCompany,
+                IsTheOrganisationCharity = false,
                 ReExCompaniesHouseSession = new ReExCompaniesHouseSession
                 {
                     Company = new Services.Dto.Company.Company
@@ -95,7 +96,9 @@ namespace FrontendAccountCreation.Core.UnitTests
                     ],
                     RoleInOrganisation = roleInOrg
                 },
-                UkNation = Nation.England                
+                UkNation = Nation.England,
+                DeclarationFullName = "Test 01",
+                DeclarationTimestamp = DateTime.UtcNow,
             };
 
             // Act
@@ -110,8 +113,8 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.Company.CompanyRegisteredAddress.Street.Should().Be("High street");
             result.Company.Nation.Should().Be(Nation.England);
             result.Company.ValidatedWithCompaniesHouse.Should().Be(true);
-            result.Company.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");            
-           
+            result.Company.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");
+
             // Assert collection
             result.InvitedApprovedPersons.Should().NotBeNull();
             result.InvitedApprovedPersons.Should().HaveCount(2);
@@ -138,21 +141,25 @@ namespace FrontendAccountCreation.Core.UnitTests
             // Arrange
             var orgSession = new OrganisationSession
             {
-                OrganisationType = null, // OrganisationType.CompaniesHouseCompany,
+                IsTheOrganisationCharity = false,
+                OrganisationType = null,
                 ReExCompaniesHouseSession = new ReExCompaniesHouseSession
                 {
                     Company = new Services.Dto.Company.Company
                     {
                         Name = null,
                         CompaniesHouseNumber = null,
-                        OrganisationId = null,                 
+                        OrganisationId = null,
                         AccountCreatedOn = DateTime.Now,
                         BusinessAddress = null
                     },
-                    RoleInOrganisation = null                    
+                    RoleInOrganisation = null
                 },
                 IsApprovedUser = false,
-                UkNation = null
+                UkNation = null,
+                IsOrganisationAPartnership = false,
+                IsTradingNameDifferent = false,
+                IsUkMainAddress = true
             };
 
             // Act
@@ -167,6 +174,61 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.Company.Nation.Should().Be(Nation.NotSet);
             result.InvitedApprovedPersons.Should().NotBeNull();
             result.InvitedApprovedPersons.Should().HaveCount(0);
+
+            result.ManualInput.Should().BeNull();
+        }
+
+        [TestMethod]
+        [DataRow(ReExTeamMemberRole.Director, "Director")]
+        public void CreateReExOrganisationModel_Returns_Model_FromOrganisationSession_With_ManualInputSession_Data(ReExTeamMemberRole memberRole, string expectedRole)
+        {
+            // Arrange
+            var orgSession = new OrganisationSession
+            {
+                OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+                ReExCompaniesHouseSession = null,
+                IsApprovedUser = false,
+                UkNation = null,
+                ReExManualInputSession = new ReExManualInputSession
+                {
+                    BusinessAddress = new Addresses.Address
+                    {
+                        BuildingName = "ReEx House",
+                        BuildingNumber = "14",
+                        Street = "High street",
+                        Town = "Lodnon",
+                        Postcode = "E10 6PN",
+                        Locality = "XYZ",
+                        DependentLocality = "ABC",
+                        County = "London",
+                        Country = "England"
+                    },
+                    ProducerType = ProducerType.SoleTrader,
+                    TeamMember = new ReExCompanyTeamMember
+                    {
+                        FirstName = "John",
+                        LastName = "Smith",
+                        Role = memberRole,
+                        Email = "john.smith@tester.com",
+                        TelephoneNumber = "07880809087"
+                    },
+                    TradingName = "test sole trader"
+                }
+            };
+
+            // Act
+            var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Company.Should().BeNull();
+            result.ManualInput.BusinessAddress.Should().NotBeNull();
+            result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
+            result.ManualInput.TradingName.Should().Be("test sole trader");
+            
+            result.InvitedApprovedPersons.Should().HaveCount(1);
+            result.InvitedApprovedPersons[0].FirstName.Should().Be("John");
+            result.InvitedApprovedPersons[0].LastName.Should().Be("Smith");
         }
     }
 }
