@@ -28,9 +28,9 @@
 
 				<p class="govuk-body">@Localizer["YouAreApprovedPersonSoleTrader.Description3"].Value</p>
 								
-				<form asp-controller="ApprovedPerson" method="get">
+				<form asp-controller="ApprovedPerson" method="post">
 					<div class="govuk-button-group">
-						<button class="govuk-button" data-module="govuk-button" asp-action="todo">
+						<button class="govuk-button" data-module="govuk-button" asp-action="CheckYourDetailsSoleTrader">
 							@SharedLocalizer["Continue"]
 						</button>
 					</div>

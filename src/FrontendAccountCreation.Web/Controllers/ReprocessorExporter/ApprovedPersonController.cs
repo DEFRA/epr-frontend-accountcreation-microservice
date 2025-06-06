@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -387,13 +388,22 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View();
         }
 
-        //[HttpGet]
-        //[Route(PagePath.DeclarationContinue)]
-        //public async Task<IActionResult> ApprovedPersonSoleTraderContinue()
-        //{
-        //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        //    return await SaveSessionAndRedirect(session, nameof(Success), PagePath.DeclarationContinue, PagePath.Success);
-        //}
+        [HttpPost]
+        [Route(PagePath.YouAreApprovedPersonSoleTrader)]
+        public async Task<IActionResult> ApprovedPersonSoleTraderContinue()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetailsSoleTrader), PagePath.YouAreApprovedPersonSoleTrader,  PagePath.NotImplemented);
+        }
+        
+        [HttpGet]
+        [Route(PagePath.NotImplemented)] // to do: edit as required
+        [ExcludeFromCodeCoverage]
+        public async Task<IActionResult> CheckYourDetailsSoleTrader()
+        {           
+            return View("Not been implemented...");
+        }
 
         [HttpGet]
         [Route(PagePath.MemberPartnership)]
