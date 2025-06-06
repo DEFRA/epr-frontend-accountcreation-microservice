@@ -421,6 +421,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.MemberPartnershipEdit)]
+        public async Task<IActionResult> MemberPartnershipEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
+                PagePath.CheckYourDetails, PagePath.MemberPartnership);
+        }
+
+        [HttpGet]
         [Route(PagePath.PartnerDetails)]
         [OrganisationJourneyAccess(PagePath.PartnerDetails)]
         public async Task<IActionResult> PartnerDetails()
