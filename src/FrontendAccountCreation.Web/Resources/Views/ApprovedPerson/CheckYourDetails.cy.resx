@@ -237,4 +237,10 @@
   <data name="CheckYourDetails.TeamMembers.Telephone" xml:space="preserve">
     <value>Ffôn</value>
   </data>
+  <data name="CheckYourDetails.LimitedLiabilityPartnership" xml:space="preserve">
+    <value>(W)Limited Liability Partnership</value>
+  </data>
+  <data name="CheckYourDetails.LimitedPartnership" xml:space="preserve">
+    <value>(W)Limited Partnership</value>
+  </data>
 </root>
