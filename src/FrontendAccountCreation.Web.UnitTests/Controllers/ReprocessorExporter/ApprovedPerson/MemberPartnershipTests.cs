@@ -104,4 +104,13 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.MemberPartnership));
     }
+
+    [TestMethod]
+    public async Task MemberPartnershipEdit_Get_RedirectsTo_TeamMemberRoleInOrganisation()
+    {
+        var result = await _systemUnderTest.MemberPartnershipEdit(Guid.NewGuid());
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.MemberPartnership));
+    }
 }
