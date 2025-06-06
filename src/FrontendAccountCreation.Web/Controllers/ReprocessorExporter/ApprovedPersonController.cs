@@ -227,7 +227,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            TeamMemberViewModel viewModel;
+            //todo: null or empty
+            TeamMemberViewModel? viewModel = null;
             if (session.ReExManualInputSession?.TeamMember != null)
             {
                 viewModel = new TeamMemberViewModel
@@ -240,8 +241,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             }
 
-            //TeamMemberDetails
-            return View(viewModel);
+            //todo: try and reuse existing view, if not, copy
+
+            //todo: nameof TeamMemberDetails
+            return View("TeamMemberDetails", viewModel);
         }
 
         [HttpPost]
@@ -253,22 +256,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (!ModelState.IsValid)
             {
                 SetBackLink(session, PagePath.TeamMemberDetails);
-                return View(model);
+                //todo: nameof TeamMemberDetails
+                return View("TeamMemberDetails", model);
             }
 
-            var index = session.ReExCompaniesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
+            session.ReExManualInputSession.TeamMember.FirstName = model.FirstName;
+            session.ReExManualInputSession.TeamMember.LastName = model.LastName;
+            session.ReExManualInputSession.TeamMember.TelephoneNumber = model.Telephone;
+            session.ReExManualInputSession.TeamMember.Email = model.Email;
 
-            if (index is >= 0)
-            {
-                // found existing team member
-                session.ReExCompaniesHouseSession.TeamMembers[index.Value].FirstName = model.FirstName;
-                session.ReExCompaniesHouseSession.TeamMembers[index.Value].LastName = model.LastName;
-                session.ReExCompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber = model.Telephone;
-                session.ReExCompaniesHouseSession.TeamMembers[index.Value].Email = model.Email;
-            }
-
-            // go to check invitation details summary page for all team members
-            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.TeamMemberDetails,
+            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
                 PagePath.TeamMembersCheckInvitationDetails);
         }
 
