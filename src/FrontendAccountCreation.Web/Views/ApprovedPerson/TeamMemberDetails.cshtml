@@ -8,8 +8,11 @@
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
+@* todo: but this back to how it was originally *@
+
 @* todo: errors are in wrong order in summary *@
-@* todo: inputs have missing aria described by in an error state - use the helpers to get this stuff for free? *@
+@* todo: doesn't follow GDS guidelines for showing errors *@
+@* todo: not accessible e.g. inputs have missing aria described by for hints/errors *@
 
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content" role="main">

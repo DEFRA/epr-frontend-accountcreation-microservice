@@ -227,11 +227,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var viewModel = new TeamMemberViewModel
-            {
-                // we set an empty guid, so that we don't have to bifurcate the view model and view (alternatively we could add a flag and ignore the id if necessary)
-                Id = Guid.Empty
-            };
+            var viewModel = new TeamMemberViewModel();
 
             if (session.ReExManualInputSession?.TeamMember != null)
             {
@@ -243,7 +239,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             //todo: try and reuse existing view, if not, copy
 
-            return View(nameof(TeamMemberDetails), viewModel);
+            //return View(nameof(TeamMemberDetails), viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -255,7 +252,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (!ModelState.IsValid)
             {
                 SetBackLink(session, PagePath.TeamMemberDetails);
-                return View(nameof(TeamMemberDetails), model);
+                //return View(nameof(TeamMemberDetails), model);
+                return View(model);
             }
 
             var teamMember = session.ReExManualInputSession.TeamMember ?? new ReExCompanyTeamMember();
