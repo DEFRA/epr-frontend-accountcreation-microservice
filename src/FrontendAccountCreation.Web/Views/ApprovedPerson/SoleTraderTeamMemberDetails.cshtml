@@ -10,7 +10,9 @@
 }
 
 @* todo: aria-described-by for error messages - no other page is doing that though *@
-@* todo: telephone number error came through without resources *@
+@* todo: telephone number error came through without resources- The Telephone field is required. should be: Enter a telephone number *@
+@* todo: welsh translations *@
+@* todo: separate email/telephone errors required/invalid format *@
 
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -18,20 +20,18 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <h1 class="govuk-heading-l">@Localizer["TeamMemberDetails.Header"]</h1>
-
                 <form method="post">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                @Localizer["BusinessAddress.Question"]
+                                @Localizer["TeamMemberDetails.Header"]
                             </h1>
                         </legend>
                         
                         <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.FirstName)) ? " govuk-form-group--error" : "")">
                             <label gov-for="FirstName" class="govuk-label">@Localizer["TeamMemberDetails.FirstName"]</label>
                             @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.FirstName)])
-                            <input class="govuk-input govuk-!-width-one-half @(errorsViewModel.HasErrorKey(nameof(Model.FirstName)) ? "govuk-input--error" : "")"
+                            <input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(Model.FirstName)) ? "govuk-input--error" : "")"
                                    type="text"
                                    gov-for="FirstName" gov-value="@Model.FirstName">
                         </div>
@@ -39,7 +39,7 @@
                         <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.LastName)) ? " govuk-form-group--error" : "")">
                             <label gov-for="LastName" class="govuk-label">@Localizer["TeamMemberDetails.LastName"]</label>
                             @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.FirstName)])
-                            <input class="govuk-input govuk-!-width-one-half @(errorsViewModel.HasErrorKey(nameof(Model.LastName)) ? "govuk-input--error" : "")"
+                            <input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(Model.LastName)) ? "govuk-input--error" : "")"
                                    type="text"
                                    gov-for="LastName" gov-value="@Model.LastName">
                         </div>
@@ -52,7 +52,7 @@
                             </div>
 
                             @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.Email)])
-                            <input class="govuk-input govuk-!-width-one-half @(errorsViewModel.HasErrorKey(nameof(Model.Email)) ? "govuk-input--error" : "")"
+                            <input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(Model.Email)) ? "govuk-input--error" : "")"
                                    type="email" spellcheck="false" autocomplete="email"
                                    gov-for="Email" gov-value="@Model.Email"
                                    aria-describedby="email-hint">
@@ -73,7 +73,7 @@
                         </div>
 
                         <button class="govuk-button" data-module="govuk-button">
-                            @Localizer["TeamMemberDetails.Continue"]
+                            @SharedLocalizer["Continue"]
                         </button>
 
                     </fieldset>

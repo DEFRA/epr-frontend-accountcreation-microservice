@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TeamMemberDetails.Continue" xml:space="preserve">
-    <value>[Welsh] Continue</value>
-  </data>
   <data name="TeamMemberDetails.Email" xml:space="preserve">
     <value>[Welsh] Email</value>
   </data>
@@ -130,16 +127,13 @@
     <value>Enw cyntaf</value>
   </data>
   <data name="TeamMemberDetails.FirstNameErrorMessage" xml:space="preserve">
-    <value>Rhowch eich enw cyntaf</value>
+    <value>[Welsh] Enter their first name</value>
   </data>
   <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
     <value>Rhaid i’r enw cyntaf fod yn 50 neu lai o gymeriadau</value>
   </data>
   <data name="TeamMemberDetails.FullName" xml:space="preserve">
     <value>[Welsh] Full name</value>
-  </data>
-  <data name="TeamMemberDetails.FullNameError" xml:space="preserve">
-    <value>[Welsh] Enter full name</value>
   </data>
   <data name="TeamMemberDetails.Header" xml:space="preserve">
     <value>[Welsh] What are their details?</value>
@@ -154,13 +148,13 @@
     <value>Enw Olaf</value>
   </data>
   <data name="TeamMemberDetails.LastNameErrorMessage" xml:space="preserve">
-    <value>Rhowch eich enw olaf</value>
+    <value>[Welsh] Enter their last name</value>
   </data>
   <data name="TeamMemberDetails.LastNameLengthErrorMessage" xml:space="preserve">
     <value>Rhaid i’r enw olaf fod yn 50 neu lai o gymeriadau</value>
   </data>
   <data name="TeamMemberDetails.Telephone" xml:space="preserve">
-    <value>[Welsh] Telephone</value>
+    <value>Ffôn</value>
   </data>
   <data name="TeamMemberDetails.Title" xml:space="preserve">
     <value>[Welsh] Team Invite</value>
