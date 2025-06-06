@@ -565,5 +565,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             return RedirectToAction("CheckYourDetails", "AccountCreation");
         }
+
+        [HttpGet]
+        [Route(PagePath.CanNotInviteThisPerson)]    
+        [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
+        public async Task<IActionResult> CanNotInviteThisPerson([FromQuery] Guid id)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.CanNotInviteThisPerson);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
+        }
+
+        [HttpPost]
+        [Route(PagePath.CanNotInviteThisPerson)]
+        [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
+        public IActionResult CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        {
+            return RedirectToAction("CheckYourDetails", "AccountCreation");
+        }
     }
 }
