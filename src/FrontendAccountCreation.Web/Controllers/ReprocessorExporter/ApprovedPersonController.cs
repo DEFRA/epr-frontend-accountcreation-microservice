@@ -243,8 +243,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             //todo: try and reuse existing view, if not, copy
 
-            //todo: nameof TeamMemberDetails
-            //return View("TeamMemberDetails", viewModel);
             return View(nameof(TeamMemberDetails), viewModel);
         }
 
@@ -257,15 +255,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (!ModelState.IsValid)
             {
                 SetBackLink(session, PagePath.TeamMemberDetails);
-                //todo: nameof TeamMemberDetails
-                //return View("TeamMemberDetails", model);
                 return View(nameof(TeamMemberDetails), model);
             }
 
-            session.ReExManualInputSession.TeamMember.FirstName = model.FirstName;
-            session.ReExManualInputSession.TeamMember.LastName = model.LastName;
-            session.ReExManualInputSession.TeamMember.TelephoneNumber = model.Telephone;
-            session.ReExManualInputSession.TeamMember.Email = model.Email;
+            var teamMember = session.ReExManualInputSession.TeamMember ?? new ReExCompanyTeamMember();
+
+            teamMember.FirstName = model.FirstName;
+            teamMember.LastName = model.LastName;
+            teamMember.TelephoneNumber = model.Telephone;
+            teamMember.Email = model.Email;
 
             return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
                 PagePath.TeamMembersCheckInvitationDetails);

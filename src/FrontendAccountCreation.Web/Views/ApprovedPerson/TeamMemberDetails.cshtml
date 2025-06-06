@@ -8,6 +8,9 @@
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
+@* todo: errors are in wrong order in summary *@
+@* todo: inputs have missing aria described by in an error state - use the helpers to get this stuff for free? *@
+
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
@@ -37,20 +40,20 @@
                         <label class="govuk-label" asp-for="Email">
                             @Localizer["TeamMemberDetails.Email"]
                         </label>
-                        <div class="govuk-hint">
+                        <div id="email-hint" class="govuk-hint">
                             @Localizer["TeamMemberDetails.HintEmail"]
                         </div>
-                        <input class="govuk-input" asp-for="Email" type="email"/>
+                        <input class="govuk-input" asp-for="Email" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email" />
                     </div>
 
                     <div class="govuk-form-group">
                         <label class="govuk-label" asp-for="Telephone">
                             @Localizer["TeamMemberDetails.Telephone"]
                         </label>
-                        <div class="govuk-hint">
+                        <div id="tel-hint" class="govuk-hint">
                             @Localizer["TeamMemberDetails.HintTelephone"]
                         </div>
-                        <input class="govuk-input" asp-for="Telephone" type="tel"/>
+                        <input class="govuk-input" asp-for="Telephone" type="tel" aria-describedby="tel-hint" autocomplete="tel" />
                     </div>
                     
                     @* todo: check existing useage *@
