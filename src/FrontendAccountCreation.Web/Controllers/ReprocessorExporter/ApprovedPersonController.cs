@@ -9,6 +9,9 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -42,7 +45,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsInEligibleToBeApprovedPerson =
                     session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
-                IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false
+                IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
             };
 
             return View(model);
@@ -73,6 +76,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
             {
+                if (session.IsOrganisationAPartnership == true)
+                {
+                    if(session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership == true)
+                        return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
+                            PagePath.AddAnApprovedPerson, PagePath.MemberPartnership);
+                }
+
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
             }
@@ -400,12 +410,40 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            if (model.IsMemberPartnership == YesNoAnswer.Yes)
+            var queryStringId = Guid.Empty;
+
+            var index = session.ReExCompaniesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
+
+            // Team memebr exists
+            if (index is >= 0)
             {
-                return await SaveSessionAndRedirect(session, "PartnerDetails", PagePath.MemberPartnership, PagePath.PartnerDetails);
+                if (model.IsMemberPartnership == YesNoAnswer.No)
+                {
+                    session?.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == model.Id);
+                }
+
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role = ReExTeamMemberRole.Member;
+                queryStringId = model.Id.Value;
+            }
+            else
+            {
+                if (model.IsMemberPartnership == YesNoAnswer.Yes)
+                {
+                    queryStringId = Guid.NewGuid();
+                    
+                    session.ReExCompaniesHouseSession.TeamMembers ??= new List<ReExCompanyTeamMember>();
+                    session.ReExCompaniesHouseSession.TeamMembers.Add(new ReExCompanyTeamMember
+                    {
+                        Id = queryStringId,
+                        Role = ReExTeamMemberRole.Member
+                    });
+                }
             }
 
-            return await SaveSessionAndRedirect(session, "CanNotInviteThisPerson", PagePath.MemberPartnership, PagePath.CanNotInviteThisPerson);
+            SetFocusId(queryStringId);
+            return model.IsMemberPartnership == YesNoAnswer.Yes
+                ? await SaveSessionAndRedirect(session, nameof(PartnerDetails), PagePath.MemberPartnership, PagePath.PartnerDetails)
+                : await SaveSessionAndRedirect(session, "CanNotInviteThisPerson", PagePath.MemberPartnership, PagePath.CanNotInviteThisPerson);
         }
 
         [HttpGet]
