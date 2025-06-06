@@ -421,6 +421,87 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.PartnerDetails)]
+        [OrganisationJourneyAccess(PagePath.PartnerDetails)]
+        public async Task<IActionResult> PartnerDetails()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.PartnerDetails);
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            var viewModel = new PartnerDetailsViewModel();
+
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                if (index is >= 0)
+                {
+                    viewModel.Id = id;
+                    viewModel.FirstName = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.FirstName;
+                    viewModel.LastName = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.LastName;
+                    viewModel.Telephone = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.TelephoneNumber;
+                    viewModel.Email = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Email;
+                }
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route(PagePath.PartnerDetails)]
+        [OrganisationJourneyAccess(PagePath.PartnerDetails)]
+        public async Task<IActionResult> PartnerDetails(PartnerDetailsViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
+            var members = companiesHouseSession.TeamMembers ?? new();
+            var index = members.FindIndex(0, x => x.Id.Equals(model?.Id));
+            bool isExistingMember = false;
+            if (index >= 0)
+            {
+                // check the email, but any field other than Id will do
+                isExistingMember = members[index].Email?.Length > 0;
+            }
+            var id = model?.Id ?? Guid.NewGuid();
+
+            if (isExistingMember)
+            {
+                members[index].FirstName = model?.FirstName;
+                members[index].LastName = model?.LastName;
+                members[index].TelephoneNumber = model.Telephone;
+                members[index].Email = model?.Email;
+            }
+            else
+            {
+                members.Add(new ReExCompanyTeamMember
+                {
+                    Id = id,
+                    FirstName = model?.FirstName,
+                    LastName = model?.LastName,
+                    TelephoneNumber = model.Telephone,
+                    Email = model?.Email,
+                });
+            }
+
+            companiesHouseSession.TeamMembers = members;
+            session.ReExCompaniesHouseSession = companiesHouseSession;
+            SetFocusId(id);
+
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(TeamMembersCheckInvitationDetails),
+                PagePath.PartnerDetails,
+                PagePath.TeamMembersCheckInvitationDetails);
+        }
+
+        [HttpGet]
         [Route(PagePath.CheckYourDetails)]
         [OrganisationJourneyAccess(PagePath.CheckYourDetails)]
         public async Task<IActionResult> CheckYourDetails()
