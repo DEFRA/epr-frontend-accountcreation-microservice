@@ -8,13 +8,12 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
     [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     [Route("re-ex/organisation")]
-    public partial class ApprovedPersonController : ControllerBase<OrganisationSession>
+    public class ApprovedPersonController : ControllerBase<OrganisationSession>
     {
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
