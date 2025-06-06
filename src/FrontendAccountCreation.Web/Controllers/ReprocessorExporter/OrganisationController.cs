@@ -691,15 +691,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             PagePath.SoleTrader, PagePath.NotApprovedPerson);
     }
 
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public Task<IActionResult> ManageAccountPerson()
-    {
-        return PlaceholderPageGet(PagePath.ManageAccountPerson);
-    }
-
     //to-do: is not-approved-person page actually a form of the approved person page?
 
     [ExcludeFromCodeCoverage]
