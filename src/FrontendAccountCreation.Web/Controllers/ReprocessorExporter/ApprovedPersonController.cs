@@ -382,7 +382,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> YouAreApprovedPersonSoleTrader()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.YouAreApprovedPerson);
+            SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View();
