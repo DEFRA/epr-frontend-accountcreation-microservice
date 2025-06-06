@@ -227,7 +227,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var viewModel = new TeamMemberViewModel();
+            var viewModel = new SoleTraderTeamMemberViewModel();
 
             if (session.ReExManualInputSession?.TeamMember != null)
             {
@@ -237,22 +237,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.Email = session.ReExManualInputSession.TeamMember.Email;
             }
 
-            //todo: try and reuse existing view, if not, copy
-
-            //return View(nameof(TeamMemberDetails), viewModel);
             return View(viewModel);
         }
 
         [HttpPost]
         [Route(PagePath.SoleTraderTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberDetails)]
-        public async Task<IActionResult> SoleTraderTeamMemberDetails(TeamMemberViewModel model)
+        public async Task<IActionResult> SoleTraderTeamMemberDetails(SoleTraderTeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
                 SetBackLink(session, PagePath.TeamMemberDetails);
-                //return View(nameof(TeamMemberDetails), model);
                 return View(model);
             }
 
