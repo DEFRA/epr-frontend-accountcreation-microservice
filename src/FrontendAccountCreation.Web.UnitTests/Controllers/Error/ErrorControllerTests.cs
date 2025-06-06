@@ -102,16 +102,30 @@ public class ErrorControllerTests
     }
 
     [TestMethod]
+    [DataRow(null, 500, 500, false)]
+    [DataRow(null, 500, 500, true)]
     [DataRow("User", null, 500)]
     [DataRow("Organisation", 500, 500)]
+    [DataRow("Organisation", 500, 500, false, true)]
     [DataRow("Account", 403, 403)]
+    [DataRow("User", 500, 500, true)]
     public void Error_NotPageNotFoundGivenSourceController_ReturnsSuppliedStatusCode(
-        string controllerName, int? passedStatusCode, int expectedStatusCode)
+        string? controllerName, int? passedStatusCode, int expectedStatusCode, bool mockFeatureReturnAsNull = false, bool hasEmptyRouteValues = false)
     {
         // Arrange
-        _featureCollection!.Setup(f => f.Get<IExceptionHandlerPathFeature>()).Returns(_exceptionHandlerPathFeature!.Object);
+        var returnHandlerPathFeature = mockFeatureReturnAsNull ? (IExceptionHandlerPathFeature)null : _exceptionHandlerPathFeature!.Object;
 
-        var routeValues = new RouteValueDictionary
+        if ((controllerName == "User") && mockFeatureReturnAsNull)
+        {
+            _statusCodeReExecuteFeature!.Setup(f => f.OriginalPath)
+                .Returns("somePath");
+            _featureCollection!.Setup(f => f.Get<IStatusCodeReExecuteFeature>())
+                .Returns(_statusCodeReExecuteFeature.Object);
+        }
+
+       _featureCollection!.Setup(f => f.Get<IExceptionHandlerPathFeature>()).Returns(returnHandlerPathFeature);
+
+        var routeValues = hasEmptyRouteValues ? null : new RouteValueDictionary
         {
             { "Controller", controllerName }
         };

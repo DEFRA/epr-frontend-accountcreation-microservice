@@ -143,7 +143,7 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task TeamMembersCheckInvitationDetailsDelete_Get_RedirectsTo_TeamMembersCheckInvitationDetails()
+    public async Task TeamMembersCheckInvitationDetailsDelete_Get_UpdatesSession_And_RedirectsTo_TeamMembersCheckInvitationDetails()
     {
         // Arrange
         Guid jackId = Guid.NewGuid();
@@ -168,5 +168,31 @@ public class TeamMembersCheckInvitationDetailsTests : ApprovedPersonTestBase
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
 
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle(x => x.Id == jillId);
+    }
+
+    [TestMethod]
+    public async Task TeamMembersCheckInvitationDetailsDelete_Get_WhenGivenMismatchedId_RedirectsTo_TeamMembersCheckInvitationDetails()
+    {
+        // Arrange
+        var teamMembers = new List<ReExCompanyTeamMember?>
+        {
+            new() { Id = Guid.NewGuid(), FirstName = "Jack", LastName = "Smith" },
+            new() { Id = Guid.NewGuid(), FirstName = "Jill", LastName = "Test" },
+        };
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = teamMembers;
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_orgSessionMock);
+
+        // Act
+        var result = await _systemUnderTest.TeamMembersCheckInvitationDetailsDelete(Guid.NewGuid());
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
+
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Count.Should().Be(2);
     }
 }

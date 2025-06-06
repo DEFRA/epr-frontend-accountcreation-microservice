@@ -115,6 +115,41 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
+    public async Task CheckYourDetails_WhenCompaniesHouseFlow_MissingSome_Data()
+    {
+        // Arrange
+        _companiesHouseSession.Company.Name = null;
+        _companiesHouseSession.Company.CompaniesHouseNumber = null;
+        _companiesHouseSession.RoleInOrganisation = null;
+
+        var session = new OrganisationSession
+        {
+            IsTheOrganisationCharity = true,
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            IsTradingNameDifferent = true,
+            UkNation = Nation.England,
+            ReExCompaniesHouseSession = _companiesHouseSession
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        model.CompanyName.Should().BeNullOrEmpty();
+        model.CompaniesHouseNumber.Should().BeNullOrEmpty();
+        model.BusinessAddress.Should().BeEquivalentTo(_company.BusinessAddress);
+        model.reExCompanyTeamMembers.Should().ContainSingle(x => x.Id == _teamMember.Id);
+        model.IsCompaniesHouseFlow.Should().BeTrue();
+        model.IsRegisteredAsCharity.Should().BeTrue();
+        model.OrganisationType.Should().Be(OrganisationType.CompaniesHouseCompany);
+    }
+
+    [TestMethod]
     public async Task CheckYourDetails_WhenManualInput_ShouldSetTradingName()
     {
         // Arrange

@@ -21,13 +21,38 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     }
 
     [TestMethod]
+    public async Task POST_SoleTraderFeatureIsDisabledAndUserSelectsNo_UserIsRedirectedToReExPageNotFound()
+    {
+        // Arrange
+        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
+            .ReturnsAsync(false);
+
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.RegisteredWithCompaniesHouse]
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(orgCreationSessionMock);
+
+        var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = YesNoAnswer.No };
+
+        // Act
+        var result = await _systemUnderTest.RegisteredWithCompaniesHouse(_featureManagerMock.Object, request);
+
+        // Assert
+        result.Should().BeOfType<RedirectResult>();
+
+        ((RedirectResult)result).Url.Should().Be(PagePath.PageNotFoundReEx);
+    }
+
+    [TestMethod]
     public async Task RegisteredWithCompaniesHouse_OrganisationIsRegistered_RedirectsToCompaniesHouseNumberPage_AndUpdateSession()
     {
         // Arrange
         var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = YesNoAnswer.Yes };
-
+       
         // Act
-        var result = await _systemUnderTest.RegisteredWithCompaniesHouse(request);
+        var result = await _systemUnderTest.RegisteredWithCompaniesHouse(_featureManagerMock.Object, request);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -40,10 +65,10 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     [TestMethod]
     [DataRow(OrganisationType.NonCompaniesHouseCompany)]
     [DataRow(OrganisationType.CompaniesHouseCompany)]
+    [DataRow(OrganisationType.NotSet)]
     public async Task RegisteredWithCompaniesHouse_OrganisationIsNotRegistered_RedirectsToIsUkMainAddressPage_AndUpdateSession(OrganisationType orgType)
     {
         // Arrange
-
         var orgCreationSessionMock = new OrganisationSession
         {
             Journey = [PagePath.RegisteredWithCompaniesHouse],
@@ -52,10 +77,10 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(orgCreationSessionMock);
 
-        var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = YesNoAnswer.No };
+        var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = orgType == OrganisationType.NotSet ? null : YesNoAnswer.No };
 
         // Act
-        var result = await _systemUnderTest.RegisteredWithCompaniesHouse(request);
+        var result = await _systemUnderTest.RegisteredWithCompaniesHouse(_featureManagerMock.Object, request);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -72,7 +97,7 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         _systemUnderTest.ModelState.AddModelError(nameof(RegisteredWithCompaniesHouseViewModel.IsTheOrganisationRegistered), "Field is required");
 
         // Act
-        var result = await _systemUnderTest.RegisteredWithCompaniesHouse(new RegisteredWithCompaniesHouseViewModel());
+        var result = await _systemUnderTest.RegisteredWithCompaniesHouse(_featureManagerMock.Object, new RegisteredWithCompaniesHouseViewModel());
 
         // Assert
         result.Should().BeOfType<ViewResult>();

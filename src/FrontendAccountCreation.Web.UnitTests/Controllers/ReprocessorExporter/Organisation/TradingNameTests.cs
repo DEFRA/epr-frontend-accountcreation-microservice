@@ -54,7 +54,9 @@ public class TradingNameTests : OrganisationTestBase
         const string tradingName = "Trading name";
         _organisationSession.ReExManualInputSession = new ReExManualInputSession
         {
-            TradingName = tradingName
+            TradingName = tradingName,
+            OrganisationId = "12345678",
+            BusinessAddress = new Core.Addresses.Address()
         };
 
         //Act

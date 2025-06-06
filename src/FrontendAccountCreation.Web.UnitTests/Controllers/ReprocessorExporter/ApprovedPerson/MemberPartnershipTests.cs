@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,7 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         // Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<ViewResult>();
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -48,6 +50,8 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.PartnerDetails));
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -65,6 +69,8 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be("CanNotInviteThisPerson");
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
@@ -86,5 +92,16 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         result.Should().BeOfType<ViewResult>();
         var viewResult = result as ViewResult;
         viewResult!.Model.Should().Be(model);
+    }
+
+    [TestMethod]
+    public async Task MemberPartnershipAdd_Get_RedirectsTo_MemberPartnership()
+    {
+         // Act
+        var result = await _systemUnderTest.MemberPartnershipAdd();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.MemberPartnership));
     }
 }
