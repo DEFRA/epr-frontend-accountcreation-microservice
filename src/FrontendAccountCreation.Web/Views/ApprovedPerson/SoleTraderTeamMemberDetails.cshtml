@@ -9,6 +9,8 @@
         nameof(Model.FirstName), nameof(Model.LastName), nameof(Model.Email), nameof(Model.Telephone));
 }
 
+@* todo: aria-described-by for error messages - no other page is doing that though *@
+
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
@@ -44,12 +46,10 @@
                         <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.Email)) ? " govuk-form-group--error" : "")">
                             <label gov-for="Email" class="govuk-label">@Localizer["TeamMemberDetails.Email"]</label>
 
-                            @* todo: check *@
                             <div id="email-hint" class="govuk-hint">
                                 @Localizer["TeamMemberDetails.HintEmail"]
                             </div>
 
-                            @* todo: does aria-described-by-error get handled? *@
                             @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.Email)])
                             <input class="govuk-input govuk-!-width-one-half @(errorsViewModel.HasErrorKey(nameof(Model.Email)) ? "govuk-input--error" : "")"
                                    type="email" spellcheck="false" autocomplete="email"
@@ -60,12 +60,10 @@
                         <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.Telephone)) ? " govuk-form-group--error" : "")">
                             <label gov-for="Telephone" class="govuk-label">@Localizer["TeamMemberDetails.Telephone"]</label>
 
-                            @* todo: check *@
                             <div id="tel-hint" class="govuk-hint">
                                 @Localizer["TeamMemberDetails.HintTelephone"]
                             </div>
 
-                            @* todo: does aria-described-by-error get handled? *@
                             @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.Telephone)])
                             <input class="govuk-input govuk-!-width-one-half @(errorsViewModel.HasErrorKey(nameof(Model.Telephone)) ? "govuk-input--error" : "")"
                                    type="tel" autocomplete="tel"
