@@ -1,6 +1,5 @@
 ﻿@using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.TeamMemberViewModel
 
@@ -54,8 +53,8 @@
                         <input class="govuk-input" asp-for="Telephone" type="tel"/>
                     </div>
                     
-                    @* todo: can we remove asp-action? *@
-                    <button class="govuk-button" data-module="govuk-button" asp-action="TeamMemberDetails" type="submit">
+                    @* todo: check existing useage *@
+                    <button class="govuk-button" data-module="govuk-button">
                         @Localizer["TeamMemberDetails.Continue"]
                     </button>
 

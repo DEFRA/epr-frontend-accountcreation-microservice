@@ -7,6 +7,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Options;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
@@ -226,24 +227,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            //todo: null or empty
-            TeamMemberViewModel? viewModel = null;
+            var viewModel = new TeamMemberViewModel
+            {
+                // we set an empty guid, so that we don't have to bifurcate the view model and view (alternatively we could add a flag and ignore the id if necessary)
+                Id = Guid.Empty
+            };
+
             if (session.ReExManualInputSession?.TeamMember != null)
             {
-                viewModel = new TeamMemberViewModel
-                {
-                    FirstName = session.ReExManualInputSession.TeamMember.FirstName,
-                    LastName = session.ReExManualInputSession.TeamMember.LastName,
-                    Telephone = session.ReExManualInputSession.TeamMember.TelephoneNumber,
-                    Email = session.ReExManualInputSession.TeamMember.Email
-                };
-
+                viewModel.FirstName = session.ReExManualInputSession.TeamMember.FirstName;
+                viewModel.LastName = session.ReExManualInputSession.TeamMember.LastName;
+                viewModel.Telephone = session.ReExManualInputSession.TeamMember.TelephoneNumber;
+                viewModel.Email = session.ReExManualInputSession.TeamMember.Email;
             }
 
             //todo: try and reuse existing view, if not, copy
 
             //todo: nameof TeamMemberDetails
-            return View("TeamMemberDetails", viewModel);
+            //return View("TeamMemberDetails", viewModel);
+            return View(nameof(TeamMemberDetails), viewModel);
         }
 
         [HttpPost]
@@ -256,7 +258,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 SetBackLink(session, PagePath.TeamMemberDetails);
                 //todo: nameof TeamMemberDetails
-                return View("TeamMemberDetails", model);
+                //return View("TeamMemberDetails", model);
+                return View(nameof(TeamMemberDetails), model);
             }
 
             session.ReExManualInputSession.TeamMember.FirstName = model.FirstName;
