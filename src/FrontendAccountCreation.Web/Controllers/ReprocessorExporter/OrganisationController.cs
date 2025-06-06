@@ -680,21 +680,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson),
-                PagePath.SoleTrader, PagePath.ManageAccountPerson);
+            return await SaveSessionAndRedirect(session,
+                controllerName: nameof(ApprovedPersonController),
+                actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
+                currentPagePath: PagePath.SoleTrader, 
+                nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
         }
 
         return await SaveSessionAndRedirect(session, nameof(NotApprovedPerson),
             PagePath.SoleTrader, PagePath.NotApprovedPerson);
-    }
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public Task<IActionResult> ManageAccountPerson()
-    {
-        return PlaceholderPageGet(PagePath.ManageAccountPerson);
     }
 
     //to-do: is not-approved-person page actually a form of the approved person page?
