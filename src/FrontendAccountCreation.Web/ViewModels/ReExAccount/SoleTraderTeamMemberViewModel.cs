@@ -6,7 +6,8 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 public class SoleTraderTeamMemberViewModel
 {
     //todo: invalid/empty - only the one error to display though
-    [Required(ErrorMessage = "TeamMemberDetails.EmailError")]
+    [Required(ErrorMessage = "TeamMemberDetails.EmailEmptyErrorMessage")]
+    [EmailAddress(ErrorMessage= "TeamMemberDetails.EmailInvalidErrorMessage")]
     public string Email { get; set; }
 
     [Required(ErrorMessage = "TeamMemberDetails.TelephoneNumberEmptyErrorMessage")]

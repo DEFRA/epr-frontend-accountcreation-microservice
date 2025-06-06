@@ -120,9 +120,6 @@
   <data name="TeamMemberDetails.Email" xml:space="preserve">
     <value>[Welsh] Email</value>
   </data>
-  <data name="TeamMemberDetails.EmailError" xml:space="preserve">
-    <value>[Welsh] Enter their email address</value>
-  </data>
   <data name="TeamMemberDetails.FirstName" xml:space="preserve">
     <value>Enw cyntaf</value>
   </data>
@@ -156,13 +153,22 @@
   <data name="TeamMemberDetails.Telephone" xml:space="preserve">
     <value>Ffôn</value>
   </data>
+  <data name="TeamMemberDetails.Title" xml:space="preserve">
+    <value>[Welsh] Team Invite</value>
+  </data>
   <data name="TeamMemberDetails.TelephoneNumberEmptyErrorMessage" xml:space="preserve">
     <value>[Welsh] Enter a telephone number</value>
   </data>
   <data name="TeamMemberDetails.TelephoneNumberInvalidErrorMessage" xml:space="preserve">
     <value>[Welsh] Enter a valid telephone number, like 01642 123 456, 07777 777 777 or +33 1 23 45 67 88</value>
   </data>
-  <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>[Welsh] Team Invite</value>
+  <data name="TeamMemberDetails.EmailEmptyErrorMessage" xml:space="preserve">
+    <value>[Welsh] Enter their email address</value>
+  </data>
+  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
+    <value>[Welsh] Enter a valid telephone number</value>
+  </data>
+  <data name="TeamMemberDetails.EmailInvalidErrorMessage" xml:space="preserve">
+    <value>[Welsh] Enter an email address with a name, @ symbol and a domain name, like yourname@example.com</value>
   </data>
 </root>
