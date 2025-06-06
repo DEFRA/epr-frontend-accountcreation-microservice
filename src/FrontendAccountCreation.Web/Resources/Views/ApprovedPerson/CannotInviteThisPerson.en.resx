@@ -117,18 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-<<<<<<<< HEAD:src/FrontendAccountCreation.Web/Resources/Views/ApprovedPerson/CannotInviteThisPerson.cy.resx
   <data name="CannotInviteThisPerson.Title" xml:space="preserve">
-    <value>[Welsh]Person cannot be invited</value>
+    <value>Person cannot be invited</value>
   </data>
   <data name="CannotInviteThisPerson.InviteEligiblePerson" xml:space="preserve">
-    <value>[Welsh]Invite an eligible person</value>
-========
-  <data name="NotImplemented.Description" xml:space="preserve">
-    <value>Gwaith ar y gweill: bydd y dudalen hon ar gael yn nes ymlaen.</value>
-  </data>
-  <data name="NotImplemented.Title" xml:space="preserve">
-    <value>Nid yw'r dudalen hon ar gael eto</value>
->>>>>>>> feature/team-tungsten-sprint-26-branch:src/FrontendAccountCreation.Web/Resources/Views/Organisation/NotImplemented.cy.resx
+    <value>Invite an eligible person</value>
   </data>
 </root>

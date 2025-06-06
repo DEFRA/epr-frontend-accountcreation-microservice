@@ -58,6 +58,9 @@ public static class PagePath
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
 
     public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-cannot-be-invited";
+    public const string MemberPartnership = "member-partnership";
+    public const string PartnerDetails = "partner-details";
+    public const string CanNotInviteThisPerson = "cannot-invite-this-person";
     
     public const string MemberPartnership = "member-partnership";
     public const string MemberPartnershipAdd = "member-partnership/add";
@@ -77,6 +80,7 @@ public static class PagePath
     public const string LimitedPartnershipType = "organisation-partnership-type";
     public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
     public const string LimitedLiabilityPartnership = "partner-you";
+    public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
 
     // Non journey paths
     public const string Accessibility = "accessibility";
