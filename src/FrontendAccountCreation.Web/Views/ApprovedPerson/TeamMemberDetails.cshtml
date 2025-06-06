@@ -53,7 +53,8 @@
                         </div>
                         <input class="govuk-input" asp-for="Telephone" type="tel"/>
                     </div>
-
+                    
+                    @* todo: can we remove asp-action? *@
                     <button class="govuk-button" data-module="govuk-button" asp-action="TeamMemberDetails" type="submit">
                         @Localizer["TeamMemberDetails.Continue"]
                     </button>

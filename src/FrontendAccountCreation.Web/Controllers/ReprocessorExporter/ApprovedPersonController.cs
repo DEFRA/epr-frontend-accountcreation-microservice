@@ -218,6 +218,61 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.SoleTraderTeamMemberDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberDetails()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.SoleTraderTeamMemberDetails);
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            TeamMemberViewModel viewModel;
+            if (session.ReExManualInputSession?.TeamMember != null)
+            {
+                viewModel = new TeamMemberViewModel
+                {
+                    FirstName = session.ReExManualInputSession.TeamMember.FirstName,
+                    LastName = session.ReExManualInputSession.TeamMember.LastName,
+                    Telephone = session.ReExManualInputSession.TeamMember.TelephoneNumber,
+                    Email = session.ReExManualInputSession.TeamMember.Email
+                };
+
+            }
+
+            //TeamMemberDetails
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route(PagePath.SoleTraderTeamMemberDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberDetails(TeamMemberViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.TeamMemberDetails);
+                return View(model);
+            }
+
+            var index = session.ReExCompaniesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
+
+            if (index is >= 0)
+            {
+                // found existing team member
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].FirstName = model.FirstName;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].LastName = model.LastName;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].TelephoneNumber = model.Telephone;
+                session.ReExCompaniesHouseSession.TeamMembers[index.Value].Email = model.Email;
+            }
+
+            // go to check invitation details summary page for all team members
+            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.TeamMemberDetails,
+                PagePath.TeamMembersCheckInvitationDetails);
+        }
+
+        [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails()
@@ -297,7 +352,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         /// <summary>
-        /// Show team member details enetered so far
+        /// Show team member details entered so far
         /// </summary>
         /// <param name="id">Id of team member to remove</param>
         /// <returns></returns>
