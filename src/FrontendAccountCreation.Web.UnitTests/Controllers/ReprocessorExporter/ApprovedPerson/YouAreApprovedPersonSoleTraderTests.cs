@@ -50,10 +50,10 @@ public class YouAreApprovedPersonSoleTraderTests : ApprovedPersonTestBase
             .ReturnsAsync(session);
 
         // Act
-        var result = await _systemUnderTest.ApprovedPersonSoleTraderContinue();
+        var result = await _systemUnderTest.SoleTraderContinue();
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetailsSoleTrader));
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
     }
 }

@@ -26,11 +26,11 @@
 
 				<p class="govuk-body">@Localizer["YouAreApprovedPersonSoleTrader.Description2"].Value</p>
 
-				<p class="govuk-body">@Localizer["YouAreApprovedPersonSoleTrader.Description3"].Value</p>
-								
-				<form asp-controller="ApprovedPerson" method="post">
+				<p class="govuk-body">@Localizer["YouAreApprovedPersonSoleTrader.Description3"].Value</p>					
+
+				<form asp-controller="ApprovedPerson" method="get">
 					<div class="govuk-button-group">
-						<button class="govuk-button" data-module="govuk-button" asp-action="CheckYourDetailsSoleTrader">
+						<button class="govuk-button" data-module="govuk-button" asp-action="SoleTraderContinue">
 							@SharedLocalizer["Continue"]
 						</button>
 					</div>

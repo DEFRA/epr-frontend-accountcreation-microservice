@@ -24,6 +24,6 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
     ];
 
     // Redirect targets
-    protected override string RedirectActionNameOnYes => nameof(OrganisationController.ManageAccountPerson);
+    protected override string RedirectActionNameOnYes => nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader);
     protected override string RedirectActionNameOnNo => nameof(OrganisationController.NotApprovedPerson);
 }

@@ -378,7 +378,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.YouAreApprovedPersonSoleTrader)]
-        //[OrganisationJourneyAccess(PagePath.YouAreApprovedPersonSoleTrader)]
+        [OrganisationJourneyAccess(PagePath.YouAreApprovedPersonSoleTrader)]
         public async Task<IActionResult> YouAreApprovedPersonSoleTrader()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -388,21 +388,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View();
         }
 
-        [HttpPost]
-        [Route(PagePath.YouAreApprovedPersonSoleTrader)]
-        public async Task<IActionResult> ApprovedPersonSoleTraderContinue()
+        [HttpGet]
+        [Route(PagePath.SoleTraderContinue)]
+        public async Task<IActionResult> SoleTraderContinue()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetailsSoleTrader), PagePath.YouAreApprovedPersonSoleTrader,  PagePath.NotImplemented);
-        }
-        
-        [HttpGet]
-        [Route(PagePath.NotImplemented)] // to do: edit as required
-        [ExcludeFromCodeCoverage]
-        public async Task<IActionResult> CheckYourDetailsSoleTrader()
-        {           
-            return View("Not been implemented...");
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderContinue,  PagePath.CheckYourDetails);
         }
 
         [HttpGet]

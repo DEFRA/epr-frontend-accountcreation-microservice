@@ -69,6 +69,7 @@ public static class PagePath
 
     // Sole Trader paths
     public const string YouAreApprovedPersonSoleTrader = "soletrader-approved-person";
+    public const string SoleTraderContinue = "soletrader-continue";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
