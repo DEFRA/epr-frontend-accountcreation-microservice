@@ -412,7 +412,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var queryStringId = Guid.Empty;
 
-            var index = session.ReExCompaniesHouseSession.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
+            var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
 
             // Team memebr exists
             if (index is >= 0)

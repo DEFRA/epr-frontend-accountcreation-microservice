@@ -39,7 +39,11 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
     public async Task Post_MemberPartnership_WhenIsMemberPartnershipIsYes_RedirectsToPartnerDetails()
     {
         // Arrange
-        var session = new OrganisationSession();
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession()
+        };
+
         var model = new IsMemberPartnershipViewModel { IsMemberPartnership = YesNoAnswer.Yes };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
