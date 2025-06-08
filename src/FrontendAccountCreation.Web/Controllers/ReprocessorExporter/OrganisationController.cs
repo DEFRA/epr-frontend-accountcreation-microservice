@@ -564,6 +564,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
             }
             session!.UkNation = nation;
+            if(!session.WhiteList.Contains(PagePath.UkNation)) 
+                session.WhiteList.Add(PagePath.UkNation);
             return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.ConfirmCompanyDetails, PagePath.IsTradingNameDifferent);
         }
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
