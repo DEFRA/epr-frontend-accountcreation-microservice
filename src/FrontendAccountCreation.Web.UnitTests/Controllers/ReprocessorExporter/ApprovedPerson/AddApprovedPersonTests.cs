@@ -480,4 +480,37 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         model.IsLimitedPartnership.Should().BeFalse();
         model.IsLimitedLiablePartnership.Should().BeFalse();
     }
+
+    [TestMethod]
+    public async Task Post_AddApprovedPerson_WhenInviteAnotherPersonAndLLPTrue_RedirectsToMemberPartnership()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = new FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ReExPartnership
+                {
+                    IsLimitedLiabilityPartnership = true
+                }
+            }
+        };
+
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.MemberPartnership));
+    }
 }
