@@ -513,4 +513,49 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(_systemUnderTest.MemberPartnership));
     }
+
+    [TestMethod]
+    public async Task Post_AddApprovedPerson_WhenInviteUserOptionIsUnknown_RedirectsToCheckYourDetails()
+    {
+        var session = new OrganisationSession();
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = "InvalidOption"
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
+    }
+
+    [TestMethod]
+    public async Task Post_AddApprovedPerson_WhenReExCompaniesHouseSessionIsNull_RedirectsToTeamMemberRoleInOrganisation()
+    {
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = null
+        };
+
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+    }
+
+
 }
