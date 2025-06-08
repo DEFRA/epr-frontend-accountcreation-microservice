@@ -108,4 +108,64 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.MemberPartnership));
     }
+
+    [TestMethod]
+    public async Task Post_MemberPartnership_WhenMemberExistsAndSaysNo_RedirectsToCannotInvite()
+    {
+        // Arrange
+        var memberId = Guid.NewGuid();
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>
+                {
+                    new() { Id = memberId, Email = "test@test.com" }
+                }
+            }
+        };
+
+        var model = new IsMemberPartnershipViewModel
+        {
+            Id = memberId,
+            IsMemberPartnership = YesNoAnswer.No
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("CanNotInviteThisPerson");
+    }
+
+    [TestMethod]
+    public async Task Post_MemberPartnership_WhenNewMemberAndSaysYes_AddsMemberAndRedirectsToPartnerDetails()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+
+        var model = new IsMemberPartnershipViewModel
+        {
+            Id = null,
+            IsMemberPartnership = YesNoAnswer.Yes
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        session.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle();
+    }
 }

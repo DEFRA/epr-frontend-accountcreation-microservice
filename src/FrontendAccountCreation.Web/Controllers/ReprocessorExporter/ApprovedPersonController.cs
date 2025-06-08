@@ -8,10 +8,6 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -421,9 +417,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 {
                     session?.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == model.Id);
                 }
-
-                session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role = ReExTeamMemberRole.Member;
-                queryStringId = model.Id.Value;
+                else
+                {
+                    session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role = ReExTeamMemberRole.Member;
+                    queryStringId = model.Id.Value;
+                }
             }
             else
             {
