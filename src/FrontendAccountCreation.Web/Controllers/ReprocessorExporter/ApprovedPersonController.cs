@@ -72,15 +72,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
             {
-                if (session.IsOrganisationAPartnership == true)
-                {
-                    if(session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership == true)
-                        return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
-                            PagePath.AddAnApprovedPerson, PagePath.MemberPartnership);
-                }
-
-                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
-                    PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+                return session.IsOrganisationAPartnership == true &&
+                       session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership == true
+                    ? await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.AddAnApprovedPerson, PagePath.MemberPartnership)
+                    : await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);

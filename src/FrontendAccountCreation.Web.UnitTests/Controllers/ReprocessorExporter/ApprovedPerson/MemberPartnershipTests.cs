@@ -168,4 +168,66 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         session.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle();
     }
+
+    [TestMethod]
+    public async Task Post_MemberPartnership_WhenExistingMemberAndSaysYes_UpdatesRoleAndRedirectsToPartnerDetails()
+    {
+        // Arrange
+        var memberId = Guid.NewGuid();
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>
+                {
+                    new() { Id = memberId, Role = ReExTeamMemberRole.CompanySecretary }
+                }
+            }
+        };
+
+        var model = new IsMemberPartnershipViewModel
+        {
+            Id = memberId,
+            IsMemberPartnership = YesNoAnswer.Yes
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.PartnerDetails));
+        session.ReExCompaniesHouseSession.TeamMembers!.First().Role.Should().Be(ReExTeamMemberRole.Member);
+    }
+
+    [TestMethod]
+    public async Task Post_MemberPartnership_WhenNewMemberAndSaysNo_DoesNotAddMemberAndRedirectsToCannotInvite()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+
+        var model = new IsMemberPartnershipViewModel
+        {
+            Id = null,
+            IsMemberPartnership = YesNoAnswer.No
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("CanNotInviteThisPerson");
+        session.ReExCompaniesHouseSession.TeamMembers.Should().BeEmpty();
+    }
 }
