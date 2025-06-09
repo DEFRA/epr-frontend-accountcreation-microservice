@@ -234,9 +234,23 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new();
-        partnershipSession.IsLimitedPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
-        partnershipSession.IsLimitedLiabilityPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+        var wasLp = session.ReExCompaniesHouseSession.Partnership?.IsLimitedPartnership;
+        var wasLlp = session.ReExCompaniesHouseSession.Partnership?.IsLimitedLiabilityPartnership;
+
+        var isLp = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
+        var isLlp  = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+
+        // clear existing session values when the user changes their original descision
+        if ((wasLp.HasValue && (wasLp.Value != isLp)) || (wasLlp.HasValue && (wasLlp.Value != isLlp)))
+        {
+            session.ReExCompaniesHouseSession.Partnership = null; // partnership details
+            session.ReExCompaniesHouseSession.TeamMembers = null; // invitee details
+        }
+
+        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new ReExPartnership();
+        partnershipSession.IsLimitedPartnership = isLp;
+        partnershipSession.IsLimitedLiabilityPartnership = isLlp;
+
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
         return model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership ?
