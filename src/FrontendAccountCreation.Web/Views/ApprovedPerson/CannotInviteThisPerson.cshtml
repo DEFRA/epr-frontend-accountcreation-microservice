@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-
-@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
+﻿@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
 
 @{
     ViewData["Title"] = Localizer["CannotInviteThisPerson.Title"];
@@ -20,8 +18,7 @@
 
                     <a class="govuk-link"
                            asp-action="CanNotInviteThisPersonAddEligible"
-                       asp-controller="ApprovedPerson"
-                       asp-route-id="@Model.Id">
+                       asp-controller="ApprovedPerson">
                         @Localizer["CannotInviteThisPerson.InviteEligiblePerson"]
                     </a>
                 </div>

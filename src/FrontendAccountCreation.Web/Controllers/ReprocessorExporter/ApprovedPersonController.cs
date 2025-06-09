@@ -213,7 +213,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.TeamMemberRoleInOrganisationAdd)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisationAdd()
         {
             DeleteFocusId();
@@ -243,7 +242,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPerson);
-
+            DeleteFocusId();
             return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                 PagePath.YouAreApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
         }
@@ -420,14 +419,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (id.HasValue)
             {
                 var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
-                if (index is >= 0)
-                {
-                    boolValue = true;
-                }
-                else
-                {
-                    boolValue = false;
-                }
+                boolValue = index is >= 0;
             }
 
             var viewModel = new IsMemberPartnershipViewModel
@@ -679,6 +671,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> CanNotInviteThisPersonAddEligible()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            DeleteFocusId();
             return await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.CanNotInviteThisPerson, PagePath.MemberPartnership);
         }
 
