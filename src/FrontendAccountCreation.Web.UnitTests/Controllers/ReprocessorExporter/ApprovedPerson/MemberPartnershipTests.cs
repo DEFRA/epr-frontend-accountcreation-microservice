@@ -230,4 +230,13 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         redirect.ActionName.Should().Be("CanNotInviteThisPerson");
         session.ReExCompaniesHouseSession.TeamMembers.Should().BeEmpty();
     }
+
+    [TestMethod]
+    public async Task MemberPartnershipEdit_Get_RedirectsTo_TeamMemberRoleInOrganisation()
+    {
+        var result = await _systemUnderTest.MemberPartnershipEdit(Guid.NewGuid());
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.MemberPartnership));
+    }
 }
