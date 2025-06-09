@@ -662,4 +662,40 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
     }
+
+    [TestMethod]
+    public async Task CanNotInviteThisPerson_Get_ReturnsViewWithCorrectId()
+    {
+        // Arrange
+        var testId = Guid.NewGuid();
+
+        // Act
+        var result = await _systemUnderTest.CanNotInviteThisPerson(testId);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPersonCanNotBeInvitedViewModel>().Subject;
+        viewModel.Id.Should().Be(testId);
+    }
+
+    [TestMethod]
+    public void CanNotInviteThisPerson_Post_RedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        {
+            Id = Guid.NewGuid()
+        };
+
+        // Act
+        var result = _systemUnderTest.CanNotInviteThisPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be("CheckYourDetails");
+        redirectResult.ControllerName.Should().Be("AccountCreation");
+    }
+
 }
