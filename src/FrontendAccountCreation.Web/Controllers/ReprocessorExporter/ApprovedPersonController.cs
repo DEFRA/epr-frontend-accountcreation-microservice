@@ -7,6 +7,7 @@ using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -35,6 +36,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
 
             var model = new AddApprovedPersonViewModel
             {
@@ -76,9 +83,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
-                return session is {IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true}
+                return session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true }
                     ? await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.AddAnApprovedPerson, PagePath.MemberPartnership)
                     : await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+            }
+
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
@@ -99,7 +112,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var viewModel = new TeamMemberRoleInOrganisationViewModel();
             var llpViewModel = new IsMemberPartnershipViewModel();
-            
+
             var id = GetFocusId();
             if (id.HasValue)
             {
@@ -125,8 +138,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View("ApprovedPersonPartnershipRole", viewModel);
             }
 
-            return isLimitedLiabilityPartnership ? 
-                View("MemberPartnership", llpViewModel) : 
+            return isLimitedLiabilityPartnership ?
+                View("MemberPartnership", llpViewModel) :
                 View(viewModel);
         }
 
@@ -384,6 +397,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false)
             };
 
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
+
             return View(approvedPersonViewModel);
         }
 
@@ -428,6 +447,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 {
                     boolValue = false;
                 }
+
+                SetFocusId(id.Value);
             }
 
             var viewModel = new IsMemberPartnershipViewModel
@@ -492,8 +513,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.MemberPartnershipAdd)]
         public async Task<IActionResult> MemberPartnershipAdd()
         {
-            DeleteFocusId();
-
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
             return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
@@ -662,7 +681,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.CanNotInviteThisPerson)]    
+        [Route(PagePath.CanNotInviteThisPerson)]
         [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
         public async Task<IActionResult> CanNotInviteThisPerson([FromQuery] Guid id)
         {
@@ -689,7 +708,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails) , PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails );
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails);
 
         }
     }
