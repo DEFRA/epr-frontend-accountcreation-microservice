@@ -368,7 +368,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+        // clear existing session values if the user changes their mind
+        var isOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+        session.IsOrganisationAPartnership = isOrganisationAPartnership;
 
         if (session.IsOrganisationAPartnership == true)
         {

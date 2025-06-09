@@ -487,6 +487,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.MemberPartnershipEdit)]
+        public async Task<IActionResult> MemberPartnershipEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
+                PagePath.CheckYourDetails, PagePath.MemberPartnership);
+        }
+
+        [HttpGet]
         [Route(PagePath.PartnerDetails)]
         [OrganisationJourneyAccess(PagePath.PartnerDetails)]
         public async Task<IActionResult> PartnerDetails()
@@ -605,7 +617,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> CheckYourDetailsPost()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            return await SaveSessionAndRedirect(session, nameof(OrganisationController.Declaration), PagePath.CheckYourDetails, PagePath.Declaration, nameof(OrganisationController).Replace("Controller", ""));
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(OrganisationController),
+                nameof(OrganisationController.Declaration),
+                PagePath.CheckYourDetails,
+                PagePath.Declaration);
         }
 
         [HttpGet]
