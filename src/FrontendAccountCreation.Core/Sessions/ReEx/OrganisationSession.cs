@@ -41,4 +41,6 @@ public class OrganisationSession : ILocalSession
     public List<string> Journey { get; set; } = [];
 
     public HashSet<string> WhiteList { get; set; } = [];
+    
+    public InviteUserOptions? InviteUserOption { get; set; }
 }

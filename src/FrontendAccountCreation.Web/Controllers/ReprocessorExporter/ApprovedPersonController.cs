@@ -3,6 +3,7 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -37,6 +38,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var model = new AddApprovedPersonViewModel
             {
+                InviteUserOption = session.InviteUserOption?.ToString(),
                 IsOrganisationAPartnership = session.IsOrganisationAPartnership,
                 IsInEligibleToBeApprovedPerson =
                     session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
@@ -63,6 +65,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
                 return View(model);
             }
+
+            session.InviteUserOption = session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
@@ -224,6 +228,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> TeamMemberRoleInOrganisationAddAnother()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.YouAreApprovedPerson);
 
             return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                 PagePath.YouAreApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
