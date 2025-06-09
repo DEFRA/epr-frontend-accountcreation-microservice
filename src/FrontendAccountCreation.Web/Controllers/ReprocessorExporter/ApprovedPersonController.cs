@@ -396,7 +396,26 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.MemberPartnership);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var viewModel = new IsMemberPartnershipViewModel();
+            bool? boolValue = null;
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                if (index is >= 0)
+                {
+                    boolValue = true;
+                }
+                else
+                {
+                    boolValue = false;
+                }
+            }
+
+            var viewModel = new IsMemberPartnershipViewModel
+            {
+                IsMemberPartnership = boolValue.HasValue ? (boolValue.Value ? YesNoAnswer.Yes : YesNoAnswer.No) : null
+            };
+
             return View(viewModel);
         }
 
@@ -434,7 +453,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 if (model.IsMemberPartnership == YesNoAnswer.Yes)
                 {
                     queryStringId = Guid.NewGuid();
-                    
+
                     session.ReExCompaniesHouseSession.TeamMembers ??= new List<ReExCompanyTeamMember>();
                     session.ReExCompaniesHouseSession.TeamMembers.Add(new ReExCompanyTeamMember
                     {
@@ -505,12 +524,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
             var members = companiesHouseSession.TeamMembers ?? new();
             var index = members.FindIndex(0, x => x.Id.Equals(model?.Id));
-            bool isExistingMember = false;
-            if (index >= 0)
-            {
-                // check the email, but any field other than Id will do
-                isExistingMember = members[index].Email?.Length > 0;
-            }
+            bool isExistingMember = index >= 0;
             var id = model?.Id ?? Guid.NewGuid();
 
             if (isExistingMember)
@@ -529,6 +543,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     LastName = model?.LastName,
                     TelephoneNumber = model.Telephone,
                     Email = model?.Email,
+                    Role = ReExTeamMemberRole.Member
                 });
             }
 
