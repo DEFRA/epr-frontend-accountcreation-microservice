@@ -219,6 +219,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.TeamMemberRoleInOrganisationAddAnother)]
+        [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
+        public async Task<IActionResult> TeamMemberRoleInOrganisationAddAnother()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
+                PagePath.YouAreApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+        }
+
+        [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails()
