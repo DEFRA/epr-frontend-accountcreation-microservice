@@ -7,7 +7,6 @@ using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -112,7 +111,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var viewModel = new TeamMemberRoleInOrganisationViewModel();
             var llpViewModel = new IsMemberPartnershipViewModel();
-
+            
             var id = GetFocusId();
             if (id.HasValue)
             {
@@ -138,8 +137,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View("ApprovedPersonPartnershipRole", viewModel);
             }
 
-            return isLimitedLiabilityPartnership ?
-                View("MemberPartnership", llpViewModel) :
+            return isLimitedLiabilityPartnership ? 
+                View("MemberPartnership", llpViewModel) : 
                 View(viewModel);
         }
 
@@ -226,7 +225,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.TeamMemberRoleInOrganisationAdd)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisationAdd()
         {
             DeleteFocusId();
@@ -256,7 +254,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPerson);
-
+            DeleteFocusId();
             return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                 PagePath.YouAreApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
         }
@@ -439,14 +437,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (id.HasValue)
             {
                 var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
-                if (index is >= 0)
-                {
-                    boolValue = true;
-                }
-                else
-                {
-                    boolValue = false;
-                }
+                boolValue = index is >= 0;
 
                 SetFocusId(id.Value);
             }
@@ -698,6 +689,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> CanNotInviteThisPersonAddEligible()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            DeleteFocusId();
             return await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.CanNotInviteThisPerson, PagePath.MemberPartnership);
         }
 
