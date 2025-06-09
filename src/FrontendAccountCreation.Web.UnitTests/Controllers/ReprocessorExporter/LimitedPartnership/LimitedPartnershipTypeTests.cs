@@ -215,7 +215,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         // Arrange
         var model = new PartnershipTypeRequestViewModel
         {
-            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedLiabilityPartnership
+            TypeOfPartnership = PartnershipType.LimitedLiabilityPartnership
         };
 
         // Act
@@ -224,7 +224,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = (RedirectToActionResult)result;
-        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.LimitedPartnershipType));
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.LimitedLiabilityPartnership));
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
