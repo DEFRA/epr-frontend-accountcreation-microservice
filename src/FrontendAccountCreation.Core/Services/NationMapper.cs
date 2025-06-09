@@ -35,9 +35,4 @@ public static class NationMapper
         nation = default;
         return false;
     }
-
-    public static Nation MapToNationOrDefault(string input, Nation fallback = Nation.NotSet)
-    {
-        return TryMapToNation(input, out var nation) ? nation : fallback;
-    }
 }

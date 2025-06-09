@@ -29,6 +29,7 @@ namespace FrontendAccountCreation.Core.UnitTests
         [DataRow("XYZ")]
         [DataRow("5")]
         [DataRow("")]
+        [DataRow(" ")]
         [DataRow("Great Britain")]
         [DataRow("Not specified")]
         [DataRow("United Kingdom")]
