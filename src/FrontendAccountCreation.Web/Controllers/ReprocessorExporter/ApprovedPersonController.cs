@@ -510,6 +510,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     viewModel.Telephone = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.TelephoneNumber;
                     viewModel.Email = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Email;
                 }
+
+                SetFocusId(id.Value);
             }
 
             return View(viewModel);
