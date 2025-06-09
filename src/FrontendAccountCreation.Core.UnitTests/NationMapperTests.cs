@@ -16,7 +16,7 @@ namespace FrontendAccountCreation.Core.UnitTests
         [DataRow("3", Nation.Scotland)]
         [DataRow("4", Nation.Wales)]
         [DataRow("0", Nation.NotSet)]
-
+        [DataRow("SCOTLAND", Nation.Scotland)]
         public void TryMapToNation_ValidInput_ReturnsTrueAndCorrectEnum(string input, Nation expected)
         {
             // Act
