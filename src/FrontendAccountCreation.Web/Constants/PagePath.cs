@@ -62,6 +62,7 @@ public static class PagePath
     
     public const string MemberPartnership = "member-partnership";
     public const string MemberPartnershipAdd = "member-partnership/add";
+    public const string MemberPartnershipEdit = "member-partnership/edit";
 
     public const string PartnerDetails = "partner-details";
     public const string CanNotInviteThisPerson = "cannot-invite-this-person";
