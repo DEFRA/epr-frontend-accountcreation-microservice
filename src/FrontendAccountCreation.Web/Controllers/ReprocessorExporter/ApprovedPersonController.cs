@@ -609,12 +609,24 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
         }
 
+        [HttpGet]
+        [Route(PagePath.CanNotInviteThisPersonAddEligible)]
+        [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
+        public async Task<IActionResult> CanNotInviteThisPersonAddEligible()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.CanNotInviteThisPerson, PagePath.MemberPartnership);
+        }
+
         [HttpPost]
         [Route(PagePath.CanNotInviteThisPerson)]
         [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
-        public IActionResult CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        public async Task<IActionResult> CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
         {
-            return RedirectToAction("CheckYourDetails", "AccountCreation");
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails) , PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails );
+
         }
     }
 }

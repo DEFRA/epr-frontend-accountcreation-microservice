@@ -64,6 +64,7 @@ public static class PagePath
 
     public const string PartnerDetails = "partner-details";
     public const string CanNotInviteThisPerson = "cannot-invite-this-person";
+    public const string CanNotInviteThisPersonAddEligible = "cannot-invite-this-person/add-eligble";
     public const string CheckPartnerInvitation = "check-partner-invitation";
 
     // Limited partnership paths
