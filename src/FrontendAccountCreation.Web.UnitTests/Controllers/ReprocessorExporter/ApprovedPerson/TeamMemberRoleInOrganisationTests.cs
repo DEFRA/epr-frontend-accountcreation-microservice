@@ -698,4 +698,21 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         redirectResult.ActionName.Should().Be("CheckYourDetails");
     }
 
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisationAddAnother_Get_RedirectsTo_TeamMemberRoleInOrganisation()
+    {
+        // Act
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationAddAnother();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+        redirect.RouteValues?["fromPage"].Should().Be(PagePath.YouAreApprovedPerson);
+        redirect.RouteValues?["toPage"].Should().Be(PagePath.TeamMemberRoleInOrganisation);
+
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+    }
+
 }
