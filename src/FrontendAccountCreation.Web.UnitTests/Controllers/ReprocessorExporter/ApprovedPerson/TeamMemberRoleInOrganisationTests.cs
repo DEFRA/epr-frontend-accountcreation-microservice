@@ -699,6 +699,19 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
+    public async Task CanNotInviteThisPersonAddEligible_Get_RedirectsToMemberPartnership()
+    {
+
+        // Act
+        var result = await _systemUnderTest.CanNotInviteThisPersonAddEligible();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be("MemberPartnership");
+    }
+
+    [TestMethod]
     public async Task TeamMemberRoleInOrganisationAddAnother_Get_RedirectsTo_TeamMemberRoleInOrganisation()
     {
         // Act
