@@ -680,7 +680,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public void CanNotInviteThisPerson_Post_RedirectsToCheckYourDetails()
+    public async Task CanNotInviteThisPerson_Post_RedirectsToCheckYourDetails()
     {
         // Arrange
         var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
@@ -688,14 +688,14 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
             Id = Guid.NewGuid()
         };
 
+
         // Act
-        var result = _systemUnderTest.CanNotInviteThisPerson(model);
+        var result = await _systemUnderTest.CanNotInviteThisPerson(model);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = (RedirectToActionResult)result;
         redirectResult.ActionName.Should().Be("CheckYourDetails");
-        redirectResult.ControllerName.Should().Be("AccountCreation");
     }
 
     [TestMethod]

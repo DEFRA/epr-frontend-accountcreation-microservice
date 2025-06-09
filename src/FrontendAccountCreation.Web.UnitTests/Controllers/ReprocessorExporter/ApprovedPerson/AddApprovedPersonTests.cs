@@ -557,5 +557,54 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
     }
 
+    [TestMethod]
+    public async Task AddApprovedPerson_InviteUserOption_StoredInSessionAsEnum()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteLater.ToString()
+        };
 
+        var session = new OrganisationSession();
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        session.InviteUserOption.Should().Be(InviteUserOptions.InviteLater);
+
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Get_PopulatesInviteUserOptionFromSession()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            InviteUserOption = InviteUserOptions.BeAnApprovedPerson
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock
+            .Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var model = viewResult.Model.Should().BeOfType<AddApprovedPersonViewModel>().Subject;
+        model.InviteUserOption.Should().Be(InviteUserOptions.BeAnApprovedPerson.ToString());
+    }
 }
