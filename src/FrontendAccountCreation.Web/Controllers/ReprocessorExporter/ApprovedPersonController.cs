@@ -247,11 +247,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.SoleTraderTeamMemberDetails);
+                SetBackLink(session!, PagePath.SoleTraderTeamMemberDetails);
                 return View(model);
             }
 
-            var teamMember = session.ReExManualInputSession.TeamMember ?? new ReExCompanyTeamMember();
+            var teamMember = session!.ReExManualInputSession!.TeamMember ??= new ReExCompanyTeamMember();
 
             teamMember.FirstName = model.FirstName;
             teamMember.LastName = model.LastName;

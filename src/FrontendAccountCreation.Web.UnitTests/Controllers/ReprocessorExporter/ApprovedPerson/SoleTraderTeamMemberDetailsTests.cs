@@ -128,7 +128,15 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
         await _systemUnderTest.SoleTraderTeamMemberDetails(request);
 
         // Assert
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.ReExManualInputSession != null &&
+                s.ReExManualInputSession.TeamMember != null &&
+                s.ReExManualInputSession.TeamMember.FirstName == "Teddy" &&
+                s.ReExManualInputSession.TeamMember.LastName == "Drowns" &&
+                s.ReExManualInputSession.TeamMember.Email == "teammember@example.com" &&
+                s.ReExManualInputSession.TeamMember.TelephoneNumber == "01234567890")),
             Times.Once);
     }
 
