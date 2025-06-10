@@ -8,14 +8,12 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
     [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     [Route("re-ex/organisation")]
-    public partial class ApprovedPersonController : ControllerBase<OrganisationSession>
+    public class ApprovedPersonController : ControllerBase<OrganisationSession>
     {
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
@@ -219,6 +217,52 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.SoleTraderTeamMemberDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberDetails()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.SoleTraderTeamMemberDetails);
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            var viewModel = new SoleTraderTeamMemberViewModel();
+
+            if (session.ReExManualInputSession?.TeamMember != null)
+            {
+                viewModel.FirstName = session.ReExManualInputSession.TeamMember.FirstName;
+                viewModel.LastName = session.ReExManualInputSession.TeamMember.LastName;
+                viewModel.Telephone = session.ReExManualInputSession.TeamMember.TelephoneNumber;
+                viewModel.Email = session.ReExManualInputSession.TeamMember.Email;
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route(PagePath.SoleTraderTeamMemberDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberDetails(SoleTraderTeamMemberViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session!, PagePath.SoleTraderTeamMemberDetails);
+                return View(model);
+            }
+
+            var teamMember = session!.ReExManualInputSession!.TeamMember ??= new ReExCompanyTeamMember();
+
+            teamMember.FirstName = model.FirstName;
+            teamMember.LastName = model.LastName;
+            teamMember.TelephoneNumber = model.Telephone;
+            teamMember.Email = model.Email;
+
+            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
+                PagePath.TeamMembersCheckInvitationDetails);
+        }
+
+        [HttpGet]
         [Route(PagePath.TeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.TeamMemberDetails)]
         public async Task<IActionResult> TeamMemberDetails()
@@ -298,7 +342,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         /// <summary>
-        /// Show team member details enetered so far
+        /// Show team member details entered so far
         /// </summary>
         /// <param name="id">Id of team member to remove</param>
         /// <returns></returns>
@@ -392,6 +436,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.SoleTraderContinue)]
         public async Task<IActionResult> SoleTraderContinue()
         {
+            //to-do: will this mean going back will loop forward?
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderContinue,  PagePath.CheckYourDetails);
