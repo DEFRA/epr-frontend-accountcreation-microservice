@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
@@ -64,14 +65,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             });
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
-        {
-            Journey = [PagePath.RegisteredAsCharity]
-        };
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         YesNoAnswer? isTheOrganisationCharity = null;
 
-        if (session.IsTheOrganisationCharity.HasValue)
+        if (session?.IsTheOrganisationCharity.HasValue == true)
         {
             isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
         }
@@ -91,10 +89,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
-        {
-            Journey = [PagePath.RegisteredAsCharity]
-        };
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session)
+            ?? new OrganisationSession()
+            {
+                Journey = [PagePath.RegisteredAsCharity]
+            };
 
         session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
@@ -137,10 +136,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         [FromServices] IFeatureManager featureManager,
         RegisteredWithCompaniesHouseViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession()
-        {
-            Journey = [PagePath.RegisteredWithCompaniesHouse]
-        };
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
@@ -555,8 +551,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> ConfirmDetailsOfTheCompany()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var company = session.ReExCompaniesHouseSession.Company;
 
-        if (session.ReExCompaniesHouseSession.Company.AccountExists)
+        if (company.AccountExists)
         {
             return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails,
                 PagePath.AccountAlreadyExists);
@@ -564,6 +561,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
 
+        if (session.IsCompaniesHouseFlow && NationMapper.TryMapToNation(company.BusinessAddress.Country, out Nation nation) && nation != Nation.NotSet)
+        {
+            session!.UkNation = nation;
+            if (!session.WhiteList.Contains(PagePath.UkNation))
+            {
+                session.WhiteList.Add(PagePath.UkNation);
+            }
+            return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.ConfirmCompanyDetails, PagePath.IsTradingNameDifferent);
+        }
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
     }
 
@@ -645,11 +651,76 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpGet]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
-    public async Task<IActionResult> BusinessAddress()
+    public Task<IActionResult> BusinessAddress()
+    {
+        return PlaceholderPageGet(PagePath.BusinessAddress, true);
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpPost]
+    [Route(PagePath.BusinessAddress)]
+    [OrganisationJourneyAccess(PagePath.BusinessAddress)]
+    public Task<IActionResult> BusinessAddressPost()
+    {
+        return PlaceholderPagePost(nameof(SoleTrader), PagePath.BusinessAddress, PagePath.SoleTrader);
+    }
+
+    [HttpGet]
+    [Route(PagePath.SoleTrader)]
+    [OrganisationJourneyAccess(PagePath.SoleTrader)]
+    public async Task<IActionResult> SoleTrader()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.BusinessAddress);
-        return View();
+        SetBackLink(session, PagePath.SoleTrader);
+
+        var viewModel = new SoleTraderViewModel();
+
+        //to-do: helper for this common code
+        if (session.IsIndividualInCharge.HasValue)
+        {
+            viewModel.IsIndividualInCharge = session.IsIndividualInCharge == true ? YesNoAnswer.Yes : YesNoAnswer.No;
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.SoleTrader)]
+    [OrganisationJourneyAccess(PagePath.SoleTrader)]
+    public async Task<IActionResult> SoleTrader(SoleTraderViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.SoleTrader);
+            return View(model);
+        }
+
+        session.IsIndividualInCharge = model.IsIndividualInCharge == YesNoAnswer.Yes;
+
+        if (session.IsIndividualInCharge == true)
+        {
+            return await SaveSessionAndRedirect(session,
+                controllerName: nameof(ApprovedPersonController),
+                actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
+                currentPagePath: PagePath.SoleTrader, 
+                nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
+        }
+
+        //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.SoleTraderTeamMemberDetails),
+            PagePath.SoleTrader, PagePath.SoleTraderTeamMemberDetails);
+    }
+
+    //to-do: is not-approved-person page actually a form of the approved person page?
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.NotApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.NotApprovedPerson)]
+    public Task<IActionResult> NotApprovedPerson()
+    {
+        return PlaceholderPageGet(PagePath.NotApprovedPerson);
     }
 
     [HttpGet]

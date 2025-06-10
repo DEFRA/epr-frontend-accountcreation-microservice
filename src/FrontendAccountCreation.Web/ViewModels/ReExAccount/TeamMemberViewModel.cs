@@ -1,11 +1,11 @@
 ﻿using FrontendAccountCreation.Web.Controllers.Attributes;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class TeamMemberViewModel
 {
+    //to-do: shouldn't be required - if it's missing it should be a system error, rather than showing "The value '' is invalid." in the error summary section on the page
     [Required]
     public Guid Id { get; set; }
 

@@ -42,6 +42,8 @@ public static class PagePath
     public const string AddApprovedPerson = "add-approved-person";
     public const string ApprovedPersonContinue = "person-approved-continue";
     public const string DeclarationContinue = "declaration-continue";
+    public const string SoleTrader = "sole-trader";
+    public const string NotApprovedPerson = "not-approved-person";
     public const string NotImplemented = "not-implemented";
 
     // Approve person paths
@@ -51,6 +53,8 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationAddAnother = "check-companies-house-role/add-another";
     public const string TeamMemberRoleInOrganisationAdd = "check-companies-house-role/add";
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
+
+    public const string SoleTraderTeamMemberDetails = "team-member-details";
 
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";
@@ -68,6 +72,10 @@ public static class PagePath
     public const string CanNotInviteThisPerson = "cannot-invite-this-person";
     public const string CanNotInviteThisPersonAddEligible = "cannot-invite-this-person/add-eligble";
     public const string CheckPartnerInvitation = "check-partner-invitation";
+
+    // Sole Trader paths
+    public const string YouAreApprovedPersonSoleTrader = "soletrader-approved-person";
+    public const string SoleTraderContinue = "soletrader-continue";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
