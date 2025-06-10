@@ -1,8 +1,10 @@
 ﻿using FrontendAccountCreation.Web.Controllers.Attributes;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
+[ExcludeFromCodeCoverage]
 public class SoleTraderTeamMemberViewModel
 {
     [Required(ErrorMessage = "TeamMemberDetails.EmailEmptyErrorMessage")]
