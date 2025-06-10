@@ -234,23 +234,29 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        var wasLp = session.ReExCompaniesHouseSession.Partnership?.IsLimitedPartnership;
-        var wasLlp = session.ReExCompaniesHouseSession.Partnership?.IsLimitedLiabilityPartnership;
+        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new ReExPartnership();
+
+        var wasLp = partnershipSession.IsLimitedPartnership;
+        var wasLlp = partnershipSession.IsLimitedLiabilityPartnership;
 
         var isLp = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
         var isLlp  = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
 
         // clear existing session values when the user changes their original decision
-        if ((wasLp.HasValue && (wasLp.Value != isLp)) || (wasLlp.HasValue && (wasLlp.Value != isLlp)))
+        if (wasLp && !isLp)
         {
-            session.ReExCompaniesHouseSession.Partnership = null; // partnership details
-            session.ReExCompaniesHouseSession.TeamMembers = null; // invitee details
+            partnershipSession.LimitedPartnership = null;
+            session.ReExCompaniesHouseSession.TeamMembers = null;
         }
 
-        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new ReExPartnership();
+        if (wasLlp && !isLlp)
+        {
+            partnershipSession.LimitedLiabilityPartnership = null;
+            session.ReExCompaniesHouseSession.TeamMembers = null;
+        }
+
         partnershipSession.IsLimitedPartnership = isLp;
         partnershipSession.IsLimitedLiabilityPartnership = isLlp;
-
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
         return model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership ?

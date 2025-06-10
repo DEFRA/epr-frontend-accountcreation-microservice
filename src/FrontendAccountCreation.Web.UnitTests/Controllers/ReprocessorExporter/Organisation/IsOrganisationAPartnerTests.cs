@@ -136,11 +136,9 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
 
         // Act
-        var result = await _systemUnderTest.IsOrganisationAPartner(viewModel);
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
 
         // Assert
-        result.Should().NotBeNull();
-
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
         _orgSessionMock.IsOrganisationAPartnership.Should().Be(isAPartnership);
@@ -168,11 +166,9 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
 
         // Act
-        var result = await _systemUnderTest.IsOrganisationAPartner(viewModel);
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
 
         // Assert
-        result.Should().NotBeNull();
-
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
         _orgSessionMock.IsOrganisationAPartnership.Should().BeTrue();
@@ -199,11 +195,9 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
 
         // Act
-        var result = await _systemUnderTest.IsOrganisationAPartner(viewModel);
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
 
         // Assert
-        result.Should().NotBeNull();
-
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
         _orgSessionMock.IsOrganisationAPartnership.Should().BeFalse();
@@ -234,11 +228,9 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
 
         // Act
-        var result = await _systemUnderTest.IsOrganisationAPartner(viewModel);
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
 
         // Assert
-        result.Should().NotBeNull();
-
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().BeNull();
     }

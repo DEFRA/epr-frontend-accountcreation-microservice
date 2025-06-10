@@ -270,4 +270,154 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
             )),
             Times.Once);
     }
+
+    [TestMethod]
+    public async Task PartnershipType_Post_WhenTypeNotPresentInSession_DoesNotClearSession()
+    {
+        // Arrange
+        var model = new PartnershipTypeRequestViewModel
+        {
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedPartnership
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new(),
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.PartnershipType(model);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+    }
+
+    [TestMethod]
+    public async Task PartnershipType_Post_WhenTypeStaysAsLimitedPartnership_DoesNotClearLpSession()
+    {
+        // Arrange
+        var model = new PartnershipTypeRequestViewModel
+        {
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedPartnership
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new ReExPartnership { IsLimitedPartnership = true, IsLimitedLiabilityPartnership = false, LimitedPartnership = new() },
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.PartnershipType(model);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Should().NotBeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task PartnershipType_Post_WhenTypeStaysAsLimitedLiabilityPartnership_DoesNoClearLlpSession()
+    {
+        // Arrange
+        var model = new PartnershipTypeRequestViewModel
+        {
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedLiabilityPartnership
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new ReExPartnership { IsLimitedPartnership = false, IsLimitedLiabilityPartnership = true, LimitedLiabilityPartnership = new() },
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.PartnershipType(model);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.Should().NotBeNull();
+    }
+
+    [TestMethod]
+    public async Task PartnershipType_Post_WhenTypeChangesToLimitedLiabilityPartnership_ClearsLpSession()
+    {
+        // Arrange
+        var model = new PartnershipTypeRequestViewModel
+        {
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedLiabilityPartnership
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new ReExPartnership { IsLimitedPartnership = true, IsLimitedLiabilityPartnership = false, LimitedPartnership = new() },
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.PartnershipType(model);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership.Should().BeTrue();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task PartnershipType_Post_WhenTypeChangesToLimitedPartnership_ClearsLlpSession()
+    {
+        // Arrange
+        var model = new PartnershipTypeRequestViewModel
+        {
+            TypeOfPartnership = Core.Sessions.PartnershipType.LimitedPartnership
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new ReExPartnership { IsLimitedPartnership = false, IsLimitedLiabilityPartnership = true, LimitedLiabilityPartnership = new() },
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.PartnershipType(model);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership.Should().BeTrue();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership.Should().BeFalse();
+    }
 }
