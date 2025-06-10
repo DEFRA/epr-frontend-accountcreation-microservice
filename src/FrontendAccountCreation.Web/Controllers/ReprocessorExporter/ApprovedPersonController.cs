@@ -439,6 +439,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.SoleTraderContinue)]
         public async Task<IActionResult> SoleTraderContinue()
         {
+            //to-do: will this mean going back will loop forward?
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderContinue,  PagePath.CheckYourDetails);
