@@ -466,10 +466,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var session = new OrganisationSession
         {
             IsIndividualInCharge = true,
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                ProducerType = ProducerType.UnincorporatedBody // not a sole trader
-            }
+            ReExManualInputSession = null
         };
 
         _sessionManagerMock
