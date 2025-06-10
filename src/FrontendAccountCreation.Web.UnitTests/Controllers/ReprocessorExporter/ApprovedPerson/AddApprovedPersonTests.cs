@@ -689,4 +689,28 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _systemUnderTest.GetFocusId().Should().Be(focusId);
     }
 
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisationAddAnother_DeletesFocusIdAndRedirectsToTeamMemberRoleInOrganisation()
+    {
+        // Arrange
+        var session = new OrganisationSession();
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Mock TempData for DeleteFocusId
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        tempDataMock.Setup(t => t.Remove("FocusId")).Returns(true); // Simulate successful removal
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationAddAnother();
+
+        // Assert
+        _sessionManagerMock.Verify(s => s.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        tempDataMock.Verify(t => t.Remove("FocusId"), Times.Once);
+
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+        redirectResult.ControllerName.Should().BeNull(); // Assuming it redirects within the same controller
+    }
+
 }
