@@ -698,10 +698,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
         }
 
-        //to-do: we skip to a later page here to handle out-of-order build
-        //return await SaveSessionAndRedirect(session, nameof(NotApprovedPerson),
-        //    PagePath.SoleTrader, PagePath.NotApprovedPerson);
-
+        //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.SoleTraderTeamMemberDetails),
             PagePath.SoleTrader, PagePath.SoleTraderTeamMemberDetails);
     }
