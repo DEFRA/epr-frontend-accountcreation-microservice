@@ -371,7 +371,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         var wasOrganisationAPartnership = session.IsOrganisationAPartnership;
         var isOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
 
-        // clear existing session values when the user changes their original descision
+        // clear existing session values when the user changes their original decision
         if (wasOrganisationAPartnership.HasValue && (wasOrganisationAPartnership != isOrganisationAPartnership))
         {
             session.ReExCompaniesHouseSession.Partnership = null; // partnership details
