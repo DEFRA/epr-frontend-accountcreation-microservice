@@ -1,8 +1,8 @@
 ﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
-using System.Security.Claims;
 using Core.Services;
 using Core.Services.FacadeModels;
+using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using Microsoft.AspNetCore.Http;
@@ -11,15 +11,16 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using System.Security.Claims;
 using Web.Configs;
 using Web.Sessions;
 
 /// <summary>
-/// Used for selection of approved team members - directors and comapny secretary.
+/// Used for selection of approved team members - directors and company secretary.
 /// </summary>
 public abstract class ApprovedPersonTestBase
 {
-    protected const string PostcodeLookupFailedKey = "PostcodeLookupFailed";
+    private const string BackLinkViewDataKey = "BackLinkToDisplay";
     protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
@@ -72,5 +73,12 @@ public abstract class ApprovedPersonTestBase
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         _systemUnderTest.TempData = _tempDataDictionaryMock.Object;
+    }
+
+    protected static void AssertBackLink(ViewResult viewResult, string expectedBackLink)
+    {
+        var hasBackLinkKey = viewResult.ViewData.TryGetValue(BackLinkViewDataKey, out var gotBackLinkObject);
+        hasBackLinkKey.Should().BeTrue();
+        (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
     }
 }
