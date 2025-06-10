@@ -7,6 +7,7 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
@@ -103,7 +104,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be(nameof(ApprovedPersonController.YouAreApprovedPerson));
     }
-
 
     [TestMethod]
     public async Task AddApprovedPerson_InviteAnotherApprovedPerson_RedirectsToTeamMemberRoleInOrganisation()
@@ -423,5 +423,406 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         model.IsLimitedLiablePartnership.Should().BeFalse();
     }
 
+    [TestMethod]
+    public async Task AddApprovedPerson_InviteAnotherPerson_PartnershipIsLimitedLiability_RedirectsToMemberPartnership()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = new ReExPartnership
+                {
+                    IsLimitedLiabilityPartnership = true
+                }
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.MemberPartnership));
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Get_WhenReExCompaniesHouseSessionIsNull_SetsDefaultModelValues()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = null // <- this triggers all `?? false` fallback logic
+        };
+
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        _sessionManagerMock.Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), session)).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as AddApprovedPersonViewModel;
+        model.Should().NotBeNull();
+        model.IsInEligibleToBeApprovedPerson.Should().BeFalse();
+        model.IsLimitedPartnership.Should().BeFalse();
+        model.IsLimitedLiablePartnership.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task Post_AddApprovedPerson_WhenInviteAnotherPersonAndLLPTrue_RedirectsToMemberPartnership()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = new FrontendAccountCreation.Core.Sessions.ReEx.Partnership.ReExPartnership
+                {
+                    IsLimitedLiabilityPartnership = true
+                }
+            }
+        };
+
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.MemberPartnership));
+    }
+
+    [TestMethod]
+    public async Task Post_AddApprovedPerson_WhenInviteUserOptionIsUnknown_RedirectsToCheckYourDetails()
+    {
+        var session = new OrganisationSession();
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = "InvalidOption"
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
+    }
+
+    [TestMethod]
+    public async Task Post_AddApprovedPerson_WhenReExCompaniesHouseSessionIsNull_RedirectsToTeamMemberRoleInOrganisation()
+    {
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = null
+        };
+
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_InviteUserOption_StoredInSessionAsEnum()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteLater.ToString()
+        };
+
+        var session = new OrganisationSession();
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        session.InviteUserOption.Should().Be(InviteUserOptions.InviteLater);
+
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Get_PopulatesInviteUserOptionFromSession()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            InviteUserOption = InviteUserOptions.BeAnApprovedPerson
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock
+            .Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var model = viewResult.Model.Should().BeOfType<AddApprovedPersonViewModel>().Subject;
+        model.InviteUserOption.Should().Be(InviteUserOptions.BeAnApprovedPerson.ToString());
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Get_WithFocusIdFromTempData_SetsFocusIdInController()
+    {
+        // Arrange
+        var focusId = Guid.NewGuid();
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        tempDataMock.Setup(t => t["FocusId"]).Returns(focusId.ToString());
+
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        // Act
+        await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        _systemUnderTest.GetFocusId().Should().Be(focusId);
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Post_InviteAnotherPerson_NotPartnershipLLP_RedirectsToTeamMemberRoleInOrganisation()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false, // Not a partnership
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = new ReExPartnership
+                {
+                    IsLimitedLiabilityPartnership = false // Not LLP
+                }
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_Post_WithFocusId_KeepsFocusIdInController()
+    {
+        var focusId = Guid.NewGuid();
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        var tempDataStorage = new Dictionary<string, object>();
+
+        tempDataMock.Setup(t => t[It.IsAny<string>()])
+            .Returns((string key) => tempDataStorage.TryGetValue(key, out var value) ? value : null);
+
+        tempDataMock.SetupSet(t => t[It.IsAny<string>()] = It.IsAny<object>())
+            .Callback((string key, object value) => tempDataStorage[key] = value);
+
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        _systemUnderTest.SetFocusId(focusId);
+
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteLater.ToString()
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(new OrganisationSession());
+
+        await _systemUnderTest.AddApprovedPerson(model);
+
+        _systemUnderTest.GetFocusId().Should().Be(focusId);
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisationAddAnother_DeletesFocusIdAndRedirectsToTeamMemberRoleInOrganisation()
+    {
+        // Arrange
+        var session = new OrganisationSession();
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Mock TempData for DeleteFocusId
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        tempDataMock.Setup(t => t.Remove("FocusId")).Returns(true); // Simulate successful removal
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationAddAnother();
+
+        // Assert
+        _sessionManagerMock.Verify(s => s.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        tempDataMock.Verify(t => t.Remove("FocusId"), Times.Once);
+
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+        redirectResult.ControllerName.Should().BeNull(); // Assuming it redirects within the same controller
+    }
+
+    [TestMethod]
+    public async Task YouAreApprovedPerson_Get_ReturnsViewWithCorrectViewModel()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Partnership = new ReExPartnership
+                {
+                    IsLimitedLiabilityPartnership = true,
+                    IsLimitedPartnership = false
+                }
+            }
+        };
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Mock TempData for GetFocusId and SetFocusId
+        var focusId = Guid.NewGuid();
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        var tempDataStorage = new Dictionary<string, object>();
+        tempDataMock.Setup(t => t[It.IsAny<string>()])
+                    .Returns((string key) => tempDataStorage.TryGetValue(key, out var value) ? value : null);
+        tempDataMock.SetupSet(t => t[It.IsAny<string>()] = It.IsAny<object>())
+                    .Callback((string key, object value) => tempDataStorage[key] = value);
+
+        _systemUnderTest.TempData = tempDataMock.Object;
+        _systemUnderTest.SetFocusId(focusId); // Set a focus ID in TempData before the action is called
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        _sessionManagerMock.Verify(s => s.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        _sessionManagerMock.Verify(s => s.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
+
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
+        model.IsLimitedLiabilityPartnership.Should().BeTrue();
+        model.IsLimitedPartnership.Should().BeFalse();
+        _systemUnderTest.GetFocusId().Should().Be(focusId); // Verify FocusId is still available
+    }
+
+    [TestMethod]
+    public async Task YouAreApprovedPerson_Get_NoPartnershipDetails_ReturnsViewWithDefaultViewModel()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = null // No Companies House session
+        };
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
+        model.IsLimitedLiabilityPartnership.Should().BeFalse();
+        model.IsLimitedPartnership.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task YouAreApprovedPerson_Get_PartnershipNoReExCompaniesHouseSession_ReturnsViewWithDefaultViewModel()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = null
+        };
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
+        model.IsLimitedLiabilityPartnership.Should().BeFalse();
+        model.IsLimitedPartnership.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task YouAreApprovedPerson_Get_NoFocusId_FocusIdStaysNull()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession()
+        };
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Ensure TempData doesn't contain FocusId
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        tempDataMock.Setup(t => t["FocusId"]).Returns(null); // Explicitly state no FocusId
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        // Act
+        await _systemUnderTest.YouAreApprovedPerson();
+
+        // Assert
+        _systemUnderTest.GetFocusId().Should().BeNull();
+    }
 
 }

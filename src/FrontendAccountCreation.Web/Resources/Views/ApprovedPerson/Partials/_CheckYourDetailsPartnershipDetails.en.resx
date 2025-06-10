@@ -117,13 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CheckYourDetails.FirstName" xml:space="preserve">
-    <value>First name</value>
-  </data>
-  <data name="CheckYourDetails.PartnersSectionTitle" xml:space="preserve">
+  <data name="_CheckYourDetailsPartnershipDetails.PartnersSectionTitle" xml:space="preserve">
     <value>Partners within a limited partnership</value>
   </data>
-  <data name="CheckYourDetails.PartnersFirstName" xml:space="preserve">
-    <value>First name</value>
+  <data name="_CheckYourDetailsPartnershipDetails.Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="_CheckYourDetailsPartnershipDetails.FullName" xml:space="preserve">
+    <value>Full name</value>
   </data>
 </root>

@@ -43,4 +43,23 @@ public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
         redirect.ActionName.Should().Be("CheckYourDetails");
         redirect.ControllerName.Should().Be("AccountCreation");
     }
+
+    [TestMethod]
+    public void PersonCanNotBeInvited_Post_ReturnsRedirectToCheckYourDetails()
+    {
+        // Arrange
+        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        {
+            Id = Guid.NewGuid()
+        };
+
+        // Act
+        var result = _systemUnderTest.PersonCanNotBeInvited(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = result as RedirectToActionResult;
+        redirect!.ActionName.Should().Be("CheckYourDetails");
+        redirect.ControllerName.Should().Be("AccountCreation");
+    }
 }
