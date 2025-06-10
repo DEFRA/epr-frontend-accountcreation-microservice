@@ -3,6 +3,7 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -35,8 +36,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.AddAnApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
+
             var model = new AddApprovedPersonViewModel
             {
+                InviteUserOption = session.InviteUserOption?.ToString(),
                 IsOrganisationAPartnership = session.IsOrganisationAPartnership,
                 IsInEligibleToBeApprovedPerson =
                     session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
@@ -64,18 +72,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
+            session.InviteUserOption = session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+
+            if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
             {
                 session.IsApprovedUser = true;
                 return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
 
-            if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
+            if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
-                return session.IsOrganisationAPartnership == true &&
-                       session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership == true
+                return session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true }
                     ? await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.AddAnApprovedPerson, PagePath.MemberPartnership)
                     : await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+            }
+
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
@@ -90,26 +105,41 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.TeamMemberRoleInOrganisation);
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            var isLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership == true;
+            var isLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership == true;
+
 
             var viewModel = new TeamMemberRoleInOrganisationViewModel();
-
+            var llpViewModel = new IsMemberPartnershipViewModel();
+            
             var id = GetFocusId();
             if (id.HasValue)
             {
                 var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
                 if (index is >= 0)
                 {
-                    viewModel.Id = id;
-                    viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Role;
-                    return session.IsOrganisationAPartnership == true
-                        ? View("ApprovedPersonPartnershipRole", viewModel)
-                        : View(viewModel);
+                    if (isLimitedLiabilityPartnership)
+                    {
+                        llpViewModel.Id = id;
+                        llpViewModel.IsMemberPartnership =
+                            session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role.ToString().ToEnumOrNull<YesNoAnswer>();
+                    }
+                    else
+                    {
+                        viewModel.Id = id;
+                        viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Role;
+                    }
                 }
             }
 
-            return session.IsOrganisationAPartnership == true
-                ? View("ApprovedPersonPartnershipRole", viewModel)
-                : View(viewModel);
+            if (isLimitedPartnership)
+            {
+                return View("ApprovedPersonPartnershipRole", viewModel);
+            }
+
+            return isLimitedLiabilityPartnership ? 
+                View("MemberPartnership", llpViewModel) : 
+                View(viewModel);
         }
 
         [HttpPost]
@@ -195,7 +225,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.TeamMemberRoleInOrganisationAdd)]
-        [OrganisationJourneyAccess(PagePath.TeamMemberRoleInOrganisation)]
         public async Task<IActionResult> TeamMemberRoleInOrganisationAdd()
         {
             DeleteFocusId();
@@ -216,6 +245,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.TeamMemberRoleInOrganisation),
                 PagePath.TeamMemberRoleInOrganisation, null);
+        }
+
+        [HttpGet]
+        [Route(PagePath.TeamMemberRoleInOrganisationAddAnother)]
+        [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
+        public async Task<IActionResult> TeamMemberRoleInOrganisationAddAnother()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.YouAreApprovedPerson);
+            DeleteFocusId();
+            return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
+                PagePath.YouAreApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
         }
 
         [HttpGet]
@@ -354,6 +395,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false)
             };
 
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
+
             return View(approvedPersonViewModel);
         }
 
@@ -385,7 +432,21 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.MemberPartnership);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var viewModel = new IsMemberPartnershipViewModel();
+            bool? boolValue = null;
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
+                boolValue = index is >= 0;
+
+                SetFocusId(id.Value);
+            }
+
+            var viewModel = new IsMemberPartnershipViewModel
+            {
+                IsMemberPartnership = boolValue.HasValue ? (boolValue.Value ? YesNoAnswer.Yes : YesNoAnswer.No) : null
+            };
+
             return View(viewModel);
         }
 
@@ -423,7 +484,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 if (model.IsMemberPartnership == YesNoAnswer.Yes)
                 {
                     queryStringId = Guid.NewGuid();
-                    
+
                     session.ReExCompaniesHouseSession.TeamMembers ??= new List<ReExCompanyTeamMember>();
                     session.ReExCompaniesHouseSession.TeamMembers.Add(new ReExCompanyTeamMember
                     {
@@ -443,8 +504,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.MemberPartnershipAdd)]
         public async Task<IActionResult> MemberPartnershipAdd()
         {
-            DeleteFocusId();
-
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
             return await SaveSessionAndRedirect(session, nameof(MemberPartnership),
@@ -487,6 +546,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     viewModel.Telephone = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.TelephoneNumber;
                     viewModel.Email = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Email;
                 }
+
+                SetFocusId(id.Value);
             }
 
             return View(viewModel);
@@ -506,12 +567,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
             var members = companiesHouseSession.TeamMembers ?? new();
             var index = members.FindIndex(0, x => x.Id.Equals(model?.Id));
-            bool isExistingMember = false;
-            if (index >= 0)
-            {
-                // check the email, but any field other than Id will do
-                isExistingMember = members[index].Email?.Length > 0;
-            }
+            bool isExistingMember = index >= 0;
             var id = model?.Id ?? Guid.NewGuid();
 
             if (isExistingMember)
@@ -530,6 +586,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     LastName = model?.LastName,
                     TelephoneNumber = model.Telephone,
                     Email = model?.Email,
+                    Role = ReExTeamMemberRole.Member
                 });
             }
 
@@ -615,7 +672,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.CanNotInviteThisPerson)]    
+        [Route(PagePath.CanNotInviteThisPerson)]
         [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
         public async Task<IActionResult> CanNotInviteThisPerson([FromQuery] Guid id)
         {
@@ -626,12 +683,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
         }
 
+        [HttpGet]
+        [Route(PagePath.CanNotInviteThisPersonAddEligible)]
+        [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
+        public async Task<IActionResult> CanNotInviteThisPersonAddEligible()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            DeleteFocusId();
+            return await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.CanNotInviteThisPerson, PagePath.MemberPartnership);
+        }
+
         [HttpPost]
         [Route(PagePath.CanNotInviteThisPerson)]
         [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
-        public IActionResult CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        public async Task<IActionResult> CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
         {
-            return RedirectToAction("CheckYourDetails", "AccountCreation");
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails);
+
         }
     }
 }

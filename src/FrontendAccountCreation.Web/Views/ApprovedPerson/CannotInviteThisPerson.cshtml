@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-
-@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
+﻿@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
 
 @{
     ViewData["Title"] = Localizer["CannotInviteThisPerson.Title"];
@@ -10,7 +8,7 @@
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-
+                <form method="post">
                 @await Html.PartialAsync("Partials/_CannotBeInvited")
 
                 <div class="govuk-button-group">
@@ -19,13 +17,12 @@
                     </button>
 
                     <a class="govuk-link"
-                       asp-action="TeamMemberRoleInOrganisation"
-                       asp-controller="ApprovedPerson"
-                       asp-route-id="@Model.Id">
+                           asp-action="CanNotInviteThisPersonAddEligible"
+                       asp-controller="ApprovedPerson">
                         @Localizer["CannotInviteThisPerson.InviteEligiblePerson"]
                     </a>
                 </div>
-
+                </form>
             </div>
         </div>
     </main>

@@ -48,6 +48,7 @@ public static class PagePath
     public const string AddAnApprovedPerson = "add-an-approved-person";
 
     public const string TeamMemberRoleInOrganisation = "check-companies-house-role";
+    public const string TeamMemberRoleInOrganisationAddAnother = "check-companies-house-role/add-another";
     public const string TeamMemberRoleInOrganisationAdd = "check-companies-house-role/add";
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
 
@@ -65,6 +66,7 @@ public static class PagePath
 
     public const string PartnerDetails = "partner-details";
     public const string CanNotInviteThisPerson = "cannot-invite-this-person";
+    public const string CanNotInviteThisPersonAddEligible = "cannot-invite-this-person/add-eligble";
     public const string CheckPartnerInvitation = "check-partner-invitation";
 
     // Limited partnership paths
