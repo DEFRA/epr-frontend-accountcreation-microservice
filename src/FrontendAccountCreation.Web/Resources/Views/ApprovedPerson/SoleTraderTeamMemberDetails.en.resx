@@ -129,9 +129,6 @@
   <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
     <value>First name must be 50 characters or less</value>
   </data>
-  <data name="TeamMemberDetails.FullName" xml:space="preserve">
-    <value>Full name</value>
-  </data>
   <data name="TeamMemberDetails.Header" xml:space="preserve">
     <value>What are their details?</value>
   </data>
@@ -154,7 +151,7 @@
     <value>Telephone</value>
   </data>
   <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>Team Invite</value>
+    <value>Team Member Details</value>
   </data>
   <data name="TeamMemberDetails.TelephoneNumberEmptyErrorMessage" xml:space="preserve">
     <value>Enter a telephone number</value>
