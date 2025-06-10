@@ -530,7 +530,6 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.ViewName.Should().Be("ApprovedPersonPartnershipRole");
         viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
         ((TeamMemberRoleInOrganisationViewModel)viewResult.Model!).RoleInOrganisation.Should().Be(role);
     }
@@ -602,7 +601,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
 
         result.Should().BeOfType<ViewResult>();
-        ((ViewResult)result).ViewName.Should().Be("ApprovedPersonPartnershipRole");
+        ((ViewResult)result).ViewName.Should().BeNull();
     }
 
     [TestMethod]

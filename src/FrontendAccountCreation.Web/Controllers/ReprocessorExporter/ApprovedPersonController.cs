@@ -434,17 +434,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             bool? boolValue = null;
             var id = GetFocusId();
-            if (id.HasValue)
+            if (id.HasValue && session.ReExCompaniesHouseSession?.TeamMembers != null)
             {
-                var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
-                boolValue = index is >= 0;
-
-                SetFocusId(id.Value);
+                var index = session.ReExCompaniesHouseSession.TeamMembers.FindIndex(0, x => x.Id.Equals(id));
+                if (index is >= 0)
+                {
+                    boolValue = true;
+                    SetFocusId(id.Value);
+                }
+                else
+                {
+                    boolValue = false;
+                }
             }
 
             var viewModel = new IsMemberPartnershipViewModel
             {
-                IsMemberPartnership = boolValue.HasValue ? (boolValue.Value ? YesNoAnswer.Yes : YesNoAnswer.No) : null
+                IsMemberPartnership = boolValue.HasValue
+                    ? (boolValue.Value ? YesNoAnswer.Yes : YesNoAnswer.No)
+                    : null
             };
 
             return View(viewModel);

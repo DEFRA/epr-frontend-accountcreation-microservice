@@ -5,6 +5,7 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
@@ -238,5 +239,153 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
 
         result.Should().BeOfType<RedirectToActionResult>();
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.MemberPartnership));
+    }
+
+    [TestMethod]
+    public async Task Get_MemberPartnership_WithFocusId_ExistingTeamMember_SetsModelToYes()
+    {
+        // Arrange
+        var focusId = Guid.NewGuid();
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>
+                {
+                    new ReExCompanyTeamMember { Id = focusId, Role = ReExTeamMemberRole.Member }
+                }
+            }
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        var tempDataStorage = new Dictionary<string, object>();
+        tempDataMock.Setup(t => t[It.IsAny<string>()])
+            .Returns((string key) => tempDataStorage.TryGetValue(key, out var value) ? value : null);
+        tempDataMock.SetupSet(t => t[It.IsAny<string>()] = It.IsAny<object>())
+            .Callback((string key, object value) => tempDataStorage[key] = value);
+        _systemUnderTest.TempData = tempDataMock.Object;
+        _systemUnderTest.SetFocusId(focusId);
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<IsMemberPartnershipViewModel>().Subject;
+        model.Id.Should().BeNull(); 
+        model.IsMemberPartnership.Should().Be(YesNoAnswer.Yes);
+        _systemUnderTest.GetFocusId().Should().Be(focusId);
+    }
+
+    [TestMethod]
+    public async Task Get_MemberPartnership_WithFocusId_NonExistingTeamMember_SetsModelToNo()
+    {
+        var focusId = Guid.NewGuid();
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        var tempDataStorage = new Dictionary<string, object>();
+        tempDataMock.Setup(t => t[It.IsAny<string>()])
+            .Returns((string key) => tempDataStorage.TryGetValue(key, out var value) ? value : null);
+        tempDataMock.SetupSet(t => t[It.IsAny<string>()] = It.IsAny<object>())
+            .Callback((string key, object value) => tempDataStorage[key] = value);
+        _systemUnderTest.TempData = tempDataMock.Object;
+        _systemUnderTest.SetFocusId(focusId);
+
+        var result = await _systemUnderTest.MemberPartnership();
+
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<IsMemberPartnershipViewModel>().Subject;
+        model.Id.Should().BeNull();
+        model.IsMemberPartnership.Should().Be(YesNoAnswer.No);
+        _systemUnderTest.GetFocusId().Should().Be(focusId);
+    }
+   
+    [TestMethod]
+    public async Task Get_MemberPartnership_NoFocusId_ViewModelIsMemberPartnershipIsNull()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        tempDataMock.Setup(t => t["FocusId"]).Returns(null);
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<IsMemberPartnershipViewModel>().Subject;
+        model.Id.Should().BeNull();
+        model.IsMemberPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task Get_MemberPartnership_ReExCompaniesHouseSessionIsNull_ViewModelIsMemberPartnershipIsNull()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = null
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        tempDataMock.Setup(t => t["FocusId"]).Returns(Guid.NewGuid().ToString()); // Has a focus ID
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<IsMemberPartnershipViewModel>().Subject;
+        model.Id.Should().BeNull(); // FocusId check will return null if session.ReExCompaniesHouseSession is null
+        model.IsMemberPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task Get_MemberPartnership_ReExCompaniesHouseSessionTeamMembersIsNull_ViewModelIsMemberPartnershipIsNull()
+    {
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = null
+            }
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        tempDataMock.Setup(t => t["FocusId"]).Returns(Guid.NewGuid().ToString());
+        _systemUnderTest.TempData = tempDataMock.Object;
+
+        var result = await _systemUnderTest.MemberPartnership();
+
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<IsMemberPartnershipViewModel>().Subject;
+        model.Id.Should().BeNull();
+        model.IsMemberPartnership.Should().BeNull();
     }
 }
