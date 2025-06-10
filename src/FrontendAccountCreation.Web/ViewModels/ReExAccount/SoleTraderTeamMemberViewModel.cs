@@ -15,12 +15,10 @@ public class SoleTraderTeamMemberViewModel
     [TeamMemberTelephoneNumberValidation(ErrorMessage = "TeamMemberDetails.TelephoneNumberInvalidErrorMessage")]
     public string? Telephone { get; set; }
 
-    //todo: test error for too long
     [Required(ErrorMessage = "TeamMemberDetails.FirstNameErrorMessage")]
     [MaxLength(50, ErrorMessage = "TeamMemberDetails.FirstNameLengthErrorMessage")]
     public string? FirstName { get; set; }
 
-    //todo: test error for too long
     [Required(ErrorMessage = "TeamMemberDetails.LastNameErrorMessage")]
     [MaxLength(50, ErrorMessage = "TeamMemberDetails.LastNameLengthErrorMessage")]
     public string? LastName { get; set; }
