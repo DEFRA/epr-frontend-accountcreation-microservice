@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
@@ -541,8 +542,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> ConfirmDetailsOfTheCompany()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var company = session.ReExCompaniesHouseSession.Company;
 
-        if (session.ReExCompaniesHouseSession.Company.AccountExists)
+        if (company.AccountExists)
         {
             return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails,
                 PagePath.AccountAlreadyExists);
@@ -550,6 +552,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
 
+        if (session.IsCompaniesHouseFlow && NationMapper.TryMapToNation(company.BusinessAddress.Country, out Nation nation) && nation != Nation.NotSet)
+        {
+            session!.UkNation = nation;
+            if (!session.WhiteList.Contains(PagePath.UkNation))
+            {
+                session.WhiteList.Add(PagePath.UkNation);
+            }
+            return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.ConfirmCompanyDetails, PagePath.IsTradingNameDifferent);
+        }
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
     }
 
@@ -680,8 +691,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson),
-                PagePath.SoleTrader, PagePath.ManageAccountPerson);
+            return await SaveSessionAndRedirect(session,
+                controllerName: nameof(ApprovedPersonController),
+                actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
+                currentPagePath: PagePath.SoleTrader, 
+                nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
         }
 
         //to-do: we skip to a later page here to handle out-of-order build
@@ -690,15 +704,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.SoleTraderTeamMemberDetails),
             PagePath.SoleTrader, PagePath.SoleTraderTeamMemberDetails);
-    }
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public Task<IActionResult> ManageAccountPerson()
-    {
-        return PlaceholderPageGet(PagePath.ManageAccountPerson);
     }
 
     //to-do: is not-approved-person page actually a form of the approved person page?

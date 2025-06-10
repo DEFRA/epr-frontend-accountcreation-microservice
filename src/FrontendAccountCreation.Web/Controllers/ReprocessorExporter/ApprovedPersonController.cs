@@ -9,6 +9,8 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -419,6 +421,27 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 : nameof(CheckYourDetails);
 
             return await SaveSessionAndRedirect(session, nextAction, PagePath.YouAreApprovedPerson, nextPage);
+        }
+
+        [HttpGet]
+        [Route(PagePath.YouAreApprovedPersonSoleTrader)]
+        [OrganisationJourneyAccess(PagePath.YouAreApprovedPersonSoleTrader)]
+        public async Task<IActionResult> YouAreApprovedPersonSoleTrader()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View();
+        }
+
+        [HttpGet]
+        [Route(PagePath.SoleTraderContinue)]
+        public async Task<IActionResult> SoleTraderContinue()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderContinue,  PagePath.CheckYourDetails);
         }
 
         [HttpGet]
