@@ -287,10 +287,13 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = true,
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new(),
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -301,6 +304,9 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
 
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.InviteAnotherPerson);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
     }
 
     [TestMethod]
@@ -315,10 +321,13 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = true,
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new ReExPartnership { IsLimitedPartnership = true, IsLimitedLiabilityPartnership = false, LimitedPartnership = new() },
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -331,6 +340,9 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.Should().BeNull();
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.InviteAnotherPerson);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
     }
 
     [TestMethod]
@@ -345,10 +357,13 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = true,
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new ReExPartnership { IsLimitedPartnership = false, IsLimitedLiabilityPartnership = true, LimitedLiabilityPartnership = new() },
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -361,6 +376,9 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.Should().NotBeNull();
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.InviteAnotherPerson);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
     }
 
     [TestMethod]
@@ -375,10 +393,13 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = true,
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new ReExPartnership { IsLimitedPartnership = true, IsLimitedLiabilityPartnership = false, LimitedPartnership = new() },
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -392,6 +413,9 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership.Should().BeTrue();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership.Should().BeFalse();
+        _orgSessionMock.InviteUserOption.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(false);
     }
 
     [TestMethod]
@@ -406,10 +430,13 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = true,
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new ReExPartnership { IsLimitedPartnership = false, IsLimitedLiabilityPartnership = true, LimitedLiabilityPartnership = new() },
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -423,5 +450,8 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership.Should().BeTrue();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership.Should().BeFalse();
+        _orgSessionMock.InviteUserOption.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(false);
     }
 }
