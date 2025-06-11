@@ -513,6 +513,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsRegisteredAsCharity = session.IsTheOrganisationCharity,
                 OrganisationType = session.OrganisationType,
                 IsTradingNameDifferent = session.IsTradingNameDifferent,
+                IsManualInputFlow = !session.IsCompaniesHouseFlow,
                 Nation = session.UkNation
             };
             if (viewModel.IsCompaniesHouseFlow)
@@ -524,12 +525,23 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
                 viewModel.LimitedPartnershipPartners = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
                 viewModel.IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+                viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
             }
-            if (session.ReExManualInputSession != null)
+            else if (viewModel.IsManualInputFlow)
             {
-                viewModel.TradingName = session.ReExManualInputSession.TradingName;
+                viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
+                viewModel.ProducerType = session.ReExManualInputSession?.ProducerType;
+                viewModel.BusinessAddress = session.ReExManualInputSession?.BusinessAddress;
+                viewModel.TradingName = session.ReExManualInputSession?.TradingName;
+                var teamMember = session.ReExManualInputSession?.TeamMember;
+                viewModel.reExCompanyTeamMembers = new List<ReExCompanyTeamMember>();
+
+                if (teamMember != null)
+                {
+                    viewModel.reExCompanyTeamMembers.Add(teamMember);
+                }
             }
-            viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+            
             _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(viewModel);
