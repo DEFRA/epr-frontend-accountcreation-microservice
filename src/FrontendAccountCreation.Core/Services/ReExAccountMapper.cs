@@ -1,7 +1,9 @@
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using System;
 
 namespace FrontendAccountCreation.Core.Services;
 
@@ -31,28 +33,56 @@ public class ReExAccountMapper : IReExAccountMapper
             {
                 OrganisationId = reExOrganisationSession.ReExCompaniesHouseSession.Company?.OrganisationId ?? string.Empty,
                 OrganisationType = reExOrganisationSession.OrganisationType?.ToString() ?? OrganisationType.NotSet.ToString(),
+                ProducerType = GetProducerType(reExOrganisationSession),
                 CompanyName = reExOrganisationSession.ReExCompaniesHouseSession.Company?.Name,
                 CompaniesHouseNumber = reExOrganisationSession.ReExCompaniesHouseSession.Company?.CompaniesHouseNumber,
                 CompanyRegisteredAddress = GetCompanyAddress(reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress),
                 ValidatedWithCompaniesHouse = reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress is not null,
                 Nation = reExOrganisationSession.UkNation ?? Nation.NotSet
-            },                        
-            InvitedApprovedPersons = GetTeamMembersModel(reExOrganisationSession.ReExCompaniesHouseSession.TeamMembers)
+            },
+            InvitedApprovedPersons = GetTeamMembersModel(reExOrganisationSession.ReExCompaniesHouseSession.TeamMembers),
+            Partners = GetPartnersModel(reExOrganisationSession)
+
         };
+    }
+
+    private static string? GetProducerType(OrganisationSession reExOrganisationSession)
+    {
+        var producerType = ProducerType.NotSet.ToString();
+        if (reExOrganisationSession.IsCompaniesHouseFlow)
+        {
+            producerType = reExOrganisationSession.ReExCompaniesHouseSession.ProducerType?.ToString() ?? ProducerType.NotSet.ToString();
+        }
+        return producerType;
+    }
+
+    private List<ReExPartnerModel>? GetPartnersModel(OrganisationSession reExOrganisationSession)
+    {
+        List<ReExPartnerModel>? reExPartnerModels = null;
+        var partners = reExOrganisationSession?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.ToList();
+        if (partners is { Count: > 0 })
+        {
+            reExPartnerModels = [.. partners.Select(x => new ReExPartnerModel()
+            {
+                Name = x.Name,
+                PartnerRole = x.IsPerson ? PartnerType.IndividualPartner.GetDescription() : PartnerType.CompanyPartner.GetDescription(),
+            })];
+        }
+        return reExPartnerModels;
     }
 
     private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(IEnumerable<ReExCompanyTeamMember> teamMembers)
     {
         List<ReExInvitedApprovedPerson> approvedPeople = [];
-        
+
         foreach (var member in teamMembers ?? [])
         {
             var memberModel = new ReExInvitedApprovedPerson()
             {
-                Id = member.Id, 
+                Id = member.Id,
                 FirstName = member.FirstName,
                 LastName = member.LastName,
-                Email = member.Email,   
+                Email = member.Email,
                 Role = member.Role?.ToString() ?? null,
                 TelephoneNumber = member.TelephoneNumber
             };

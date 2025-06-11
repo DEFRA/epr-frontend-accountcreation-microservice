@@ -372,6 +372,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         {
             session.ReExCompaniesHouseSession.Partnership = null; // partnership details
             session.ReExCompaniesHouseSession.TeamMembers = null; // invitee details
+            session.ReExCompaniesHouseSession.ProducerType = null; //Setting producer to null as from here it can go to non paternship flow
         }
         session.IsOrganisationAPartnership = isOrganisationAPartnership;
 
