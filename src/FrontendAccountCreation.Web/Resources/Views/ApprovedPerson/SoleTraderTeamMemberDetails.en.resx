@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,28 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ReExTypeOfOrganisation.Title" xml:space="preserve">
-    <value>Math o sefydliad</value>
+  <data name="TeamMemberDetails.Email" xml:space="preserve">
+    <value>Email</value>
   </data>
-  <data name="ReExTypeOfOrganisation.Question" xml:space="preserve">
-    <value>Pa fath o fusnes rydych chi'n ei ychwanegu?</value>
+  <data name="TeamMemberDetails.FirstName" xml:space="preserve">
+    <value>First name</value>
   </data>
-  <data name="TypeOfOrganisation.NonUkOrganisation" xml:space="preserve">
-    <value>Sefydliad y tu allan i’r Deyrnas Unedig</value>
+  <data name="TeamMemberDetails.FirstNameErrorMessage" xml:space="preserve">
+    <value>Enter their first name</value>
   </data>
-  <data name="ReExTypeOfOrganisation.Partnership" xml:space="preserve">
-    <value>Partneriaeth o dan Ddeddf Partneriaethau 1890 (sydd yn aml yn cael ei galw'n bartneriaeth gyffredinol)</value>
+  <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
+    <value>First name must be 50 characters or less</value>
   </data>
-  <data name="ReExTypeOfOrganisation.SoleTrader" xml:space="preserve">
-    <value>Unigolyn (er enghraifft, unig fasnachwr)</value>
+  <data name="TeamMemberDetails.Header" xml:space="preserve">
+    <value>What are their details?</value>
   </data>
-  <data name="ReExTypeOfOrganisation.UnincorporatedBody" xml:space="preserve">
-    <value>Cymdeithas anghorfforedig</value>
+  <data name="TeamMemberDetails.HintEmail" xml:space="preserve">
+    <value>We ask for this so we can invite them to join your team.</value>
   </data>
-  <data name="TypeOfOrganisation.Other" xml:space="preserve">
-    <value>Arall</value>
+  <data name="TeamMemberDetails.HintTelephone" xml:space="preserve">
+    <value>We ask for this in case your regulator needs to call them directly with any queries.</value>
   </data>
-  <data name="ReExTypeOfOrganisation.ErrorMessage" xml:space="preserve">
-    <value>Dewiswch y math o fusnes rydych chi'n ei ychwanegu</value>
+  <data name="TeamMemberDetails.LastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="TeamMemberDetails.LastNameErrorMessage" xml:space="preserve">
+    <value>Enter their last name</value>
+  </data>
+  <data name="TeamMemberDetails.LastNameLengthErrorMessage" xml:space="preserve">
+    <value>Last name must be 50 characters or less</value>
+  </data>
+  <data name="TeamMemberDetails.Telephone" xml:space="preserve">
+    <value>Telephone</value>
+  </data>
+  <data name="TeamMemberDetails.Title" xml:space="preserve">
+    <value>Team Member Details</value>
+  </data>
+  <data name="TeamMemberDetails.TelephoneNumberEmptyErrorMessage" xml:space="preserve">
+    <value>Enter a telephone number</value>
+  </data>
+  <data name="TeamMemberDetails.TelephoneNumberInvalidErrorMessage" xml:space="preserve">
+    <value>Enter a valid telephone number, like 01642 123 456, 07777 777 777 or +33 1 23 45 67 88</value>
+  </data>
+  <data name="TeamMemberDetails.EmailEmptyErrorMessage" xml:space="preserve">
+    <value>Enter their email address</value>
+  </data>
+  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
+    <value>Enter a valid telephone number</value>
+  </data>
+  <data name="TeamMemberDetails.EmailInvalidErrorMessage" xml:space="preserve">
+    <value>Enter an email address with a name, @ symbol and a domain name, like yourname@example.com</value>
   </data>
 </root>
