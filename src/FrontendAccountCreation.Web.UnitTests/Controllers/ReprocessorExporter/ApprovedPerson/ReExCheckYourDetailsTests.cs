@@ -4,6 +4,7 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -358,7 +359,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = result as RedirectToActionResult;
 
-        redirectResult!.ActionName.Should().Be("check-your-details");
-        redirectResult.ControllerName.Should().Be("Declaration");
+        redirectResult!.ActionName.Should().Be(nameof(OrganisationController.Declaration));
+        redirectResult.ControllerName.Should().Be(nameof(OrganisationController).Replace("Controller", ""));
     }
 }

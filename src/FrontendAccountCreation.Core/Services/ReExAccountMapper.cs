@@ -27,8 +27,8 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             UserRoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation?.ToString() ?? null,
             IsApprovedUser = session.IsApprovedUser,
-            Company = session.ReExCompaniesHouseSession == null ? null : GetCompanyModel(session),
-            ManualInput = session.ReExManualInputSession == null ? null : GetManualInputModel(session),
+            Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
+            ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
             InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession)
         };
     }
@@ -39,7 +39,9 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
             ProducerType = session.ReExManualInputSession?.ProducerType,
-            TradingName = session.ReExManualInputSession?.TradingName
+            TradingName = session.ReExManualInputSession?.TradingName,
+            Nation = session.UkNation ?? Nation.NotSet,
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet
         };
     }
 
@@ -48,12 +50,13 @@ public class ReExAccountMapper : IReExAccountMapper
         return new ReExCompanyModel()
         {
             OrganisationId = session.ReExCompaniesHouseSession?.Company?.OrganisationId ?? string.Empty,
-            OrganisationType = session.OrganisationType?.ToString() ?? OrganisationType.NotSet.ToString(),
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
             CompanyName = session.ReExCompaniesHouseSession?.Company?.Name,
             CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company?.CompaniesHouseNumber,
             CompanyRegisteredAddress = GetAddressModel(session.ReExCompaniesHouseSession?.Company?.BusinessAddress),
             ValidatedWithCompaniesHouse = session.ReExCompaniesHouseSession?.Company?.BusinessAddress is not null,
-            Nation = session.UkNation ?? Nation.NotSet
+            Nation = session.UkNation ?? Nation.NotSet,
+            IsComplianceScheme = session.ReExCompaniesHouseSession?.IsComplianceScheme ?? false
         };
     }
 

@@ -77,7 +77,7 @@ public class SuccessTests : OrganisationTestBase
                     Country = "England"
                 },
                 Nation = Nation.England,
-                OrganisationType = OrganisationType.CompaniesHouseCompany.ToString(),
+                OrganisationType = OrganisationType.CompaniesHouseCompany,
                 ValidatedWithCompaniesHouse = true
             }
         };
