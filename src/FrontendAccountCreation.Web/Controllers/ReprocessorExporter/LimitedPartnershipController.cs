@@ -243,16 +243,14 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         var isLlp  = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
 
         // clear existing session values when the user changes their original decision
-        if (wasLp && !isLp)
+        if ((wasLp && !isLp) || (wasLlp && !isLlp))
         {
             partnershipSession.LimitedPartnership = null;
-            session.ReExCompaniesHouseSession.TeamMembers = null;
-        }
-
-        if (wasLlp && !isLlp)
-        {
             partnershipSession.LimitedLiabilityPartnership = null;
             session.ReExCompaniesHouseSession.TeamMembers = null;
+            session.ReExCompaniesHouseSession.RoleInOrganisation = null;
+            session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = false;
+            session.InviteUserOption = null;
         }
 
         partnershipSession.IsLimitedPartnership = isLp;

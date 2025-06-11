@@ -372,6 +372,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         {
             session.ReExCompaniesHouseSession.Partnership = null; // partnership details
             session.ReExCompaniesHouseSession.TeamMembers = null; // invitee details
+            session.ReExCompaniesHouseSession.RoleInOrganisation = null;
+            session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = false;
+            session.InviteUserOption = null;
         }
         session.IsOrganisationAPartnership = isOrganisationAPartnership;
 

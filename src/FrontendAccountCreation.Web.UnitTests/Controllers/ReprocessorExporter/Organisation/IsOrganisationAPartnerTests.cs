@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 
 using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -126,10 +127,13 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = wasAPartnership,
+            InviteUserOption = InviteUserOptions.None,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new(),
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -142,6 +146,9 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
         _orgSessionMock.IsOrganisationAPartnership.Should().Be(isAPartnership);
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.None);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
     }
 
     [TestMethod]
@@ -156,10 +163,13 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = true,
+            InviteUserOption = InviteUserOptions.None,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new(),
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -172,6 +182,9 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
         _orgSessionMock.IsOrganisationAPartnership.Should().BeTrue();
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.None);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
     }
 
     public async Task Post_IsOrganisationAPartner_WhenDecisionStaysAsNo_DoesNotClearSession()
@@ -185,10 +198,13 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = false,
+            InviteUserOption = InviteUserOptions.None,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new(),
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -201,6 +217,9 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
         _orgSessionMock.IsOrganisationAPartnership.Should().BeFalse();
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.None);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
     }
 
     [TestMethod]
@@ -218,10 +237,13 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         _orgSessionMock = new OrganisationSession
         {
             IsOrganisationAPartnership = wasAPartnership,
+            InviteUserOption = InviteUserOptions.None,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 TeamMembers = [],
                 Partnership = new(),
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
@@ -233,5 +255,8 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().BeNull();
+        _orgSessionMock.InviteUserOption.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(false);
     }
 }
