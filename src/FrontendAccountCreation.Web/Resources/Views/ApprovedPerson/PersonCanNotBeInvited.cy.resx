@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PersonCanNotBeInvited.ApplyForAccreditation" xml:space="preserve">
-    <value>[Welsh]apply for accreditation</value>
+    <value>Gwneud cais am achrediad</value>
   </data>
   <data name="PersonCanNotBeInvited.Explanation" xml:space="preserve">
     <value>[Welsh]You cannot invite this person to be an approved person but you can still continue to add the organisation.</value>
@@ -130,7 +130,7 @@
     <value>[Welsh]Invite an eligible person</value>
   </data>
   <data name="PersonCanNotBeInvited.SubmitAndVerify" xml:space="preserve">
-    <value>[Welsh]submit and verify data returns</value>
+    <value>Cyflwyno a dilysu ffurflenni data</value>
   </data>
   <data name="PersonCanNotBeInvited.Title" xml:space="preserve">
     <value>[Welsh]Person cannot be invited</value>
