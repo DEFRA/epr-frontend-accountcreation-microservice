@@ -245,7 +245,7 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
             {
                 Name = "Company1",
-                PartnerRole = PartnerType.CompanyPartner.GetDescription()
+                PartnerRole = PartnerType.CorporatePartner.GetDescription()
             });
         }
     }
