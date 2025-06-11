@@ -245,6 +245,8 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
                 TeamMembers = [],
                 Partnership = new(),
                 ProducerType = ProducerType.LimitedLiabilityPartnership,
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
             }
         };
 
