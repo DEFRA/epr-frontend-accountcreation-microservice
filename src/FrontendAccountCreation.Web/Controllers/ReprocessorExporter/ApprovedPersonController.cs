@@ -41,7 +41,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsInEligibleToBeApprovedPerson =
                     session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
-                IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false
+                IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
+                IsIndividualInCharge = session.IsIndividualInCharge ?? false,
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
             };
 
             return View(model);
@@ -53,6 +55,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            model.IsIndividualInCharge = session.IsIndividualInCharge ?? false;
+            model.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
 
             if (!ModelState.IsValid)
             {
@@ -64,6 +68,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
+            model.IsIndividualInCharge = session.IsIndividualInCharge ?? false;
+            model.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
+
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
                 session.IsApprovedUser = true;
@@ -72,6 +79,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
             {
+                if(model.IsSoleTrader && !model.IsIndividualInCharge)
+                {
+                    return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberDetails),
+                    PagePath.AddAnApprovedPerson, PagePath.SoleTraderTeamMemberDetails);
+                }
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
             }

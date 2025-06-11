@@ -2,17 +2,23 @@
 @using FrontendAccountCreation.Core.Sessions;
 @model AddApprovedPersonViewModel
 
+@{
+    var localizerPrefix = Model.IsSoleTrader
+        ? "AddNotApprovedPerson.SoleTrader."
+        : "AddNotApprovedPerson.";
+}
+
 <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
     <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
         @Localizer["AddNotApprovedPerson.Title"]
     </h1>
 
     <p class="govuk-body">
-        @Localizer["AddNotApprovedPerson.IntroText1"]
+        @Localizer[$"{localizerPrefix}IntroText1"]
     </p>
 
     <p class="govuk-body">
-        @Localizer["AddNotApprovedPerson.IntroText2"]
+        @Localizer[$"{localizerPrefix}IntroText2"]
     </p>
 
     <ul class="govuk-list govuk-list--bullet">
@@ -24,9 +30,11 @@
         @Localizer["AddNotApprovedPerson.InsetText"]
     </div>
 
-    <p class="govuk-body">
-        @Localizer["AddNotApprovedPerson.IntroText3"]
-    </p>
+    @if(!Model.IsSoleTrader){
+        <p class="govuk-body">
+            @Localizer["AddNotApprovedPerson.IntroText3"]
+        </p>
+    }
 
     <br />
     <h3 class="govuk-heading-s">
@@ -34,14 +42,15 @@
     </h3>
 
     <p class="govuk-body">
-        @Localizer["AddNotApprovedPerson.RolesInstruction"]
+        @Localizer[$"{localizerPrefix}RolesInstruction"]
     </p>
 
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@Localizer["AddNotApprovedPerson.Director"]</li>
-        <li>@Localizer["AddNotApprovedPerson.CompanySecretary"]</li>
-    </ul>
-
+    @if(!Model.IsSoleTrader){
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@Localizer["AddNotApprovedPerson.Director"]</li>
+            <li>@Localizer["AddNotApprovedPerson.CompanySecretary"]</li>
+        </ul>
+    }
     <h3 class="govuk-heading-s">
         @Localizer["AddNotApprovedPerson.UserHeading"]
     </h3>
@@ -62,7 +71,7 @@
                 <input class="govuk-radios__input" type="radio" id="rdoInviteNow"
                        name="InviteUserOption" value="@nameof(InviteUserOptions.InviteAnotherPerson)">
                 <label class="govuk-label govuk-radios__label" for="rdoInviteNow">
-                    @Localizer["AddNotApprovedPerson.InviteAnotherApprovedPerson"]
+                    @Localizer[$"{localizerPrefix}InviteAnotherApprovedPerson"]
                 </label>
             </div>
 
@@ -70,7 +79,7 @@
                 <input class="govuk-radios__input" type="radio" id="rdoInviteLater"
                        name="InviteUserOption" value="@nameof(InviteUserOptions.InviteLater)">
                 <label class="govuk-label govuk-radios__label" for="rdoInviteLater">
-                    @Localizer["AddNotApprovedPerson.InviteApprovedPersonLater"]
+                    @Localizer[$"{localizerPrefix}InviteApprovedPersonLater"]
                 </label>
             </div>
 

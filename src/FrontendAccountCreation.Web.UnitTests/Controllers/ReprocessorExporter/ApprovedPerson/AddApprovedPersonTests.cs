@@ -423,5 +423,65 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         model.IsLimitedLiablePartnership.Should().BeFalse();
     }
 
+    [TestMethod]
+    public async Task AddApprovedPerson_InviteAnotherPerson_SoleTraderAndNotIndividualInCharge_RedirectsToSoleTraderTeamMemberDetails()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        var session = new OrganisationSession
+        {
+            IsIndividualInCharge = false,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.SoleTrader
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var redirect = result as RedirectToActionResult;
+        redirect.Should().NotBeNull();
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.SoleTraderTeamMemberDetails));
+    }
+
+    [TestMethod]
+    public async Task AddApprovedPerson_InviteAnotherPerson_NotSoleTrader_RedirectsToTeamMemberRoleInOrganisation()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        var session = new OrganisationSession
+        {
+            IsIndividualInCharge = true,
+            ReExManualInputSession = null
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var redirect = result as RedirectToActionResult;
+        redirect.Should().NotBeNull();
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+    }
+
+
 
 }
