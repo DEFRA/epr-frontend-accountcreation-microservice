@@ -118,39 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BusinessAddress.BuildingNameLabel" xml:space="preserve">
-    <value />
+    <value>Enw’r adeilad</value>
   </data>
   <data name="BusinessAddress.BuildingNumberLabel" xml:space="preserve">
-    <value />
+    <value>Rhif yr adeilad</value>
   </data>
   <data name="BusinessAddress.CountyLabel" xml:space="preserve">
-    <value />
+    <value>Sir (dewisol)</value>
   </data>
   <data name="BusinessAddress.CountyLengthError" xml:space="preserve">
-    <value />
+    <value>Rhaid i’r sir fod yn 50 neu lai o gymeriadau</value>
   </data>
   <data name="BusinessAddress.PostcodeError" xml:space="preserve">
-    <value />
+    <value>Rhowch god post, fel AA1 1AA</value>
   </data>
   <data name="BusinessAddress.PostcodeLabel" xml:space="preserve">
-    <value />
+    <value>Cod post</value>
   </data>
   <data name="BusinessAddress.Question" xml:space="preserve">
-    <value />
+    <value>[W]What is your organisation's address?</value>
   </data>
   <data name="BusinessAddress.StreetLabel" xml:space="preserve">
-    <value />
+    <value>Enw’r stryd</value>
   </data>
   <data name="BusinessAddress.Title" xml:space="preserve">
-    <value />
+    <value>Cyfeiriad Busnes</value>
   </data>
   <data name="BusinessAddress.TownError" xml:space="preserve">
-    <value />
+    <value>Rhowch enw tref neu ddinas</value>
   </data>
   <data name="BusinessAddress.TownLabel" xml:space="preserve">
-    <value />
+    <value>Tref neu ddinas</value>
   </data>
   <data name="BusinessAddress.TownLengthError" xml:space="preserve">
-    <value />
+    <value>Rhaid i’r dref neu’r ddinas fod yn 70 neu lai o gymeriadau</value>
   </data>
 </root>
