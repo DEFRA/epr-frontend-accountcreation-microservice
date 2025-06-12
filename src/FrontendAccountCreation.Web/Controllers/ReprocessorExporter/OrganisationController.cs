@@ -646,7 +646,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var viewModel = new ReExBusinessAddressViewModel();
 
-        //IsManualAddress?
+        //todo: IsManualAddress?
         if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
         {
             viewModel.BuildingNumber = session.ReExManualInputSession.BusinessAddress.BuildingNumber;
@@ -680,6 +680,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Town = model.Town;
         address.County = model.County;
         address.Postcode = model.Postcode;
+        address.IsManualAddress = true;
 
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
             PagePath.BusinessAddress, PagePath.SoleTrader);
