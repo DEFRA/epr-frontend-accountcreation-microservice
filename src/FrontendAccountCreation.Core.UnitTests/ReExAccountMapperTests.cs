@@ -148,6 +148,10 @@ public class ReExAccountMapperTests
 
     [TestMethod]
     [DataRow(null, null, null)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, null, Nation.England)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, "123", Nation.Wales)]
+    [DataRow(OrganisationType.NotSet, "123", Nation.NorthernIreland)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, "123", Nation.Scotland)]
     public void CreateReExOrganisationModel_Returns_Model_FromOrganisationSession_WithoutAddress(OrganisationType? orgType, string? orgId, Nation? nation)
     {
         // Arrange
@@ -168,14 +172,15 @@ public class ReExAccountMapperTests
                 RoleInOrganisation = null
             },
             IsApprovedUser = false,
-            UkNation = null,
+            UkNation = nation,
             IsOrganisationAPartnership = false,
             IsTradingNameDifferent = false,
             IsUkMainAddress = true
         };
         
         var expectedOrgType = orgType ?? OrganisationType.NotSet;
-        var expectedNation = nation ?? Nation.NotSet;
+        var expectedOrgId = orgId ?? string.Empty;
+        var expectedNation = nation ?? Nation.NotSet;        
 
         // Act
         var result = _mapper!.CreateReExOrganisationModel(orgSession);        
@@ -184,7 +189,7 @@ public class ReExAccountMapperTests
         result.Should().NotBeNull();
 
         result.Company.OrganisationType.Should().Be(expectedOrgType);
-        result.Company.OrganisationId.Should().Be(orgId);
+        result.Company.OrganisationId.Should().Be(expectedOrgId);
         result.Company.CompanyRegisteredAddress.Should().BeNull();
         result.Company.CompanyName.Should().BeNull();
         result.Company.CompaniesHouseNumber.Should().BeNull();
