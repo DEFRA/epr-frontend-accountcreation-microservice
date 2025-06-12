@@ -58,6 +58,9 @@ public static class PagePath
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";
 
+    public const string SoleTraderTeamMemberCheckInvitationDetails = "soletrader-check-invitation-details";
+    public const string SoleTraderTeamMemberCheckInvitationDetailsDelete = "soletrader-check-invitation-details/delete";
+
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
 
