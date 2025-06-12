@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Reflection;
+using FluentAssertions;
 using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -7,7 +8,6 @@ using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 
 namespace FrontendAccountCreation.Core.UnitTests;
-
 
 [TestClass]
 public class ReExAccountMapperTests
@@ -177,13 +177,13 @@ public class ReExAccountMapperTests
             IsTradingNameDifferent = false,
             IsUkMainAddress = true
         };
-        
+
         var expectedOrgType = orgType ?? OrganisationType.NotSet;
         var expectedOrgId = orgId ?? string.Empty;
-        var expectedNation = nation ?? Nation.NotSet;        
+        var expectedNation = nation ?? Nation.NotSet;
 
         // Act
-        var result = _mapper!.CreateReExOrganisationModel(orgSession);        
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
 
         // Assert
         result.Should().NotBeNull();
@@ -612,8 +612,6 @@ public class ReExAccountMapperTests
         result.ManualInput.OrganisationType.Should().Be(OrganisationType.NotSet);
     }
 
-    //*****
-
     [TestMethod]
     public void GetManualInputModel_AllFieldsMappedCorrectly()
     {
@@ -639,22 +637,20 @@ public class ReExAccountMapperTests
         };
 
         // Act
-        var result = typeof(ReExAccountMapper)
-            .GetMethod("GetManualInputModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
-            .Invoke(null, new object[] { session }) as ReExManualInputModel;
+        var result = _mapper.CreateReExOrganisationModel(session);
 
         // Assert
         result.Should().NotBeNull();
-        result.TradingName.Should().Be("Test Trading");
-        result.ProducerType.Should().Be(ProducerType.SoleTrader);
-        result.BusinessAddress.Should().NotBeNull();
-        result.BusinessAddress.BuildingName.Should().Be("Bldg");
-        result.Nation.Should().Be(Nation.England);
-        result.OrganisationType.Should().Be(OrganisationType.CompaniesHouseCompany);
+        result.ManualInput.TradingName.Should().Be("Test Trading");
+        result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
+        result.ManualInput.BusinessAddress.Should().NotBeNull();
+        result.ManualInput.BusinessAddress.BuildingName.Should().Be("Bldg");
+        result.ManualInput.Nation.Should().Be(Nation.England);
+        result.ManualInput.OrganisationType.Should().Be(OrganisationType.CompaniesHouseCompany);
     }
 
     [TestMethod]
-    public void GetManualInputModel_NullBusinessAddress_ReturnsNullAddressModel()
+    public void GetManualInputModel_Returns_Null_BusinessAddress_As_AddressModel()
     {
         // Arrange
         var session = new OrganisationSession
@@ -670,21 +666,26 @@ public class ReExAccountMapperTests
         };
 
         // Act
-        var result = typeof(ReExAccountMapper)
-            .GetMethod("GetManualInputModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
-            .Invoke(null, new object[] { session }) as ReExManualInputModel;
+        var result = _mapper.CreateReExOrganisationModel(session);
 
         // Assert
         result.Should().NotBeNull();
-        result.BusinessAddress.Should().BeNull();
-        result.TradingName.Should().Be("TradeName");
-        result.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
-        result.Nation.Should().Be(Nation.Scotland);
-        result.OrganisationType.Should().Be(OrganisationType.NonCompaniesHouseCompany);
+        result.ManualInput.BusinessAddress.Should().BeNull();
+        result.ManualInput.TradingName.Should().Be("TradeName");
+        result.ManualInput.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
+        result.ManualInput.Nation.Should().Be(Nation.Scotland);
+        result.ManualInput.OrganisationType.Should().Be(OrganisationType.NonCompaniesHouseCompany);
     }
 
     [TestMethod]
-    public void GetManualInputModel_NullProducerType_ReturnsNullProducerType()
+    [DataRow(null)]
+    [DataRow(ProducerType.Other)]
+    [DataRow(ProducerType.NotSet)]
+    [DataRow(ProducerType.NonUkOrganisation)]
+    [DataRow(ProducerType.UnincorporatedBody)]
+    [DataRow(ProducerType.SoleTrader)]
+    [DataRow(ProducerType.Partnership)]
+    public void GetManualInputModel_Returns_ProducerType_As(ProducerType? producerType)
     {
         // Arrange
         var session = new OrganisationSession
@@ -694,23 +695,24 @@ public class ReExAccountMapperTests
             ReExManualInputSession = new ReExManualInputSession
             {
                 TradingName = "TradeName",
-                ProducerType = null,
+                ProducerType = producerType,
                 BusinessAddress = new Address()
             }
         };
 
         // Act
-        var result = typeof(ReExAccountMapper)
-            .GetMethod("GetManualInputModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
-            .Invoke(null, new object[] { session }) as ReExManualInputModel;
+        var result = _mapper.CreateReExOrganisationModel(session);
 
         // Assert
         result.Should().NotBeNull();
-        result.ProducerType.Should().BeNull();
+        result.ManualInput.ProducerType.Should().Be(producerType);
     }
 
     [TestMethod]
-    public void GetManualInputModel_NullTradingName_ReturnsNullTradingName()
+    [DataRow(null)]
+    [DataRow("Trader Name")]
+    [DataRow("")]
+    public void GetManualInputModel_Returns_TradingName_As(string? tradingName)
     {
         // Arrange
         var session = new OrganisationSession
@@ -719,30 +721,34 @@ public class ReExAccountMapperTests
             UkNation = Nation.NorthernIreland,
             ReExManualInputSession = new ReExManualInputSession
             {
-                TradingName = null,
+                TradingName = tradingName,
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = new Address()
             }
         };
 
         // Act
-        var result = typeof(ReExAccountMapper)
-            .GetMethod("GetManualInputModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
-            .Invoke(null, new object[] { session }) as ReExManualInputModel;
+        var result = _mapper.CreateReExOrganisationModel(session);
 
         // Assert
         result.Should().NotBeNull();
-        result.TradingName.Should().BeNull();
+        result.ManualInput.TradingName.Should().Be(tradingName);
     }
 
     [TestMethod]
-    public void GetManualInputModel_NullUkNation_ReturnsNotSet()
+    [DataRow(null)]
+    [DataRow(Nation.England)]
+    [DataRow(Nation.Scotland)]
+    [DataRow(Nation.Wales)]
+    [DataRow(Nation.NorthernIreland)]
+    [DataRow(Nation.NotSet)]
+    public void GetManualInputModel_Returns_UKNation_As(Nation? nation)
     {
         // Arrange
         var session = new OrganisationSession
         {
             OrganisationType = OrganisationType.NotSet,
-            UkNation = null,
+            UkNation = nation,
             ReExManualInputSession = new ReExManualInputSession
             {
                 TradingName = "TradeName",
@@ -750,24 +756,27 @@ public class ReExAccountMapperTests
                 BusinessAddress = new Address()
             }
         };
+        Nation expectedNation = nation ?? Nation.NotSet;
 
         // Act
-        var result = typeof(ReExAccountMapper)
-            .GetMethod("GetManualInputModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
-            .Invoke(null, new object[] { session }) as ReExManualInputModel;
+        var result = _mapper.CreateReExOrganisationModel(session);
 
         // Assert
         result.Should().NotBeNull();
-        result.Nation.Should().Be(Nation.NotSet);
+        result.ManualInput.Nation.Should().Be(expectedNation);
     }
 
     [TestMethod]
-    public void GetManualInputModel_NullOrganisationType_ReturnsNotSet()
+    [DataRow(null)]
+    [DataRow(OrganisationType.NotSet)]
+    [DataRow(OrganisationType.CompaniesHouseCompany)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany)]
+    public void GetManualInputModel_OrganisationType_Returns_As(OrganisationType? orgType)
     {
         // Arrange
         var session = new OrganisationSession
         {
-            OrganisationType = null,
+            OrganisationType = orgType,
             UkNation = Nation.England,
             ReExManualInputSession = new ReExManualInputSession
             {
@@ -777,13 +786,156 @@ public class ReExAccountMapperTests
             }
         };
 
+        OrganisationType expectedType = orgType ?? OrganisationType.NotSet;
+
         // Act
-        var result = typeof(ReExAccountMapper)
-            .GetMethod("GetManualInputModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
-            .Invoke(null, new object[] { session }) as ReExManualInputModel;
+        var result = _mapper.CreateReExOrganisationModel(session);
 
         // Assert
         result.Should().NotBeNull();
-        result.OrganisationType.Should().Be(OrganisationType.NotSet);
+        result.ManualInput.OrganisationType.Should().Be(expectedType);
+    }
+
+    [TestMethod]
+    public void GetCompanyModel_AllNulls_Defaults()
+    {
+        var session = new OrganisationSession();
+        var result = _mapper.CreateReExOrganisationModel(session);
+
+        result.Company.Should().BeNull();
+        result.UserRoleInOrganisation.Should().BeNull();
+        result.ManualInput.Should().BeNull();
+        result.InvitedApprovedPersons.Should().NotBeNull();
+        result.InvitedApprovedPersons.Should().HaveCount(0);
+    }
+
+    [TestMethod]
+    [DataRow(null, null, true)]
+    [DataRow(OrganisationType.NotSet, Nation.England, true)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.Wales, true)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.Scotland, true)]
+    [DataRow(OrganisationType.NotSet, Nation.NorthernIreland, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.NotSet, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.England, true)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.England, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.NotSet, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.England, false)]
+    [DataRow(OrganisationType.NotSet, null, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, null, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, null, false)]
+    [DataRow(OrganisationType.NotSet, Nation.NotSet, false)]
+    public void GetCompanyModel_OrgType_And_Nation_With_NullCompanyNull_AndIsCompaliance_As(OrganisationType? orgType, Nation? nation, bool isCompliance)
+    {
+        var session = new OrganisationSession
+        {
+            OrganisationType = orgType,
+            UkNation = nation,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = null,
+                IsComplianceScheme = isCompliance
+            }
+        };
+
+        var expectedOrgType = orgType ?? OrganisationType.NotSet;
+        var expectedNation = nation ?? Nation.NotSet;
+
+        var result = _mapper.CreateReExOrganisationModel(session);
+
+        result.Company.OrganisationType.Should().Be(expectedOrgType);
+        result.Company.Nation.Should().Be(expectedNation);
+        result.Company.IsComplianceScheme.Should().Be(isCompliance);
+    }
+
+    [TestMethod]
+    [DataRow(null, null, true)]
+    [DataRow(OrganisationType.NotSet, Nation.England, true)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.Wales, true)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.Scotland, true)]
+    [DataRow(OrganisationType.NotSet, Nation.NorthernIreland, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.NotSet, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.England, true)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.England, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.NotSet, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.England, false)]
+    [DataRow(OrganisationType.NotSet, null, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, null, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, null, false)]
+    [DataRow(OrganisationType.NotSet, Nation.NotSet, false)]
+    public void GetCompanyModel_OrgType_And_Nation_With_Company_details_AndIsCompaliance_As(OrganisationType? orgType, Nation? nation, bool isCompliance)
+    {
+        var session = new OrganisationSession
+        {
+            OrganisationType = orgType,
+            UkNation = nation,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Company
+                {
+                    OrganisationId = "org-1",
+                    Name = "Test Co",
+                    CompaniesHouseNumber = "CH123",
+                    BusinessAddress = null
+                },
+                IsComplianceScheme = isCompliance
+            }
+        };
+
+        var result = _mapper.CreateReExOrganisationModel(session);
+
+        result.Company.OrganisationId.Should().Be("org-1");
+        result.Company.CompanyName.Should().Be("Test Co");
+        result.Company.CompaniesHouseNumber.Should().Be("CH123");
+        result.Company.CompanyRegisteredAddress.Should().BeNull();
+        result.Company.ValidatedWithCompaniesHouse.Should().BeFalse();
+        result.Company.IsComplianceScheme.Should().Be(isCompliance);
+    }
+
+    [TestMethod]
+    [DataRow(null, null, true)]
+    [DataRow(OrganisationType.NotSet, Nation.England, true)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.Wales, true)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.Scotland, true)]
+    [DataRow(OrganisationType.NotSet, Nation.NorthernIreland, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.NotSet, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.England, true)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, Nation.England, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.NotSet, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, Nation.England, false)]
+    [DataRow(OrganisationType.NotSet, null, false)]
+    [DataRow(OrganisationType.CompaniesHouseCompany, null, false)]
+    [DataRow(OrganisationType.NonCompaniesHouseCompany, null, false)]
+    [DataRow(OrganisationType.NotSet, Nation.NotSet, false)]
+    public void GetCompanyModel_With_OrgType_And_Nation_CompanyIs_NotNull_And_BusinessAddressNotNull_And_IsCompliance_As(OrganisationType? orgType, Nation? nation, bool isCompliance)
+    {
+        var session = new OrganisationSession
+        {
+            OrganisationType = orgType,
+            UkNation = nation,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Company
+                {
+                    OrganisationId = "org-2",
+                    Name = "Test Co2",
+                    CompaniesHouseNumber = "CH124",
+                    BusinessAddress = new Address
+                    {
+                        BuildingName = "Bldg"
+                    }
+                },
+                IsComplianceScheme = isCompliance
+            }
+        };
+
+        var result = _mapper.CreateReExOrganisationModel(session);
+
+        result.Company.OrganisationId.Should().Be("org-2");
+        result.Company.CompanyName.Should().Be("Test Co2");
+        result.Company.CompaniesHouseNumber.Should().Be("CH124");
+        result.Company.CompanyRegisteredAddress.Should().NotBeNull();
+        result.Company.CompanyRegisteredAddress.BuildingName.Should().Be("Bldg");
+        result.Company.ValidatedWithCompaniesHouse.Should().BeTrue();
+        result.Company.IsComplianceScheme.Should().Be(isCompliance);
     }
 }
