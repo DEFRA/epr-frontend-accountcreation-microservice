@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
@@ -541,8 +542,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> ConfirmDetailsOfTheCompany()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var company = session.ReExCompaniesHouseSession.Company;
 
-        if (session.ReExCompaniesHouseSession.Company.AccountExists)
+        if (company.AccountExists)
         {
             return await SaveSessionAndRedirect(session, nameof(AccountAlreadyExists), PagePath.ConfirmCompanyDetails,
                 PagePath.AccountAlreadyExists);
@@ -550,6 +552,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.Journey.RemoveAll(x => x == PagePath.AccountAlreadyExists);
 
+        if (session.IsCompaniesHouseFlow && NationMapper.TryMapToNation(company.BusinessAddress.Country, out Nation nation) && nation != Nation.NotSet)
+        {
+            session!.UkNation = nation;
+            if (!session.WhiteList.Contains(PagePath.UkNation))
+            {
+                session.WhiteList.Add(PagePath.UkNation);
+            }
+            return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.ConfirmCompanyDetails, PagePath.IsTradingNameDifferent);
+        }
         return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.ConfirmCompanyDetails, PagePath.UkNation);
     }
 
@@ -687,19 +698,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
         }
 
-        return await SaveSessionAndRedirect(session, nameof(NotApprovedPerson),
-            PagePath.SoleTrader, PagePath.NotApprovedPerson);
-    }
-
-    //to-do: is not-approved-person page actually a form of the approved person page?
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.NotApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.NotApprovedPerson)]
-    public Task<IActionResult> NotApprovedPerson()
-    {
-        return PlaceholderPageGet(PagePath.NotApprovedPerson);
+        //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.SoleTrader, PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]

@@ -117,73 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddNotApprovedPerson.BulletAccreditation" xml:space="preserve">
-    <value>[Welsh]Apply for accreditation</value>
+  <data name="TeamMemberDetails.Email" xml:space="preserve">
+    <value>Email</value>
   </data>
-  <data name="AddNotApprovedPerson.BulletSubmit" xml:space="preserve">
-    <value>[Welsh]Submit and verify data returns</value>
+  <data name="TeamMemberDetails.FirstName" xml:space="preserve">
+    <value>First name</value>
   </data>
-  <data name="AddNotApprovedPerson.CompanySecretary" xml:space="preserve">
-    <value>[Welsh]company secretary</value>
+  <data name="TeamMemberDetails.FirstNameErrorMessage" xml:space="preserve">
+    <value>Enter their first name</value>
   </data>
-  <data name="AddNotApprovedPerson.Director" xml:space="preserve">
-    <value>[Welsh]director</value>
+  <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
+    <value>First name must be 50 characters or less</value>
   </data>
-  <data name="AddNotApprovedPerson.InsetText" xml:space="preserve">
-    <value>[Welsh]An approved person may delegate their function to another person (a delegate) at a later stage - subject to regulator approval.</value>
+  <data name="TeamMemberDetails.Header" xml:space="preserve">
+    <value>What are their details?</value>
   </data>
-  <data name="AddNotApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
+  <data name="TeamMemberDetails.HintEmail" xml:space="preserve">
+    <value>We ask for this so we can invite them to join your team.</value>
   </data>
-  <data name="AddNotApprovedPerson.IntroText1" xml:space="preserve">
-    <value>[Welsh]You should invite an 'approved person' who needs to be invited to take on tasks on behalf of the organisation.</value>
+  <data name="TeamMemberDetails.HintTelephone" xml:space="preserve">
+    <value>We ask for this in case your regulator needs to call them directly with any queries.</value>
   </data>
-  <data name="AddNotApprovedPerson.IntroText2" xml:space="preserve">
-    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to:</value>
+  <data name="TeamMemberDetails.LastName" xml:space="preserve">
+    <value>Last name</value>
   </data>
-  <data name="AddNotApprovedPerson.IntroText3" xml:space="preserve">
-    <value>[Welsh]More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
+  <data name="TeamMemberDetails.LastNameErrorMessage" xml:space="preserve">
+    <value>Enter their last name</value>
   </data>
-  <data name="AddNotApprovedPerson.InviteOptionsLegend" xml:space="preserve">
-    <value>[Welsh]Invite approved person options</value>
+  <data name="TeamMemberDetails.LastNameLengthErrorMessage" xml:space="preserve">
+    <value>Last name must be 50 characters or less</value>
   </data>
-  <data name="AddNotApprovedPerson.InviteAnotherApprovedPerson" xml:space="preserve">
-    <value>[Welsh]I will invite an eligible person to be an approved person</value>
+  <data name="TeamMemberDetails.Telephone" xml:space="preserve">
+    <value>Telephone</value>
   </data>
-  <data name="AddNotApprovedPerson.InviteApprovedPersonLater" xml:space="preserve">
-    <value>[Welsh]I will invite an approved person later</value>
+  <data name="TeamMemberDetails.Title" xml:space="preserve">
+    <value>Team Member Details</value>
   </data>
-  <data name="AddNotApprovedPerson.RolesHeading" xml:space="preserve">
-    <value>[Welsh]Roles eligible to be an approved person</value>
+  <data name="TeamMemberDetails.TelephoneNumberEmptyErrorMessage" xml:space="preserve">
+    <value>Enter a telephone number</value>
   </data>
-  <data name="AddNotApprovedPerson.RolesInstruction" xml:space="preserve">
-    <value>[Welsh]Either of these roles can be an approved person</value>
+  <data name="TeamMemberDetails.TelephoneNumberInvalidErrorMessage" xml:space="preserve">
+    <value>Enter a valid telephone number, like 01642 123 456, 07777 777 777 or +33 1 23 45 67 88</value>
   </data>
-  <data name="AddNotApprovedPerson.SelectOptionText" xml:space="preserve">
-    <value>[Welsh]Select an option to proceed.</value>
+  <data name="TeamMemberDetails.EmailEmptyErrorMessage" xml:space="preserve">
+    <value>Enter their email address</value>
   </data>
-  <data name="AddNotApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh]Add an approved person </value>
+  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
+    <value>Enter a valid telephone number</value>
   </data>
-  <data name="AddNotApprovedPerson.UserHeading" xml:space="preserve">
-    <value>[Welsh]Invite users in your team</value>
-  </data>
-  <data name="AddNotApprovedPerson.SoleTrader.ErrorMessage" xml:space="preserve">
-    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
-  </data>
-  <data name="AddNotApprovedPerson.SoleTrader.IntroText1" xml:space="preserve">
-    <value>You should invite the individual in charge of the organisation sole trader to be the 'approved person'. This role needs to take on tasks on behalf of the organisation.</value>
-  </data>
-  <data name="AddNotApprovedPerson.SoleTrader.IntroText2" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can:</value>
-  </data>
-  <data name="AddNotApprovedPerson.SoleTrader.InviteAnotherApprovedPerson" xml:space="preserve">
-    <value>I will invite the individual in charge of the organisation to be an approved person</value>
-  </data>
-  <data name="AddNotApprovedPerson.SoleTrader.InviteApprovedPersonLater" xml:space="preserve">
-    <value>I will invite the individual in charge of the organisation to be an approved person later</value>
-  </data>
-  <data name="AddNotApprovedPerson.SoleTrader.RolesInstruction" xml:space="preserve">
-    <value>Only the individual in charge of the business in your organisation is eligible for this role.</value>
+  <data name="TeamMemberDetails.EmailInvalidErrorMessage" xml:space="preserve">
+    <value>Enter an email address with a name, @ symbol and a domain name, like yourname@example.com</value>
   </data>
 </root>

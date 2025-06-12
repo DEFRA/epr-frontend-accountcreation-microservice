@@ -106,7 +106,9 @@ public class MockedFacadeService : IFacadeService
                 BuildingName = "Dummy Place",
                 Street = "Dummy Street",
                 Town = "Nowhere",
-                Postcode = "AB1 0CD"
+                Postcode = "AB1 0CD",
+                 Country = "England"
+
             },
             AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
         };
