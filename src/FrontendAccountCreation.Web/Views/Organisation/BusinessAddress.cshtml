@@ -10,6 +10,7 @@
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer,
+        nameof(Model.BuildingNumber), nameof(Model.BuildingName), nameof(Model.Street),
         nameof(Model.Town), nameof(Model.County), nameof(Model.Postcode));
 
     const string errorClass = "govuk-input--error";
@@ -41,7 +42,7 @@
 
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.BuildingName)) ? " govuk-form-group--error" : "")">
                                 <label gov-for="BuildingName" class="govuk-label">@Localizer["BusinessAddress.BuildingNameLabel"]</label>
-                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.BuildingNumber)])
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.BuildingName)])
                                 <input class="govuk-input govuk-!-width-full @Html.Raw(errorsViewModel.HasErrorKey(nameof(Model.BuildingName)) ? errorClass : "")"
                                        type="text"
                                        gov-for="BuildingName"
