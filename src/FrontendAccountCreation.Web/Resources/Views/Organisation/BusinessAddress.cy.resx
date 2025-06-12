@@ -166,12 +166,12 @@
     <value>Rhowch god post, fel AA1 1AA</value>
   </data>
   <data name="BusinessAddress.BuildingNumberLengthError" xml:space="preserve">
-    <value />
+    <value>[W]Building number must be 50 characters or less</value>
   </data>
   <data name="BusinessAddress.BuildingNameLengthError" xml:space="preserve">
-    <value />
+    <value>[W]Building name must be 100 characters or less</value>
   </data>
   <data name="BusinessAddress.StreetNameLengthError" xml:space="preserve">
-    <value />
+    <value>[W]Street must be 100 characters or less</value>
   </data>
 </root>

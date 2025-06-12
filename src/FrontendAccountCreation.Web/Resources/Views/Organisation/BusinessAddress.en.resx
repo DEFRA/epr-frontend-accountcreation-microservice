@@ -166,12 +166,12 @@
     <value>Enter a postcode, like AA1 1AA</value>
   </data>
   <data name="BusinessAddress.BuildingNumberLengthError" xml:space="preserve">
-    <value />
+    <value>Building number must be 50 characters or less</value>
   </data>
   <data name="BusinessAddress.BuildingNameLengthError" xml:space="preserve">
-    <value />
+    <value>Building name must be 100 characters or less</value>
   </data>
   <data name="BusinessAddress.StreetNameLengthError" xml:space="preserve">
-    <value />
+    <value>Street must be 100 characters or less</value>
   </data>
 </root>
