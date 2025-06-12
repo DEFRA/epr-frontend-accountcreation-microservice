@@ -649,8 +649,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         //IsManualAddress?
         if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
         {
-            viewModel.AddressLine1 = session.ReExManualInputSession.BusinessAddress.SubBuildingName;
-            viewModel.AddressLine2 = session.ReExManualInputSession.BusinessAddress.AddressSingleLine;
+            viewModel.BuildingNumber = session.ReExManualInputSession.BusinessAddress.BuildingNumber;
+            viewModel.BuildingName = session.ReExManualInputSession.BusinessAddress.BuildingName;
+            viewModel.Street = session.ReExManualInputSession.BusinessAddress.Street;
             viewModel.Town = session.ReExManualInputSession.BusinessAddress.Town;
             viewModel.County = session.ReExManualInputSession.BusinessAddress.County;
             viewModel.Postcode = session.ReExManualInputSession.BusinessAddress.County;
@@ -673,6 +674,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var address = session.ReExManualInputSession?.BusinessAddress ?? new Address();
 
+        address.BuildingNumber = model.BuildingNumber;
+        address.BuildingName = model.BuildingName;
+        address.Street = model.Street;
         address.Town = model.Town;
         address.County = model.County;
         address.Postcode = model.Postcode;

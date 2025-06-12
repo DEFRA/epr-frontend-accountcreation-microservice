@@ -4,25 +4,16 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class ReExBusinessAddressViewModel
 {
-    //[MaxLength(100, ErrorMessage = "BusinessAddress.SubBuildingNameLengthError")]
-    //public string? SubBuildingName { get; set; }
+    [MaxLength(50, ErrorMessage = "BusinessAddress.BuildingNumberLengthError")]
+    [Required(ErrorMessage = "BusinessAddress.BuildingNumberError")]
+    public string? BuildingNumber { get; set; }
 
-    //[MaxLength(100, ErrorMessage = "BusinessAddress.BuildingNameLengthError")]
-    //public string? BuildingName { get; set; }
+    [MaxLength(100, ErrorMessage = "BusinessAddress.BuildingNameLengthError")]
+    public string? BuildingName { get; set; }
 
-    //[MaxLength(50, ErrorMessage = "BusinessAddress.BuildingNumberLengthError")]
-    //[Required(ErrorMessage = "BusinessAddress.BuildingNumberError")]
-    //public string? BuildingNumber { get; set; }
-
-    //[MaxLength(100, ErrorMessage = "BusinessAddress.StreetNameLengthError")]
-    //[Required(ErrorMessage = "BusinessAddress.StreetNameError")]
-    //public string? Street { get; set; }
-
-    [MaxLength(100, ErrorMessage = "BusinessAddress.AddressLine1LengthError")]
-    [Required(ErrorMessage = "BusinessAddress.AddressLine1MissingError")]
-    public string? AddressLine1 { get; set; }
-
-    public string? AddressLine2 { get; set; }
+    [MaxLength(100, ErrorMessage = "BusinessAddress.StreetNameLengthError")]
+    [Required(ErrorMessage = "BusinessAddress.StreetNameError")]
+    public string? Street { get; set; }
 
     [MaxLength(70, ErrorMessage = "BusinessAddress.TownLengthError")]
     [Required(ErrorMessage = "BusinessAddress.TownError")]
