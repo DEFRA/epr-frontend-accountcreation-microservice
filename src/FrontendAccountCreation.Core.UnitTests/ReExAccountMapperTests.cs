@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services;
+using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -58,6 +60,7 @@ namespace FrontendAccountCreation.Core.UnitTests
             {
                 OrganisationType = orgType,
                 IsTheOrganisationCharity = false,
+                IsApprovedUser = true,
                 ReExCompaniesHouseSession = new ReExCompaniesHouseSession
                 {
                     IsComplianceScheme = isCompliance,
@@ -102,7 +105,7 @@ namespace FrontendAccountCreation.Core.UnitTests
                 ReExManualInputSession = null,
                 UkNation = nation,
                 DeclarationFullName = "Test 01",
-                DeclarationTimestamp = DateTime.UtcNow                
+                DeclarationTimestamp = DateTime.UtcNow
             };
 
             // Act
@@ -238,10 +241,149 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.ManualInput.Nation.Should().Be(nation);
             result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
             result.ManualInput.TradingName.Should().Be("test sole trader");
-            
+
             result.InvitedApprovedPersons.Should().HaveCount(1);
             result.InvitedApprovedPersons[0].FirstName.Should().Be("John");
             result.InvitedApprovedPersons[0].LastName.Should().Be("Smith");
+        }
+
+
+        // ***
+        [TestMethod]
+        public void CreateReprocessorExporterAccountModel_MapsContactCorrectly()
+        {
+            // Arrange
+            var session = new ReExAccountCreationSession
+            {
+                Contact = new ReExContact
+                {
+                    FirstName = "John",
+                    LastName = "Doe",
+                    TelephoneNumber = "1234567890"
+                }
+            };
+            var mapper = new ReExAccountMapper();
+            var email = "john.doe@example.com";
+
+            // Act
+            var result = mapper.CreateReprocessorExporterAccountModel(session, email);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Person.Should().NotBeNull();
+            result.Person.FirstName.Should().Be("John");
+            result.Person.LastName.Should().Be("Doe");
+            result.Person.TelephoneNumber.Should().Be("1234567890");
+            result.Person.ContactEmail.Should().Be(email);
+        }
+
+        [TestMethod]
+        public void CreateReExOrganisationModel_MapsCompanyAndManualInput()
+        {
+            // Arrange
+            var company = new Company
+            {
+                OrganisationId = "org-123",
+                Name = "Test Company",
+                CompaniesHouseNumber = "CH123456",
+                BusinessAddress = new Address
+                {
+                    BuildingName = "Building",
+                    Street = "Street",
+                    Town = "Town",
+                    Country = "Country",
+                    Postcode = "PC1 1AA"
+                }
+            };
+            var companiesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = company,
+                RoleInOrganisation = RoleInOrganisation.Director,
+                IsComplianceScheme = true,
+                TeamMembers = new List<ReExCompanyTeamMember>
+            {
+                new ReExCompanyTeamMember
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Alice",
+                    LastName = "Smith",
+                    Email = "alice@example.com",
+                    Role = ReExTeamMemberRole.CompanySecretary,
+                    TelephoneNumber = "111222333"
+                }
+            }
+            };
+            var manualInputSession = new ReExManualInputSession
+            {
+                TradingName = "Trading",
+                ProducerType = ProducerType.SoleTrader,
+                BusinessAddress = new Address
+                {
+                    BuildingName = "Manual",
+                    Street = "Manual Street",
+                    Town = "Manual Town",
+                    Country = "Manual Country",
+                    Postcode = "PC2 2BB"
+                },
+                TeamMember = new ReExCompanyTeamMember
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Bob",
+                    LastName = "Brown",
+                    Email = "bob@example.com",
+                    Role = ReExTeamMemberRole.Director,
+                    TelephoneNumber = "444555666"
+                }
+            };
+            var session = new OrganisationSession
+            {
+                ReExCompaniesHouseSession = companiesHouseSession,
+                ReExManualInputSession = manualInputSession,
+                IsApprovedUser = true,
+                OrganisationType = OrganisationType.CompaniesHouseCompany,
+                UkNation = Nation.England
+            };
+            var mapper = new ReExAccountMapper();
+
+            // Act
+            var result = mapper.CreateReExOrganisationModel(session);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.UserRoleInOrganisation.Should().Be("Director");
+            result.IsApprovedUser.Should().BeTrue();
+            result.Company.Should().NotBeNull();
+
+            result.Company.OrganisationId.Should().Be("org-123");
+            result.Company.CompanyName.Should().Be("Test Company");
+            result.Company.CompaniesHouseNumber.Should().Be("CH123456");
+            result.Company.CompanyRegisteredAddress.Should().NotBeNull();
+            result.Company.CompanyRegisteredAddress.BuildingName.Should().Be("Building");
+            result.ManualInput.TradingName.Should().Be("Trading");
+            result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
+            result.InvitedApprovedPersons.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void CreateReExOrganisationModel_ReturnsNulls_WhenNoCompanyOrManualInput()
+        {
+            // Arrange
+            var session = new OrganisationSession
+            {
+                IsApprovedUser = false
+            };
+            var mapper = new ReExAccountMapper();
+
+            // Act
+            var result = mapper.CreateReExOrganisationModel(session);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.UserRoleInOrganisation.Should().BeNull();
+            result.IsApprovedUser.Should().BeFalse();
+            result.Company.Should().BeNull();
+            result.ManualInput?.Should().BeNull();
+            result.InvitedApprovedPersons?.Should().NotBeNull().And.BeEmpty();
         }
     }
 }
