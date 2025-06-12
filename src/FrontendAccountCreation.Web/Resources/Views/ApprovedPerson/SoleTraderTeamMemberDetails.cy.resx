@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TeamMemberDetails.Email" xml:space="preserve">
-    <value>[Welsh] Email</value>
+    <value>Ebost</value>
   </data>
   <data name="TeamMemberDetails.FirstName" xml:space="preserve">
     <value>Enw cyntaf</value>
@@ -163,7 +163,7 @@
     <value>[Welsh] Enter their email address</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter a valid telephone number</value>
+    <value>Rhowch rif ffôn dilys</value>
   </data>
   <data name="TeamMemberDetails.EmailInvalidErrorMessage" xml:space="preserve">
     <value>[Welsh] Enter an email address with a name, @ symbol and a domain name, like yourname@example.com</value>

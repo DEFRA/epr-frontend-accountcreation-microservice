@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TeamMemberDetails.FullName" xml:space="preserve">
-    <value>[Welsh] Full name</value>
+    <value>Enw llawn</value>
   </data>
   <data name="TeamMemberDetails.Email" xml:space="preserve">
-    <value>[Welsh] Email</value>
+    <value>Ebost</value>
   </data>
   <data name="TeamMemberDetails.HintEmail" xml:space="preserve">
     <value>[Welsh] We ask for this so we can invite them to join your team.</value>
@@ -130,7 +130,7 @@
     <value>[Welsh] We ask for this in case your regulator needs to call them directly with any queries.</value>
   </data>
   <data name="TeamMemberDetails.Telephone" xml:space="preserve">
-    <value>[Welsh] Telephone</value>
+    <value>Ffôn</value>
   </data>
   <data name="TeamMemberDetails.Continue" xml:space="preserve">
     <value>[Welsh] Continue</value>
@@ -142,13 +142,13 @@
     <value>[Welsh] What are their details?</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter a valid telephone number</value>
+    <value>Rhowch rif ffôn dilys</value>
   </data>
   <data name="TeamMemberDetails.FullNameError" xml:space="preserve">
-    <value>[Welsh] Enter full name</value>
+    <value>Rhowch enw llawn</value>
   </data>
   <data name="TeamMemberDetails.EmailError" xml:space="preserve">
-    <value>[Welsh] Enter a valid email address</value>
+    <value>Rhowch gyfeiriad ebost dilys</value>
   </data>
   <data name="TeamMemberDetails.FirstName" xml:space="preserve">
     <value>Enw cyntaf</value>
