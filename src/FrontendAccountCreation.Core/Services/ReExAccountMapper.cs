@@ -65,7 +65,7 @@ public class ReExAccountMapper : IReExAccountMapper
             reExPartnerModels = [.. partners.Select(x => new ReExPartnerModel()
             {
                 Name = x.Name,
-                PartnerRole = x.IsPerson ? PartnerType.IndividualPartner.GetDescription() : PartnerType.CorporatePartner.GetDescription(),
+                PartnerRole = x.IsPerson ? PartnerType.IndividualPartner.GetDescription() : PartnerType.CompanyPartner.GetDescription(),
             })];
         }
         return reExPartnerModels;
