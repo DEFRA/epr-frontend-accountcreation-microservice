@@ -55,7 +55,6 @@ public class TradingNameTests : OrganisationTestBase
         _organisationSession.ReExManualInputSession = new ReExManualInputSession
         {
             TradingName = tradingName,
-            OrganisationId = "12345678",
             BusinessAddress = new Core.Addresses.Address()
         };
 
@@ -96,9 +95,6 @@ public class TradingNameTests : OrganisationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
-
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
-            Times.Once);
     }
 
     [TestMethod]
@@ -115,9 +111,6 @@ public class TradingNameTests : OrganisationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
-
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
-            Times.Once);
     }
 
     [TestMethod]

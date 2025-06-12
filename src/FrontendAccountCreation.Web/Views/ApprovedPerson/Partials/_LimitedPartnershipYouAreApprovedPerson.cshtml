@@ -1,7 +1,7 @@
 ﻿@using FrontendAccountCreation.Web.Constants
 
 @{
-    ViewData["Title"] = Localizer["LimitedPartnershipYouAreApprovedPerson.Title"];
+    ViewData["Title"] = Localizer["_LimitedPartnershipYouAreApprovedPerson.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 }
@@ -13,20 +13,20 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
-                            @Localizer["LimitedPartnershipYouAreApprovedPerson.Title"]
+                            @Localizer["_LimitedPartnershipYouAreApprovedPerson.Title"]
                         </h1>
                     </legend>
                 </fieldset>
 
-                <p class="govuk-body">@Localizer["LimitedPartnershipYouAreApprovedPerson.Description"]</p>
+                <p class="govuk-body">@Localizer["_LimitedPartnershipYouAreApprovedPerson.Description"]</p>
 
-                <p class="govuk-body">@Localizer["LimitedPartnershipYouAreApprovedPerson.YouCanNow"]:</p>
+                <p class="govuk-body">@Localizer["_LimitedPartnershipYouAreApprovedPerson.YouCanNow"]:</p>
 
                 <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        @Localizer["LimitedPartnershipYouAreApprovedPerson.Item1"]
+                        @Localizer["_LimitedPartnershipYouAreApprovedPerson.Continue"]
                     <li>
-                            @Localizer["LimitedPartnershipYouAreApprovedPerson.Item2"]
+                            @Localizer["_LimitedPartnershipYouAreApprovedPerson.Invite"]
                     </li>
                 </ul>
 
@@ -37,7 +37,7 @@
                         </button>
 
                         <a asp-controller="ApprovedPerson" asp-action="TeamMemberRoleInOrganisation" class="govuk-link">
-                            @Localizer["LimitedPartnershipYouAreApprovedPerson.InviteLink"]
+                            @Localizer["_LimitedPartnershipYouAreApprovedPerson.InviteLink"]
                         </a>
                     </div>
                 </form>

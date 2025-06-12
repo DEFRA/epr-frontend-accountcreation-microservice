@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Data;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -46,7 +47,7 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 Company = _company
-            }
+            }, OrganisationType = Core.Sessions.OrganisationType.CompaniesHouseCompany
         };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSessionMock);
         _facadeServiceMock.Setup(x => x.GetCompanyByCompaniesHouseNumberAsync(It.IsAny<string>())).ReturnsAsync(_company);
@@ -72,12 +73,18 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
         gotViewModel.BusinessAddress?.Town.Should().Be(_company.BusinessAddress.Town);
         gotViewModel.BusinessAddress?.County.Should().Be(_company.BusinessAddress.County);
         gotViewModel.BusinessAddress?.Postcode.Should().Be(_company.BusinessAddress.Postcode);
+        gotViewModel.BusinessAddress?.Country.Should().Be(_company.BusinessAddress.Country);
     }
 
     [TestMethod]
-    public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_ThenRedirectToUkNation()
+    [DataRow("")]
+    [DataRow("Great Britan")]
+    [DataRow("Not specified")]
+    [DataRow("United Kingdom")]
+    public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_AndHaveInvalidCountry_ThenRedirectToUkNation(string inValidCountry)
     {
         // Arrange
+        _organisationSessionMock.ReExCompaniesHouseSession.Company.BusinessAddress.Country = inValidCountry;
 
         // Act
         var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();
@@ -86,6 +93,25 @@ public class ConfirmCompanyDetailsTests : OrganisationTestBase
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.UkNation));
+    }
+
+    [TestMethod]
+    [DataRow("Wales")]
+    [DataRow("England")]
+    [DataRow("Scotland")]
+    [DataRow("Northern Ireland")]
+    public async Task GivenCompaniesHouseNumber_WhenConfirmDetailsOfTheCompanyCalled_AndHaveValidCountry_ThenRedirectToIsTradingNameDifferentCheckPage(string validCountry)
+    {
+        // Arrange
+        _organisationSessionMock.ReExCompaniesHouseSession.Company.BusinessAddress.Country = validCountry;
+        // Act
+        var result = await _systemUnderTest.ConfirmDetailsOfTheCompany();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((result as RedirectToActionResult)!).ActionName.Should().Be(nameof(OrganisationController.IsTradingNameDifferent));
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]

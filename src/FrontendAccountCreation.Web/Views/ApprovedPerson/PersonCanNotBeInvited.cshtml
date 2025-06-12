@@ -27,21 +27,20 @@
                     <li>@Localizer["PersonCanNotBeInvited.ApplyForAccreditation"]</li>
                     <li>@Localizer["PersonCanNotBeInvited.SubmitAndVerify"]</li>
                 </ul>
-                
-                <form asp-controller="ApprovedPerson" asp-action="PersonCanNotBeInvited" method="post">
-                    <div class="govuk-button-group">
-                        <button class="govuk-button" data-module="govuk-button">
-                            @SharedLocalizer["Continue"]
-                        </button>
 
-                        <a class="govuk-link"
-                           asp-action="TeamMemberRoleInOrganisation"
-                           asp-controller="ApprovedPerson"
-                           asp-route-id="@Model.Id">
-                            @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
-                        </a>
-                    </div>
-                </form>
+                <div class="govuk-button-group">
+                    <button class="govuk-button" type="submit">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                    
+                    <a class="govuk-link"
+                       asp-action="TeamMemberRoleInOrganisation"
+                       asp-controller="ApprovedPerson"
+                       asp-route-id="@Model.Id">
+                        @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
+                    </a>
+                </div>
+
             </div>
         </div>
     </main>

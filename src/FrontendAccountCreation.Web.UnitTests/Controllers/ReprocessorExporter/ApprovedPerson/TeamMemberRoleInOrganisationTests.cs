@@ -56,9 +56,10 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 }
             }
         };
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(teamMemberId);
 
         // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(teamMemberId);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -85,9 +86,10 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 }
             ]
         };
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(invalidTeamMemberId);
 
         // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(invalidTeamMemberId);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -109,9 +111,10 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         {
             TeamMembers = new List<ReExCompanyTeamMember>()
         };
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(teamMemberId);
 
         // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(teamMemberId);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -135,7 +138,8 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 new ReExCompanyTeamMember
                 {
                     Id = teamMemberId,
-                    Role = ReExTeamMemberRole.Director
+                    Role = ReExTeamMemberRole.Director,
+                    Email = "director@outlook.com"
                 }
             }
         };
@@ -248,14 +252,14 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         var model = viewResult.Model as TeamMemberRoleInOrganisationViewModel;
         model.Should().NotBeNull();
         viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
-       // AssertBackLink(viewResult, "Pagebefore");
+        // AssertBackLink(viewResult, "Pagebefore");
 
         // Verify ModelState contains the error
         _systemUnderTest.ModelState.IsValid.Should().BeFalse();
         _systemUnderTest.ModelState[nameof(TeamMemberRoleInOrganisationViewModel.RoleInOrganisation)]
             .Errors.Should()
             .Contain(e => e.ErrorMessage == "Field is required");
-    } 
+    }
 
     [TestMethod]
     public async Task TeamMemberRoleInOrganisation_Post_WithCompanySecretaryRole_CreatesNewMemberAndRedirectsToDetails()
@@ -345,12 +349,14 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
             new ReExCompanyTeamMember
             {
                 Id = teamMemberId,
-                Role = ReExTeamMemberRole.Director
+                Role = ReExTeamMemberRole.Director,
+                Email = "director@gmail.com"
             },
             new ReExCompanyTeamMember
             {
                 Id = Guid.NewGuid(),
-                Role = ReExTeamMemberRole.Director
+                Role = ReExTeamMemberRole.Director,
+                Email = "spielberger@gmail.com"
             }
         };
 
@@ -398,7 +404,8 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 new ReExCompanyTeamMember
                 {
                     Id = teamMemberId,
-                    Role = ReExTeamMemberRole.CompanySecretary
+                    Role = ReExTeamMemberRole.CompanySecretary,
+                    Email = "companysecretary@gmail.com"
                 }
             }
         };
@@ -439,7 +446,8 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
                 new ReExCompanyTeamMember
                 {
                     Id = teamMemberId,
-                    Role = ReExTeamMemberRole.Director
+                    Role = ReExTeamMemberRole.Director,
+                    Email = "director@outlook.com"
                 }
             }
         };
@@ -512,8 +520,10 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
             }
         };
 
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(teamMemberId);
+
         // Act
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(teamMemberId);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -526,7 +536,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     [TestMethod]
     public async Task TeamMemberRoleInOrganisation_Get_NullId_ReturnsDefaultView()
     {
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation((Guid?)null);
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
 
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
@@ -585,7 +595,9 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _orgSessionMock.IsOrganisationAPartnership = true;
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = new List<ReExCompanyTeamMember>();
 
-        var result = await _systemUnderTest.TeamMemberRoleInOrganisation(Guid.NewGuid());
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(Guid.NewGuid());
+
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
 
         result.Should().BeOfType<ViewResult>();
         ((ViewResult)result).ViewName.Should().Be("ApprovedPersonPartnershipRole");
@@ -613,10 +625,10 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     {
         var duplicateId = Guid.NewGuid();
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers = new List<ReExCompanyTeamMember>
-    {
-        new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.Director },
-        new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.CompanySecretary }
-    };
+        {
+            new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.Director, Email = "director@outlook.com" },
+            new ReExCompanyTeamMember { Id = duplicateId, Role = ReExTeamMemberRole.CompanySecretary, Email = "companysecretary@gmail.com" }
+        };
 
         var model = new TeamMemberRoleInOrganisationViewModel
         {
@@ -631,5 +643,23 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
 
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[0].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers[1].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisationAdd_Get_RedirectsTo_TeamMemberRoleInOrganisation()
+    {
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationAdd();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
+    }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisationEdit_Get_RedirectsTo_TeamMemberRoleInOrganisation()
+    {
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationEdit(Guid.NewGuid());
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMemberRoleInOrganisation));
     }
 }

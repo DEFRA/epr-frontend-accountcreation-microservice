@@ -121,24 +121,24 @@
     <value>Math o sefydliad</value>
   </data>
   <data name="ReExTypeOfOrganisation.Question" xml:space="preserve">
-    <value>(W)What type of business are you adding?</value>
+    <value>Pa fath o fusnes rydych chi'n ei ychwanegu?</value>
   </data>
   <data name="TypeOfOrganisation.NonUkOrganisation" xml:space="preserve">
     <value>Sefydliad y tu allan i’r Deyrnas Unedig</value>
   </data>
   <data name="ReExTypeOfOrganisation.Partnership" xml:space="preserve">
-    <value>(W)A partnership under the Partnership Act 1890(often called a general partnership)</value>
+    <value>Partneriaeth o dan Ddeddf Partneriaethau 1890 (sydd yn aml yn cael ei galw'n bartneriaeth gyffredinol)</value>
   </data>
   <data name="ReExTypeOfOrganisation.SoleTrader" xml:space="preserve">
-    <value>(W)An individual(for example, a sole trader)</value>
+    <value>Unigolyn (er enghraifft, unig fasnachwr)</value>
   </data>
   <data name="ReExTypeOfOrganisation.UnincorporatedBody" xml:space="preserve">
-    <value>(W)Unincorporated association</value>
+    <value>Cymdeithas anghorfforedig</value>
   </data>
   <data name="TypeOfOrganisation.Other" xml:space="preserve">
     <value>Arall</value>
   </data>
   <data name="ReExTypeOfOrganisation.ErrorMessage" xml:space="preserve">
-    <value>(W)Select the type of business you're adding</value>
+    <value>Dewiswch y math o fusnes rydych chi'n ei ychwanegu</value>
   </data>
 </root>

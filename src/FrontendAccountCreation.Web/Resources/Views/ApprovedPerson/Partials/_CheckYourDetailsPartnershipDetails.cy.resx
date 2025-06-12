@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,55 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddNotApprovedPerson.BulletAccreditation" xml:space="preserve">
-    <value>apply for accreditation</value>
+  <data name="CheckYourDetails.PartnersInPartnership" xml:space="preserve">
+    <value>[Welsh]Company Secretary within an organisation partner</value>
   </data>
-  <data name="AddNotApprovedPerson.BulletSubmit" xml:space="preserve">
-    <value>submit and verify data returns</value>
-  </data>
-  <data name="AddNotApprovedPerson.CompanySecretary" xml:space="preserve">
-    <value>company secretary</value>
-  </data>
-  <data name="AddNotApprovedPerson.Director" xml:space="preserve">
-    <value>director</value>
-  </data>
-  <data name="AddNotApprovedPerson.InsetText" xml:space="preserve">
-    <value>An approved person may delegate their function to another person (a delegate) at a later stage - subject to regulator approval.</value>
-  </data>
-  <data name="AddNotApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
-  </data>
-  <data name="AddNotApprovedPerson.IntroText1" xml:space="preserve">
-    <value>You should invite an 'approved person' who needs to be invited to take on tasks on behalf of the organisation.</value>
-  </data>
-  <data name="AddNotApprovedPerson.IntroText2" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to:</value>
-  </data>
-  <data name="AddNotApprovedPerson.IntroText3" xml:space="preserve">
-    <value>More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
-  </data>
-  <data name="AddNotApprovedPerson.InviteOptionsLegend" xml:space="preserve">
-    <value>Invite approved person options</value>
-  </data>
-  <data name="AddNotApprovedPerson.InviteAnotherApprovedPerson" xml:space="preserve">
-    <value>I will invite an eligible person to be an approved person</value>
-  </data>
-  <data name="AddNotApprovedPerson.InviteApprovedPersonLater" xml:space="preserve">
-    <value>I will invite an approved person later</value>
-  </data>
-  <data name="AddNotApprovedPerson.RolesHeading" xml:space="preserve">
-    <value>Roles eligible to be an approved person</value>
-  </data>
-  <data name="AddNotApprovedPerson.RolesInstruction" xml:space="preserve">
-    <value>Either of these roles can be an approved person</value>
-  </data>
-  <data name="AddNotApprovedPerson.SelectOptionText" xml:space="preserve">
-    <value>Select an option to proceed.</value>
-  </data>
-  <data name="AddNotApprovedPerson.Title" xml:space="preserve">
-    <value>Add an approved person </value>
-  </data>
-  <data name="AddNotApprovedPerson.UserHeading" xml:space="preserve">
-    <value>Invite users in your team</value>
+  <data name="CheckYourDetails.TeamMembers.FirstName" xml:space="preserve">
+    <value>[Welsh]First name</value>
   </data>
 </root>
