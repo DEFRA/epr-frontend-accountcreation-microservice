@@ -30,5 +30,5 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
 
     //todo: revisit once 'Add an approved person' page is in
     //protected override string RedirectActionNameOnNo => nameof(OrganisationController.NotApprovedPerson);
-    protected override string RedirectActionNameOnNo => nameof(ApprovedPersonController.SoleTraderTeamMemberDetails);
+    protected override string RedirectActionNameOnNo => nameof(ApprovedPersonController.AddApprovedPerson);
 }
