@@ -653,7 +653,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             viewModel.Street = session.ReExManualInputSession.BusinessAddress.Street;
             viewModel.Town = session.ReExManualInputSession.BusinessAddress.Town;
             viewModel.County = session.ReExManualInputSession.BusinessAddress.County;
-            viewModel.Postcode = session.ReExManualInputSession.BusinessAddress.County;
+            viewModel.Postcode = session.ReExManualInputSession.BusinessAddress.Postcode;
         }
 
         return View(viewModel);
