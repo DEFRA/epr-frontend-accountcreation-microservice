@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BusinessAddress.BuildingNameLabel" xml:space="preserve">
+    <value />
+  </data>
+  <data name="BusinessAddress.BuildingNumberLabel" xml:space="preserve">
+    <value />
+  </data>
   <data name="BusinessAddress.CountyLabel" xml:space="preserve">
     <value />
   </data>
@@ -130,6 +136,9 @@
     <value />
   </data>
   <data name="BusinessAddress.Question" xml:space="preserve">
+    <value />
+  </data>
+  <data name="BusinessAddress.StreetLabel" xml:space="preserve">
     <value />
   </data>
   <data name="BusinessAddress.Title" xml:space="preserve">
