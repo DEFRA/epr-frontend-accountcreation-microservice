@@ -12,7 +12,7 @@ namespace FrontendAccountCreation.Core.Sessions
         [Description("Individual Partner")]
         IndividualPartner = 1,
 
-        [Description("Company Partner")]
-        CompanyPartner = 2,
+        [Description("Corporate Partner")]
+        CorporatePartner = 2,
     }
 }
