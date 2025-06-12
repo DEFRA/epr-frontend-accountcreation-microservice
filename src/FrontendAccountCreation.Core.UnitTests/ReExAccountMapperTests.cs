@@ -46,18 +46,21 @@ namespace FrontendAccountCreation.Core.UnitTests
         }
 
         [TestMethod]
-        [DataRow(null, null, null, null)]
-        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.Director, "Director", "Director")]
-        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.CompanySecretary, "Director", "CompanySecretary")]
-        public void CreateReExOrganisationModel_Returns_ValidModel_FromOrganisationSession(RoleInOrganisation? roleInOrg, ReExTeamMemberRole? teamMemberRole, string? expectedRole, string? expectedTeamMember)
+        [DataRow(OrganisationType.NotSet, null, null, null, null, false, Nation.NotSet)]
+        [DataRow(OrganisationType.CompaniesHouseCompany, RoleInOrganisation.Director, ReExTeamMemberRole.Director, "Director", "Director", true, Nation.Wales)]
+        [DataRow(OrganisationType.CompaniesHouseCompany, RoleInOrganisation.CompanySecretary, ReExTeamMemberRole.CompanySecretary, "CompanySecretary", "CompanySecretary", false, Nation.Scotland)]
+        [DataRow(OrganisationType.CompaniesHouseCompany, RoleInOrganisation.Director, ReExTeamMemberRole.Director, "Director", "Director", false, Nation.NorthernIreland)]
+        [DataRow(OrganisationType.CompaniesHouseCompany, RoleInOrganisation.CompanySecretary, ReExTeamMemberRole.CompanySecretary, "CompanySecretary", "CompanySecretary", false, Nation.England)]
+        public void CreateReExOrganisationModel_Returns_ValidModel_FromOrganisationSession(OrganisationType orgType, RoleInOrganisation? roleInOrg, ReExTeamMemberRole? teamMemberRole, string? expectedRole, string? expectedTeamMember, bool isCompliance, Nation nation)
         {
             // Arrange
             var orgSession = new OrganisationSession
             {
-                OrganisationType = OrganisationType.CompaniesHouseCompany,
+                OrganisationType = orgType,
                 IsTheOrganisationCharity = false,
                 ReExCompaniesHouseSession = new ReExCompaniesHouseSession
                 {
+                    IsComplianceScheme = isCompliance,
                     Company = new Services.Dto.Company.Company
                     {
                         AccountCreatedOn = DateTime.Now,
@@ -96,9 +99,10 @@ namespace FrontendAccountCreation.Core.UnitTests
                     ],
                     RoleInOrganisation = roleInOrg
                 },
-                UkNation = Nation.England,
+                ReExManualInputSession = null,
+                UkNation = nation,
                 DeclarationFullName = "Test 01",
-                DeclarationTimestamp = DateTime.UtcNow,
+                DeclarationTimestamp = DateTime.UtcNow                
             };
 
             // Act
@@ -106,14 +110,17 @@ namespace FrontendAccountCreation.Core.UnitTests
 
             // Assert
             result.Should().NotBeNull();
+            result.Company.OrganisationType.Should().Be(orgType);
             result.UserRoleInOrganisation.Should().Be(expectedRole);
             result.Company.CompanyName.Should().Be("ReEx Test Ltd");
             result.Company.CompaniesHouseNumber.Should().Be("12345678");
             result.Company.CompanyRegisteredAddress.BuildingName.Should().Be("ReEx House");
             result.Company.CompanyRegisteredAddress.Street.Should().Be("High street");
-            result.Company.Nation.Should().Be(Nation.England);
+            result.Company.Nation.Should().Be(nation);
             result.Company.ValidatedWithCompaniesHouse.Should().Be(true);
             result.Company.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");
+
+            result.ManualInput.Should().BeNull();
 
             // Assert collection
             result.InvitedApprovedPersons.Should().NotBeNull();
@@ -179,16 +186,20 @@ namespace FrontendAccountCreation.Core.UnitTests
         }
 
         [TestMethod]
-        [DataRow(ReExTeamMemberRole.Director, "Director")]
-        public void CreateReExOrganisationModel_Returns_Model_FromOrganisationSession_With_ManualInputSession_Data(ReExTeamMemberRole memberRole, string expectedRole)
+        [DataRow(ReExTeamMemberRole.Director, "Director", OrganisationType.NonCompaniesHouseCompany, Nation.Scotland)]
+        [DataRow(ReExTeamMemberRole.CompanySecretary, "CompanySecretary", OrganisationType.NonCompaniesHouseCompany, Nation.England)]
+        [DataRow(ReExTeamMemberRole.IndividualPartner, "IndividualPartner", OrganisationType.NonCompaniesHouseCompany, Nation.Wales)]
+        [DataRow(ReExTeamMemberRole.PartnerDirector, "PartnerDirector", OrganisationType.NonCompaniesHouseCompany, Nation.NorthernIreland)]
+        [DataRow(ReExTeamMemberRole.None, "None", OrganisationType.NonCompaniesHouseCompany, Nation.NotSet)]
+        public void CreateReExOrganisationModel_Returns_Model_FromOrganisationSession_With_ManualInputSession_Data(ReExTeamMemberRole memberRole, string expectedRole, OrganisationType organisationType, Nation nation)
         {
             // Arrange
             var orgSession = new OrganisationSession
             {
-                OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+                OrganisationType = organisationType,
                 ReExCompaniesHouseSession = null,
                 IsApprovedUser = false,
-                UkNation = null,
+                UkNation = nation,
                 ReExManualInputSession = new ReExManualInputSession
                 {
                     BusinessAddress = new Addresses.Address
@@ -223,6 +234,8 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.Should().NotBeNull();
             result.Company.Should().BeNull();
             result.ManualInput.BusinessAddress.Should().NotBeNull();
+            result.ManualInput.OrganisationType.Should().Be(organisationType);
+            result.ManualInput.Nation.Should().Be(nation);
             result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
             result.ManualInput.TradingName.Should().Be("test sole trader");
             
