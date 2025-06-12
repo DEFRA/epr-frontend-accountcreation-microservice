@@ -671,7 +671,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        var address = session.ReExManualInputSession?.BusinessAddress ?? new Address();
+        var address = session!.ReExManualInputSession!.BusinessAddress ??= new Address();
 
         address.BuildingNumber = model.BuildingNumber;
         address.BuildingName = model.BuildingName;
