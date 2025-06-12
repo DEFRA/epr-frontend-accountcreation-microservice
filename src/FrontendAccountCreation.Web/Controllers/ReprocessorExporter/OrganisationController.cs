@@ -638,11 +638,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpGet]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
-    public Task<IActionResult> BusinessAddress()
-    {
-        return PlaceholderPageGet(PagePath.BusinessAddress, true);
-    }
-
     public async Task<IActionResult> BusinessAddress()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -662,11 +657,10 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return View(viewModel);
     }
 
-    [ExcludeFromCodeCoverage]
     [HttpPost]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
-    public Task<IActionResult> BusinessAddressPost()
+    public Task<IActionResult> BusinessAddressPost(ReExBusinessAddressViewModel model)
     {
         return PlaceholderPagePost(nameof(SoleTrader), PagePath.BusinessAddress, PagePath.SoleTrader);
     }
