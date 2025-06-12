@@ -19,6 +19,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
+using FrontendAccountCreation.Core.Addresses;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -645,6 +646,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var viewModel = new ReExBusinessAddressViewModel();
 
+        //IsManualAddress?
         if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
         {
             viewModel.AddressLine1 = session.ReExManualInputSession.BusinessAddress.SubBuildingName;
@@ -660,9 +662,23 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpPost]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
-    public Task<IActionResult> BusinessAddressPost(ReExBusinessAddressViewModel model)
+    public async Task<IActionResult> BusinessAddress(ReExBusinessAddressViewModel model)
     {
-        return PlaceholderPagePost(nameof(SoleTrader), PagePath.BusinessAddress, PagePath.SoleTrader);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.BusinessAddress);
+            return View(model);
+        }
+
+        var address = session.ReExManualInputSession?.BusinessAddress ?? new Address();
+
+        address.Town = model.Town;
+        address.County = model.County;
+        address.Postcode = model.Postcode;
+
+        return await SaveSessionAndRedirect(session, nameof(SoleTrader),
+            PagePath.BusinessAddress, PagePath.SoleTrader);
     }
 
     [HttpGet]
