@@ -259,11 +259,6 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         partnershipSession.IsLimitedLiabilityPartnership = isLlp;
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
-        //Set producer type to LP or LLP
-        session.ReExCompaniesHouseSession.ProducerType = partnershipSession.IsLimitedPartnership ?
-                                                                ProducerType.LimitedPartnership :
-                                                                ProducerType.LimitedLiabilityPartnership;
-
         return model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership ?
             await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType) :
             await SaveSessionAndRedirect(session, nameof(LimitedLiabilityPartnership), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);

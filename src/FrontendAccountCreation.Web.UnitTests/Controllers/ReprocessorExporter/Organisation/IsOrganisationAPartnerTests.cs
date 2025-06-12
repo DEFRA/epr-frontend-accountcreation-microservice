@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 
 using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -161,7 +160,6 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
             {
                 TeamMembers = [],
                 Partnership = new(),
-                ProducerType = ProducerType.LimitedPartnership
             }
         };
 
@@ -173,7 +171,6 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
-        _orgSessionMock.ReExCompaniesHouseSession.ProducerType.Should().NotBeNull().And.Be(ProducerType.LimitedPartnership);
         _orgSessionMock.IsOrganisationAPartnership.Should().BeTrue();
     }
 
@@ -225,7 +222,6 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
             {
                 TeamMembers = [],
                 Partnership = new(),
-                ProducerType = ProducerType.LimitedLiabilityPartnership,
             }
         };
 
@@ -237,6 +233,5 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().BeNull();
-        _orgSessionMock.ReExCompaniesHouseSession.ProducerType.Should().BeNull();
     }
 }

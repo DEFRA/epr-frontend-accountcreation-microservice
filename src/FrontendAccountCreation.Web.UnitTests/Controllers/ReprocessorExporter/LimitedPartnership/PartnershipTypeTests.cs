@@ -203,9 +203,7 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
             It.Is<OrganisationSession>(s =>
                 s.IsOrganisationAPartnership.HasValue &&
                 s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null &&
-                s.ReExCompaniesHouseSession.ProducerType.HasValue &&
-                s.ReExCompaniesHouseSession.ProducerType == ProducerType.LimitedPartnership
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null
             )),
             Times.Once);
     }
@@ -230,9 +228,7 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
-                s.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership &&
-                s.ReExCompaniesHouseSession.ProducerType.HasValue &&
-                s.ReExCompaniesHouseSession.ProducerType == ProducerType.LimitedLiabilityPartnership
+                s.ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership == true
             )),
             Times.Once);
     }

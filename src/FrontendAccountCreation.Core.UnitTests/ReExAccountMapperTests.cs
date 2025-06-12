@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
@@ -96,7 +95,7 @@ namespace FrontendAccountCreation.Core.UnitTests
                     ],
                     RoleInOrganisation = roleInOrg
                 },
-                UkNation = Nation.England
+                UkNation = Nation.England                
             };
 
             // Act
@@ -111,8 +110,8 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.Company.CompanyRegisteredAddress.Street.Should().Be("High street");
             result.Company.Nation.Should().Be(Nation.England);
             result.Company.ValidatedWithCompaniesHouse.Should().Be(true);
-            result.Company.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");
-
+            result.Company.OrganisationId.Should().Be("06352abc-bb77-4855-9705-cf06ae88f5a8");            
+           
             // Assert collection
             result.InvitedApprovedPersons.Should().NotBeNull();
             result.InvitedApprovedPersons.Should().HaveCount(2);
@@ -146,11 +145,11 @@ namespace FrontendAccountCreation.Core.UnitTests
                     {
                         Name = null,
                         CompaniesHouseNumber = null,
-                        OrganisationId = null,
+                        OrganisationId = null,                 
                         AccountCreatedOn = DateTime.Now,
                         BusinessAddress = null
                     },
-                    RoleInOrganisation = null
+                    RoleInOrganisation = null                    
                 },
                 IsApprovedUser = false,
                 UkNation = null
@@ -168,85 +167,6 @@ namespace FrontendAccountCreation.Core.UnitTests
             result.Company.Nation.Should().Be(Nation.NotSet);
             result.InvitedApprovedPersons.Should().NotBeNull();
             result.InvitedApprovedPersons.Should().HaveCount(0);
-        }
-
-        [TestMethod]
-        public void CreateReExOrganisationModel_Map_ProducerTypes()
-        {
-            // Arrange
-            var orgSession = new OrganisationSession
-            {
-                OrganisationType = OrganisationType.CompaniesHouseCompany,
-                ReExCompaniesHouseSession = new ReExCompaniesHouseSession
-                {
-                    Company = new Services.Dto.Company.Company
-                    {
-                        AccountCreatedOn = DateTime.Now,
-                        Name = "ReEx Test Ltd",
-                        CompaniesHouseNumber = "12345678",
-                        OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
-                    },
-                    ProducerType = ProducerType.LimitedLiabilityPartnership,
-                },
-                UkNation = Nation.England,
-            };
-
-            var result = _mapper!.CreateReExOrganisationModel(orgSession);
-
-            result.Company.ProducerType.Should().NotBeNull().And.Be(ProducerType.LimitedLiabilityPartnership.ToString());
-        }
-
-        [TestMethod]
-        public void CreateReExOrganisationModel_Map_Partners()
-        {
-            var orgSession = new OrganisationSession
-            {
-                OrganisationType = OrganisationType.CompaniesHouseCompany,
-                ReExCompaniesHouseSession = new ReExCompaniesHouseSession
-                {
-                    Company = new Services.Dto.Company.Company
-                    {
-                        AccountCreatedOn = DateTime.Now,
-                        Name = "ReEx Test Ltd",
-                        CompaniesHouseNumber = "12345678",
-                        OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
-                    },
-                    Partnership = new()
-                    {
-                        LimitedPartnership = new()
-                        {
-                            Partners =
-                            [
-                                new()
-                                {
-                                    IsPerson = true,
-                                    Name = "Person1"
-                                },
-                                new()
-                                {
-                                    IsPerson = false,
-                                    Name = "Company1"
-                                }
-                            ]
-                        }
-                    }
-                },
-                UkNation = Nation.England,
-            };
-
-            var result = _mapper!.CreateReExOrganisationModel(orgSession);
-
-            result.Partners.Should().NotBeNull().And.HaveCount(2);
-            result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
-            {
-                Name = "Person1",
-                PartnerRole = PartnerType.IndividualPartner.GetDescription()
-            });
-            result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
-            {
-                Name = "Company1",
-                PartnerRole = PartnerType.CompanyPartner.GetDescription()
-            });
         }
     }
 }
