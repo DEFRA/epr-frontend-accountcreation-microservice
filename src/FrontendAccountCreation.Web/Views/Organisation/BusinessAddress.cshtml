@@ -50,7 +50,7 @@
                             </div>
 
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.Street)) ? " govuk-form-group--error" : "")">
-                                <label gov-for="BuildingName" class="govuk-label">@Localizer["BusinessAddress.StreetLabel"]</label>
+                                <label gov-for="Street" class="govuk-label">@Localizer["BusinessAddress.StreetLabel"]</label>
                                 @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.Street)])
                                 <input class="govuk-input govuk-!-width-full @Html.Raw(errorsViewModel.HasErrorKey(nameof(Model.Street)) ? errorClass : "")"
                                        type="text"
