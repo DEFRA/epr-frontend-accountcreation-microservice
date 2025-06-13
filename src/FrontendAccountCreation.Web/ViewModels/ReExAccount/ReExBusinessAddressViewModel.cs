@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
+[ExcludeFromCodeCoverage]
 public class ReExBusinessAddressViewModel
 {
-    //todo: add extra error messages to story
     [Required(ErrorMessage = "BusinessAddress.BuildingNumberError")]
     [MaxLength(50, ErrorMessage = "BusinessAddress.BuildingNumberLengthError")]
     public string? BuildingNumber { get; set; }

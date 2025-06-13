@@ -645,7 +645,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var viewModel = new ReExBusinessAddressViewModel();
 
-        //todo: IsManualAddress?
         if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
         {
             viewModel.BuildingNumber = session.ReExManualInputSession.BusinessAddress.BuildingNumber;
