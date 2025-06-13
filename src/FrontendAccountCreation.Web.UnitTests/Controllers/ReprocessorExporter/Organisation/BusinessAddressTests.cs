@@ -142,22 +142,20 @@ public class BusinessAddressTests : OrganisationTestBase
             Times.Never);
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenNoTradingName_ThenReturnView()
-    //{
-    //    // Arrange
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
-    //    var viewModel = new TradingNameViewModel
-    //    {
-    //        TradingName = ""
-    //    };
+    [TestMethod]
+    public async Task POST_GivenBusinessAddressDetailsMissing_ThenReturnView()
+    {
+        // Arrange
+        var request = new ReExBusinessAddressViewModel();
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(viewModel);
+        _systemUnderTest.ModelState.AddModelError(nameof(ReExBusinessAddressViewModel.Town), "Enter your organisation's town or city");
 
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //}
+        // Act
+        var result = await _systemUnderTest.BusinessAddress(request);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+    }
 
     //[TestMethod]
     //public async Task POST_GivenNoTradingName_ThenReturnViewWithUsersBadInput()
