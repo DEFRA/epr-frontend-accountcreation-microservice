@@ -70,9 +70,9 @@
                                         @Localizer[Model.TypeOfProducer].Value
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a href="~/@PagePath.TypeOfOrganisation" class="govuk-link govuk-link--no-visited-state">
+                                        <a class="govuk-link" href="@Url.Action("TypeOfOrganisation", "Organisation")">
                                             @SharedLocalizer["Change"]
-                                            <span class="govuk-visually-hidden"></span>
+                                            <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
                                         </a>
                                     </dd>
                                 </div>
@@ -174,7 +174,7 @@
                             @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
 
-                        @if (Model.reExCompanyTeamMembers != null)
+                        @if (Model.reExCompanyTeamMembers != null && Model.reExCompanyTeamMembers?.Count > 0)
                         {
                             <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4">@Localizer["CheckYourDetails.TeamMembers.ApprovedPersonsAdded"]</h2>
 
