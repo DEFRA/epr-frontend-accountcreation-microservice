@@ -36,7 +36,7 @@ public class BusinessAddressTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task GET_WhenTradingNameIsNotInSession_ThenViewIsReturnedWithoutDetails()
+    public async Task GET_WhenBusinessAddressIsNotInSession_ThenViewIsReturnedWithoutDetails()
     {
         //Act
         var result = await _systemUnderTest.BusinessAddress();
@@ -54,27 +54,39 @@ public class BusinessAddressTests : OrganisationTestBase
         viewModel.Postcode.Should().BeNull();
     }
 
-    //[TestMethod]
-    //public async Task GET_WhenTradingNameIsInSession_ThenViewIsReturnedWithTradingName()
-    //{
-    //    //Arrange
-    //    const string tradingName = "Trading name";
-    //    _organisationSession.ReExManualInputSession = new ReExManualInputSession
-    //    {
-    //        TradingName = tradingName,
-    //        BusinessAddress = new Core.Addresses.Address()
-    //    };
+    [TestMethod]
+    public async Task GET_WhenBusinessAddressIsInSession_ThenViewIsReturnedWithBusinessAddress()
+    {
+        //Arrange
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            BusinessAddress = new Core.Addresses.Address
+            {
+                BuildingName = "building name",
+                BuildingNumber = "building number",
+                Street = "street",
+                Town = "town",
+                County = "county",
+                Postcode = "b1 2AA",
+                IsManualAddress = true
+            }
+        };
 
-    //    //Act
-    //    var result = await _systemUnderTest.TradingName();
+        //Act
+        var result = await _systemUnderTest.BusinessAddress();
 
-    //    //Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    viewResult.Model.Should().BeOfType<TradingNameViewModel>();
-    //    var viewModel = (TradingNameViewModel?)viewResult.Model;
-    //    viewModel!.TradingName.Should().Be(tradingName);
-    //}
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<ReExBusinessAddressViewModel>();
+        var viewModel = (ReExBusinessAddressViewModel?)viewResult.Model;
+        viewModel!.BuildingName.Should().Be("building name");
+        viewModel.BuildingNumber.Should().Be("building number");
+        viewModel.Street.Should().Be("street");
+        viewModel.Town.Should().Be("town");
+        viewModel.County.Should().Be("county");
+        viewModel.Postcode.Should().Be("b1 2AA");
+    }
 
     //[TestMethod]
     //public async Task GET_ThenBackLinkIsCorrect()
