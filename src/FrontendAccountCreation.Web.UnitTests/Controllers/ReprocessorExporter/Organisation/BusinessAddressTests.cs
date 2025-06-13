@@ -1,9 +1,7 @@
 ﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -158,6 +156,25 @@ public class BusinessAddressTests : OrganisationTestBase
     }
 
     [TestMethod]
+    public async Task POST_GivenBusinessAddressDetailsMissing_ThenViewHasCorrectBackLink()
+    {
+        // Arrange
+        var request = new ReExBusinessAddressViewModel();
+
+        _systemUnderTest.ModelState.AddModelError(nameof(ReExBusinessAddressViewModel.Town), "Enter your organisation's town or city");
+
+        // Act
+        var result = await _systemUnderTest.BusinessAddress(request);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+
+        var viewResult = (ViewResult)result;
+
+        AssertBackLink(viewResult, PagePath.UkNation);
+    }
+
+    [TestMethod]
     public async Task POST_GivenFieldTooLong_ThenReturnViewWithUsersBadInput()
     {
         // Arrange
@@ -181,21 +198,4 @@ public class BusinessAddressTests : OrganisationTestBase
         var resultViewModel = (ReExBusinessAddressViewModel?)viewResult.Model;
         resultViewModel!.Town.Should().Be(tooLongTown);
     }
-
-    //[TestMethod]
-    //public async Task POST_GivenNoTradingName_ThenViewHasCorrectBackLink()
-    //{
-    //    // Arrange
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
-
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(new TradingNameViewModel());
-
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
-
-    //    var viewResult = (ViewResult)result;
-
-    //    AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
-    //}
 }
