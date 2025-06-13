@@ -145,7 +145,7 @@
     <value>What is your organisation's address?</value>
   </data>
   <data name="BusinessAddress.StreetLabel" xml:space="preserve">
-    <value>Street name</value>
+    <value>Street</value>
   </data>
   <data name="BusinessAddress.StreetNameError" xml:space="preserve">
     <value>Enter your organisation's street</value>
