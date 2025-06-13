@@ -25,10 +25,7 @@ public class BusinessAddressTests : OrganisationTestBase
         {
             Journey =
             [
-                //todo:
-                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
-                PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent,
-                PagePath.TradingName
+                PagePath.UkNation, PagePath.BusinessAddress
             ]
         };
 
@@ -88,17 +85,17 @@ public class BusinessAddressTests : OrganisationTestBase
         viewModel.Postcode.Should().Be("b1 2AA");
     }
 
-    //[TestMethod]
-    //public async Task GET_ThenBackLinkIsCorrect()
-    //{
-    //    //Act
-    //    var result = await _systemUnderTest.TradingName();
+    [TestMethod]
+    public async Task GET_ThenBackLinkIsCorrect()
+    {
+        //Act
+        var result = await _systemUnderTest.BusinessAddress();
 
-    //    //Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
-    //}
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        AssertBackLink(viewResult, PagePath.UkNation);
+    }
 
     //[TestMethod]
     //public async Task POST_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
