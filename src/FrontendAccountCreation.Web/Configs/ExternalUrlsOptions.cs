@@ -56,4 +56,6 @@ public class ExternalUrlsOptions
     public string CustomerServiceEmail { get; set; }
 
     public string CustomerServicePhone { get; set; }
+
+    public string PrnRedirectUrl { get; set; }
 }

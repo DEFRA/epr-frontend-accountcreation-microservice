@@ -1,13 +1,14 @@
-﻿using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.HealthChecks;
 using FrontendAccountCreation.Web.Middleware;
-
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,27 +83,32 @@ app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
 
 if (app.Environment.IsDevelopment())
 {
+#pragma warning disable S4507
     IdentityModelEventSource.ShowPII = true;
     app.UseDeveloperExceptionPage();
+#pragma warning restore S4507
 }
 else
 {
     app.UseExceptionHandler("/error");
 }
+app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
 
 app.UseForwardedHeaders();
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
 app.UseCookiePolicy();
 app.UseSession();
-app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRequestLocalization();
+app.UseMiddleware<FeatureMiddleware>();
 app.UseMiddleware<JourneyAccessCheckerMiddleware>();
+app.UseMiddleware<ReExJourneyAccessCheckerMiddleware>();
+app.UseMiddleware<OrganisationJourneyAccessCheckerMiddleware>();
 app.UseMiddleware<AnalyticsCookieMiddleware>();
 
 app.MapControllerRoute(

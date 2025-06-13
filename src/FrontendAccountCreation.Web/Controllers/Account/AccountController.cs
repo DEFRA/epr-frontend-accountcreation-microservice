@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
 namespace FrontendAccountCreation.Web.Controllers.Account
@@ -49,7 +48,8 @@ namespace FrontendAccountCreation.Web.Controllers.Account
         /// <returns>Sign out result.</returns>
         [HttpGet("{scheme?}")]
         public IActionResult SignOut(
-            [FromRoute] string? scheme)
+            [FromRoute] string? scheme,
+            bool? reEx)
         {
             if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
             {
@@ -59,7 +59,7 @@ namespace FrontendAccountCreation.Web.Controllers.Account
             }
 
             scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
-            var callbackUrl = Url.Action(action: "SignedOut", controller: "Home", values: null, protocol: Request.Scheme);
+            var callbackUrl = Url.Action(action: "SignedOut", controller: "Home", values: new { reEx }, protocol: Request.Scheme);
             return SignOut(
                  new AuthenticationProperties
                  {

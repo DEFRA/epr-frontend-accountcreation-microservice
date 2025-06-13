@@ -1,0 +1,89 @@
+﻿@using FrontendAccountCreation.Core.Sessions;
+@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Controllers.AccountCreation
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
+
+@model TeamMemberRoleInOrganisationViewModel;
+
+@{
+    ViewData["Title"] = Localizer["TeamMemberRoleInOrganisation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+    
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
+
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                                    @Localizer["TeamMemberRoleInOrganisation.WhatIsTheirRole"]
+                                </h1>
+                            </legend>
+
+                            <p class="govuk-body">@Localizer["TeamMemberRoleInOrganisation.WhatIsTheirRoleAdditionalInformation"]</p>
+
+                            @Html.HiddenFor(x => x.Id)
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <!-- director -->
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoDirector"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(RoleInOrganisation.Director)"
+                                           gov-first-option="true">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(RoleInOrganisation.Director)"
+                                           gov-first-option="true">
+                                        @SharedLocalizer["Director"]
+                                    </label>
+                                </div>
+                                <!-- company secretary -->
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(RoleInOrganisation.CompanySecretary)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="RoleInOrganisation"
+                                           gov-value="@nameof(RoleInOrganisation.CompanySecretary)">
+                                        @SharedLocalizer["CompanySecretary"]
+                                    </label>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-button-group">
+
+                        <!-- goes to what are their details-->
+                        <button class="govuk-button" asp-controller="ApprovedPerson" asp-action="TeamMemberRoleInOrganisation" type="submit">
+                            @Localizer["TeamMemberRoleInOrganisation.ContinueWithInvitation"]
+                        </button>
+
+                        <!-- goes to check your details -->
+                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueWithoutInvitation"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
+                                 new
+                                 {
+                                     @class = "govuk-button govuk-button--secondary"
+                                 })
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

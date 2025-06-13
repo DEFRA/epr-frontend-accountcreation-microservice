@@ -1,0 +1,23 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@model ApprovedPersonViewModel
+@{
+    ViewData["Title"] = Localizer["YouAreApprovedPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+@if (Model.IsLimitedPartnership)
+{
+    @Html.Partial("Partials/_LimitedPartnershipYouAreApprovedPerson")
+}
+else if (Model.IsLimitedLiabilityPartnership)
+{
+    @Html.Partial("Partials/_LimitedLiabilityPartnershipApprovedPerson")
+}
+else 
+{
+    @Html.Partial("Partials/_NonPartnershipApprovedPerson")
+}
+
+

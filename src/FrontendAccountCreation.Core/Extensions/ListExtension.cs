@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Core.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Core.Extensions;
+
+[ExcludeFromCodeCoverage]
 public static class ListExtension
 {
     public static void AddIfNotExists<T>(this List<T> source, T value)

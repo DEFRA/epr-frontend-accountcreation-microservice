@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TeamMemberRoleInOrganisation.Title" xml:space="preserve">
+    <value>What is their role as shown on Companies House?</value>
+  </data>
+  <data name="TeamMemberRoleInOrganisation.WhatIsTheirRole" xml:space="preserve">
+    <value>What is their role as shown on Companies House?</value>
+  </data>
+  <data name="TeamMemberRoleInOrganisation.WhatIsTheirRoleAdditionalInformation" xml:space="preserve">
+    <value>These roles are eligible to be invited as an approved person. You can still enrol an organisation without inviting someone if you do not have a name and contact details yet.
+	</value>
+  </data>
+  <data name="TeamMemberRoleInOrganisation.ContinueWithInvitation" xml:space="preserve">
+    <value>Continue with invitation</value>
+  </data>
+  <data name="TeamMemberRoleInOrganisation.ContinueWithoutInvitation" xml:space="preserve">
+    <value>Continue without invitation</value>
+  </data>
+  <data name="TeamMemberRoleInOrganisation.ErrorMessage" xml:space="preserve">
+    <value>Select their role in the organisation</value>
+  </data>
+</root>

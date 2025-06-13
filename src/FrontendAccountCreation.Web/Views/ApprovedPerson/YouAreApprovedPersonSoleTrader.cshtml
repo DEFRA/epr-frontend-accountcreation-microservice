@@ -1,0 +1,41 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+
+@{
+	ViewData["Title"] = Localizer["YouAreApprovedPerson.Title"];
+	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+	ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<div class="govuk-width-container">
+	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
+				<fieldset class="govuk-fieldset">
+					<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+						<h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
+							@Localizer["YouAreApprovedPersonSoleTrader.Header"]
+						</h1>
+					</legend>
+				</fieldset>
+
+				<p class="govuk-body">@Localizer["YouAreApprovedPersonSoleTrader.Description"].Value</p>
+
+				<p class="govuk-body">@Localizer["YouAreApprovedPersonSoleTrader.Description2"].Value</p>
+
+				<p class="govuk-body">@Localizer["YouAreApprovedPersonSoleTrader.Description3"].Value</p>					
+
+				<form asp-controller="ApprovedPerson" method="get">
+					<div class="govuk-button-group">
+						<button class="govuk-button" data-module="govuk-button" asp-action="SoleTraderContinue">
+							@SharedLocalizer["Continue"]
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</main>
+</div>

@@ -8,16 +8,26 @@
 
 @{
     string cookiesLink = ($"{ExternalUrlsOptions.Value.CookiesLink}?returnurl={Model.ReturnUrl}");
+    LocalizedHtmlString cookieBannerTitle;
+
+    if (ViewData["ApplicationTitleOverride"] == LayoutOverrides.ReExTitleOverride)
+    {
+        cookieBannerTitle = Localizer["CookieBanner.ReExTitle"];
+    }
+    else
+    {
+        cookieBannerTitle = Localizer["CookieBanner.Title"];
+    }
 }
 
 @if (Model.ShowBanner)
 {
     <form method="POST" asp-controller="Cookies" asp-action="UpdateAcceptance" asp-route-returnUrl="@Model.ReturnUrl">
-        <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="@Localizer["CookieBanner.Title"]">
+        <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="@cookieBannerTitle">
             <div class="govuk-cookie-banner__message govuk-width-container">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">
-                        <h2 class="govuk-cookie-banner__heading govuk-heading-m">@Localizer["CookieBanner.Title"]</h2>
+                        <h2 class="govuk-cookie-banner__heading govuk-heading-m">@cookieBannerTitle</h2>
                         <div class="govuk-cookie-banner__content">
                             <p class="govuk-body">@Localizer["CookieBanner.EssentialParagraph"]</p>
                             <p class="govuk-body">@Localizer["CookieBanner.AnalyticalParagraph"]</p>
@@ -39,13 +49,14 @@
 }
 else if (Model.ShowAcknowledgement)
 {
-    <form  method="POST" asp-controller="Cookies" asp-action="AcknowledgeAcceptance" asp-route-returnUrl="@Model.ReturnUrl">
-        <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="@Localizer["CookieBanner.Title"]">
+    <form method="POST" asp-controller="Cookies" asp-action="AcknowledgeAcceptance" asp-route-returnUrl="@Model.ReturnUrl">
+        <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="@cookieBannerTitle">
             <div class="govuk-cookie-banner__message govuk-width-container">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds">
                         <div class="govuk-cookie-banner__content">
-                            <p class="govuk-body">@Localizer[ Model.AcceptAnalytics ? "CookieBanner.Accepted" : "CookieBanner.Rejected"]
+                            <p class="govuk-body">
+                                @Localizer[Model.AcceptAnalytics ? "CookieBanner.Accepted" : "CookieBanner.Rejected"]
                                 <a class="govuk-link" href="@cookiesLink">@Localizer["CookieBanner.ChangeYourCookieSettings"]</a> @Localizer["CookieBanner.AtAnyTime"]
                             </p>
                         </div>

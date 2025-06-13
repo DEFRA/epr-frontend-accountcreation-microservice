@@ -1,0 +1,113 @@
+@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Core.Sessions
+@using FrontendAccountCreation.Web.Constants
+
+@model UkNationViewModel
+
+@{
+    ViewData["Title"] = Localizer["UkNation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form asp-controller="Organisation" asp-action="UkNation" method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+                        <fieldset class="govuk-fieldset" aria-describedby="@(Model.IsCompaniesHouseFlow ? "limited-company-hint" : "")">
+                            <legend class="govuk-fieldset__legend">
+                                @if (Model.IsCompaniesHouseFlow)
+                                {
+                                    <h1 class="fieldset__heading govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                        @Localizer["UkNation.LimitedCompany.Question"]
+                                    </h1>
+                                }
+                                else if (Model.IsManualInputFlow)
+                                {
+                                    <h1 class="fieldset__heading govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                        @Localizer["UkNation.SoleTrader.Question"]
+                                    </h1>
+                                }
+                            </legend>
+                            
+                            @if (Model.IsCompaniesHouseFlow)
+                            {
+                                <div class="govuk-hint" id="limited-company-hint">
+                                    @Localizer["UkNation.LimitedCompany.Hint"]
+                                </div>
+                            }
+                            @if (Model.IsManualInputFlow)
+                            {
+                                <div class="govuk-hint" id="sole-trader-hint">
+                                    @Localizer["UkNation.SoleTrader.Hint"]
+                                </div>
+                            }
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoEngland"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.England)"
+                                           gov-first-option="true">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.England)"
+                                           gov-first-option="true">
+                                        @Localizer["UkNation.England"]
+                                    </label>
+                                </div>
+                                
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoScotland"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.Scotland)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.Scotland)">
+                                        @Localizer["UkNation.Scotland"]
+                                    </label>
+                                </div>
+                                
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoWales"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.Wales)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.Wales)">
+                                        @Localizer["UkNation.Wales"]
+                                    </label>
+                                </div>
+                                
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoNorthernIreland"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.NorthernIreland)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="UkNation"
+                                           gov-value="@nameof(Nation.NorthernIreland)">
+                                        @Localizer["UkNation.NorthernIreland"]
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

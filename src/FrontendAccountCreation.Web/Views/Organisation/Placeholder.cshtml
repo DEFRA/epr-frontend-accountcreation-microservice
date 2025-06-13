@@ -1,0 +1,31 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+
+@model PlaceholderViewModel
+
+@{
+    ViewData["Title"] = $"Placeholder for {Model.PageTitle}";
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                    Placeholder page for @Model.PageTitle
+                </h1>
+
+                @if (Model.Interstitial)
+                {
+                    <form method="post">
+                        <button class="govuk-button" data-module="govuk-button">
+                            @SharedLocalizer["Continue"]
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </main>
+</div>

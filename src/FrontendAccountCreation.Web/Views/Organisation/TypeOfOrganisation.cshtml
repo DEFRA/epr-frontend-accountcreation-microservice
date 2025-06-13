@@ -1,0 +1,75 @@
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Core.Sessions
+@using FrontendAccountCreation.Web.Constants
+
+@model ReExTypeOfOrganisationViewModel
+
+@{
+    ViewData["Title"] = Localizer["ReExTypeOfOrganisation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form asp-controller="Organisation" asp-action="TypeOfOrganisation" method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                                    @Localizer["ReExTypeOfOrganisation.Question"]
+                                </h1>
+                            </legend>
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoSoleTrader"
+                                           gov-for="ProducerType"
+                                           gov-value="@nameof(ProducerType.SoleTrader)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="ProducerType"
+                                           gov-value="@nameof(ProducerType.SoleTrader)">
+                                        @Localizer["ReExTypeOfOrganisation.SoleTrader"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoUnincorporatedBody"
+                                           gov-for="ProducerType"
+                                           gov-value="@nameof(ProducerType.UnincorporatedBody)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="ProducerType"
+                                           gov-value="@nameof(ProducerType.UnincorporatedBody)">
+                                        @Localizer["ReExTypeOfOrganisation.UnincorporatedBody"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" type="radio" id="rdoPartnership"
+                                           gov-for="ProducerType"
+                                           gov-value="@nameof(ProducerType.Partnership)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="ProducerType"
+                                           gov-value="@nameof(ProducerType.Partnership)">
+                                        @Localizer["ReExTypeOfOrganisation.Partnership"]
+                                    </label>
+                                </div>
+                             </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

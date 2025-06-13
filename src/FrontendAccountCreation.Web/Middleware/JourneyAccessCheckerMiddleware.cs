@@ -39,6 +39,7 @@ public class JourneyAccessCheckerMiddleware
             }
             else if (sessionValue.Journey.Count == 0)
             {
+                //to-do: redirecting to "PageNotFound" only shows the "page not found" page, as "PageNotFound" doesn't exist!
                 pageToRedirect = PagePath.PageNotFound;
             }
             else if (!sessionValue.Journey.Contains(attribute.PagePath) && !sessionValue.IsUserChangingDetails)

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Castle.DynamicProxy;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services;
@@ -172,6 +173,43 @@ public class AccountMapperTests
     }
 
     [TestMethod]
+    public void CreateAccountModel_AsCompaniesHouseCompany_ShouldReturnAccountModelSuccessfully_When_CompanyHouseNumber_And_NameIsNull()
+    {
+        // Arrange
+        var accountCreationSession = new AccountCreationSession()
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany
+        };
+
+        var company = new Company(new CompaniesHouseCompany
+        {
+            Organisation = new Organisation
+            {
+                RegistrationNumber = null,
+                Name = null,
+                RegisteredOffice = null
+            },
+            AccountCreatedOn = null,
+        });
+
+        var companiesHouseSession = new CompaniesHouseSession
+        {
+            Company = company,
+            RoleInOrganisation = RoleInOrganisation.Partner,
+            IsComplianceScheme = true
+        };
+        accountCreationSession.CompaniesHouseSession = companiesHouseSession;
+        AccountMapper accountMapper = new();
+
+        // Act
+        AccountModel accountModel = accountMapper.CreateAccountModel(accountCreationSession, "testaccount@gmail.com");
+
+        // Assert
+        accountModel.Organisation.Name.Should().BeNullOrEmpty();
+        accountModel.Organisation.CompaniesHouseNumber.Should().BeNullOrEmpty();
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void Constructor_ShouldThrowArgumentNullException_WhenOrganisationIsNull()
     {
@@ -317,7 +355,9 @@ public class AccountMapperTests
     }
 
     [TestMethod]
-    public void CreateAccountModel_DeclarationProperties_ShouldReturnSetValues()
+    [DataRow(true)]
+    [DataRow(false)]
+    public void CreateAccountModel_DeclarationProperties_ShouldReturnSetValues(bool isDateNull )
     {
         // Arrange
         var accountMapper = new AccountMapper();
@@ -332,7 +372,7 @@ public class AccountMapperTests
             {
                 Company = new Company
                 {
-                    AccountCreatedOn = DateTime.Now,
+                    AccountCreatedOn = isDateNull ? DateTime.Now : null,
                     BusinessAddress = new Address { BuildingName = "building name" },
                     CompaniesHouseNumber = "123",
                     Name = "unit test name",
