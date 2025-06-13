@@ -127,6 +127,9 @@
       <SonarQubeSetting Include="sonar.coverage.exclusions">
         <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs,**/loadingspinner.js</Value>
       </SonarQubeSetting>
+      <SonarQubeSetting Include="sonar.cpd.exclusions">
+	    <Value>**/BusinessAddress.cshtml</Value>
+	  </SonarQubeSetting>
 	</ItemGroup>
   
      <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">

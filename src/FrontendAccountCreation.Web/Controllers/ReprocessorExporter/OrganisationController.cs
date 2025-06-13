@@ -15,10 +15,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
+using FrontendAccountCreation.Core.Addresses;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -620,10 +620,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         {
             return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.UkNation, PagePath.IsTradingNameDifferent);
         }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(BusinessAddress), PagePath.UkNation, PagePath.BusinessAddress);
-        }
+        return await SaveSessionAndRedirect(session, nameof(BusinessAddress), PagePath.UkNation, PagePath.BusinessAddress);
     }
 
     [HttpGet]
@@ -638,22 +635,53 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return View();
     }
 
-    [ExcludeFromCodeCoverage]
     [HttpGet]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
-    public Task<IActionResult> BusinessAddress()
+    public async Task<IActionResult> BusinessAddress()
     {
-        return PlaceholderPageGet(PagePath.BusinessAddress, true);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.BusinessAddress);
+
+        var viewModel = new ReExBusinessAddressViewModel();
+
+        if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
+        {
+            viewModel.BuildingNumber = session.ReExManualInputSession.BusinessAddress.BuildingNumber;
+            viewModel.BuildingName = session.ReExManualInputSession.BusinessAddress.BuildingName;
+            viewModel.Street = session.ReExManualInputSession.BusinessAddress.Street;
+            viewModel.Town = session.ReExManualInputSession.BusinessAddress.Town;
+            viewModel.County = session.ReExManualInputSession.BusinessAddress.County;
+            viewModel.Postcode = session.ReExManualInputSession.BusinessAddress.Postcode;
+        }
+
+        return View(viewModel);
     }
 
-    [ExcludeFromCodeCoverage]
     [HttpPost]
     [Route(PagePath.BusinessAddress)]
     [OrganisationJourneyAccess(PagePath.BusinessAddress)]
-    public Task<IActionResult> BusinessAddressPost()
+    public async Task<IActionResult> BusinessAddress(ReExBusinessAddressViewModel model)
     {
-        return PlaceholderPagePost(nameof(SoleTrader), PagePath.BusinessAddress, PagePath.SoleTrader);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.BusinessAddress);
+            return View(model);
+        }
+
+        var address = session!.ReExManualInputSession!.BusinessAddress ??= new Address();
+
+        address.BuildingNumber = model.BuildingNumber;
+        address.BuildingName = model.BuildingName;
+        address.Street = model.Street;
+        address.Town = model.Town;
+        address.County = model.County;
+        address.Postcode = model.Postcode;
+        address.IsManualAddress = true;
+
+        return await SaveSessionAndRedirect(session, nameof(SoleTrader),
+            PagePath.BusinessAddress, PagePath.SoleTrader);
     }
 
     [HttpGet]
