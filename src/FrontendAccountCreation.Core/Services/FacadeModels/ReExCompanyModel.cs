@@ -8,7 +8,7 @@ public class ReExCompanyModel
 {
     public string? OrganisationId { get; set; }
 
-    public string? OrganisationType { get; set; }
+    public OrganisationType? OrganisationType { get; set; }
 
     public string? CompaniesHouseNumber { get; set; }
 
@@ -19,4 +19,6 @@ public class ReExCompanyModel
     public bool ValidatedWithCompaniesHouse { get; set; }
 
     public Nation? Nation { get; set; }
+
+    public bool IsComplianceScheme { get; set; }
 }

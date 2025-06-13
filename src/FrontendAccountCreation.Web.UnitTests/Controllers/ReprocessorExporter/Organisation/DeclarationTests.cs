@@ -93,7 +93,7 @@ public class DeclarationTests : OrganisationTestBase
                     Country = "England"
                 },
                 Nation = Nation.England,
-                OrganisationType = OrganisationType.CompaniesHouseCompany.ToString(),
+                OrganisationType = OrganisationType.CompaniesHouseCompany,
                 ValidatedWithCompaniesHouse = true
             }
         };
@@ -114,7 +114,7 @@ public class DeclarationTests : OrganisationTestBase
 
         _facadeServiceMock.Verify(f => f.PostReprocessorExporterCreateOrganisationAsync(
             It.Is<ReExOrganisationModel>(x =>
-                x.Company.OrganisationType == OrganisationType.CompaniesHouseCompany.ToString()
+                x.Company.OrganisationType == OrganisationType.CompaniesHouseCompany
                 && x.Company.CompaniesHouseNumber == "12345678"
                 && x.Company.CompanyName == "ReEx Test Ltd"
                 && x.Company.Nation == Nation.England), "Re-Ex"), Times.Once);

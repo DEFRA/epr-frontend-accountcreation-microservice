@@ -12,7 +12,12 @@ public class ReExOrganisationModel
 
     public bool IsApprovedUser { get; set; }
 
-    public ReExCompanyModel Company { get; set; }
+    public ReExCompanyModel? Company { get; set; }
+
+    /// <summary>
+    /// Used for non-company journey i.e. SoleTrader, partnership
+    /// </summary>
+    public ReExManualInputModel? ManualInput { get; set; }
 
     /// <summary>
     /// Approved persons information related to names/emails
