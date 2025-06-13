@@ -27,7 +27,7 @@ public class ReExAccountMapper : IReExAccountMapper
     {
         return new ReExOrganisationModel
         {
-            UserRoleInOrganisation = reExOrganisationSession.ReExCompaniesHouseSession.RoleInOrganisation?.ToString() ?? null,
+            UserRoleInOrganisation = reExOrganisationSession.ReExCompaniesHouseSession.RoleInOrganisation?.GetDescriptionOrNull() ?? null,
             IsApprovedUser = reExOrganisationSession.IsApprovedUser,
             Company = new ReExCompanyModel()
             {
@@ -83,7 +83,7 @@ public class ReExAccountMapper : IReExAccountMapper
                 FirstName = member.FirstName,
                 LastName = member.LastName,
                 Email = member.Email,
-                Role = member.Role?.ToString() ?? null,
+                Role = member.Role?.GetDescriptionOrNull() ?? null,
                 TelephoneNumber = member.TelephoneNumber
             };
 

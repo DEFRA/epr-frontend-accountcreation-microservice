@@ -1,10 +1,6 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FrontendAccountCreation.Core.UnitTests.Extensions
 {
@@ -18,6 +14,7 @@ namespace FrontendAccountCreation.Core.UnitTests.Extensions
 
         Third // No description
     }
+
     [TestClass]
     public class EnumExtensionsTests
     {
@@ -34,5 +31,17 @@ namespace FrontendAccountCreation.Core.UnitTests.Extensions
             description.Should().Be(expected);
         }
 
+        [TestMethod]
+        [DataRow(Test.First, "First Value")]
+        [DataRow(Test.Second, "Second Value")]
+        [DataRow(Test.Third, null)]
+        public void GetDescriptionOrNull_ReturnsExpectedDescription(Test value, string expected)
+        {
+            // Act
+            var description = value.GetDescriptionOrNull();
+
+            // Assert
+            description.Should().Be(expected);
+        }
     }
 }

@@ -48,8 +48,10 @@ namespace FrontendAccountCreation.Core.UnitTests
 
         [TestMethod]
         [DataRow(null, null, null, null)]
-        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.Director, "Director", "Director")]
-        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.CompanySecretary, "Director", "CompanySecretary")]
+        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.PartnerDirector, "Company director of a corporate partner", "Company director of a corporate partner")]
+        [DataRow(RoleInOrganisation.Director, ReExTeamMemberRole.PartnerCompanySecretary, "Company director of a corporate partner", "Company secretary of a corporate partner")]
+        [DataRow(RoleInOrganisation.Partner, ReExTeamMemberRole.IndividualPartner, "Individual partner", "Individual partner")]
+        [DataRow(RoleInOrganisation.NoneOfTheAbove, ReExTeamMemberRole.None, null, null)]
         public void CreateReExOrganisationModel_Returns_ValidModel_FromOrganisationSession(RoleInOrganisation? roleInOrg, ReExTeamMemberRole? teamMemberRole, string? expectedRole, string? expectedTeamMember)
         {
             // Arrange
@@ -128,7 +130,7 @@ namespace FrontendAccountCreation.Core.UnitTests
                 {
                     second.FirstName.Should().Be("Jill");
                     second.LastName.Should().Be("Handerson");
-                    second.Role.Should().Be("CompanySecretary");
+                    second.Role.Should().BeNull();
                     second.Email.Should().NotBeNullOrWhiteSpace();
                 });
         }
