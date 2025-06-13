@@ -126,19 +126,21 @@ public class BusinessAddressTests : OrganisationTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenNoTradingName_ThenSessionNotUpdated()
-    //{
-    //    // Arrange
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
+    [TestMethod]
+    public async Task POST_GivenBusinessAddressDetailsMissing_ThenSessionNotUpdated()
+    {
+        // Arrange
+        var request = new ReExBusinessAddressViewModel();
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(new TradingNameViewModel());
+        _systemUnderTest.ModelState.AddModelError(nameof(ReExBusinessAddressViewModel.Town), "Enter your organisation's town or city");
 
-    //    // Assert
-    //    _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
-    //        Times.Never);
-    //}
+        // Act
+        await _systemUnderTest.BusinessAddress(request);
+
+        // Assert
+        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
+            Times.Never);
+    }
 
     //[TestMethod]
     //public async Task POST_GivenNoTradingName_ThenReturnView()
