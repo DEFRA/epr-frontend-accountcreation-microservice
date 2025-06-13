@@ -157,29 +157,30 @@ public class BusinessAddressTests : OrganisationTestBase
         result.Should().BeOfType<ViewResult>();
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenNoTradingName_ThenReturnViewWithUsersBadInput()
-    //{
-    //    // Arrange
-    //    const string badTradingName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
+    [TestMethod]
+    public async Task POST_GivenFieldTooLong_ThenReturnViewWithUsersBadInput()
+    {
+        // Arrange
+        const string tooLongTown = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 1";
 
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name must be 170 characters or less");
-    //    var viewModel = new TradingNameViewModel
-    //    {
-    //        TradingName = badTradingName
-    //    };
+        var request = new ReExBusinessAddressViewModel
+        {
+            Town = tooLongTown
+        };
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(viewModel);
+        _systemUnderTest.ModelState.AddModelError(nameof(ReExBusinessAddressViewModel.Town), "Town or city must be 70 characters or less");
 
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
+        // Act
+        var result = await _systemUnderTest.BusinessAddress(request);
 
-    //    viewResult.Model.Should().BeOfType<TradingNameViewModel?>();
-    //    var resultViewModel = (TradingNameViewModel?)viewResult.Model;
-    //    resultViewModel!.TradingName.Should().Be(badTradingName);
-    //}
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+
+        viewResult.Model.Should().BeOfType<ReExBusinessAddressViewModel?>();
+        var resultViewModel = (ReExBusinessAddressViewModel?)viewResult.Model;
+        resultViewModel!.Town.Should().Be(tooLongTown);
+    }
 
     //[TestMethod]
     //public async Task POST_GivenNoTradingName_ThenViewHasCorrectBackLink()
