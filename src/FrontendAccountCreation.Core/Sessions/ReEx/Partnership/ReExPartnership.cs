@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+
+[ExcludeFromCodeCoverage]
 public class ReExPartnership
 {
     public bool IsLimitedPartnership { get; set; }

@@ -8,5 +8,5 @@ public interface IReExAccountMapper
 {
     ReprocessorExporterAccountModel CreateReprocessorExporterAccountModel(ReExAccountCreationSession session, string email);
 
-    ReExOrganisationModel CreateReExOrganisationModel(OrganisationSession reExOrganisationSession);
+    ReExOrganisationModel CreateReExOrganisationModel(OrganisationSession session);
 }
