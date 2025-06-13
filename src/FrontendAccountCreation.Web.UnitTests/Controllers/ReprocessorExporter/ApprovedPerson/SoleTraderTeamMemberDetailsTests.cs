@@ -92,7 +92,7 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenTeamMemberDetails_ThenRedirectToTypeOfOrganisation()
+    public async Task POST_GivenTeamMemberDetails_ThenRedirectToSoleTraderTeamMemberCheckInvitationDetails()
     {
         // Arrange
         var request = new SoleTraderTeamMemberViewModel
@@ -109,7 +109,7 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.SoleTraderTeamMemberCheckInvitationDetails));
     }
 
     [TestMethod]

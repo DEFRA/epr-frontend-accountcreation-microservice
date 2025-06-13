@@ -270,8 +270,41 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             teamMember.TelephoneNumber = model.Telephone;
             teamMember.Email = model.Email;
 
-            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
-                PagePath.TeamMembersCheckInvitationDetails);
+            return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
+                PagePath.SoleTraderTeamMemberCheckInvitationDetails);
+        }
+
+        [HttpGet]
+        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetails()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.SoleTraderTeamMemberCheckInvitationDetails);
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View(session.ReExManualInputSession?.TeamMember);
+        }
+
+        [HttpPost]
+        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetailsPost()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderTeamMemberCheckInvitationDetails, PagePath.CheckYourDetails);
+        }
+
+        [HttpGet]
+        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetailsDelete)]
+        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetailsDelete()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            session.ReExManualInputSession.TeamMember = null;
+
+            return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberCheckInvitationDetails),
+                PagePath.SoleTraderTeamMemberCheckInvitationDetails, null);
         }
 
         [HttpGet]
