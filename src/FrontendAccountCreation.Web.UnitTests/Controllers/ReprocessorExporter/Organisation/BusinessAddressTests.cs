@@ -113,34 +113,18 @@ public class BusinessAddressTests : OrganisationTestBase
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.SoleTrader));
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenTradingName_NonCompaniesHouseFlow_ThenRedirectToTypeOfOrganisation()
-    //{
-    //    // Arrange
-    //    var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-    //    _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+    [TestMethod]
+    public async Task POST_GivenBusinessAddress_ThenUpdatesSession()
+    {
+        // Arrange
+        var request = new ReExBusinessAddressViewModel();
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(request);
+        // Act
+        await _systemUnderTest.BusinessAddress(request);
 
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
-
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
-    //}
-
-    //[TestMethod]
-    //public async Task POST_GivenTradingName_ThenUpdatesSession()
-    //{
-    //    // Arrange
-    //    var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-
-    //    // Act
-    //    await _systemUnderTest.TradingName(request);
-
-    //    // Assert
-    //    _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    //}
+        // Assert
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
 
     //[TestMethod]
     //public async Task POST_GivenNoTradingName_ThenSessionNotUpdated()
