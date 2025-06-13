@@ -26,7 +26,8 @@ public class BusinessAddressTests : OrganisationTestBase
             Journey =
             [
                 PagePath.UkNation, PagePath.BusinessAddress
-            ]
+            ],
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
@@ -97,21 +98,20 @@ public class BusinessAddressTests : OrganisationTestBase
         AssertBackLink(viewResult, PagePath.UkNation);
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
-    //{
-    //    // Arrange
-    //    var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-    //    _organisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
+    [TestMethod]
+    public async Task POST_GivenBusinessAddress_ThenRedirectToNextPage()
+    {
+        // Arrange
+        var request = new ReExBusinessAddressViewModel();
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(request);
+        // Act
+        var result = await _systemUnderTest.BusinessAddress(request);
 
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
 
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
-    //}
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.SoleTrader));
+    }
 
     //[TestMethod]
     //public async Task POST_GivenTradingName_NonCompaniesHouseFlow_ThenRedirectToTypeOfOrganisation()
