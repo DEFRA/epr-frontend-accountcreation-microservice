@@ -113,10 +113,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var llpViewModel = new IsMemberPartnershipViewModel();
             
             var id = GetFocusId();
-            if (id.HasValue)
-            {
-                SetFocusId(id.Value);
-            }
 
             if (id.HasValue)
             {
@@ -137,6 +133,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                         viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession.TeamMembers[index.Value]?.Role;
                     }
                 }
+                SetFocusId(id.Value);
             }
 
             if (isLimitedPartnership)

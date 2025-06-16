@@ -804,4 +804,36 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         ((IsMemberPartnershipViewModel)viewResult.Model!).Id.Should().BeNull();
         ((IsMemberPartnershipViewModel)viewResult.Model!).IsMemberPartnership.Should().BeNull();
     }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Get_WithValidIdNotInList_SetsFocusIdAndReturnsEmptyViewModel()
+    {
+        // Arrange
+        var nonMatchingId = Guid.NewGuid();
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+        {
+            TeamMembers = new List<ReExCompanyTeamMember>
+            {
+                new ReExCompanyTeamMember
+                {
+                    Id = Guid.NewGuid(), // different ID
+                    Role = ReExTeamMemberRole.Director
+                }
+            }
+        };
+        _tempDataDictionaryMock.Setup(x => x["FocusId"]).Returns(nonMatchingId);
+
+        // Act
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisation();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.ViewName.Should().BeNull(); // default view
+        viewResult.Model.Should().BeOfType<TeamMemberRoleInOrganisationViewModel>();
+        var model = viewResult.Model as TeamMemberRoleInOrganisationViewModel;
+        model!.Id.Should().BeNull();
+        model.RoleInOrganisation.Should().BeNull();
+        _systemUnderTest.GetFocusId().Should().Be(nonMatchingId); // confirms SetFocusId was called
+    }
 }
