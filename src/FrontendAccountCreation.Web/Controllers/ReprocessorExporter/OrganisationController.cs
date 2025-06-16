@@ -760,13 +760,22 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        var viewModel = new ReExOrganisationSuccessViewModel
+        var viewModel = new ReExOrganisationSuccessViewModel();
+        viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
+        if (viewModel.IsSoleTrader)
         {
-            CompanyName = session.ReExCompaniesHouseSession.Company.Name,
-            reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers
-        };
-
+            viewModel.CompanyName = session.ReExManualInputSession?.TradingName;
+			if (session.ReExManualInputSession?.TeamMember != null)
+			{
+                viewModel.ReExCompanyTeamMembers = new List<ReExCompanyTeamMember> { session.ReExManualInputSession.TeamMember };
+			}
+		}
+        else
+        {
+            viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
+			viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+		}
+        
         return View(viewModel);
     }
 

@@ -35,20 +35,20 @@
 					</div>
 				</div>
 
-				<h3 class="govuk-notification-banner__heading">
-					@Localizer["Success.ApprovedPersonsInvite.Heading"]
-				</h3>
-				<p class="govuk-body govuk-!-margin-bottom-7">
-					@Localizer["Success.ApprovedPersonsInvite.Paragraph"]
-				</p>
-
-				@if (Model.reExCompanyTeamMembers != null)
+				@if (Model.ReExCompanyTeamMembers != null)
 				{
+					<h3 class="govuk-notification-banner__heading">
+						@Localizer["Success.ApprovedPersonsInvite.Heading"]
+					</h3>
+					<p class="govuk-body govuk-!-margin-bottom-7">
+						@Localizer["Success.ApprovedPersonsInvite.Paragraph"]
+					</p>
+
 					<dl class="govuk-summary-list govuk-!-margin-bottom-0">
-						@for (int i = 0; i < Model.reExCompanyTeamMembers?.Count; i++)
+						@for (int i = 0; i < Model.ReExCompanyTeamMembers?.Count; i++)
 						{
 							<div class="govuk-summary-list">
-								@Model.reExCompanyTeamMembers[i].Email
+								@Model.ReExCompanyTeamMembers[i].Email
 							</div>
 						}
 					</dl>
@@ -57,13 +57,29 @@
 				<h3 class="govuk-notification-banner__heading">
 					@Localizer["Success.WhatYouMustDoNext.Heading"]
 				</h3>
-				<p class="govuk-body govuk-!-margin-bottom-7">
-					@Localizer["Success.WhatYouMustDoNext.Paragrah"]
-				</p>
+				@if (Model.IsSoleTrader)
+				{
+					<p class="govuk-body govuk-!-margin-bottom-7">
+						@Localizer["Success.WhatYouMustDoNext.SoleTrader.Paragrah"]
+					</p>
+				}
+				else
+				{
+					<p class="govuk-body govuk-!-margin-bottom-7">
+						@Localizer["Success.WhatYouMustDoNext.Paragrah"]
+					</p>
+				}
 
 				<ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
 					<li>@Localizer["Success.WhatYouMustDoNext.List.Item1"]</li>
-					<li>@Localizer["Success.WhatYouMustDoNext.List.Item2"]</li>
+					@if (Model.IsSoleTrader)
+					{
+						<li>@Localizer["Success.WhatYouMustDoNext.SoleTrader.List.Item2"]</li>
+					}
+					else
+					{
+						<li>@Localizer["Success.WhatYouMustDoNext.List.Item2"]</li>
+					}
 				</ul>
 
 				<a class="govuk-link" href="@ExternalUrlsOptions.Value.PrnRedirectUrl">@Localizer["Success.Continue"]</a>
