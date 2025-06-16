@@ -522,9 +522,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var viewModel = new IsMemberPartnershipViewModel
             {
-                IsMemberPartnership = boolValue.HasValue
-                    ? (boolValue.Value ? YesNoAnswer.Yes : YesNoAnswer.No)
-                    : null
+                IsMemberPartnership = boolValue switch
+                {
+                    true => YesNoAnswer.Yes,
+                    false => YesNoAnswer.No,
+                    null => null
+                }
             };
 
             return View(viewModel);
