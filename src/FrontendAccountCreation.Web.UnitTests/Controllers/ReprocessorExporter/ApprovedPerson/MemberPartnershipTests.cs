@@ -399,4 +399,79 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
         model.Id.Should().BeNull();
         model.IsMemberPartnership.Should().BeNull();
     }
+
+    [TestMethod]
+    public async Task Post_MemberPartnership_WhenTeamMembersIsNull_AddsNewMemberAndRedirects()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = null
+            }
+        };
+
+        var model = new IsMemberPartnershipViewModel
+        {
+            Id = null,
+            IsMemberPartnership = YesNoAnswer.Yes
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.PartnerDetails));
+
+        session.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+        session.ReExCompaniesHouseSession.TeamMembers.Should().ContainSingle();
+        session.ReExCompaniesHouseSession.TeamMembers.First().Role.Should().Be(ReExTeamMemberRole.Member);
+    }
+
+    [TestMethod]
+    public async Task Post_MemberPartnership_WhenExistingMemberAndSaysNo_RemovesTeamMember()
+    {
+        // Arrange
+        var memberId = Guid.NewGuid();
+        var teamMember = new ReExCompanyTeamMember { Id = memberId };
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember> { teamMember }
+            }
+        };
+
+        var model = new IsMemberPartnershipViewModel
+        {
+            Id = memberId,
+            IsMemberPartnership = YesNoAnswer.No
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        var tempDataStore = new Dictionary<string, object>();
+        tempDataMock.Setup(t => t[It.IsAny<string>()])
+            .Returns((string key) => tempDataStore.GetValueOrDefault(key));
+        tempDataMock.SetupSet(t => t[It.IsAny<string>()] = It.IsAny<object>())
+            .Callback((string key, object value) => tempDataStore[key] = value);
+        _systemUnderTest.TempData = tempDataMock.Object;
+        _systemUnderTest.SetFocusId(memberId);
+
+        // Act
+        var result = await _systemUnderTest.MemberPartnership(model);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("CanNotInviteThisPerson");
+
+        session.ReExCompaniesHouseSession.TeamMembers.Should().BeEmpty();
+    }
 }
