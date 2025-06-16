@@ -5,7 +5,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
 {
     public class AddApprovedPersonViewModel
     {
-        [Required(ErrorMessage = "AddNotApprovedPerson.SoleTrader.ErrorMessage")]
+        [Required]
         public string InviteUserOption { get; set; }
 
         public bool? IsOrganisationAPartnership { get; set; }   

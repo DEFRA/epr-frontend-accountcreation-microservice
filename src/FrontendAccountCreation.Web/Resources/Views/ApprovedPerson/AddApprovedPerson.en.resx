@@ -123,4 +123,7 @@
   <data name="AddAnApprovedPerson.Title" xml:space="preserve">
     <value>Add an approved person </value>
   </data>
+  <data name="AddNotApprovedPerson.SoleTrader.ErrorMessage" xml:space="preserve">
+    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
+  </data>
 </root>
