@@ -543,7 +543,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 if (model.IsMemberPartnership == YesNoAnswer.No)
                 {
-                    session?.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == teamMemberId);
+                    session.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == teamMemberId);
                 }
                 else
                 {
@@ -607,9 +607,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (id.HasValue)
             {
                 SetFocusId(id.Value);
-            }
-            if (id.HasValue)
-            {
                 var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
                 if (index is >= 0)
                 {
@@ -741,6 +738,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [OrganisationJourneyAccess(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
         public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             return RedirectToAction("CheckYourDetails", "AccountCreation");
         }
 
@@ -755,6 +757,21 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
         }
+        
+        [HttpPost]
+        [Route(PagePath.CanNotInviteThisPerson)]
+        [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
+        public async Task<IActionResult> CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails);
+        }
 
         [HttpGet]
         [Route(PagePath.CanNotInviteThisPersonAddEligible)]
@@ -764,17 +781,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             DeleteFocusId();
             return await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.CanNotInviteThisPerson, PagePath.MemberPartnership);
-        }
-
-        [HttpPost]
-        [Route(PagePath.CanNotInviteThisPerson)]
-        [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
-        public async Task<IActionResult> CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails);
-
         }
     }
 }

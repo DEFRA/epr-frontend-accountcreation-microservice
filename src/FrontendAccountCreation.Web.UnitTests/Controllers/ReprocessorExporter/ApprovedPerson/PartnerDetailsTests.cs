@@ -269,4 +269,166 @@ public class PartnerDetailsTests : ApprovedPersonTestBase
         var viewResult = result as ViewResult;
         viewResult!.Model.Should().Be(model);
     }
+
+    [TestMethod]
+    public async Task Get_PartnerDetails_WithNonMatchingId_DoesNotPopulateViewModel()
+    {
+        // Arrange
+        var unmatchedId = Guid.NewGuid();
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>
+                {
+                    new()
+                    {
+                        Id = Guid.NewGuid(), // Different ID
+                        FirstName = "Test",
+                        LastName = "User",
+                        Email = "test@example.com",
+                        TelephoneNumber = "1234567890"
+                    }
+                }
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var httpContext = new DefaultHttpContext();
+        var sessionMock = new Mock<ISession>();
+        httpContext.Session = sessionMock.Object;
+
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>())
+        {
+            ["FocusId"] = unmatchedId.ToString()
+        };
+
+        _systemUnderTest.ControllerContext = new ControllerContext
+        {
+            HttpContext = httpContext
+        };
+        _systemUnderTest.TempData = tempData;
+
+        // Act
+        var result = await _systemUnderTest.PartnerDetails();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as PartnerDetailsViewModel;
+
+        model.Should().NotBeNull();
+        model!.Id.Should().BeNull(); // no match => no ID assigned
+        model.FirstName.Should().BeNull();
+        model.LastName.Should().BeNull();
+        model.Email.Should().BeNull();
+        model.Telephone.Should().BeNull();
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Post_PartnerDetails_WithNullId_AddsNewMemberWithGeneratedId()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+
+        var model = new PartnerDetailsViewModel
+        {
+            Id = null,
+            FirstName = "NoId",
+            LastName = "User",
+            Email = "noid@example.com",
+            Telephone = "1112223333"
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var httpContext = new DefaultHttpContext();
+        var sessionMock = new Mock<ISession>();
+        httpContext.Session = sessionMock.Object;
+
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        _systemUnderTest.ControllerContext = new ControllerContext
+        {
+            HttpContext = httpContext
+        };
+        _systemUnderTest.TempData = tempData;
+
+        // Act
+        var result = await _systemUnderTest.PartnerDetails(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = result as RedirectToActionResult;
+        redirect!.ActionName.Should().Be("TeamMembersCheckInvitationDetails");
+
+        session.ReExCompaniesHouseSession.TeamMembers.Should().HaveCount(1);
+        var member = session.ReExCompaniesHouseSession.TeamMembers.First();
+
+        member.Id.Should().NotBe(Guid.Empty);
+        member.FirstName.Should().Be("NoId");
+        member.LastName.Should().Be("User");
+        member.Email.Should().Be("noid@example.com");
+        member.TelephoneNumber.Should().Be("1112223333");
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Post_PartnerDetails_WithNullSessionProperties_AddsNewMember()
+    {
+        // Arrange
+        var model = new PartnerDetailsViewModel
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "NullProps",
+            LastName = "User",
+            Email = "null@example.com",
+            Telephone = "0001112222"
+        };
+
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = null
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var httpContext = new DefaultHttpContext();
+        var sessionMock = new Mock<ISession>();
+        httpContext.Session = sessionMock.Object;
+
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        _systemUnderTest.ControllerContext = new ControllerContext
+        {
+            HttpContext = httpContext
+        };
+        _systemUnderTest.TempData = tempData;
+
+        // Act
+        var result = await _systemUnderTest.PartnerDetails(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = result as RedirectToActionResult;
+        redirect!.ActionName.Should().Be("TeamMembersCheckInvitationDetails");
+
+        session.ReExCompaniesHouseSession.Should().NotBeNull();
+        session.ReExCompaniesHouseSession.TeamMembers.Should().HaveCount(1);
+
+        var member = session.ReExCompaniesHouseSession.TeamMembers.First();
+        member.FirstName.Should().Be("NullProps");
+        member.Email.Should().Be("null@example.com");
+    }
 }
