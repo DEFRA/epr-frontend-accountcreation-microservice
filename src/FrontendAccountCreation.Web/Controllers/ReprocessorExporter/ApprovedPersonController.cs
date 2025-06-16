@@ -504,30 +504,19 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.MemberPartnership);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            bool? boolValue = null;
+            YesNoAnswer? isMember = null;
             var id = GetFocusId();
             if (id.HasValue && session.ReExCompaniesHouseSession?.TeamMembers != null)
             {
-                var index = session.ReExCompaniesHouseSession.TeamMembers.FindIndex(0, x => x.Id.Equals(id));
-                if (index is >= 0)
-                {
-                    boolValue = true;
-                    SetFocusId(id.Value);
-                }
-                else
-                {
-                    boolValue = false;
-                }
-            }
+                SetFocusId(id.Value);
 
+                var index = session.ReExCompaniesHouseSession.TeamMembers.FindIndex(0, x => x.Id.Equals(id));
+                isMember = index is >= 0 ? YesNoAnswer.Yes : YesNoAnswer.No;
+            }
+            
             var viewModel = new IsMemberPartnershipViewModel
             {
-                IsMemberPartnership = boolValue switch
-                {
-                    true => YesNoAnswer.Yes,
-                    false => YesNoAnswer.No,
-                    null => null
-                }
+                IsMemberPartnership = isMember
             };
 
             return View(viewModel);
