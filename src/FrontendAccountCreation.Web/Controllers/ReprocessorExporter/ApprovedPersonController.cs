@@ -115,14 +115,21 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var id = GetFocusId();
             if (id.HasValue)
             {
+                SetFocusId(id.Value);
+            }
+
+            if (id.HasValue)
+            {
                 var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));
                 if (index is >= 0)
                 {
                     if (isLimitedLiabilityPartnership)
                     {
+                        var memberRole = session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role.ToString()
+                            .ToEnumOrNull<ReExTeamMemberRole>();
+
                         llpViewModel.Id = id;
-                        llpViewModel.IsMemberPartnership =
-                            session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role.ToString().ToEnumOrNull<YesNoAnswer>();
+                        llpViewModel.IsMemberPartnership = memberRole == ReExTeamMemberRole.Member ? YesNoAnswer.Yes : YesNoAnswer.No;
                     }
                     else
                     {
@@ -538,39 +545,36 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            var queryStringId = Guid.Empty;
+            var teamMemberId = GetFocusId() ?? Guid.NewGuid();
 
-            var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(model.Id));
+            var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(teamMemberId));
 
             // Team memebr exists
             if (index is >= 0)
             {
                 if (model.IsMemberPartnership == YesNoAnswer.No)
                 {
-                    session?.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == model.Id);
+                    session?.ReExCompaniesHouseSession?.TeamMembers?.RemoveAll(x => x.Id == teamMemberId);
                 }
                 else
                 {
                     session.ReExCompaniesHouseSession.TeamMembers[index.Value].Role = ReExTeamMemberRole.Member;
-                    queryStringId = model.Id.Value;
                 }
             }
             else
             {
                 if (model.IsMemberPartnership == YesNoAnswer.Yes)
                 {
-                    queryStringId = Guid.NewGuid();
-
                     session.ReExCompaniesHouseSession.TeamMembers ??= new List<ReExCompanyTeamMember>();
                     session.ReExCompaniesHouseSession.TeamMembers.Add(new ReExCompanyTeamMember
                     {
-                        Id = queryStringId,
+                        Id = teamMemberId,
                         Role = ReExTeamMemberRole.Member
                     });
                 }
             }
 
-            SetFocusId(queryStringId);
+            SetFocusId(teamMemberId);
             return model.IsMemberPartnership == YesNoAnswer.Yes
                 ? await SaveSessionAndRedirect(session, nameof(PartnerDetails), PagePath.MemberPartnership, PagePath.PartnerDetails)
                 : await SaveSessionAndRedirect(session, "CanNotInviteThisPerson", PagePath.MemberPartnership, PagePath.CanNotInviteThisPerson);
@@ -611,6 +615,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var viewModel = new PartnerDetailsViewModel();
 
             var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
             if (id.HasValue)
             {
                 var index = session.ReExCompaniesHouseSession?.TeamMembers?.FindIndex(0, x => x.Id.Equals(id));

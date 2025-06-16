@@ -188,11 +188,22 @@ public class MemberPartnershipTests : ApprovedPersonTestBase
 
         var model = new IsMemberPartnershipViewModel
         {
-            Id = memberId,
             IsMemberPartnership = YesNoAnswer.Yes
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        var tempDataStore = new Dictionary<string, object>();
+        tempDataMock.Setup(t => t[It.IsAny<string>()])
+            .Returns((string key) => tempDataStore.GetValueOrDefault(key));
+        tempDataMock.SetupSet(t => t[It.IsAny<string>()] = It.IsAny<object>())
+            .Callback((string key, object value) => tempDataStore[key] = value);
+
+        _systemUnderTest.TempData = tempDataMock.Object;
+        _systemUnderTest.SetFocusId(memberId);
 
         // Act
         var result = await _systemUnderTest.MemberPartnership(model);
