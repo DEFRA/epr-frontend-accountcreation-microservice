@@ -836,4 +836,59 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         model.RoleInOrganisation.Should().BeNull();
         _systemUnderTest.GetFocusId().Should().Be(nonMatchingId); // confirms SetFocusId was called
     }
+
+    [TestMethod]
+    public void PersonCanNotBeInvited_Post_InvalidModel_ReturnsView()
+    {
+        // Arrange
+        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        {
+            Id = Guid.NewGuid()
+        };
+
+        _systemUnderTest.ModelState.AddModelError("Test", "Required");
+
+        // Act
+        var result = _systemUnderTest.PersonCanNotBeInvited(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().Be(model);
+    }
+
+    [TestMethod]
+    public void PersonCanNotBeInvited_Post_ValidModel_RedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        {
+            Id = Guid.NewGuid()
+        };
+
+        // Act
+        var result = _systemUnderTest.PersonCanNotBeInvited(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be("CheckYourDetails");
+        redirectResult.ControllerName.Should().Be("AccountCreation");
+    }
+
+    [TestMethod]
+    public async Task CanNotInviteThisPerson_Post_InvalidModel_ReturnsView()
+    {
+        // Arrange
+        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = Guid.NewGuid() };
+        _systemUnderTest.ModelState.AddModelError("Test", "Required");
+
+        // Act
+        var result = await _systemUnderTest.CanNotInviteThisPerson(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().Be(model);
+    }
 }

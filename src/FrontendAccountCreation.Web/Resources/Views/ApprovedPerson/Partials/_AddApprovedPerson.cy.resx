@@ -139,7 +139,7 @@
     <value>[Welsh]You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
   </data>
   <data name="AddAnApprovedPerson.IntroText2" xml:space="preserve">
-    <value>[Welsh]An approved person may delegate their functions to another person (a delegate) at a later stage - subject to regulator approval.</value>
+    <value>[Welsh]An approved person may delegate their function to another person (a delegate) at a later stage - subject to regulator approval.</value>
   </data>
   <data name="AddAnApprovedPerson.IntroText3" xml:space="preserve">
     <value>[Welsh]More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
