@@ -6,5 +6,6 @@ public enum ReExTeamMemberRole
     CompanySecretary = 2,
     PartnerDirector = 3,
     PartnerCompanySecretary = 4,
-    IndividualPartner = 5
+    IndividualPartner = 5,
+    SoleTrader = 6,
 }

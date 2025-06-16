@@ -272,7 +272,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             teamMember.LastName = model.LastName;
             teamMember.TelephoneNumber = model.Telephone;
             teamMember.Email = model.Email;
-            teamMember.Role = null;
+            teamMember.Role = ReExTeamMemberRole.SoleTrader;
 
             return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
                 PagePath.SoleTraderTeamMemberCheckInvitationDetails);

@@ -75,7 +75,6 @@ public class ReExAccountMapper : IReExAccountMapper
                 LastName = teamMember.LastName,
                 Role = teamMember.Role?.ToString() ?? null,
                 TelephoneNumber = teamMember.TelephoneNumber
-
             });
             return approvedPeople;
         }
