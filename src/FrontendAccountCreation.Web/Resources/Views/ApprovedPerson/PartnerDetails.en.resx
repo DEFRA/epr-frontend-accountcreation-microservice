@@ -139,7 +139,7 @@
     <value>Team Member Details</value>
   </data>
   <data name="PartnerDetails.Header" xml:space="preserve">
-    <value>What are your their details?</value>
+    <value>What are their details?</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
     <value>Enter a valid telephone number</value>
