@@ -17,6 +17,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="LimitedPartnershipRole.Title" xml:space="preserve">
+    <value>[Welsh]Type of roles</value>
+  </data>
+  <data name="LimitedPartnershipRole.Question" xml:space="preserve">
     <value>[Welsh]What role do you have within the limited partnership, as registered on Companies House?</value>
   </data>
   <data name="LimitedPartnershipRole.IndividualPartner" xml:space="preserve">
