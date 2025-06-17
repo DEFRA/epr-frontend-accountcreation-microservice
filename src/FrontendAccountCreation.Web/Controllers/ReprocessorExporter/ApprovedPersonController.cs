@@ -50,6 +50,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
+                IsIndividualInCharge = session.IsIndividualInCharge ?? false,
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
             };
 
             return View(model);
@@ -61,6 +63,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            model.IsIndividualInCharge = session.IsIndividualInCharge ?? false;
+            model.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
 
             if (!ModelState.IsValid)
             {
@@ -73,6 +77,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             session.InviteUserOption = session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+            model.IsIndividualInCharge = session.IsIndividualInCharge ?? false;
+            model.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
 
             if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
             {
@@ -82,6 +88,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
+                if (model is {IsSoleTrader: true, IsIndividualInCharge: false})
+                {
+                    return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberDetails), PagePath.AddAnApprovedPerson, PagePath.SoleTraderTeamMemberDetails);
+                }
+
                 return session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true }
                     ? await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.AddAnApprovedPerson, PagePath.MemberPartnership)
                     : await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
@@ -691,6 +702,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsRegisteredAsCharity = session.IsTheOrganisationCharity,
                 OrganisationType = session.OrganisationType,
                 IsTradingNameDifferent = session.IsTradingNameDifferent,
+                IsManualInputFlow = !session.IsCompaniesHouseFlow,
                 Nation = session.UkNation
             };
             if (viewModel.IsCompaniesHouseFlow)
@@ -702,12 +714,23 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
                 viewModel.LimitedPartnershipPartners = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
                 viewModel.IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+                viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
             }
-            if (session.ReExManualInputSession != null)
+            else if (viewModel.IsManualInputFlow)
             {
-                viewModel.TradingName = session.ReExManualInputSession.TradingName;
+                viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
+                viewModel.ProducerType = session.ReExManualInputSession?.ProducerType;
+                viewModel.BusinessAddress = session.ReExManualInputSession?.BusinessAddress;
+                viewModel.TradingName = session.ReExManualInputSession?.TradingName;
+                var teamMember = session.ReExManualInputSession?.TeamMember;
+                viewModel.reExCompanyTeamMembers = new List<ReExCompanyTeamMember>();
+
+                if (teamMember != null)
+                {
+                    viewModel.reExCompanyTeamMembers.Add(teamMember);
+                }
             }
-            viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+            
             _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(viewModel);

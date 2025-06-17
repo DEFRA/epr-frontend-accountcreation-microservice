@@ -7,7 +7,5 @@ public enum ProducerType
     UnincorporatedBody = 2,
     NonUkOrganisation = 3,
     SoleTrader = 4,
-    Other = 5,
-    LimitedPartnership = 6,
-    LimitedLiabilityPartnership = 7
+    Other = 5
 }

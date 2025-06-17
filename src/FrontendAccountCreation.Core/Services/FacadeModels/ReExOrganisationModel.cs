@@ -18,9 +18,4 @@ public class ReExOrganisationModel
     /// Approved persons information related to names/emails
     /// </summary>
     public List<ReExInvitedApprovedPerson?> InvitedApprovedPersons { get; set; }
-
-    /// <summary>
-    /// Partners Details for partnership org fullName and type
-    /// </summary>
-    public List<ReExPartnerModel>? Partners { get; set; }
 }

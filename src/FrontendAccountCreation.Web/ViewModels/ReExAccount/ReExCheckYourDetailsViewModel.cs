@@ -35,6 +35,10 @@ public class ReExCheckYourDetailsViewModel
     public List<ReExLimitedPartnershipPersonOrCompany>? LimitedPartnershipPartners { get; set; }
     public bool IsLimitedLiabilityPartnership { get; set; }
 
+    public bool IsManualInputFlow { get; set; }
+
+    public bool IsSoleTrader { get; set; }
+
     private static string GetCheckYourDetailsKey<TEnum>(TEnum? enumValue) where TEnum : struct, Enum
     {
         if (enumValue == null || !Enum.IsDefined(typeof(TEnum), enumValue))

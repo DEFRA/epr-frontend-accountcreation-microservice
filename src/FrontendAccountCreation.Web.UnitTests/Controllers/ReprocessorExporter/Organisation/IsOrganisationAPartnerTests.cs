@@ -168,7 +168,6 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
             {
                 TeamMembers = [],
                 Partnership = new(),
-                ProducerType = ProducerType.LimitedPartnership,
                 RoleInOrganisation = RoleInOrganisation.CompanySecretary,
                 IsInEligibleToBeApprovedPerson = true,
             }
@@ -182,7 +181,6 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
-        _orgSessionMock.ReExCompaniesHouseSession.ProducerType.Should().NotBeNull().And.Be(ProducerType.LimitedPartnership);
         _orgSessionMock.IsOrganisationAPartnership.Should().BeTrue();
         _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.None);
         _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
@@ -244,7 +242,6 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
             {
                 TeamMembers = [],
                 Partnership = new(),
-                ProducerType = ProducerType.LimitedLiabilityPartnership,
                 RoleInOrganisation = RoleInOrganisation.CompanySecretary,
                 IsInEligibleToBeApprovedPerson = true,
             }
@@ -258,7 +255,6 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
         // Assert
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().BeNull();
-        _orgSessionMock.ReExCompaniesHouseSession.ProducerType.Should().BeNull();
         _orgSessionMock.InviteUserOption.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().BeNull();
         _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(false);

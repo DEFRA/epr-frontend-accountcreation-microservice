@@ -372,7 +372,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         {
             session.ReExCompaniesHouseSession.Partnership = null; // partnership details
             session.ReExCompaniesHouseSession.TeamMembers = null; // invitee details
-            session.ReExCompaniesHouseSession.ProducerType = null; // setting producer to null as from here it can go to non paternship flow
             session.ReExCompaniesHouseSession.RoleInOrganisation = null;
             session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = false;
             session.InviteUserOption = null;
@@ -712,19 +711,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
-        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.SoleTraderTeamMemberDetails),
-            PagePath.SoleTrader, PagePath.SoleTraderTeamMemberDetails);
-    }
-
-    //to-do: is not-approved-person page actually a form of the approved person page?
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.NotApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.NotApprovedPerson)]
-    public Task<IActionResult> NotApprovedPerson()
-    {
-        return PlaceholderPageGet(PagePath.NotApprovedPerson);
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.SoleTrader, PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]
