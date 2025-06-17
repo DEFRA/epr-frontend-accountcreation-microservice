@@ -77,7 +77,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (model.InviteUserOption == InviteUserOptions.BeAnApprovedPerson.ToString())
             {
                 session.IsApprovedUser = true;
-                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
+				return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
 
             if (model.InviteUserOption == InviteUserOptions.InviteAnotherPerson.ToString())
@@ -284,7 +284,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.SoleTraderTeamMemberCheckInvitationDetails);
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
