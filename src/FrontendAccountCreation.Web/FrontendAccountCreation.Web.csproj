@@ -26,11 +26,19 @@
     <Exec Command="npm run build-frontend" />
   </Target>
 
+  <ItemGroup>
+    <Compile Remove="Controllers\ReprocessorExporter\ReExAccountCreation\**" />
+    <Content Remove="Controllers\ReprocessorExporter\ReExAccountCreation\**" />
+    <EmbeddedResource Remove="Controllers\ReprocessorExporter\ReExAccountCreation\**" />
+    <None Remove="Controllers\ReprocessorExporter\ReExAccountCreation\**" />
+  </ItemGroup>
+
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
+      <!--<PackageReference Include="EPR.Common.Authorization" Version="1.0.17" />-->
       <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.7" />
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
@@ -93,6 +101,22 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>TradingName.en.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\User\ReExAccountFullName.cy.resx">
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+        <Generator>ResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\User\ReExAccountFullName.en.resx">
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+        <Generator>ResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\User\ReExAccountTelephoneNumber.cy.resx">
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+        <Generator>ResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\User\ReExAccountTelephoneNumber.en.resx">
+        <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
+        <Generator>ResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -103,6 +127,9 @@
       <SonarQubeSetting Include="sonar.coverage.exclusions">
         <Value>**/AnalyticsCookieMiddleware.cs,**/gulpfile.js,**/ErrorsViewModel.cs,**/ErrorViewModel.cs,**/CookieDetailViewModel.cs,**/Program.cs,**/SecurityHeaderMiddleware.cs,**/loadingspinner.js</Value>
       </SonarQubeSetting>
+      <SonarQubeSetting Include="sonar.cpd.exclusions">
+	    <Value>**/BusinessAddress.cshtml</Value>
+	  </SonarQubeSetting>
 	</ItemGroup>
   
      <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">

@@ -22,6 +22,7 @@ using Services.Dto.User;
 [TestClass]
 public class FacadeServiceTests
 {
+    private const string ServiceKey = "ServiceKey";
     private Mock<HttpMessageHandler> _mockHandler = null!;
     private Mock<ITokenAcquisition> _tokenAcquisitionMock = null!;
     private HttpClient _httpClient = null!;
@@ -134,13 +135,14 @@ public class FacadeServiceTests
     public async Task GetCompanyByCompanyHouseNumber_ReturnsCompanyObject()
     {
         // Arrange
-        var companyHouseNumber = "001";
+        var companyHouseNumber = "12345678";
         var expectedResponse = new CompaniesHouseCompany
         {
             AccountExists = true,
             Organisation = new Organisation
             {
                 Name = "Test Org",
+                RegistrationNumber = "12345678",
                 RegisteredOffice = new RegisteredOfficeAddress
                 {
                     Postcode = "BT11 8NR",
@@ -169,6 +171,7 @@ public class FacadeServiceTests
 
         // Assert
         Assert.IsNotNull(response);
+        response.Should().NotBeNull();
         Assert.AreEqual(expected: expectedResponse.Organisation.Name, actual: response.Name);
         httpTestHandler.Dispose();
     }
@@ -340,9 +343,279 @@ public class FacadeServiceTests
         await _facadeService.PostAccountDetailsAsync(account);
         
         // Assert
-        Assert.IsTrue(true);
-        
+        Assert.IsTrue(true);        
         httpTestHandler.Dispose();
+    }
+
+    [TestMethod]
+    public async Task AddReprocessorExporterAccountAsync_HappyPath_ReturnsSuccessByNotThrowing()
+    {
+        // Arrange
+        var account = new ReprocessorExporterAccountModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK
+            });
+
+        Func<Task> act = async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey);
+
+        // Act & Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task AddReprocessorExporterAccountAsync_HappyPath_CreateReprocessorExporterAccountEndpointCalled()
+    {
+        // Arrange
+        var account = new ReprocessorExporterAccountModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK
+            }).Verifiable();
+
+        // Act
+        await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey);
+
+        // Assert
+        _mockHandler.Protected().Verify("SendAsync", Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(
+                req => req.Method == HttpMethod.Post
+                       && req.RequestUri != null
+                       && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
+            ItExpr.IsAny<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task AddReprocessorExporterAccountAsync_CreateReprocessorExporterAccountReturnsConflict_ProblemExceptionThrown()
+    {
+        // Arrange
+        var account = new ReprocessorExporterAccountModel();
+        var apiResponse = new ProblemDetails
+        {
+            Detail = "detail",
+            Type = "type"
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Conflict,
+                Content = new StringContent(JsonSerializer.Serialize(apiResponse))
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
+        Assert.IsNotNull(exception.ProblemDetails);
+        Assert.AreEqual(apiResponse.Detail, exception.ProblemDetails.Detail);
+        Assert.AreEqual(apiResponse.Type, exception.ProblemDetails.Type);
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterAccountAsync_Throws_HttpRequestException_When_ProblemDetails_IsNull()
+    {
+        // Arrange
+        var account = new ReprocessorExporterAccountModel();
+        ProblemDetails? apiResponse = null;
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Conflict,
+                Content = new StringContent(JsonSerializer.Serialize(apiResponse))
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
+        Assert.IsNotNull(exception);
+        Assert.IsTrue(exception.StatusCode == HttpStatusCode.Conflict);
+    }
+
+    [TestMethod]
+    public async Task AddReprocessorExporterAccountAsync_CreateReprocessorExporterAccountReturnsNonConflictError_500HttpRequestExceptionExceptionThrown()
+    {
+        // Arrange
+        var account = new ReprocessorExporterAccountModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-user-accounts")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Content = new StringContent("")
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
+        Assert.AreEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_HappyPath_Returns_Success_ByNotThrowingError()
+    {
+        // Arrange
+        var organisationModel = new ReExOrganisationModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-org")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK
+            });
+
+        Func<Task> act = async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(organisationModel, ServiceKey);
+
+        // Act & Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_HappyPath_When_Related_EndpointCalled()
+    {
+        // Arrange
+        var orgModel = new ReExOrganisationModel();
+        var url = "http://example/api/v1/reprocessor-exporter-org";
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith(url)),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK
+            }).Verifiable();
+
+        // Act
+        await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey);
+
+        // Assert
+        _mockHandler.Protected().Verify("SendAsync", Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(
+                req => req.Method == HttpMethod.Post
+                       && req.RequestUri != null
+                       && req.RequestUri.ToString().StartsWith(url)),
+            ItExpr.IsAny<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_Returns_NonConflictError_500HttpRequestExceptionExceptionThrown()
+    {
+        // Arrange
+        var account = new ReExOrganisationModel();
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-org")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Content = new StringContent("")
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(account, ServiceKey));
+        exception.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_Throws_ProblemException()
+    {
+        // Arrange
+        var orgModel = new ReExOrganisationModel();
+        var apiResponse = new ProblemDetails
+        {
+            Detail = "detail",
+            Type = "type"
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-org")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Conflict,
+                Content = new StringContent(JsonSerializer.Serialize(apiResponse))
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey));
+        Assert.IsNotNull(exception.ProblemDetails);
+        Assert.AreEqual(apiResponse.Detail, exception.ProblemDetails.Detail);
+        Assert.AreEqual(apiResponse.Type, exception.ProblemDetails.Type);
+    }
+
+    [TestMethod]
+    public async Task PostReprocessorExporterCreateOrganisationAsync_Throws_HttpRequestException_When_ProblemDetails_IsNull()
+    {
+        // Arrange
+        var orgModel = new ReExOrganisationModel();
+        ProblemDetails? apiResponse = null;
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.Method == HttpMethod.Post
+                           && req.RequestUri != null
+                           && req.RequestUri.ToString().StartsWith("http://example/api/v1/reprocessor-exporter-org")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Conflict,
+                Content = new StringContent(JsonSerializer.Serialize(apiResponse))
+            }).Verifiable();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey));
+        Assert.IsNotNull(exception);
+        Assert.IsTrue(exception.StatusCode == HttpStatusCode.Conflict);
     }
 
     [TestMethod]
@@ -463,7 +736,8 @@ public class FacadeServiceTests
         // Assert
         Assert.AreEqual(expected: true, actual: response);
         httpTestHandler.Dispose();
-    }   
+    }
+    
     [TestMethod]
     public async Task GetUserAccount_WhenStatusCodeIsOk_ReturnsUserAccountModel()
     {
@@ -546,7 +820,6 @@ public class FacadeServiceTests
     public async Task GetServiceRoleIdAsync_ReturnsInviteApprovedUserModel()
     {
         // Arrange
-        var ServiceRoleId = "1";
         var expectedResponse = new InviteApprovedUserModel
         {
             Email = "",
@@ -575,12 +848,36 @@ public class FacadeServiceTests
         Assert.AreEqual(expected: expectedResponse.ServiceRoleId, actual: response.ServiceRoleId);
         httpTestHandler.Dispose();
     }
-    
+
+    [TestMethod]
+    public async Task GetServiceRoleIdAsync_Returns_NoContent_Response()
+    {
+        // Arrange
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NoContent,
+            Content = new StringContent("")
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        var response = await _facadeService.GetServiceRoleIdAsync(It.IsAny<string>());
+
+        // Assert
+        Assert.IsNull(response);
+        httpTestHandler.Dispose();
+    }
+
     [TestMethod]
     public async Task GetOrganisationNameByInviteTokenAsync_Returns_ApprovedPersonOrganisationModel()
     {
         // Arrange
-        var token = "asdasd";
         var expectedResponse = new ApprovedPersonOrganisationModel
         {
             SubBuildingName = "",
@@ -619,7 +916,32 @@ public class FacadeServiceTests
         Assert.AreEqual(expected: expectedResponse.Country, actual: response.Country);
         httpTestHandler.Dispose();
     }
-    
+
+    [TestMethod]
+    public async Task GetOrganisationNameByInviteTokenAsync_Returns_NoContent_Response()
+    {
+        // Arrange
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NoContent,
+            Content = new StringContent("")
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        var response = await _facadeService.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>());
+
+        // Assert
+        Assert.IsNull(response);
+        httpTestHandler.Dispose();
+    }
+
     [TestMethod]
     public async Task PostApprovedUserAccountDetailsAsync_WithValidData_ReturnsSuccess()
     {
@@ -762,4 +1084,87 @@ public class FacadeServiceTests
         Assert.IsTrue(true);
         httpTestHandler.Dispose();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(HttpRequestException))]
+    public async Task PostApprovedUserAccountDetailsAsync_Throws_HttpRequestException_When_ProblemDetails_IsNull()
+    {
+        // Arrange
+        var approvedUser = new AccountModel();
+
+        ProblemDetails? problemDetails = null;
+
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NotFound,
+            Content = new StringContent(JsonSerializer.Serialize(problemDetails))
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        await _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser);
+
+        // Assert
+        Assert.IsTrue(true);
+        httpTestHandler.Dispose();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(HttpRequestException))]
+    public async Task PostAccountDetails_WithUnsuccessfulCode_Throws_HttpRequestException_When_ProblemDetailsIsNull()
+    {
+        // Arrange
+        var account = new AccountModel
+        {
+            Person = new PersonModel
+            {
+                FirstName = "Sherlock",
+                LastName = "Holmes",
+                ContactEmail = "sherlock.holmes@test.com",
+                TelephoneNumber = "074440221"
+            },
+            Connection = new ConnectionModel
+            {
+                JobTitle = "Detective",
+                ServiceRole = "Test"
+            },
+            Organisation = new OrganisationModel
+            {
+                CompaniesHouseNumber = null,
+                Address = new AddressModel(),
+                IsComplianceScheme = false,
+                Name = "Test",
+                ValidatedWithCompaniesHouse = true
+            }
+        };
+
+        ProblemDetails? problemDetails = null;        
+
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NotFound,
+            Content = new StringContent(JsonSerializer.Serialize(problemDetails))
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+         await _facadeService.PostAccountDetailsAsync(account);
+
+        // Assert
+        Assert.IsTrue(true);        
+        httpTestHandler.Dispose();
+    }
+
 }

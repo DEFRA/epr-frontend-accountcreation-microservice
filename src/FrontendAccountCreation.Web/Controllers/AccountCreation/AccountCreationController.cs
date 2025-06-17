@@ -65,6 +65,7 @@ public class AccountCreationController : Controller
     {
         if (_deploymentRoleOptions.IsRegulator())
         {
+            //to-do: this gets the controller name wrong, which leads to showing the error page due to that error :-)
             return RedirectToAction(PagePath.Error, nameof(ErrorController.Error), new
             {
                 statusCode = (int)HttpStatusCode.Forbidden
@@ -106,6 +107,7 @@ public class AccountCreationController : Controller
         });
     }
 
+    //todo: check if this is still working
     [HttpPost]
     [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)
@@ -508,7 +510,7 @@ public class AccountCreationController : Controller
 
         var invitedApprovedUser = await _facadeService.GetServiceRoleIdAsync(inviteToken);
 
-        if (invitedApprovedUser.IsInvitationTokenInvalid) 
+        if (invitedApprovedUser.IsInvitationTokenInvalid)
         {
             return RedirectToAction(nameof(InvalidToken));
         }
@@ -529,9 +531,10 @@ public class AccountCreationController : Controller
 
         return RedirectToAction(nameof(InviteeFullName));
     }
-    
+
     [HttpGet]
-    public IActionResult InvalidToken() {
+    public IActionResult InvalidToken()
+    {
         var callbackUrl = Url.Action(action: "SignedOutInvalidToken", controller: "Home", values: null, protocol: Request.Scheme);
         return SignOut(
              new AuthenticationProperties()

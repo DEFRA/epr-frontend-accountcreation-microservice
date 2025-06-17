@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using FrontendAccountCreation.Core.Addresses;
-using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 
@@ -27,6 +26,11 @@ public class MockedFacadeService : IFacadeService
     }
 
     public Task PostAccountDetailsAsync(AccountModel account)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task PostReprocessorExporterAccountAsync(ReprocessorExporterAccountModel account, string serviceKey)
     {
         return Task.CompletedTask;
     }
@@ -102,7 +106,9 @@ public class MockedFacadeService : IFacadeService
                 BuildingName = "Dummy Place",
                 Street = "Dummy Street",
                 Town = "Nowhere",
-                Postcode = "AB1 0CD"
+                Postcode = "AB1 0CD",
+                 Country = "England"
+
             },
             AccountCreatedOn = companiesHouseNumber.Contains('X') ? DateTime.Now : null
         };
@@ -124,6 +130,11 @@ public class MockedFacadeService : IFacadeService
     }
 
     public Task PostApprovedUserAccountDetailsAsync(AccountModel account)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task PostReprocessorExporterCreateOrganisationAsync(ReExOrganisationModel reExOrganisation, string serviceKey)
     {
         return Task.CompletedTask;
     }

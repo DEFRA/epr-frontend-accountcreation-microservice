@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
 
+//to-do: shouldn't be excluded
 [ExcludeFromCodeCoverage]
 public class ErrorsViewModel
 {

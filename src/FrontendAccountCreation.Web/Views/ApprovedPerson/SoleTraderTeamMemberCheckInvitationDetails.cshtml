@@ -1,0 +1,89 @@
+﻿@using FrontendAccountCreation.Core.Sessions;
+@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Controllers.AccountCreation
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
+
+@model ReExCompanyTeamMember;
+
+@{
+    ViewData["Title"] = Localizer["SoleTraderTeamMemberCheckInvitationDetails.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-6">
+                    @Localizer["SoleTraderTeamMemberCheckInvitationDetails.Title"]
+                </h1>
+
+                <div class="govuk-summary-card">
+                    <div class="govuk-summary-card__title-wrapper">
+                        <p class="govuk-body">@Localizer["SoleTraderTeamMemberCheckInvitationDetails.Help"]</p>
+                    </div>
+                    @if (Model != null)
+                    {
+                        <div class="govuk-summary-card__content">
+                            <dl class="govuk-summary-list">
+
+                                <!-- Role of team member -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["SoleTraderTeamMemberCheckInvitationDetails.Role"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @Localizer["SoleTraderTeamMemberCheckInvitationDetails.SoleTrader"]
+                                    </dd>
+                                </div>
+
+                                <!-- Name, Email, Telephone -->
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["SoleTraderTeamMemberCheckInvitationDetails.FirstName"]<br />
+                                        @Localizer["SoleTraderTeamMemberCheckInvitationDetails.LastName"]<br />
+                                        @Localizer["SoleTraderTeamMemberCheckInvitationDetails.Email"]<br />
+                                        @Localizer["SoleTraderTeamMemberCheckInvitationDetails.Telephone"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @Model.FirstName<br />
+                                        @Model.LastName<br />
+                                        @Model.Email<br/>
+                                        @Model.TelephoneNumber
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.SoleTraderTeamMemberDetails), "ApprovedPerson")">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
+                                        </a>
+                                    </dd>
+                                </div>
+
+                            </dl>
+                        </div>
+                        <form asp-controller="ApprovedPerson" asp-action="SoleTraderTeamMemberCheckInvitationDetailsDelete" method="get">
+                            <div class="govuk-button-group">
+                                <button class="govuk-button govuk-button--secondary" data-module="govuk-button" >
+                                    @SharedLocalizer["Remove"]
+                                </button>
+                            </div>
+                        </form>
+                    }
+                    <form asp-controller="ApprovedPerson">
+                        <div class="govuk-button-group">
+                            <!-- goes to check your details -->
+                            <button class="govuk-button" data-module="govuk-button" asp-action="SoleTraderTeamMemberCheckInvitationDetailsPost">
+                                @SharedLocalizer["Continue"]
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
