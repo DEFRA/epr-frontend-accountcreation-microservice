@@ -17,10 +17,14 @@ public class PublicEmailAddressAttributeTests
     /// <param name="email">A valid email address to test.</param>
     [DataTestMethod]
     [DataRow("test@example.com")]
-    [DataRow("user.name@domain.co.uk")]
+    [DataRow("user.name@domain.co.uk")]     // Multi-part TLD
+    [DataRow("user@sub.domain.net")]        // Subdomain
+    [DataRow("user@example.com.au")]        // Another multi-part TLD
     [DataRow("user+alias@gmail.com")]
-    [DataRow("user-name@my-domain.net")]
+    [DataRow("user-name@my-domain.net")]    // Minus signs in the domain are allowed
+    [DataRow("user@my-domain-10.net")]      // digits in the domain are allowed
     [DataRow("12345@domain.io")]
+    [DataRow("test@domain.c")]              // Single character TLD's are allowed, but one doesn't currently exist (see https://data.iana.org/TLD/tlds-alpha-by-domain.txt)
     public void IsValid_ShouldReturnTrue_ForValidPublicEmails(string email)
     {
         // Arrange
@@ -39,7 +43,7 @@ public class PublicEmailAddressAttributeTests
     /// </summary>
     /// <param name="email">An invalid email address to test.</param>
     [DataTestMethod]
-    // Core requirement: Emails without a TLD
+    // Emails without a TLD
     [DataRow("test@localhost")]
     [DataRow("user@hostname")]
     // General malformed emails
@@ -49,6 +53,14 @@ public class PublicEmailAddressAttributeTests
     [DataRow("test@.com")]            // Domain starts with a dot
     [DataRow("test@domain.")]         // TLD is empty
     [DataRow("test @example.com")]    // Contains whitespace
+    [DataRow("test@domain,com")]      // Comma in domain
+    [DataRow("test@dom_ain.com")]     // Underscore in domain
+    [DataRow("test@domain.co,m")]     // Comma in TLD
+    [DataRow("test@domain!.com")]     // Exclamation in domain
+    [DataRow("test@domain$.com")]     // Dollar sign in domain
+    [DataRow("test@domain..com")]     // Consecutive dots
+    [DataRow("test@-domain.com")]     // Leading hyphen in domain
+    [DataRow("test@domain-.com")]     // Trailing hyphen in domain
     public void IsValid_ShouldReturnFalse_ForInvalidEmails(string email)
     {
         // Arrange

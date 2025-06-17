@@ -5,7 +5,7 @@ namespace FrontendAccountCreation.Core.DataAnnotations;
 
 public partial class PublicEmailAddressAttribute : ValidationAttribute
 {
-    [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s\.]+$", RegexOptions.IgnoreCase)]
+    [GeneratedRegex(@"^[^@\s]+@([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{1,}$", RegexOptions.IgnoreCase)]
     private static partial Regex PublicEmailRegex();
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
