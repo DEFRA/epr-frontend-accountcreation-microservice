@@ -28,7 +28,10 @@
                                     @Localizer["CheckYourDetails.RegisteredCharity"]
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    @Localizer["CheckYourDetails.No"]
+                                    @if (Model.IsCompaniesHouseFlow)
+                                    {
+                                        @Localizer["CheckYourDetails.No"]
+                                    }
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
                                     <a href="~/re-ex/organisation/@PagePath.RegisteredAsCharity" class="govuk-link govuk-link--no-visited-state">
@@ -46,10 +49,6 @@
                                     @if (Model.IsCompaniesHouseFlow)
                                     {
                                         @SharedLocalizer["Yes"]
-                                    }
-                                    else
-                                    {
-                                        @SharedLocalizer["No"]
                                     }
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
@@ -145,6 +144,26 @@
                                             <span class="govuk-visually-hidden"></span>
                                         </a>
                                     </dd>
+                                </div>
+                            }
+
+                            @if (Model.IsSoleTrader)
+                            {
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["CheckYourDetails.Address"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @{
+                                            RenderAddressParts(Model?.BusinessAddress?.AddressFields);
+                                         }
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a href="~/re-ex/organisation/@PagePath.BusinessAddress" class="govuk-link govuk-link--no-visited-state">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"></span>
+                                        </a>
+                                   </dd>
                                 </div>
                             }
 

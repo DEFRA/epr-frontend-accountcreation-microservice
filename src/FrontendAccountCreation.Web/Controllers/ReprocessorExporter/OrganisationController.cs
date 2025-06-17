@@ -719,7 +719,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
-            return await SaveSessionAndRedirect(session,
+			session.ReExManualInputSession.TeamMember = null;
+			return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
                 currentPagePath: PagePath.SoleTrader, 
