@@ -226,7 +226,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return View(new IsTradingNameDifferentViewModel
         {
-            IsTradingNameDifferent = isTradingNameDifferent
+            IsTradingNameDifferent = isTradingNameDifferent,
+            IsNonUk = session.IsUkMainAddress == false
         });
     }
 
@@ -245,11 +246,36 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
+        string nextAction, nextPagePath;
+        
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
+            nextAction = nameof(TradingName);
+            nextPagePath = PagePath.TradingName;
         }
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+        else
+        {
+            if (session.IsUkMainAddress == true)
+            {
+                nextAction = nameof(IsOrganisationAPartner);
+                nextPagePath = PagePath.IsPartnership;
+            }
+            else
+            {
+                nextAction = nameof(AddressOverseas);
+                nextPagePath = PagePath.AddressOverseas;
+            }
+        }
+
+        return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
+    }
+
+    [HttpGet]
+    [Route(PagePath.AddressOverseas)]
+    [OrganisationJourneyAccess(PagePath.AddressOverseas)]
+    public Task<IActionResult> AddressOverseas()
+    {
+        return PlaceholderPageGet(PagePath.AddressOverseas);
     }
 
     [HttpGet]
