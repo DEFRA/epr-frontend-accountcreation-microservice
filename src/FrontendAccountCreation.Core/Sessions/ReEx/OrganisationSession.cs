@@ -40,6 +40,8 @@ public class OrganisationSession : ILocalSession
 
     public bool IsUserChangingDetails { get; set; }
 
+    public string? RoleInOrganisation { get; set; }
+
     public List<string> Journey { get; set; } = [];
 
     public HashSet<string> WhiteList { get; set; } = [];

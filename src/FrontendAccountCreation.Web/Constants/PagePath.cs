@@ -90,6 +90,9 @@ public static class PagePath
     public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
     public const string LimitedLiabilityPartnership = "partner-you";
 
+    // Unincorporated paths
+    public const string UnincorporatedRoleInOrganisation = "unincorporated-role-in-organisation";
+
     // Non journey paths
     public const string Accessibility = "accessibility";
 
