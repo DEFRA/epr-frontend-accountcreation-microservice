@@ -165,9 +165,6 @@
   <data name="AddressOverseas.PostcodeError" xml:space="preserve">
     <value />
   </data>
-  <data name="AddressOverseas.PostcodeInvalidError" xml:space="preserve">
-    <value />
-  </data>
   <data name="AddressOverseas.StateProvinceRegionLengthError" xml:space="preserve">
     <value />
   </data>
