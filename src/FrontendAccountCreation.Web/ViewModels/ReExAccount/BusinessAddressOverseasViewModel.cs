@@ -6,6 +6,8 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 [ExcludeFromCodeCoverage]
 public class BusinessAddressOverseasViewModel
 {
+    //todo: reconcile with the errors in the story, e.g. invalid country name
+    
     [Required(ErrorMessage = "BusinessAddressOverseas.CountryNameError")]
     [MaxLength(100, ErrorMessage = "BusinessAddressOverseas.CountryLengthError")]
     public string? Country { get; set; }
