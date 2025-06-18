@@ -121,7 +121,7 @@
     <value>Dewiswch os yw enw masnachu'ch sefydliad yn wahanol i'w enw yn Nhŷ'r Cwmnïau</value>
   </data>
   <data name="IsTradingNameDifferent.NonUk.ErrorMessage" xml:space="preserve">
-    <value>[W]Select if the trading name different to its organisation name</value>
+    <value>[W]Select if the trading name is different to its organisation name</value>
   </data>
   <data name="IsTradingNameDifferent.NonUk.Question" xml:space="preserve">
     <value>[W]Is the trading name different to its organisation name?</value>
