@@ -202,6 +202,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsUkMainAddress != true)
         {
+            session.ReExManualInputSession ??= new ReExManualInputSession();
+            session.ReExManualInputSession.ProducerType = ProducerType.NonUkOrganisation;
+
             return await SaveSessionAndRedirect(session, nameof(NotImplemented),
                 PagePath.IsUkMainAddress, PagePath.NotImplemented);
         }
@@ -787,14 +790,17 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        var viewModel = new ReExOrganisationSuccessViewModel();
-        viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
+        var viewModel = new ReExOrganisationSuccessViewModel
+        {
+            IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+        };
+
         if (viewModel.IsSoleTrader)
         {
             viewModel.CompanyName = session.ReExManualInputSession?.TradingName;
 			if (session.ReExManualInputSession?.TeamMember != null)
 			{
-                viewModel.ReExCompanyTeamMembers = new List<ReExCompanyTeamMember> { session.ReExManualInputSession.TeamMember };
+                viewModel.ReExCompanyTeamMembers = [session.ReExManualInputSession.TeamMember];
 			}
 		}
         else
