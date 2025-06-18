@@ -226,7 +226,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return View(new IsTradingNameDifferentViewModel
         {
-            IsTradingNameDifferent = isTradingNameDifferent
+            IsTradingNameDifferent = isTradingNameDifferent,
+            IsNonUk = session.IsUkMainAddress == false
         });
     }
 

@@ -45,7 +45,7 @@ public static class PagePath
     public const string SoleTrader = "sole-trader";
     public const string NotApprovedPerson = "not-approved-person";
     public const string NotImplemented = "not-implemented";
-    public const string AddressOverseas = "address-oversears";
+    public const string AddressOverseas = "address-overseas";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
