@@ -202,8 +202,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsUkMainAddress != true)
         {
-            return await SaveSessionAndRedirect(session, nameof(NotImplemented),
-                PagePath.IsUkMainAddress, PagePath.NotImplemented);
+            session.ReExManualInputSession ??= new ReExManualInputSession();
+            session.ReExManualInputSession.ProducerType = ProducerType.NonUkOrganisation;
+
+            return await SaveSessionAndRedirect(session, nameof(NonUkOrganisationName),
+                PagePath.IsUkMainAddress, PagePath.NonUkOrganisationName);
         }
 
         return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
@@ -226,7 +229,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return View(new IsTradingNameDifferentViewModel
         {
-            IsTradingNameDifferent = isTradingNameDifferent
+            IsTradingNameDifferent = isTradingNameDifferent,
+            IsNonUk = session.IsUkMainAddress == false
         });
     }
 
@@ -245,11 +249,36 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
+        string nextAction, nextPagePath;
+        
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
+            nextAction = nameof(TradingName);
+            nextPagePath = PagePath.TradingName;
         }
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+        else
+        {
+            if (session.IsUkMainAddress == true)
+            {
+                nextAction = nameof(IsOrganisationAPartner);
+                nextPagePath = PagePath.IsPartnership;
+            }
+            else
+            {
+                nextAction = nameof(AddressOverseas);
+                nextPagePath = PagePath.AddressOverseas;
+            }
+        }
+
+        return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
+    }
+
+    [HttpGet]
+    [Route(PagePath.AddressOverseas)]
+    [OrganisationJourneyAccess(PagePath.AddressOverseas)]
+    public Task<IActionResult> AddressOverseas()
+    {
+        return PlaceholderPageGet(PagePath.AddressOverseas);
     }
 
     [HttpGet]
@@ -719,7 +748,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
-            return await SaveSessionAndRedirect(session,
+			session.ReExManualInputSession.TeamMember = null;
+			return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
                 currentPagePath: PagePath.SoleTrader, 
@@ -729,6 +759,44 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.SoleTrader, PagePath.AddAnApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonUkOrganisationName)]
+    [OrganisationJourneyAccess(PagePath.NonUkOrganisationName)]
+    public async Task<IActionResult> NonUkOrganisationName()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.NonUkOrganisationName);
+
+        var viewModel = new NonUkOrganisationNameViewModel()
+        {
+            NonUkOrganisationName = session?.ReExManualInputSession?.NonUkOrganisationName,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonUkOrganisationName)]
+    [OrganisationJourneyAccess(PagePath.NonUkOrganisationName)]
+    public async Task<IActionResult> NonUkOrganisationName(NonUkOrganisationNameViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonUkOrganisationName);
+
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+
+        session.ReExManualInputSession.NonUkOrganisationName = model.NonUkOrganisationName!;
+
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.TradingName,
+            PagePath.IsTradingNameDifferent);
     }
 
     [HttpGet]
@@ -760,14 +828,17 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        var viewModel = new ReExOrganisationSuccessViewModel();
-        viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
+        var viewModel = new ReExOrganisationSuccessViewModel
+        {
+            IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+        };
+
         if (viewModel.IsSoleTrader)
         {
             viewModel.CompanyName = session.ReExManualInputSession?.TradingName;
 			if (session.ReExManualInputSession?.TeamMember != null)
 			{
-                viewModel.ReExCompanyTeamMembers = new List<ReExCompanyTeamMember> { session.ReExManualInputSession.TeamMember };
+                viewModel.ReExCompanyTeamMembers = [session.ReExManualInputSession.TeamMember];
 			}
 		}
         else

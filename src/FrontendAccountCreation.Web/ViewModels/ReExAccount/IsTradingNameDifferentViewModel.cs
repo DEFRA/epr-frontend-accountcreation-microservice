@@ -2,8 +2,23 @@
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
-public class IsTradingNameDifferentViewModel
+public class IsTradingNameDifferentViewModel : IValidatableObject
 {
-    [Required(ErrorMessage = "IsTradingNameDifferent.ErrorMessage")]
+    private static readonly RequiredAttribute RequiredAttribute = new();
+
     public YesNoAnswer? IsTradingNameDifferent { get; set; }
+
+    public bool IsNonUk { get; set; }
+    
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (!RequiredAttribute.IsValid(IsTradingNameDifferent))
+        {
+            string errorMessageKey = IsNonUk 
+                ? "IsTradingNameDifferent.NonUk.ErrorMessage"
+                : "IsTradingNameDifferent.ErrorMessage";
+
+            yield return new ValidationResult(errorMessageKey, [nameof(IsTradingNameDifferent)]);
+        }
+    }
 }

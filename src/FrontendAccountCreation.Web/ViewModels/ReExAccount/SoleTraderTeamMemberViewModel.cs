@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Web.Controllers.Attributes;
+﻿using FrontendAccountCreation.Core.DataAnnotations;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
@@ -8,7 +9,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 public class SoleTraderTeamMemberViewModel
 {
     [Required(ErrorMessage = "TeamMemberDetails.EmailEmptyErrorMessage")]
-    [EmailAddress(ErrorMessage= "TeamMemberDetails.EmailInvalidErrorMessage")]
+    [PublicEmailAddress(ErrorMessage= "TeamMemberDetails.EmailInvalidErrorMessage")]
     public string? Email { get; set; }
 
     [Required(ErrorMessage = "TeamMemberDetails.TelephoneNumberEmptyErrorMessage")]

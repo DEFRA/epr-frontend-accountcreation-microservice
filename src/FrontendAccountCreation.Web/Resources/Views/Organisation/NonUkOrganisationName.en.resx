@@ -117,13 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="IsOrganisationAPartner.ErrorMessage" xml:space="preserve">
-    <value>Select yes if your organisation is a partnership</value>
+  <data name="NonUkOrganisationName.ErrorMessage" xml:space="preserve">
+    <value>Enter your organisation's name</value>
   </data>
-  <data name="IsOrganisationAPartner.Question" xml:space="preserve">
-    <value>Is your organisation a partnership?</value>
+  <data name="NonUkOrganisationName.Hint" xml:space="preserve">
+    <value>You may trade under your own name, or a name you have given to your business.</value>
   </data>
-  <data name="IsOrganisationAPartner.Title" xml:space="preserve">
-    <value>Partner organisation</value>
+  <data name="NonUkOrganisationName.LengthErrorMessage" xml:space="preserve">
+    <value>Organisation name must be 170 characters or less</value>
+  </data>
+  <data name="NonUkOrganisationName.Question" xml:space="preserve">
+    <value>What is the name of your organisation?</value>
+  </data>
+  <data name="NonUkOrganisationName.Title" xml:space="preserve">
+    <value>Non Uk Organisation Name</value>
   </data>
 </root>
