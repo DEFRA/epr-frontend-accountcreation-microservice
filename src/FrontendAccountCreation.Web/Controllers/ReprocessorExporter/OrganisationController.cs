@@ -285,6 +285,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
         {
+            viewModel.Country = session.ReExManualInputSession.BusinessAddress.Country;
             viewModel.AddressLine1 = session.ReExManualInputSession.BusinessAddress.BuildingName;
             viewModel.AddressLine2 = session.ReExManualInputSession.BusinessAddress.Street;
             viewModel.TownOrCity = session.ReExManualInputSession.BusinessAddress.Town;
@@ -309,6 +310,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var address = session!.ReExManualInputSession!.BusinessAddress ??= new Address();
 
+        address.Country = model.Country;
         address.BuildingName = model.AddressLine1;
         address.Street = model.AddressLine2;
         address.Town = model.TownOrCity;
