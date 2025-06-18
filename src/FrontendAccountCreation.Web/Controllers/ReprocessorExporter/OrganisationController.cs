@@ -205,8 +205,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             session.ReExManualInputSession ??= new ReExManualInputSession();
             session.ReExManualInputSession.ProducerType = ProducerType.NonUkOrganisation;
 
-            return await SaveSessionAndRedirect(session, nameof(NotImplemented),
-                PagePath.IsUkMainAddress, PagePath.NotImplemented);
+            return await SaveSessionAndRedirect(session, nameof(NonUkOrganisationName),
+                PagePath.IsUkMainAddress, PagePath.NonUkOrganisationName);
         }
 
         return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
@@ -759,6 +759,44 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.SoleTrader, PagePath.AddAnApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonUkOrganisationName)]
+    [OrganisationJourneyAccess(PagePath.NonUkOrganisationName)]
+    public async Task<IActionResult> NonUkOrganisationName()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.NonUkOrganisationName);
+
+        var viewModel = new NonUkOrganisationNameViewModel()
+        {
+            NonUkOrganisationName = session?.ReExManualInputSession?.NonUkOrganisationName,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonUkOrganisationName)]
+    [OrganisationJourneyAccess(PagePath.NonUkOrganisationName)]
+    public async Task<IActionResult> NonUkOrganisationName(NonUkOrganisationNameViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonUkOrganisationName);
+
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+
+        session.ReExManualInputSession.NonUkOrganisationName = model.NonUkOrganisationName!;
+
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.TradingName,
+            PagePath.IsTradingNameDifferent);
     }
 
     [HttpGet]
