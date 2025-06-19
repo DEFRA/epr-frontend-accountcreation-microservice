@@ -7,10 +7,10 @@ public enum RoleInOrganisation
 {
     NoneOfTheAbove = 0,
 
-    [Description("Company director of a corporate partner")]
+    [Description("Director")]
     Director = 1,
 
-    [Description("Company secretary of a corporate partner")]
+    [Description("CompanySecretary")]
     CompanySecretary = 2,
 
     [Description("Individual partner")]
