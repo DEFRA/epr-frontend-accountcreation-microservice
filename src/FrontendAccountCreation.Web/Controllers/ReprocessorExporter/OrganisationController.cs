@@ -898,7 +898,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.ReExManualInputSession.NonUkOrganisationName = model.NonUkOrganisationName!;
 
-        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.TradingName,
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.NonUkOrganisationName,
             PagePath.IsTradingNameDifferent);
     }
 
