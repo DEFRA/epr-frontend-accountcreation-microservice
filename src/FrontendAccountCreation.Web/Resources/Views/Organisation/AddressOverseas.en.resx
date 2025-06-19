@@ -175,6 +175,6 @@
     <value>Town or city must be 70 characters or less</value>
   </data>
   <data name="AddressOverseas.PostcodeLengthError" xml:space="preserve">
-    <value>Town or city must be 15 characters or less</value>
+    <value>Postcode must be 15 characters or less</value>
   </data>
 </root>
