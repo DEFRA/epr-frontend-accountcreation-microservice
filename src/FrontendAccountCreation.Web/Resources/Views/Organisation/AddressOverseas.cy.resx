@@ -117,41 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddressOverseas.Title" xml:space="preserve">
+    <value>Business address overseas</value>
+  </data>
+  <data name="AddressOverseas.Question" xml:space="preserve">
+    <value>What is the organisation's address?</value>
+  </data>
+  <data name="AddressOverseas.CountryLabel" xml:space="preserve">
+    <value>Country</value>
+  </data>
   <data name="AddressOverseas.AddressLine1Label" xml:space="preserve">
     <value>Address line 1</value>
   </data>
   <data name="AddressOverseas.AddressLine2Label" xml:space="preserve">
     <value>Address line 2 (optional)</value>
   </data>
-  <data name="AddressOverseas.CountryLabel" xml:space="preserve">
-    <value>Country</value>
-  </data>
-  <data name="AddressOverseas.PostcodeHint" xml:space="preserve">
-    <value>Some countries use only numbers, others use a mix of letters and numbers. Leave blank if the country does not have postcodes.</value>
-  </data>
-  <data name="AddressOverseas.PostcodeLabel" xml:space="preserve">
-    <value>Postcode or similar</value>
-  </data>
-  <data name="AddressOverseas.Question" xml:space="preserve">
-    <value>What is the organisation's address?</value>
-  </data>
-  <data name="AddressOverseas.StateProvinceRegionHint" xml:space="preserve">
-    <value>Leave blank if the address does not have a state, province or region</value>
+  <data name="AddressOverseas.TownOrCityLabel" xml:space="preserve">
+    <value>Town or city</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLabel" xml:space="preserve">
     <value>State, province or region (optional)</value>
   </data>
-  <data name="AddressOverseas.Title" xml:space="preserve">
-    <value>Business address overseas</value>
+  <data name="AddressOverseas.StateProvinceRegionHint" xml:space="preserve">
+    <value>Leave blank if the address does not have a state, province or region</value>
   </data>
-  <data name="AddressOverseas.TownOrCityLabel" xml:space="preserve">
-    <value>Town or city</value>
+  <data name="AddressOverseas.PostcodeLabel" xml:space="preserve">
+    <value>Postcode or similar</value>
   </data>
-  <data name="AddressOverseas.AddressLine1LengthError" xml:space="preserve">
-    <value>Address line 1 must be 100 characters or less</value>
+  <data name="AddressOverseas.PostcodeHint" xml:space="preserve">
+    <value>Some countries use only numbers, others use a mix of letters and numbers. Leave blank if the country does not have postcodes.</value>
   </data>
   <data name="AddressOverseas.AddressLine1Error" xml:space="preserve">
     <value>Enter the registered office, head office or principal place of business address of your organisation</value>
+  </data>
+  <data name="AddressOverseas.AddressLine1LengthError" xml:space="preserve">
+    <value>Address line 1 must be 100 characters or less</value>
   </data>
   <data name="AddressOverseas.AddressLine2LengthError" xml:space="preserve">
     <value>Address line 2 must be 100 characters or less</value>
@@ -161,9 +161,6 @@
   </data>
   <data name="AddressOverseas.CountryNameError" xml:space="preserve">
     <value>Enter the registered office, head office or principal place of business country of your organisation</value>
-  </data>
-  <data name="AddressOverseas.PostcodeError" xml:space="preserve">
-    <value>Enter postcode or similar</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLengthError" xml:space="preserve">
     <value>State, province or region must be 50 characters or less</value>
@@ -176,5 +173,8 @@
   </data>
   <data name="AddressOverseas.PostcodeLengthError" xml:space="preserve">
     <value>Postcode must be 15 characters or less</value>
+  </data>
+  <data name="AddressOverseas.CountryInvalidError" xml:space="preserve">
+    <value>Countries must only include letters, spaces and hyphens</value>
   </data>
 </root>

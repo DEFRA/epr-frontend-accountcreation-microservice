@@ -6,16 +6,15 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 [ExcludeFromCodeCoverage]
 public class BusinessAddressOverseasViewModel
 {
-    //todo: reconcile with the errors in the story, e.g. invalid country name
-    
     [Required(ErrorMessage = "AddressOverseas.CountryNameError")]
     [MaxLength(54, ErrorMessage = "AddressOverseas.CountryLengthError")]
+    [RegularExpression(@"^[a-zA-Z -]+$", ErrorMessage = "AddressOverseas.CountryInvalidError")]
     public string? Country { get; set; }
 
     [Required(ErrorMessage = "AddressOverseas.AddressLine1Error")]
     [MaxLength(100, ErrorMessage = "AddressOverseas.AddressLine1LengthError")]
     public string? AddressLine1 { get; set; }
-
+        
     [MaxLength(100, ErrorMessage = "AddressOverseas.AddressLine2LengthError")]
     public string? AddressLine2 { get; set; }
 
@@ -26,7 +25,6 @@ public class BusinessAddressOverseasViewModel
     [MaxLength(50, ErrorMessage = "AddressOverseas.StateProvinceRegionLengthError")]
     public string? StateProvinceRegion { get; set; }
 
-    [Required(ErrorMessage = "AddressOverseas.PostcodeError")]
     [MaxLength(15, ErrorMessage = "AddressOverseas.PostcodeLengthError")]
     public string? Postcode { get; set; }
 }
