@@ -19,8 +19,10 @@
                 <form asp-controller="Unincorporated" asp-action="RoleInOrganisation" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                            <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                @Localizer["ReExRoleInOrganisation.Question"]
+                            <h1 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--l" for="role">
+                                    @Localizer["ReExRoleInOrganisation.Question"]
+                                </label>
                             </h1>
                             <div class="govuk-hint" id="hint">
                                 @Localizer["ReExRoleInOrganisation.Hint"]
@@ -30,7 +32,7 @@
                         @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
                         <div class="govuk-form-group">
-                            <input class="govuk-input govuk-!-width-full" aria-describedby="hint" name="role" type="text" value="@Model.Role">
+                            <input id="role" class="govuk-input" aria-describedby="hint" name="role" type="text" autocomplete="off" value="@Model.Role">
                         </div>
                     </div>
 

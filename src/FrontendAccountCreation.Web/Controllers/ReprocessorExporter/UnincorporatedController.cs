@@ -41,7 +41,11 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         session.RoleInOrganisation = viewModel.Role;
 
-        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl);
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(ManageControl),
+            PagePath.UnincorporatedRoleInOrganisation,
+            PagePath.UnincorporatedManageControl);
     }
 
     [HttpGet]
