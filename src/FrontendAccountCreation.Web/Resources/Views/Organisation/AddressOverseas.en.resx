@@ -136,28 +136,28 @@
     <value>What is the organisation's address?</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionHint" xml:space="preserve">
-    <value />
+    <value>Leave blank if the address does not have a state, province or region</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLabel" xml:space="preserve">
     <value>State, province or region (optional)</value>
   </data>
   <data name="AddressOverseas.Title" xml:space="preserve">
-    <value />
+    <value>Business address overseas</value>
   </data>
   <data name="AddressOverseas.TownOrCityLabel" xml:space="preserve">
     <value>Town or city</value>
   </data>
   <data name="AddressOverseas.AddressLine1LengthError" xml:space="preserve">
-    <value />
+    <value>Address line 1 must be 100 characters or less</value>
   </data>
   <data name="AddressOverseas.AddressLine1Error" xml:space="preserve">
     <value>Enter the registered office, head office or principal place of business address of your organisation</value>
   </data>
   <data name="AddressOverseas.AddressLine2LengthError" xml:space="preserve">
-    <value />
+    <value>Address line 2 must be 100 characters or less</value>
   </data>
   <data name="AddressOverseas.CountryLengthError" xml:space="preserve">
-    <value />
+    <value>Country must be 54 characters or less</value>
   </data>
   <data name="AddressOverseas.CountryNameError" xml:space="preserve">
     <value>Enter the registered office, head office or principal place of business country of your organisation</value>
@@ -166,12 +166,15 @@
     <value>Enter postcode or similar</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLengthError" xml:space="preserve">
-    <value />
+    <value>State, province or region must be 50 characters or less</value>
   </data>
   <data name="AddressOverseas.TownOrCityError" xml:space="preserve">
     <value>Enter the town or city of the registered office, head office or principal place of business of your organisation</value>
   </data>
   <data name="AddressOverseas.TownOrCityLengthError" xml:space="preserve">
-    <value />
+    <value>Town or city must be 70 characters or less</value>
+  </data>
+  <data name="AddressOverseas.PostcodeLengthError" xml:space="preserve">
+    <value>Town or city must be 15 characters or less</value>
   </data>
 </root>

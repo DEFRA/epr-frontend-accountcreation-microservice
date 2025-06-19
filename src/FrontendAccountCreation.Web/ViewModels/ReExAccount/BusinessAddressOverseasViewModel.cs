@@ -9,7 +9,7 @@ public class BusinessAddressOverseasViewModel
     //todo: reconcile with the errors in the story, e.g. invalid country name
     
     [Required(ErrorMessage = "AddressOverseas.CountryNameError")]
-    [MaxLength(100, ErrorMessage = "AddressOverseas.CountryLengthError")]
+    [MaxLength(54, ErrorMessage = "AddressOverseas.CountryLengthError")]
     public string? Country { get; set; }
 
     [Required(ErrorMessage = "AddressOverseas.AddressLine1Error")]
@@ -27,5 +27,6 @@ public class BusinessAddressOverseasViewModel
     public string? StateProvinceRegion { get; set; }
 
     [Required(ErrorMessage = "AddressOverseas.PostcodeError")]
+    [MaxLength(15, ErrorMessage = "AddressOverseas.PostcodeLengthError")]
     public string? Postcode { get; set; }
 }

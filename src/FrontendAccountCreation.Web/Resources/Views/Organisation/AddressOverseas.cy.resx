@@ -174,4 +174,7 @@
   <data name="AddressOverseas.TownOrCityLengthError" xml:space="preserve">
     <value />
   </data>
+  <data name="AddressOverseas.PostcodeLengthError" xml:space="preserve">
+    <value />
+  </data>
 </root>
