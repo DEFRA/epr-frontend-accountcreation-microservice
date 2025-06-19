@@ -1,4 +1,8 @@
-﻿using FrontendAccountCreation.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text.Json;
+using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -15,10 +19,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation.Core.Addresses;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -293,6 +293,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         var viewModel = new TradingNameViewModel()
         {
             TradingName = session?.ReExManualInputSession?.TradingName,
+            ProducerType = session?.ReExManualInputSession?.ProducerType
         };
         return View(viewModel);
     }
@@ -313,7 +314,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.ReExManualInputSession ??= new ReExManualInputSession();
 
-        session.ReExManualInputSession.TradingName = model.TradingName!;
+        session.ReExManualInputSession.TradingName = model.TradingName!;        
 
         if (session.IsCompaniesHouseFlow)
         {
