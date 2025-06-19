@@ -6,7 +6,11 @@ namespace FrontendAccountCreation.Core.Sessions.ReEx;
 public enum ReExTeamMemberRole
 {
     None = 0,
+
+    [Description("Director")]
     Director = 1,
+
+    [Description("CompanySecretary")]
     CompanySecretary = 2,
 
     [Description("Company director of a corporate partner")]
