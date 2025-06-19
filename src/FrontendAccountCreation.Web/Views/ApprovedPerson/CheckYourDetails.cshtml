@@ -147,6 +147,25 @@
                                 </div>
                             }
 
+                            @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true })
+                            {
+                                string partnershipType = Model.IsLimitedLiabilityPartnership ? "CheckYourDetails.LimitedLiabilityPartnership" : "CheckYourDetails.LimitedPartnership";
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["CheckYourDetails.Partnership"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @Localizer[partnershipType].Value
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a href="~/re-ex/organisation/@PagePath.PartnershipType" class="govuk-link govuk-link--no-visited-state">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"></span>
+                                        </a>
+                                    </dd>
+                                </div>
+                            }
+
                             @if (Model.IsSoleTrader)
                             {
                                 <div class="govuk-summary-list__row">
