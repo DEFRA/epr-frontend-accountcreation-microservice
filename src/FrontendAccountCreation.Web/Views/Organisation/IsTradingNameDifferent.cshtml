@@ -11,6 +11,10 @@
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+
+    string questionResourceKey = Model.IsNonUk
+        ? "IsTradingNameDifferent.NonUk.Question"
+        : "IsTradingNameDifferent.Question";
 }
 
 <div class="govuk-width-container">
@@ -20,16 +24,18 @@
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
                 <form asp-controller="Organisation" asp-action="IsTradingNameDifferent" method="post">
+                    @Html.HiddenFor(m => m.IsNonUk)
+
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                    @Localizer["IsTradingNameDifferent.Question"]
+                                    @Localizer[questionResourceKey]
                                 </h1>
                             </legend>
 
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
-                            
+
                             <div class="govuk-radios" data-module="govuk-radios">
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="rdoYesIsTradingNameDifferent"

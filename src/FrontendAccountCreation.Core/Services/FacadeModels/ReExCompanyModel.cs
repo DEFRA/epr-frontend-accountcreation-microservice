@@ -8,7 +8,7 @@ public class ReExCompanyModel
 {
     public string? OrganisationId { get; set; }
 
-    public string? OrganisationType { get; set; }
+    public OrganisationType? OrganisationType { get; set; }
 
     //Type of producers for comapany house can be LP or LLP
     public string? ProducerType { get; set; }
@@ -22,4 +22,6 @@ public class ReExCompanyModel
     public bool ValidatedWithCompaniesHouse { get; set; }
 
     public Nation? Nation { get; set; }
+
+    public bool IsComplianceScheme { get; set; }
 }

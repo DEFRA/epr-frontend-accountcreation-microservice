@@ -142,7 +142,7 @@
     <value>packaging waste material for each UK reprocessing site</value>
   </data>
   <data name="Success.WhatYouMustDoNext.List.Item2" xml:space="preserve">
-    <value>UK-derived packaging waste material to be exported for reprocessing out side the UK</value>
+    <value>UK-derived packaging waste material to be exported for reprocessing outside the UK</value>
   </data>
   <data name="Success.WhatYouMustDoNext.Paragrah" xml:space="preserve">
     <value>Now you must apply to register each:</value>
@@ -154,6 +154,12 @@
     <value>Approved persons invited</value>
   </data>
   <data name="Success.Continue" xml:space="preserve">
-    <value>Return to home</value>
+    <value>Return to the dashboard</value>
+  </data>
+  <data name="Success.WhatYouMustDoNext.SoleTrader.List.Item2" xml:space="preserve">
+    <value>packaging waste material to be exported for reprocessing outside the UK</value>
+  </data>
+  <data name="Success.WhatYouMustDoNext.SoleTrader.Paragrah" xml:space="preserve">
+    <value>Now you must apply to register each UK-derived:</value>
   </data>
 </root>

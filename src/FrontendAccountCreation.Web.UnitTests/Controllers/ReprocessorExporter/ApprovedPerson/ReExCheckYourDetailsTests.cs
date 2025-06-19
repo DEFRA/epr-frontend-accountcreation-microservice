@@ -341,6 +341,87 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
+    public async Task CheckYourDetails_WhenManualInputFlow_ShouldSetIsSoleTrader()
+    {
+        // Arrange
+        var manualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = manualInputSession
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.IsSoleTrader.Should().BeTrue();
+        model.ProducerType.Should().Be(ProducerType.SoleTrader);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenManualInputFlow_WithTeamMember_ShouldAddToViewModel()
+    {
+        // Arrange
+        var teamMember = new ReExCompanyTeamMember
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "Alex"
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMember = teamMember
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.reExCompanyTeamMembers.Should().ContainSingle(x => x.Id == teamMember.Id);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenManualInputFlow_WithoutTeamMember_ShouldInitializeEmptyTeamMembersList()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession()
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.reExCompanyTeamMembers.Should().NotBeNull();
+        model.reExCompanyTeamMembers.Should().BeEmpty();
+    }
+
+
+
+    [TestMethod]
     public async Task CheckYourDetailsPost_ShouldRedirectToDeclaration()
     {
         // Arrange

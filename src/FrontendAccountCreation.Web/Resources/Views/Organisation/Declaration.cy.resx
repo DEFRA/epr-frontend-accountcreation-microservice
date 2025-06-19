@@ -124,7 +124,7 @@
     <value>Drwy gadarnhau'ch manylion, rydych chi'n cytuno bod yr wybodaeth sefydliadol rydych chi wedi'i rhoi yn gyflawn ac yn gywir.</value>
   </data>
   <data name="Declaration.Information" xml:space="preserve">
-    <value>Gallech wynebu camau gorfodi os byddwch chi'n rhoi gwybodaeth ffug neu wybodaeth sy'n fwriadol yn gamarweiniol.</value>
+    <value>If any of the information you provide is inaccurate then this may prevent or delay any subsequent submissions made on this service.</value>
   </data>
   <data name="Declaration.Confirm" xml:space="preserve">
     <value>Cadarnhau ac ychwanegu sefydliad</value>

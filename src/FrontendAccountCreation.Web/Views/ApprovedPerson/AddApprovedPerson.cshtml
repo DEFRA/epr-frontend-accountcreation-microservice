@@ -36,7 +36,7 @@
                         }
                         else
                         {
-                            if (Model.IsInEligibleToBeApprovedPerson)
+                            if (Model.IsInEligibleToBeApprovedPerson || (Model.IsSoleTrader && !Model.IsIndividualInCharge))
                             {
                                 @await Html.PartialAsync("Partials/_AddNotApprovedPerson", Model)
                             }

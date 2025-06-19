@@ -2,51 +2,62 @@
 @using FrontendAccountCreation.Web.ViewModels.AccountCreation
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Core.Sessions;
 
 @model TradingNameViewModel
 
-@{
-    ViewData["Title"] = Localizer["TradingName.Title"];
-    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
-    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+@{
+	ViewData["Title"] = Localizer["TradingName.Title"];
+	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+	ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+
+	var tt = ProducerType.UnincorporatedBody;
 }
 
 <div class="govuk-width-container">
-    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
+				@await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="Organisation" asp-action="TradingName" method="post">
-                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
-                        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                            <label for="TradingName">
-                                @Localizer["TradingName.Question"]
-                            </label>
-                        </h1>
+				<form asp-controller="Organisation" asp-action="TradingName" method="post">
+					<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+						<h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+							<label for="TradingName">
+								@if (@Model.ProducerType.HasValue && @Model.ProducerType  == ProducerType.NonUkOrganisation)
+								{
+									@Localizer["TradingName.QuestionUnincorporatedBody"].Value
+								}
+								else
+								{
+									@Localizer["TradingName.Question"].Value
+								}
+							</label>
+						</h1>
 
-                        <div class="govuk-hint" id="TradingName-hint">
-                            @Localizer["TradingName.Hint"]
-                        </div>
+						<div class="govuk-hint" id="TradingName-hint">
+							@Localizer["TradingName.Hint"]
+						</div>
 
-                        @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+						@await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
-                        <div class="govuk-form-group">
-                            <input class="govuk-input govuk-!-width-full @Html.Raw(ViewData.ModelState.Count > 0 ? "govuk-input--error" : "")"
-                                   type="text"
-                                   gov-for="TradingName"
-                                   gov-value="@Model.TradingName"
-                                   aria-describedby="TradingName-hint">
-                        </div>
-                    </div>
+						<div class="govuk-form-group">
+							<input class="govuk-input govuk-!-width-full @Html.Raw(ViewData.ModelState.Count > 0 ? "govuk-input--error" : "")"
+								   type="text"
+								   gov-for="TradingName"
+								   gov-value="@Model.TradingName"
+								   aria-describedby="TradingName-hint">
+						</div>
+					</div>
 
-                    <button class="govuk-button" data-module="govuk-button">
-                        @SharedLocalizer["Continue"]
-                    </button>
-                </form>
-            </div>
-        </div>
-    </main>
+					<button class="govuk-button" data-module="govuk-button">
+						@SharedLocalizer["Continue"]
+					</button>
+				</form>
+			</div>
+		</div>
+	</main>
 </div>

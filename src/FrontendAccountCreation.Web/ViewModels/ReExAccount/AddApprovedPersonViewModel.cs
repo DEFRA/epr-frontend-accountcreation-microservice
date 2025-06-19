@@ -5,7 +5,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
 {
     public class AddApprovedPersonViewModel
     {
-        [Required(ErrorMessage = "AddAnApprovedPerson.OptionError")]
+        [Required]
         public string InviteUserOption { get; set; }
 
         public bool? IsOrganisationAPartnership { get; set; }   
@@ -17,6 +17,10 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
         public bool IsLimitedPartnership { get; set; }
 
         public bool IsLimitedLiablePartnership { get; set; }
+
+        public bool IsIndividualInCharge { get; set; }
+
+        public bool IsSoleTrader { get; set; }
     }
 }
         

@@ -1,9 +1,7 @@
 using FrontendAccountCreation.Core.Addresses;
-using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using System;
 
 namespace FrontendAccountCreation.Core.Services;
 
@@ -23,57 +21,63 @@ public class ReExAccountMapper : IReExAccountMapper
         };
     }
 
-    public ReExOrganisationModel CreateReExOrganisationModel(OrganisationSession reExOrganisationSession)
+    public ReExOrganisationModel CreateReExOrganisationModel(OrganisationSession session)
     {
         return new ReExOrganisationModel
         {
-            UserRoleInOrganisation = reExOrganisationSession.ReExCompaniesHouseSession.RoleInOrganisation?.GetDescriptionOrNull() ?? null,
-            IsApprovedUser = reExOrganisationSession.IsApprovedUser,
-            Company = new ReExCompanyModel()
-            {
-                OrganisationId = reExOrganisationSession.ReExCompaniesHouseSession.Company?.OrganisationId ?? string.Empty,
-                OrganisationType = reExOrganisationSession.OrganisationType?.ToString() ?? OrganisationType.NotSet.ToString(),
-                ProducerType = GetProducerType(reExOrganisationSession),
-                CompanyName = reExOrganisationSession.ReExCompaniesHouseSession.Company?.Name,
-                CompaniesHouseNumber = reExOrganisationSession.ReExCompaniesHouseSession.Company?.CompaniesHouseNumber,
-                CompanyRegisteredAddress = GetCompanyAddress(reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress),
-                ValidatedWithCompaniesHouse = reExOrganisationSession.ReExCompaniesHouseSession.Company?.BusinessAddress is not null,
-                Nation = reExOrganisationSession.UkNation ?? Nation.NotSet
-            },
-            InvitedApprovedPersons = GetTeamMembersModel(reExOrganisationSession.ReExCompaniesHouseSession.TeamMembers),
-            Partners = GetPartnersModel(reExOrganisationSession)
-
+            UserRoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation?.ToString() ?? null,
+            IsApprovedUser = session.IsApprovedUser,
+            Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
+            ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
+            InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession)
         };
     }
 
-    private static string? GetProducerType(OrganisationSession reExOrganisationSession)
+    private static ReExManualInputModel GetManualInputModel(OrganisationSession session)
     {
-        var producerType = ProducerType.NotSet.ToString();
-        if (reExOrganisationSession.IsCompaniesHouseFlow)
+        return new ReExManualInputModel()
         {
-            producerType = reExOrganisationSession.ReExCompaniesHouseSession.ProducerType?.ToString() ?? ProducerType.NotSet.ToString();
-        }
-        return producerType;
+            BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
+            ProducerType = session.ReExManualInputSession?.ProducerType,
+            TradingName = session.ReExManualInputSession?.TradingName,
+            Nation = session.UkNation ?? Nation.NotSet,
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet
+        };
     }
 
-    private List<ReExPartnerModel>? GetPartnersModel(OrganisationSession reExOrganisationSession)
+    private static ReExCompanyModel GetCompanyModel(OrganisationSession session)
     {
-        List<ReExPartnerModel>? reExPartnerModels = null;
-        var partners = reExOrganisationSession?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.ToList();
-        if (partners is { Count: > 0 })
+        return new ReExCompanyModel()
         {
-            reExPartnerModels = [.. partners.Select(x => new ReExPartnerModel()
-            {
-                Name = x.Name,
-                PartnerRole = x.IsPerson ? PartnerType.IndividualPartner.GetDescription() : PartnerType.CorporatePartner.GetDescription(),
-            })];
-        }
-        return reExPartnerModels;
+            OrganisationId = session.ReExCompaniesHouseSession?.Company?.OrganisationId ?? string.Empty,
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
+            CompanyName = session.ReExCompaniesHouseSession?.Company?.Name,
+            CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company?.CompaniesHouseNumber,
+            CompanyRegisteredAddress = GetAddressModel(session.ReExCompaniesHouseSession?.Company?.BusinessAddress),
+            ValidatedWithCompaniesHouse = session.ReExCompaniesHouseSession?.Company?.BusinessAddress is not null,
+            Nation = session.UkNation ?? Nation.NotSet,
+            IsComplianceScheme = session.ReExCompaniesHouseSession?.IsComplianceScheme ?? false
+        };
     }
 
-    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(IEnumerable<ReExCompanyTeamMember> teamMembers)
+    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(IEnumerable<ReExCompanyTeamMember>? teamMembers = null, ReExManualInputSession? reExManualInput = null)
     {
         List<ReExInvitedApprovedPerson> approvedPeople = [];
+
+        if (reExManualInput != null && reExManualInput.TeamMember != null)
+        {
+            var teamMember = reExManualInput.TeamMember;
+            approvedPeople.Add(new ReExInvitedApprovedPerson
+            {
+                Email = teamMember.Email,
+                FirstName = teamMember.FirstName,
+                Id = teamMember.Id,
+                LastName = teamMember.LastName,
+                Role = teamMember.Role?.ToString() ?? null,
+                TelephoneNumber = teamMember.TelephoneNumber
+            });
+            return approvedPeople;
+        }
 
         foreach (var member in teamMembers ?? [])
         {
@@ -83,21 +87,19 @@ public class ReExAccountMapper : IReExAccountMapper
                 FirstName = member.FirstName,
                 LastName = member.LastName,
                 Email = member.Email,
-                Role = member.Role?.GetDescriptionOrNull() ?? null,
+                Role = member.Role?.ToString() ?? null,
                 TelephoneNumber = member.TelephoneNumber
             };
-
             approvedPeople.Add(memberModel);
         }
         return approvedPeople;
     }
 
     /// <summary>
-    /// Gets company address
+    /// Gets address model
     /// </summary>
-    /// <param name="address"></param>
-    /// <returns>mapped company address</returns>
-    private static AddressModel? GetCompanyAddress(Address address)
+    /// <returns>mapped model</returns>
+    private static AddressModel? GetAddressModel(Address address)
     {
         return address is null ? null : new AddressModel()
         {

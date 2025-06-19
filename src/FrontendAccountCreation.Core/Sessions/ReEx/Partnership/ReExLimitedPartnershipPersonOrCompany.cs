@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
+
+[ExcludeFromCodeCoverage]
 public class ReExLimitedPartnershipPersonOrCompany
 {
     public Guid Id { get; set; }

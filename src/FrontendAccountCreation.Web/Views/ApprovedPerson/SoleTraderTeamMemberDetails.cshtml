@@ -17,7 +17,7 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form method="post">
+                <form method="post" novalidate>
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
@@ -35,7 +35,7 @@
 
                         <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.LastName)) ? " govuk-form-group--error" : "")">
                             <label gov-for="LastName" class="govuk-label">@Localizer["TeamMemberDetails.LastName"]</label>
-                            @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.FirstName)])
+                            @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.LastName)])
                             <input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(Model.LastName)) ? "govuk-input--error" : "")"
                                    type="text"
                                    gov-for="LastName" gov-value="@Model.LastName">

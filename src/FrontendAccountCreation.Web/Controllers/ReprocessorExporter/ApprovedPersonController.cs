@@ -50,6 +50,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
+                IsIndividualInCharge = session.IsIndividualInCharge ?? false,
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
             };
 
             return View(model);
@@ -61,6 +63,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            model.IsIndividualInCharge = session.IsIndividualInCharge ?? false;
+            model.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
 
             if (!ModelState.IsValid)
             {
@@ -69,15 +73,20 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
                 model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
+                var errorMessage = model.IsSoleTrader ? "AddNotApprovedPerson.SoleTrader.ErrorMessage" : "AddAnApprovedPerson.OptionError";
+                ModelState.ClearValidationState(nameof(model.InviteUserOption));
+                ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
                 return View(model);
             }
 
+            model.IsIndividualInCharge = session.IsIndividualInCharge ?? false;
+            model.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
             session.InviteUserOption = session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
             if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
             {
                 session.IsApprovedUser = true;
-                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
+				return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
 
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
@@ -90,6 +99,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var id = GetFocusId();
             if (id.HasValue)
             {
+                if(model.IsSoleTrader && !model.IsIndividualInCharge)
+                {
+                    return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberDetails),
+                    PagePath.AddAnApprovedPerson, PagePath.SoleTraderTeamMemberDetails);
+                }
+                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
+                    PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
                 SetFocusId(id.Value);
             }
 
@@ -292,9 +308,42 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             teamMember.LastName = model.LastName;
             teamMember.TelephoneNumber = model.Telephone;
             teamMember.Email = model.Email;
+            teamMember.Role = ReExTeamMemberRole.SoleTrader;
 
-            return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
-                PagePath.TeamMembersCheckInvitationDetails);
+            return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
+                PagePath.SoleTraderTeamMemberCheckInvitationDetails);
+        }
+
+        [HttpGet]
+        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetails()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            return View(session.ReExManualInputSession?.TeamMember);
+        }
+
+        [HttpPost]
+        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
+        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetailsPost()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderTeamMemberCheckInvitationDetails, PagePath.CheckYourDetails);
+        }
+
+        [HttpGet]
+        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetailsDelete)]
+        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetailsDelete()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            session.ReExManualInputSession.TeamMember = null;
+
+            return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberCheckInvitationDetails),
+                PagePath.SoleTraderTeamMemberCheckInvitationDetails, null);
         }
 
         [HttpGet]
@@ -685,6 +734,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsRegisteredAsCharity = session.IsTheOrganisationCharity,
                 OrganisationType = session.OrganisationType,
                 IsTradingNameDifferent = session.IsTradingNameDifferent,
+                IsManualInputFlow = !session.IsCompaniesHouseFlow,
                 Nation = session.UkNation
             };
             if (viewModel.IsCompaniesHouseFlow)
@@ -696,12 +746,23 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
                 viewModel.LimitedPartnershipPartners = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
                 viewModel.IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+                viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
             }
-            if (session.ReExManualInputSession != null)
+            else if (viewModel.IsManualInputFlow)
             {
-                viewModel.TradingName = session.ReExManualInputSession.TradingName;
+                viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
+                viewModel.ProducerType = session.ReExManualInputSession?.ProducerType;
+                viewModel.BusinessAddress = session.ReExManualInputSession?.BusinessAddress;
+                viewModel.TradingName = session.ReExManualInputSession?.TradingName;
+                var teamMember = session.ReExManualInputSession?.TeamMember;
+                viewModel.reExCompanyTeamMembers = new List<ReExCompanyTeamMember>();
+
+                if (teamMember != null)
+                {
+                    viewModel.reExCompanyTeamMembers.Add(teamMember);
+                }
             }
-            viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+            
             _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(viewModel);
@@ -713,12 +774,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> CheckYourDetailsPost()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            return await SaveSessionAndRedirect(
-                session,
-                nameof(OrganisationController),
-                nameof(OrganisationController.Declaration),
-                PagePath.CheckYourDetails,
-                PagePath.Declaration);
+            return await SaveSessionAndRedirect(session, 
+                controllerName: nameof(OrganisationController), 
+                actionName: nameof(OrganisationController.Declaration),
+                currentPagePath: PagePath.CheckYourDetails, 
+                nextPagePath: PagePath.Declaration);
         }
 
         [HttpGet]

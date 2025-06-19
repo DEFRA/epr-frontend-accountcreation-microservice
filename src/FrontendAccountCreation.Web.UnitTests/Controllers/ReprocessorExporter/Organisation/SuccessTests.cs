@@ -77,7 +77,7 @@ public class SuccessTests : OrganisationTestBase
                     Country = "England"
                 },
                 Nation = Nation.England,
-                OrganisationType = OrganisationType.CompaniesHouseCompany.ToString(),
+                OrganisationType = OrganisationType.CompaniesHouseCompany,
                 ValidatedWithCompaniesHouse = true
             }
         };
@@ -122,7 +122,129 @@ public class SuccessTests : OrganisationTestBase
 		viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>();
 		var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
 		viewModel.CompanyName.Should().Be("Test Ltd");
-		viewModel.reExCompanyTeamMembers.Should().HaveCount(1);
-		viewModel.reExCompanyTeamMembers![0].FirstName.Should().Be("Alice");
+		viewModel.ReExCompanyTeamMembers.Should().HaveCount(1);
+		viewModel.ReExCompanyTeamMembers![0].FirstName.Should().Be("Alice");
+	}
+
+	[TestMethod]
+	public async Task GET_Success_WithCompaniesHouseSession_ReturnsCorrectViewAndModel()
+	{
+		// Arrange
+		var session = new OrganisationSession
+		{
+			ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+			{
+				Company = new Company { Name = "Test Ltd" },
+				TeamMembers = new List<ReExCompanyTeamMember>
+				{
+					new ReExCompanyTeamMember { FirstName = "Alice" }
+				}
+			}
+		};
+
+		_sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+		// Act
+		var result = await _systemUnderTest.Success();
+
+		// Assert
+		result.Should().BeOfType<ViewResult>();
+		var viewResult = (ViewResult)result;
+		viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>();
+
+		var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+		viewModel.CompanyName.Should().Be("Test Ltd");
+		viewModel.ReExCompanyTeamMembers.Should().NotBeNull();
+		viewModel.ReExCompanyTeamMembers.Should().HaveCount(1);
+		viewModel.ReExCompanyTeamMembers![0].FirstName.Should().Be("Alice");
+		viewModel.IsSoleTrader.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public async Task GET_Success_WithSoleTraderSession_ReturnsCorrectViewAndModel()
+	{
+		// Arrange
+		var session = new OrganisationSession
+		{
+			ReExManualInputSession = new ReExManualInputSession
+			{
+				ProducerType = ProducerType.SoleTrader,
+				TradingName = "Sole Trader Ltd",
+				TeamMember = new ReExCompanyTeamMember { FirstName = "Bob" }
+			}
+		};
+
+		_sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+		// Act
+		var result = await _systemUnderTest.Success();
+
+		// Assert
+		result.Should().BeOfType<ViewResult>();
+		var viewResult = (ViewResult)result;
+		viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>();
+
+		var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+		viewModel.CompanyName.Should().Be("Sole Trader Ltd");
+		viewModel.ReExCompanyTeamMembers.Should().NotBeNull();
+		viewModel.ReExCompanyTeamMembers.Should().HaveCount(1);
+		viewModel.ReExCompanyTeamMembers![0].FirstName.Should().Be("Bob");
+		viewModel.IsSoleTrader.Should().BeTrue();
+	}
+
+	[TestMethod]
+	public async Task GET_Success_WithSoleTraderSession_NoTeamMember_ReturnsViewModelWithoutTeamMembers()
+	{
+		// Arrange
+		var session = new OrganisationSession
+		{
+			ReExManualInputSession = new ReExManualInputSession
+			{
+				ProducerType = ProducerType.SoleTrader,
+				TradingName = "Solo Ltd",
+				TeamMember = null
+			}
+		};
+
+		_sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+		// Act
+		var result = await _systemUnderTest.Success();
+
+		// Assert
+		result.Should().BeOfType<ViewResult>();
+		var viewResult = (ViewResult)result;
+		viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>();
+
+		var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+		viewModel.CompanyName.Should().Be("Solo Ltd");
+		viewModel.ReExCompanyTeamMembers.Should().BeNullOrEmpty();
+		viewModel.IsSoleTrader.Should().BeTrue();
+	}
+
+	[TestMethod]
+	public async Task GET_Success_WithNullSessionProperties_ReturnsViewModelWithDefaults()
+	{
+		// Arrange
+		var session = new OrganisationSession
+		{
+			ReExManualInputSession = null,
+			ReExCompaniesHouseSession = null
+		};
+
+		_sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+		// Act
+		var result = await _systemUnderTest.Success();
+
+		// Assert
+		result.Should().BeOfType<ViewResult>();
+		var viewResult = (ViewResult)result;
+		viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>();
+
+		var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+		viewModel.CompanyName.Should().BeNull();
+		viewModel.ReExCompanyTeamMembers.Should().BeNull();
+		viewModel.IsSoleTrader.Should().BeFalse();
 	}
 }

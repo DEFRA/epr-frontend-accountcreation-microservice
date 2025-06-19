@@ -1,6 +1,12 @@
-﻿using FrontendAccountCreation.Web.Constants;
+﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -23,6 +29,38 @@ public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDiff
     ];
 
     // Redirect targets
-    protected override string RedirectActionNameOnYes => nameof(OrganisationController.TradingName);
-    protected override string RedirectActionNameOnNo => nameof(OrganisationController.IsOrganisationAPartner);
+    protected override string RedirectActionNameOnYes => "";
+    protected override string RedirectActionNameOnNo => "";
+
+    public override Task POST_UserSelectsYesOrNo_UserIsRedirected(YesNoAnswer userAnswer)
+    {
+        // replaced with the specific implementation below
+        return Task.CompletedTask;
+    }
+
+    [TestMethod]
+    [DataRow(YesNoAnswer.Yes, true,  nameof(OrganisationController.TradingName))]
+    [DataRow(YesNoAnswer.Yes, false, nameof(OrganisationController.TradingName))]
+    [DataRow(YesNoAnswer.No,  true,  nameof(OrganisationController.IsOrganisationAPartner))]
+    [DataRow(YesNoAnswer.No,  false, nameof(OrganisationController.AddressOverseas))]
+    public async Task POST_UserSelectsYesOrNo_UserIsRedirected(
+        YesNoAnswer userAnswer,
+        bool sessionIsUkMainAddress,
+        string expectedRedirect)
+    {
+        var orgCreationSession = new OrganisationSession
+        {
+            Journey = [CurrentPagePath],
+            IsUkMainAddress = sessionIsUkMainAddress
+        };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
+
+        var requestViewModel = new IsTradingNameDifferentViewModel();
+        SetActualViewModelYesNoAnswer(requestViewModel, userAnswer);
+
+        var result = await PostPageAction(_systemUnderTest, requestViewModel);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);
+    }
 }

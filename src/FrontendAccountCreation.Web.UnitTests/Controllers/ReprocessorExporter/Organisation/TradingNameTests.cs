@@ -133,7 +133,7 @@ public class TradingNameTests : OrganisationTestBase
         _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
 
         // Act
-        var result = await _systemUnderTest.TradingName(new TradingNameViewModel());
+        await _systemUnderTest.TradingName(new TradingNameViewModel());
 
         // Assert
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
@@ -158,7 +158,7 @@ public class TradingNameTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenNoTradingName_ThenReturnViewWithUsersBadInput()
+    public async Task POST_GivenTradingNameTooLong_ThenReturnViewWithUsersBadInput()
     {
         // Arrange
         const string badTradingName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
@@ -196,5 +196,24 @@ public class TradingNameTests : OrganisationTestBase
         var viewResult = (ViewResult)result;
 
         AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
+    }
+
+    [TestMethod]
+    public async Task POST_GivenTradingName_WithNonUKOrganisationProducerType_Flow_Redirects_To_AddressOverseas()
+    {
+        // Arrange
+        var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.NonUkOrganisation
+        };
+
+        // Act
+        var result = await _systemUnderTest.TradingName(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddressOverseas));
     }
 }
