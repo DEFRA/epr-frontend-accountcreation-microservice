@@ -23,7 +23,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> RoleInOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
+        
         return View(new ReExRoleInOrganisationViewModel { Role = session.RoleInOrganisation });
     }
 
@@ -41,6 +41,40 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         session.RoleInOrganisation = viewModel.Role;
 
-        return await SaveSessionAndRedirect(session, nameof(RoleInOrganisation), PagePath.UnincorporatedRoleInOrganisation, null);
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedManageControl)]
+    public async Task<IActionResult> ManageControl()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedManageControl);
+
+        return View(new ReExManageControlViewModel { ManageControlInUKAnswer = session.ManageControlAnswer });
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedManageControl)]
+    public async Task<IActionResult> ManageControl(ReExManageControlViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedManageControl);
+            return View(viewModel);
+        }
+
+        session.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
+
+        if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
+        {
+            //TODO: Redirect to ManageAccountPerson
+            return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        }
+
+        //TODO: Redirect to AddApprovedPerson
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
     }
 }
