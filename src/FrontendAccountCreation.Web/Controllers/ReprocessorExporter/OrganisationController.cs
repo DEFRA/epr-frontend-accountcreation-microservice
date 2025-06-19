@@ -322,6 +322,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             PagePath.AddressOverseas, PagePath.UkRegulator);
     }
 
+    [ExcludeFromCodeCoverage]
     [HttpGet]
     [Route(PagePath.UkRegulator)]
     [OrganisationJourneyAccess(PagePath.UkRegulator)]
