@@ -133,7 +133,7 @@
     <value>Address line 2 (optional)</value>
   </data>
   <data name="AddressOverseas.TownOrCityLabel" xml:space="preserve">
-    <value>Town or city</value>
+    <value>Tref neu ddinas</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLabel" xml:space="preserve">
     <value>State, province or region (optional)</value>
@@ -169,7 +169,7 @@
     <value>Enter the town or city of the registered office, head office or principal place of business of your organisation</value>
   </data>
   <data name="AddressOverseas.TownOrCityLengthError" xml:space="preserve">
-    <value>Town or city must be 70 characters or less</value>
+    <value>Rhaid i’r dref neu’r ddinas fod yn 70 neu lai o gymeriadau</value>
   </data>
   <data name="AddressOverseas.PostcodeLengthError" xml:space="preserve">
     <value>Postcode must be 15 characters or less</value>
