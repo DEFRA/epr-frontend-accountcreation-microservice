@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,124 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Back" xml:space="preserve">
-    <value>Yn ôl</value>
+  <data name="ReExManageControl.Title" xml:space="preserve">
+    <value>Do you manage or control the organisation?</value>
   </data>
-  <data name="Continue" xml:space="preserve">
-    <value>Parhau</value>
+  <data name="ReExManageControl.ErrorMessage.Required" xml:space="preserve">
+    <value>Select 'Yes' if you manage or control the organisation, 'No' if you do not or 'Not sure' if you are not sure</value>
   </data>
-  <data name="SkipToMainContent" xml:space="preserve">
-    <value>WSkip to main content</value>
-  </data>
-  <data name="ApplicationTitle" xml:space="preserve">
-    <value>Rhoi gwybodaeth am ddata pecynwaith</value>
-  </data>
-  <data name="No" xml:space="preserve">
-    <value>Nac ydy</value>
-  </data>
-  <data name="Yes" xml:space="preserve">
-    <value>Ydy</value>
-  </data>
-  <data name="Change" xml:space="preserve">
-    <value>Newid</value>
-  </data>
-  <data name="Or" xml:space="preserve">
-    <value>neu</value>
-  </data>
-  <data name="English" xml:space="preserve">
-    <value>English</value>
-  </data>
-  <data name="Cymraeg" xml:space="preserve">
-    <value>Cymraeg</value>
-  </data>
-  <data name="Welsh" xml:space="preserve">
-    <value>Cymraeg</value>
-  </data>
-  <data name="GovUKTitle" xml:space="preserve">
-    <value>GOV.UK</value>
-  </data>
-  <data name="Header.SignIn" xml:space="preserve">
-    <value>Mewngofnodi</value>
-  </data>
-  <data name="Header.SignOut" xml:space="preserve">
-    <value>Allgofnodi</value>
-  </data>
-  <data name="EprForPackaging" xml:space="preserve">
-    <value>EPR dros becynwaith: ailbroseswyr ac allforwyr</value>
-  </data>
-  <data name="CompanySecretary" xml:space="preserve">
-    <value>Ysgrifennydd y cwmni</value>
-  </data>
-  <data name="Director" xml:space="preserve">
-    <value>Cyfarwyddwr</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>[Welsh]Remove</value>
-  </data>
-  <data name="IndividualPartner" xml:space="preserve">
-    <value>Partner unigol</value>
-  </data>
-  <data name="NoneOfTheAbove" xml:space="preserve">
-    <value>Dim un o’r uchod</value>
-  </data>
-  <data name="PartnerCompanySecretary" xml:space="preserve">
-    <value>[Welsh]Company secretary of a corporate partner</value>
-  </data>
-  <data name="PartnerDirector" xml:space="preserve">
-    <value>[Welsh]Company director of a corporate partner</value>
-  </data>
-  <data name="Member" xml:space="preserve">
-    <value>[Welsh]Member</value>
-  </data>
-  <data name="NotSure" xml:space="preserve">
-    <value>Ddim yn siŵr</value>
-  </data>
-  <data name="CEO" xml:space="preserve">
-    <value>Prif Swyddog Gweithredol</value>
-  </data>
-  <data name="Owner" xml:space="preserve">
-    <value>Owner</value>
-  </data>
-  <data name="Partner" xml:space="preserve">
-    <value>Partner</value>
-  </data>
-  <data name="CompanyDirectorOrSecretary" xml:space="preserve">
-    <value>Cyfarwyddwr neu Ysgrifennydd y Cwmni</value>
-  </data>
-  <data name="UnincorporatedRoles" xml:space="preserve">
-    <value>Chair, Treasurer or Secretary of an unincorporated organisation</value>
-  </data>
-  <data name="ForExample" xml:space="preserve">
-    <value>Er enghraifft:</value>
-  </data>
-  <data name="CompanyDirector" xml:space="preserve">
-    <value>Company director</value>
-  </data>
-  <data name="England" xml:space="preserve">
-    <value>Lloegr</value>
-  </data>
-  <data name="Scotland" xml:space="preserve">
-    <value>Yr Alban</value>
-  </data>
-  <data name="Wales" xml:space="preserve">
-    <value>Cymru</value>
-  </data>
-  <data name="NorthernIreland" xml:space="preserve">
-    <value>Gogledd Iwerddon</value>
-  </data>
-  <data name="Yes_AreThey" xml:space="preserve">
-    <value>Ydyn</value>
-  </data>
-  <data name="No_AreThey" xml:space="preserve">
-    <value>Nac ydyn</value>
-  </data>
-  <data name="Yes_IsHeSheIt" xml:space="preserve">
-    <value>Ydy</value>
-  </data>
-  <data name="No_IsHeSheIt" xml:space="preserve">
-    <value>Nac ydy</value>
-  </data>
-  <data name="NotSure" xml:space="preserve">
-    <value>Ddim yn siŵr</value>
+  <data name="ReExManageControl.Question" xml:space="preserve">
+    <value>This means control or management of an unincorporated association which has a registered office, head office or principal place of business in the United Kingdom.</value>
   </data>
 </root>
