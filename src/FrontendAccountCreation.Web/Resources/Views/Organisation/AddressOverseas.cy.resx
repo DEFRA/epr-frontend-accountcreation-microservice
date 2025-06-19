@@ -160,7 +160,7 @@
     <value>Country must be 54 characters or less</value>
   </data>
   <data name="AddressOverseas.CountryNameError" xml:space="preserve">
-    <value>Enter the registered office, head office or principal place of business country of your organisation</value>
+    <value>Enter the country of your organisation's registered office, head office or principal place of business</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLengthError" xml:space="preserve">
     <value>State, province or region must be 50 characters or less</value>

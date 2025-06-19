@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -271,6 +272,53 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
+    }
+
+    [HttpGet]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.ManageControl);
+
+        return View(new ManageControlViewModel
+        {
+            UserManagesOrControls = session.UserManagesOrControls
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl(ManageControlViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.ManageControl);
+            return View(model);
+        }
+
+        session.UserManagesOrControls = model.UserManagesOrControls;
+
+        string nextAction, nextPagePath;
+
+        if (session.UserManagesOrControls == YesNoNotSure.Yes)
+        {
+            //todo: manage-account-person
+            nextAction = nameof(TradingName);
+            nextPagePath = PagePath.TradingName;
+        }
+        else
+        {
+            //todo: not-approved-person
+            nextAction = nameof(IsOrganisationAPartner);
+            nextPagePath = PagePath.IsPartnership;
+        }
+
+        return await SaveSessionAndRedirect(session, nextAction, PagePath.ManageControl, nextPagePath);
     }
 
     [HttpGet]
