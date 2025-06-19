@@ -29,6 +29,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
+    //to-do: this is only used by one method, so we should inject it directly into the method
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
@@ -307,18 +308,36 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.UserManagesOrControls == YesNoNotSure.Yes)
         {
-            //todo: manage-account-person
-            nextAction = nameof(TradingName);
-            nextPagePath = PagePath.TradingName;
+            //todo: supposed to be an existing page, but i can't find it
+            nextAction = nameof(ManageAccountPerson);
+            nextPagePath = PagePath.ManageAccountPerson;
         }
         else
         {
             //todo: not-approved-person
-            nextAction = nameof(IsOrganisationAPartner);
-            nextPagePath = PagePath.IsPartnership;
+            nextAction = nameof(NotApprovedPerson);
+            nextPagePath = PagePath.NotApprovedPerson;
         }
 
         return await SaveSessionAndRedirect(session, nextAction, PagePath.ManageControl, nextPagePath);
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.ManageAccountPerson)]
+    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
+    public Task<IActionResult> ManageAccountPerson()
+    {
+        return PlaceholderPageGet(PagePath.ManageAccountPerson);
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.NotApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.NotApprovedPerson)]
+    public Task<IActionResult> NotApprovedPerson()
+    {
+        return PlaceholderPageGet(PagePath.NotApprovedPerson);
     }
 
     [HttpGet]
@@ -366,8 +385,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Postcode = model.Postcode;
         address.IsManualAddress = true;
 
-        return await SaveSessionAndRedirect(session, nameof(UkRegulator),
-            PagePath.AddressOverseas, PagePath.UkRegulator);
+        //todo: just for testing
+        //return await SaveSessionAndRedirect(session, nameof(UkRegulator),
+        //    PagePath.AddressOverseas, PagePath.UkRegulator);
+        return await SaveSessionAndRedirect(session, nameof(ManageControl),
+            PagePath.AddressOverseas, PagePath.ManageControl);
     }
 
     [ExcludeFromCodeCoverage]
