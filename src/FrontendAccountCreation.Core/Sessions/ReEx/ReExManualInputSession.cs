@@ -8,6 +8,8 @@ public class ReExManualInputSession
 {
     public string TradingName { get; set; }
 
+    public string NonUkOrganisationName { get; set; }
+
     public ProducerType? ProducerType { get; set; }
 
     public Address? BusinessAddress { get; set; }
