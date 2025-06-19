@@ -1,4 +1,8 @@
-﻿using FrontendAccountCreation.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text.Json;
+using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -15,10 +19,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation.Core.Addresses;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -250,7 +250,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
         string nextAction, nextPagePath;
-        
+
         if (session.IsTradingNameDifferent == true)
         {
             nextAction = nameof(TradingName);
@@ -293,6 +293,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         var viewModel = new TradingNameViewModel()
         {
             TradingName = session?.ReExManualInputSession?.TradingName,
+            ProducerType = session?.ReExManualInputSession?.ProducerType
         };
         return View(viewModel);
     }
@@ -312,16 +313,20 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.ReExManualInputSession ??= new ReExManualInputSession();
-
         session.ReExManualInputSession.TradingName = model.TradingName!;
 
         if (session.IsCompaniesHouseFlow)
         {
-            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
-                PagePath.IsPartnership);
+            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName, PagePath.IsPartnership);
         }
-        return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
-            PagePath.TypeOfOrganisation);
+        else if (session.ReExManualInputSession.ProducerType.HasValue && session.ReExManualInputSession.ProducerType.Value == ProducerType.NonUkOrganisation)
+        {
+            return await SaveSessionAndRedirect(session, nameof(AddressOverseas), PagePath.TradingName, PagePath.AddressOverseas);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName, PagePath.TypeOfOrganisation);
+        }
     }
 
     [HttpGet]
@@ -748,11 +753,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
-			session.ReExManualInputSession.TeamMember = null;
-			return await SaveSessionAndRedirect(session,
+            session.ReExManualInputSession.TeamMember = null;
+            return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
-                currentPagePath: PagePath.SoleTrader, 
+                currentPagePath: PagePath.SoleTrader,
                 nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
         }
 
@@ -836,17 +841,17 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         if (viewModel.IsSoleTrader)
         {
             viewModel.CompanyName = session.ReExManualInputSession?.TradingName;
-			if (session.ReExManualInputSession?.TeamMember != null)
-			{
+            if (session.ReExManualInputSession?.TeamMember != null)
+            {
                 viewModel.ReExCompanyTeamMembers = [session.ReExManualInputSession.TeamMember];
-			}
-		}
+            }
+        }
         else
         {
             viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
-			viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
-		}
-        
+            viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+        }
+
         return View(viewModel);
     }
 
