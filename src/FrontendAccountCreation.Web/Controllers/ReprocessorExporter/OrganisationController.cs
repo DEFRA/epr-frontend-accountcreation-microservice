@@ -279,7 +279,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> AddressOverseas()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.BusinessAddress);
+        SetBackLink(session, PagePath.AddressOverseas);
 
         var viewModel = new BusinessAddressOverseasViewModel();
 
