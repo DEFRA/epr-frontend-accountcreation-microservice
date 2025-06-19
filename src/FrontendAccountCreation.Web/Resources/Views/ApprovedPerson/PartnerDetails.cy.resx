@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,55 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddAnApprovedPerson.BulletAccreditation" xml:space="preserve">
-    <value>[Welsh]Apply for accreditation</value>
+  <data name="PartnerDetails.FullName" xml:space="preserve">
+    <value>[Welsh] Full name</value>
   </data>
-  <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
-    <value>[Welsh]Submit and verify data returns</value>
+  <data name="PartnerDetails.Email" xml:space="preserve">
+    <value>[Welsh] Email</value>
   </data>
-  <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
-    <value>[Welsh]company secretary</value>
+  <data name="PartnerDetails.HintEmail" xml:space="preserve">
+    <value>[Welsh] We ask for this so we can invite them to join your team.</value>
   </data>
-  <data name="AddAnApprovedPerson.Director" xml:space="preserve">
-    <value>[Welsh]director</value>
+  <data name="PartnerDetails.HintTelephone" xml:space="preserve">
+    <value>[Welsh] We ask for this in case your regulator needs to call them directly with any queries.</value>
   </data>
-  <data name="AddAnApprovedPerson.IAgreeToBeAnApprovedPerson" xml:space="preserve">
-    <value>[Welsh]I agree to be an approved person</value>
+  <data name="PartnerDetails.Telephone" xml:space="preserve">
+    <value>[Welsh] Telephone</value>
   </data>
-  <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
+  <data name="PartnerDetails.Continue" xml:space="preserve">
+    <value>[Welsh] Continue</value>
   </data>
-  <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
-    <value>[Welsh]You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
+  <data name="PartnerDetails.Title" xml:space="preserve">
+    <value>[Welsh] What are your team member’s details?</value>
   </data>
-  <data name="AddAnApprovedPerson.IntroText2" xml:space="preserve">
-    <value>[Welsh]An approved person may delegate their function to another person (a delegate) at a later stage - subject to regulator approval.</value>
+  <data name="PartnerDetails.Header" xml:space="preserve">
+    <value>[Welsh] Team Member Details</value>
   </data>
-  <data name="AddAnApprovedPerson.IntroText3" xml:space="preserve">
-    <value>[Welsh]More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
+  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
+    <value>[Welsh] Enter a valid telephone number</value>
   </data>
-  <data name="AddAnApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
-    <value>[Welsh]I will invite another eligible person to be an approved person instead</value>
+  <data name="PartnerDetails.FullNameError" xml:space="preserve">
+    <value>[Welsh] Enter full name</value>
   </data>
-  <data name="AddAnApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
-    <value>[Welsh]I will invite an approved person later</value>
+  <data name="PartnerDetails.EmailError" xml:space="preserve">
+    <value>[Welsh] Enter a valid email address</value>
   </data>
-  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>[Welsh]Select an option</value>
+  <data name="PartnerDetails.FirstName" xml:space="preserve">
+    <value>Enw cyntaf</value>
   </data>
-  <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
-    <value>[Welsh]Roles eligible to be an approved person</value>
+  <data name="PartnerDetails.FirstNameErrorMessage" xml:space="preserve">
+    <value>Rhowch eich enw cyntaf</value>
   </data>
-  <data name="AddAnApprovedPerson.RolesInstruction" xml:space="preserve">
-    <value>[Welsh]Either of these roles can be an approved person</value>
+  <data name="PartnerDetails.FirstNameLengthErrorMessage" xml:space="preserve">
+    <value>Rhaid i’r enw cyntaf fod yn 50 neu lai o gymeriadau</value>
   </data>
-  <data name="AddAnApprovedPerson.SelectOptionText" xml:space="preserve">
-    <value>[Welsh]Select an option to proceed.</value>
+  <data name="PartnerDetails.LastName" xml:space="preserve">
+    <value>Enw Olaf</value>
   </data>
-  <data name="AddAnApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh]Add an approved person </value>
+  <data name="PartnerDetails.LastNameErrorMessage" xml:space="preserve">
+    <value>Rhowch eich enw olaf</value>
   </data>
-  <data name="AddAnApprovedPerson.UserHeading" xml:space="preserve">
-    <value>[Welsh]Invite users in your team</value>
+  <data name="PartnerDetails.LastNameLengthErrorMessage" xml:space="preserve">
+    <value>Rhaid i’r enw olaf fod yn 50 neu lai o gymeriadau</value>
   </data>
 </root>

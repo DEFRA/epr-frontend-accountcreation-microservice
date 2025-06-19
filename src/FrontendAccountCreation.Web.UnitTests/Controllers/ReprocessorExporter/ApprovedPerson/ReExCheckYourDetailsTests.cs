@@ -4,6 +4,7 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
+using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
@@ -441,6 +442,50 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         var redirectResult = result as RedirectToActionResult;
 
         redirectResult!.ActionName.Should().Be(nameof(OrganisationController.Declaration));
-        redirectResult.ControllerName.Should().Be(nameof(OrganisationController).Replace("Controller", ""));
+        redirectResult.ControllerName.Should().Be("Organisation");
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_ShouldSet_MakeChangesToYourLimitedCompanyLink_ViewBag()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession()
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var link = _systemUnderTest.ViewBag.MakeChangesToYourLimitedCompanyLink as string;
+        link.Should().Be("https://gov.uk/update-company-info");
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WithNullSessions_ShouldNotThrow()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExCompaniesHouseSession = null,
+            ReExManualInputSession = null
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+        model.CompanyName.Should().BeNull();
+        model.TradingName.Should().BeNull();
     }
 }

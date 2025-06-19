@@ -124,7 +124,7 @@
     <value>As the individual in charge of your business you are now the 'approved person' for your organisation.</value>
   </data>
   <data name="YouAreApprovedPersonSoleTrader.Description2" xml:space="preserve">
-    <value>An approved person may delegate their functions to another person (a delegate) at a later stage - subject to regulator approval.</value>
+    <value>An approved person may delegate their function to another person (a delegate) at a later stage - subject to regulator approval.</value>
   </data>
   <data name="YouAreApprovedPersonSoleTrader.Description3" xml:space="preserve">
     <value>You can now continue to add your organisation.</value>

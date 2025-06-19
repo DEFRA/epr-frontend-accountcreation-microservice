@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CheckYourDetails.Title" xml:space="preserve">
-    <value>Eich manylion</value>
+    <value>Gwiriwch eich manylion</value>
   </data>
   <data name="CheckYourDetails.Header" xml:space="preserve">
     <value>Gwiriwch eich manylion</value>
@@ -220,7 +220,7 @@
     <value>(W)Different trading name</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.ApprovedPersonsAdded" xml:space="preserve">
-    <value>(W)Approved persons added</value>
+    <value>(W)Approved persons invite</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Email" xml:space="preserve">
     <value>(W) Email</value>
@@ -236,5 +236,11 @@
   </data>
   <data name="CheckYourDetails.TeamMembers.Telephone" xml:space="preserve">
     <value>Ffôn</value>
+  </data>
+  <data name="CheckYourDetails.LimitedLiabilityPartnership" xml:space="preserve">
+    <value>(W)Limited Liability Partnership</value>
+  </data>
+  <data name="CheckYourDetails.LimitedPartnership" xml:space="preserve">
+    <value>(W)Limited Partnership</value>
   </data>
 </root>

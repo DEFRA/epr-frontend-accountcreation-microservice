@@ -448,7 +448,20 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+        var wasOrganisationAPartnership = session.IsOrganisationAPartnership;
+        var isOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+
+        // clear existing session values when the user changes their original decision
+        if (wasOrganisationAPartnership.HasValue && (wasOrganisationAPartnership != isOrganisationAPartnership))
+        {
+            session.ReExCompaniesHouseSession.Partnership = null; // partnership details
+            session.ReExCompaniesHouseSession.TeamMembers = null; // invitee details
+            session.ReExCompaniesHouseSession.ProducerType = null; // setting producer to null as from here it can go to non paternship flow
+            session.ReExCompaniesHouseSession.RoleInOrganisation = null;
+            session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = false;
+            session.InviteUserOption = null;
+        }
+        session.IsOrganisationAPartnership = isOrganisationAPartnership;
 
         if (session.IsOrganisationAPartnership == true)
         {
