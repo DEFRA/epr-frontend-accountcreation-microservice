@@ -8,7 +8,7 @@ public class BusinessAddressOverseasViewModel
 {
     [Required(ErrorMessage = "AddressOverseas.CountryNameError")]
     [MaxLength(54, ErrorMessage = "AddressOverseas.CountryLengthError")]
-    [RegularExpression(@"^[a-zA-Z -]+$", ErrorMessage = "AddressOverseas.CountryInvalidError")]
+    [RegularExpression(@"^[a-zA-ZÀ-ÖØ-öø-ÿ '\-]+$", ErrorMessage = "AddressOverseas.CountryInvalidError")]
     public string? Country { get; set; }
 
     [Required(ErrorMessage = "AddressOverseas.AddressLine1Error")]
