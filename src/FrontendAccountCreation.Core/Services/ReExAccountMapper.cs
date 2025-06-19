@@ -119,7 +119,7 @@ public class ReExAccountMapper : IReExAccountMapper
         };
     }
 
-    private List<ReExPartnerModel>? GetPartnersModel(OrganisationSession reExOrganisationSession)
+    private static List<ReExPartnerModel>? GetPartnersModel(OrganisationSession reExOrganisationSession)
     {
         List<ReExPartnerModel>? reExPartnerModels = null;
         var partners = reExOrganisationSession?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.ToList();
