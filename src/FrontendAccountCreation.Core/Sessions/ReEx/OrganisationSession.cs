@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Sessions.Interfaces;
+using FrontendAccountCreation.Web.ViewModels;
 
 namespace FrontendAccountCreation.Core.Sessions.ReEx;
 
@@ -41,6 +42,8 @@ public class OrganisationSession : ILocalSession
     public bool IsUserChangingDetails { get; set; }
 
     public string? RoleInOrganisation { get; set; }
+    
+    public ManageControlAnswer ManageControlAnswer { get; set; }
 
     public List<string> Journey { get; set; } = [];
 

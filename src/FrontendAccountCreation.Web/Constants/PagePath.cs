@@ -92,6 +92,8 @@ public static class PagePath
 
     // Unincorporated paths
     public const string UnincorporatedRoleInOrganisation = "unincorporated-role-in-organisation";
+    public const string UnincorporatedManageControl = "unincorporated-manage-control";
+    public const string UnincorporatedManageAccountPerson = "unincorporated-manage-account-person";
 
     // Non journey paths
     public const string Accessibility = "accessibility";
