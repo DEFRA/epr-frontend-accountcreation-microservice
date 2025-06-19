@@ -1,0 +1,258 @@
+﻿using System.ComponentModel.DataAnnotations;
+using FluentAssertions;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+
+namespace FrontendAccountCreation.Web.UnitTests.ViewModels
+{
+    [TestClass]
+    public class BusinessAddressOverseasViewModelTests
+    {
+        [DataTestMethod]
+        [DataRow("Afghanistan")]
+        [DataRow("Albania")]
+        [DataRow("Algeria")]
+        [DataRow("Andorra")]
+        [DataRow("Angola")]
+        [DataRow("Antigua and Barbuda")]
+        [DataRow("Argentina")]
+        [DataRow("Armenia")]
+        [DataRow("Australia")]
+        [DataRow("Austria")]
+        [DataRow("Azerbaijan")]
+        [DataRow("Bahamas")]
+        [DataRow("Bahrain")]
+        [DataRow("Bangladesh")]
+        [DataRow("Barbados")]
+        [DataRow("Belarus")]
+        [DataRow("Belgium")]
+        [DataRow("Belize")]
+        [DataRow("Benin")]
+        [DataRow("Bhutan")]
+        [DataRow("Bolivia")]
+        [DataRow("Bosnia and Herzegovina")]
+        [DataRow("Botswana")]
+        [DataRow("Brazil")]
+        [DataRow("Brunei")]
+        [DataRow("Bulgaria")]
+        [DataRow("Burkina Faso")]
+        [DataRow("Burundi")]
+        [DataRow("Cabo Verde")]
+        [DataRow("Cambodia")]
+        [DataRow("Cameroon")]
+        [DataRow("Canada")]
+        [DataRow("Central African Republic")]
+        [DataRow("Chad")]
+        [DataRow("Chile")]
+        [DataRow("China")]
+        [DataRow("Colombia")]
+        [DataRow("Comoros")]
+        [DataRow("Congo")]
+        [DataRow("Costa Rica")]
+        [DataRow("Côte d'Ivoire")]
+        [DataRow("Croatia")]
+        [DataRow("Cuba")]
+        [DataRow("Cyprus")]
+        [DataRow("Czech Republic")]
+        [DataRow("Democratic Republic of the Congo")]
+        [DataRow("Denmark")]
+        [DataRow("Djibouti")]
+        [DataRow("Dominica")]
+        [DataRow("Dominican Republic")]
+        [DataRow("Ecuador")]
+        [DataRow("Egypt")]
+        [DataRow("El Salvador")]
+        [DataRow("Equatorial Guinea")]
+        [DataRow("Eritrea")]
+        [DataRow("Estonia")]
+        [DataRow("Eswatini")]
+        [DataRow("Ethiopia")]
+        [DataRow("Fiji")]
+        [DataRow("Finland")]
+        [DataRow("France")]
+        [DataRow("Gabon")]
+        [DataRow("Gambia")]
+        [DataRow("Georgia")]
+        [DataRow("Germany")]
+        [DataRow("Ghana")]
+        [DataRow("Greece")]
+        [DataRow("Grenada")]
+        [DataRow("Guatemala")]
+        [DataRow("Guinea")]
+        [DataRow("Guinea-Bissau")]
+        [DataRow("Guyana")]
+        [DataRow("Haiti")]
+        [DataRow("Honduras")]
+        [DataRow("Hungary")]
+        [DataRow("Iceland")]
+        [DataRow("India")]
+        [DataRow("Indonesia")]
+        [DataRow("Iran")]
+        [DataRow("Iraq")]
+        [DataRow("Ireland")]
+        [DataRow("Israel")]
+        [DataRow("Italy")]
+        [DataRow("Jamaica")]
+        [DataRow("Japan")]
+        [DataRow("Jordan")]
+        [DataRow("Kazakhstan")]
+        [DataRow("Kenya")]
+        [DataRow("Kiribati")]
+        [DataRow("Kosovo")]
+        [DataRow("Kuwait")]
+        [DataRow("Kyrgyzstan")]
+        [DataRow("Laos")]
+        [DataRow("Latvia")]
+        [DataRow("Lebanon")]
+        [DataRow("Lesotho")]
+        [DataRow("Liberia")]
+        [DataRow("Libya")]
+        [DataRow("Liechtenstein")]
+        [DataRow("Lithuania")]
+        [DataRow("Luxembourg")]
+        [DataRow("Madagascar")]
+        [DataRow("Malawi")]
+        [DataRow("Malaysia")]
+        [DataRow("Maldives")]
+        [DataRow("Mali")]
+        [DataRow("Malta")]
+        [DataRow("Marshall Islands")]
+        [DataRow("Mauritania")]
+        [DataRow("Mauritius")]
+        [DataRow("Mexico")]
+        [DataRow("Micronesia")]
+        [DataRow("Moldova")]
+        [DataRow("Monaco")]
+        [DataRow("Mongolia")]
+        [DataRow("Montenegro")]
+        [DataRow("Morocco")]
+        [DataRow("Mozambique")]
+        [DataRow("Myanmar")]
+        [DataRow("Namibia")]
+        [DataRow("Nauru")]
+        [DataRow("Nepal")]
+        [DataRow("Netherlands")]
+        [DataRow("New Zealand")]
+        [DataRow("Nicaragua")]
+        [DataRow("Niger")]
+        [DataRow("Nigeria")]
+        [DataRow("North Korea")]
+        [DataRow("North Macedonia")]
+        [DataRow("Norway")]
+        [DataRow("Oman")]
+        [DataRow("Pakistan")]
+        [DataRow("Palau")]
+        [DataRow("Palestine")]
+        [DataRow("Panama")]
+        [DataRow("Papua New Guinea")]
+        [DataRow("Paraguay")]
+        [DataRow("Peru")]
+        [DataRow("Philippines")]
+        [DataRow("Poland")]
+        [DataRow("Portugal")]
+        [DataRow("Qatar")]
+        [DataRow("Romania")]
+        [DataRow("Russia")]
+        [DataRow("Rwanda")]
+        [DataRow("Saint Kitts and Nevis")]
+        [DataRow("Saint Lucia")]
+        [DataRow("Saint Vincent and the Grenadines")]
+        [DataRow("Samoa")]
+        [DataRow("San Marino")]
+        [DataRow("Sao Tome and Principe")]
+        [DataRow("Saudi Arabia")]
+        [DataRow("Senegal")]
+        [DataRow("Serbia")]
+        [DataRow("Seychelles")]
+        [DataRow("Sierra Leone")]
+        [DataRow("Singapore")]
+        [DataRow("Slovakia")]
+        [DataRow("Slovenia")]
+        [DataRow("Solomon Islands")]
+        [DataRow("Somalia")]
+        [DataRow("South Africa")]
+        [DataRow("South Korea")]
+        [DataRow("South Sudan")]
+        [DataRow("Spain")]
+        [DataRow("Sri Lanka")]
+        [DataRow("Sudan")]
+        [DataRow("Suriname")]
+        [DataRow("Sweden")]
+        [DataRow("Switzerland")]
+        [DataRow("Syria")]
+        [DataRow("Taiwan")]
+        [DataRow("Tajikistan")]
+        [DataRow("Tanzania")]
+        [DataRow("Thailand")]
+        [DataRow("Timor-Leste")]
+        [DataRow("Togo")]
+        [DataRow("Tonga")]
+        [DataRow("Trinidad and Tobago")]
+        [DataRow("Tunisia")]
+        [DataRow("Turkey")]
+        [DataRow("Turkmenistan")]
+        [DataRow("Tuvalu")]
+        [DataRow("Uganda")]
+        [DataRow("Ukraine")]
+        [DataRow("United Arab Emirates")]
+        [DataRow("United Kingdom")]
+        [DataRow("United States")]
+        [DataRow("Uruguay")]
+        [DataRow("Uzbekistan")]
+        [DataRow("Vanuatu")]
+        [DataRow("Vatican City")]
+        [DataRow("Venezuela")]
+        [DataRow("Vietnam")]
+        [DataRow("Yemen")]
+        [DataRow("Zambia")]
+        [DataRow("Zimbabwe")]
+        public void Country_ValidInput_PassesValidation(string countryName)
+        {
+            // Arrange
+            var model = new BusinessAddressOverseasViewModel
+            {
+                Country = countryName,
+                AddressLine1 = "Test Address",
+                TownOrCity = "Test City"
+            };
+            var validationContext = new ValidationContext(model);
+            var validationResults = new List<ValidationResult>();
+
+            // Act
+            var isValid = Validator.TryValidateObject(model, validationContext, validationResults, true);
+
+            // Assert
+            isValid.Should().BeTrue();
+            validationResults.Should().BeEmpty();
+        }
+
+        [DataTestMethod]
+        [DataRow("Country123", "AddressOverseas.CountryInvalidError", "Contains numbers")]
+        [DataRow("Country!", "AddressOverseas.CountryInvalidError", "Contains special character !")]
+        [DataRow("Country@", "AddressOverseas.CountryInvalidError", "Contains special character @")]
+        [DataRow("Country#", "AddressOverseas.CountryInvalidError", "Contains special character #")]
+        [DataRow("Country$", "AddressOverseas.CountryInvalidError", "Contains special character $")]
+        [DataRow("", "AddressOverseas.CountryNameError", "Empty string")]
+        [DataRow(null, "AddressOverseas.CountryNameError", "Null value")]
+        [DataRow("ThisCountryNameIsWayTooLongToBeValidAccordingToTheDefinedMaxLengthValidation", "AddressOverseas.CountryLengthError", "Exceeds max length")]
+        public void Country_InvalidInput_FailsValidation(string countryName, string expectedErrorMessage, string testDescription)
+        {
+            // Arrange
+            var model = new BusinessAddressOverseasViewModel
+            {
+                Country = countryName,
+                AddressLine1 = "Test Address",
+                TownOrCity = "Test City"
+            };
+            var validationContext = new ValidationContext(model);
+            var validationResults = new List<ValidationResult>();
+
+            // Act
+            var isValid = Validator.TryValidateObject(model, validationContext, validationResults, true);
+
+            // Assert
+            isValid.Should().BeFalse();
+            validationResults.Should().NotBeEmpty();
+            validationResults.Should().Contain(r => r.ErrorMessage == expectedErrorMessage);
+        }
+    }
+}

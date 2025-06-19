@@ -276,9 +276,59 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpGet]
     [Route(PagePath.AddressOverseas)]
     [OrganisationJourneyAccess(PagePath.AddressOverseas)]
-    public Task<IActionResult> AddressOverseas()
+    public async Task<IActionResult> AddressOverseas()
     {
-        return PlaceholderPageGet(PagePath.AddressOverseas);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.AddressOverseas);
+
+        var viewModel = new BusinessAddressOverseasViewModel();
+
+        if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
+        {
+            viewModel.Country = session.ReExManualInputSession.BusinessAddress.Country;
+            viewModel.AddressLine1 = session.ReExManualInputSession.BusinessAddress.BuildingName;
+            viewModel.AddressLine2 = session.ReExManualInputSession.BusinessAddress.Street;
+            viewModel.TownOrCity = session.ReExManualInputSession.BusinessAddress.Town;
+            viewModel.StateProvinceRegion = session.ReExManualInputSession.BusinessAddress.County;
+            viewModel.Postcode = session.ReExManualInputSession.BusinessAddress.Postcode;
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.AddressOverseas)]
+    [OrganisationJourneyAccess(PagePath.AddressOverseas)]
+    public async Task<IActionResult> AddressOverseas(BusinessAddressOverseasViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.AddressOverseas);
+            return View(model);
+        }
+
+        var address = session!.ReExManualInputSession!.BusinessAddress ??= new Address();
+
+        address.Country = model.Country;
+        address.BuildingName = model.AddressLine1;
+        address.Street = model.AddressLine2;
+        address.Town = model.TownOrCity;
+        address.County = model.StateProvinceRegion;
+        address.Postcode = model.Postcode;
+        address.IsManualAddress = true;
+
+        return await SaveSessionAndRedirect(session, nameof(UkRegulator),
+            PagePath.AddressOverseas, PagePath.UkRegulator);
+    }
+
+    [ExcludeFromCodeCoverage]
+    [HttpGet]
+    [Route(PagePath.UkRegulator)]
+    [OrganisationJourneyAccess(PagePath.UkRegulator)]
+    public Task<IActionResult> UkRegulator()
+    {
+        return PlaceholderPageGet(PagePath.UkRegulator);
     }
 
     [HttpGet]
