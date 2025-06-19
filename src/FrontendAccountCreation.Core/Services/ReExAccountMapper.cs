@@ -1,4 +1,6 @@
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -29,7 +31,8 @@ public class ReExAccountMapper : IReExAccountMapper
             IsApprovedUser = session.IsApprovedUser,
             Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
             ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
-            InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession)
+            InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession),
+            Partners = GetPartnersModel(session)
         };
     }
 
@@ -51,6 +54,7 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             OrganisationId = session.ReExCompaniesHouseSession?.Company?.OrganisationId ?? string.Empty,
             OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
+            ProducerType = GetProducerType(session),
             CompanyName = session.ReExCompaniesHouseSession?.Company?.Name,
             CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company?.CompaniesHouseNumber,
             CompanyRegisteredAddress = GetAddressModel(session.ReExCompaniesHouseSession?.Company?.BusinessAddress),
@@ -113,5 +117,30 @@ public class ReExAccountMapper : IReExAccountMapper
             DependentLocality = address.DependentLocality,
             County = address.County
         };
+    }
+
+    private List<ReExPartnerModel>? GetPartnersModel(OrganisationSession reExOrganisationSession)
+    {
+        List<ReExPartnerModel>? reExPartnerModels = null;
+        var partners = reExOrganisationSession?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.ToList();
+        if (partners is { Count: > 0 })
+        {
+            reExPartnerModels = [.. partners.Select(x => new ReExPartnerModel()
+            {
+                Name = x.Name,
+                PartnerRole = x.IsPerson ? PartnerType.IndividualPartner.GetDescription() : PartnerType.CorporatePartner.GetDescription(),
+            })];
+        }
+        return reExPartnerModels;
+    }
+
+    private static string? GetProducerType(OrganisationSession reExOrganisationSession)
+    {
+        var producerType = ProducerType.NotSet.ToString();
+        if (reExOrganisationSession.IsCompaniesHouseFlow)
+        {
+            producerType = reExOrganisationSession.ReExCompaniesHouseSession.ProducerType?.ToString() ?? ProducerType.NotSet.ToString();
+        }
+        return producerType;
     }
 }
