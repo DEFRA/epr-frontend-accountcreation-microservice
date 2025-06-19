@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
@@ -936,5 +937,84 @@ public class ReExAccountMapperTests
         result.Company.CompanyRegisteredAddress.BuildingName.Should().Be("Bldg");
         result.Company.ValidatedWithCompaniesHouse.Should().BeTrue();
         result.Company.IsComplianceScheme.Should().Be(isCompliance);
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_ProducerTypes()
+    {
+        // Arrange
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Services.Dto.Company.Company
+                {
+                    AccountCreatedOn = DateTime.Now,
+                    Name = "ReEx Test Ltd",
+                    CompaniesHouseNumber = "12345678",
+                    OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
+                },
+                ProducerType = ProducerType.LimitedLiabilityPartnership,
+            },
+            UkNation = Nation.England,
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Company.ProducerType.Should().NotBeNull().And.Be(ProducerType.LimitedLiabilityPartnership.ToString());
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_Partners()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Services.Dto.Company.Company
+                {
+                    AccountCreatedOn = DateTime.Now,
+                    Name = "ReEx Test Ltd",
+                    CompaniesHouseNumber = "12345678",
+                    OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
+                },
+                Partnership = new()
+                {
+                    LimitedPartnership = new()
+                    {
+                        Partners =
+                        [
+                            new()
+                                {
+                                    IsPerson = true,
+                                    Name = "Person1"
+                                },
+                                new()
+                                {
+                                    IsPerson = false,
+                                    Name = "Company1"
+                                }
+                        ]
+                    }
+                }
+            },
+            UkNation = Nation.England,
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Partners.Should().NotBeNull().And.HaveCount(2);
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Person1",
+            PartnerRole = PartnerType.IndividualPartner.GetDescription()
+        });
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Company1",
+            PartnerRole = PartnerType.CorporatePartner.GetDescription()
+        });
     }
 }
