@@ -250,7 +250,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
         string nextAction, nextPagePath;
-        
+
         if (session.IsTradingNameDifferent == true)
         {
             nextAction = nameof(TradingName);
@@ -313,16 +313,20 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.ReExManualInputSession ??= new ReExManualInputSession();
-
-        session.ReExManualInputSession.TradingName = model.TradingName!;        
+        session.ReExManualInputSession.TradingName = model.TradingName!;
 
         if (session.IsCompaniesHouseFlow)
         {
-            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
-                PagePath.IsPartnership);
+            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName, PagePath.IsPartnership);
         }
-        return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
-            PagePath.TypeOfOrganisation);
+        else if (session.ReExManualInputSession.ProducerType.HasValue && session.ReExManualInputSession.ProducerType.Value == ProducerType.NonUkOrganisation)
+        {
+            return await SaveSessionAndRedirect(session, nameof(AddressOverseas), PagePath.TradingName, PagePath.AddressOverseas);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName, PagePath.TypeOfOrganisation);
+        }
     }
 
     [HttpGet]
@@ -749,11 +753,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
-			session.ReExManualInputSession.TeamMember = null;
-			return await SaveSessionAndRedirect(session,
+            session.ReExManualInputSession.TeamMember = null;
+            return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
-                currentPagePath: PagePath.SoleTrader, 
+                currentPagePath: PagePath.SoleTrader,
                 nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
         }
 
@@ -837,17 +841,17 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         if (viewModel.IsSoleTrader)
         {
             viewModel.CompanyName = session.ReExManualInputSession?.TradingName;
-			if (session.ReExManualInputSession?.TeamMember != null)
-			{
+            if (session.ReExManualInputSession?.TeamMember != null)
+            {
                 viewModel.ReExCompanyTeamMembers = [session.ReExManualInputSession.TeamMember];
-			}
-		}
+            }
+        }
         else
         {
             viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
-			viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
-		}
-        
+            viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+        }
+
         return View(viewModel);
     }
 
