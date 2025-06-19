@@ -14,12 +14,10 @@ public enum ReExTeamMemberRole
 
     [Description("Company secretary of a corporate partner")]
     PartnerCompanySecretary = 4,
-    IndividualPartner = 5,
-    SoleTrader = 6,
-}
 
     [Description("Individual partner")]
     IndividualPartner = 5,
 
+    SoleTrader = 6,
     Member = 7
 }
