@@ -16,5 +16,13 @@ public enum RoleInOrganisation
     [Description("Individual partner")]
     Partner = 3,
 
-    Member = 4
+    [Description("Member")]
+    Member = 4,
+
+    [Description("Company director of a corporate partner")]
+    PartnerDirector = 5,
+
+    [Description("Company secretary of a corporate partner")]
+    PartnerCompanySecretary = 6
+
 }
