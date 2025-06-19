@@ -175,6 +175,6 @@
     <value>Postcode must be 15 characters or less</value>
   </data>
   <data name="AddressOverseas.CountryInvalidError" xml:space="preserve">
-    <value>Countries must only include letters, spaces and hyphens</value>
+    <value>Countries must only include letters, spaces, hyphens, apostrophes and accented characters</value>
   </data>
 </root>
