@@ -10,6 +10,8 @@ public class ReExManualInputSession
 
     public string NonUkOrganisationName { get; set; }
 
+    public string NonUkRoleInOrganisation { get; set; }
+
     /// <summary>
     /// Sets nation for the non-UK organisation.
     /// </summary>

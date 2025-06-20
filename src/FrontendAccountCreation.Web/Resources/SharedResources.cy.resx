@@ -178,9 +178,18 @@
     <value>Dim un o’r uchod</value>
   </data>
   <data name="PartnerCompanySecretary" xml:space="preserve">
-    <value>Ysgrifennydd y cwmni</value>
+    <value>[Welsh]Company secretary of a corporate partner</value>
   </data>
   <data name="PartnerDirector" xml:space="preserve">
-    <value>Cyfarwyddwr</value>
+    <value>[Welsh]Company director of a corporate partner</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>[Welsh]Member</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>[Welsh]Individual partner</value>
+  </data>
+  <data name="NotSure" xml:space="preserve">
+    <value>Ddim yn siŵr</value>
   </data>
 </root>

@@ -178,9 +178,18 @@
     <value>None of the above</value>
   </data>
   <data name="PartnerCompanySecretary" xml:space="preserve">
-    <value>Company Secretary</value>
+    <value>Company secretary of a corporate partner</value>
   </data>
   <data name="PartnerDirector" xml:space="preserve">
-    <value>Director</value>
+    <value>Company director of a corporate partner</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Individual partner</value>
+  </data>
+  <data name="NotSure" xml:space="preserve">
+    <value>Not sure</value>
   </data>
 </root>

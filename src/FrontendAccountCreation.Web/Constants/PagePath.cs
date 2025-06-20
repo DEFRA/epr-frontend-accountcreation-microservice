@@ -47,11 +47,13 @@ public static class PagePath
     public const string NotImplemented = "not-implemented";
     public const string AddressOverseas = "address-overseas";
     public const string UkRegulator = "uk-regulator";
+    public const string ManageControl = "manage-control";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
 
     public const string TeamMemberRoleInOrganisation = "check-companies-house-role";
+    public const string TeamMemberRoleInOrganisationAddAnother = "check-companies-house-role/add-another";
     public const string TeamMemberRoleInOrganisationAdd = "check-companies-house-role/add";
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
 
@@ -70,9 +72,12 @@ public static class PagePath
     
     public const string MemberPartnership = "member-partnership";
     public const string MemberPartnershipAdd = "member-partnership/add";
+    public const string MemberPartnershipEdit = "member-partnership/edit";
 
     public const string PartnerDetails = "partner-details";
     public const string CanNotInviteThisPerson = "cannot-invite-this-person";
+    public const string CanNotInviteThisPersonAddEligible = "cannot-invite-this-person/add-eligble";
+    public const string CheckPartnerInvitation = "check-partner-invitation";
 
     // Sole Trader paths
     public const string YouAreApprovedPersonSoleTrader = "soletrader-approved-person";
@@ -80,6 +85,7 @@ public static class PagePath
 
     // Non Uk Non Companies House paths
     public const string NonUkOrganisationName = "nonuk-organisation-name";
+    public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
@@ -91,7 +97,6 @@ public static class PagePath
     public const string PartnershipType = "partnership-type";
     public const string LimitedPartnershipType = "organisation-partnership-type";
     public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
-    public const string LimitedPartnershipYouAreApprovedPerson = "you-are-now-an-approved-person";
     public const string LimitedLiabilityPartnership = "partner-you";
 
     // Non journey paths

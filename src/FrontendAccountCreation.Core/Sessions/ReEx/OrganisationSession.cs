@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions.Interfaces;
+﻿using FrontendAccountCreation.Core.Models;
+using FrontendAccountCreation.Core.Sessions.Interfaces;
 
 namespace FrontendAccountCreation.Core.Sessions.ReEx;
 
@@ -40,7 +41,11 @@ public class OrganisationSession : ILocalSession
 
     public bool IsUserChangingDetails { get; set; }
 
+    public YesNoNotSure? UserManagesOrControls { get; set; }
+
     public List<string> Journey { get; set; } = [];
 
     public HashSet<string> WhiteList { get; set; } = [];
+    
+    public InviteUserOptions? InviteUserOption { get; set; }
 }

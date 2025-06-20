@@ -1,7 +1,7 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -234,14 +234,37 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new();
-        partnershipSession.IsLimitedPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
-        partnershipSession.IsLimitedLiabilityPartnership = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+        var partnershipSession = session.ReExCompaniesHouseSession.Partnership ?? new ReExPartnership();
+
+        var wasLp = partnershipSession.IsLimitedPartnership;
+        var wasLlp = partnershipSession.IsLimitedLiabilityPartnership;
+
+        var isLp = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
+        var isLlp  = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+
+        // clear existing session values when the user changes their original decision
+        if ((wasLp && !isLp) || (wasLlp && !isLlp))
+        {
+            partnershipSession.LimitedPartnership = null;
+            partnershipSession.LimitedLiabilityPartnership = null;
+            session.ReExCompaniesHouseSession.TeamMembers = null;
+            session.ReExCompaniesHouseSession.RoleInOrganisation = null;
+            session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = false;
+            session.InviteUserOption = null;
+        }
+
+        partnershipSession.IsLimitedPartnership = isLp;
+        partnershipSession.IsLimitedLiabilityPartnership = isLlp;
         session.ReExCompaniesHouseSession.Partnership = partnershipSession;
 
-        return partnershipSession.IsLimitedPartnership ?
+        //Set producer type to LP or LLP
+        session.ReExCompaniesHouseSession.ProducerType = partnershipSession.IsLimitedPartnership ?
+                                                                ProducerType.LimitedPartnership :
+                                                                ProducerType.LimitedLiabilityPartnership;
+
+        return model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership ?
             await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedPartnershipType) :
-            await SaveSessionAndRedirect(session, nameof(LimitedPartnershipType), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);
+            await SaveSessionAndRedirect(session, nameof(LimitedLiabilityPartnership), PagePath.PartnershipType, PagePath.LimitedLiabilityPartnership);
     }
 
     [HttpGet]
@@ -381,6 +404,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership ??= new();
         session.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership
             .IsMemberOfLimitedLiabilityPartnership = model.IsMemberOfLimitedLiabilityPartnership!.Value;
+
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.IsMemberOfLimitedLiabilityPartnership == true
+            ? RoleInOrganisation.Member
+            : null;
 
         session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = !model.IsMemberOfLimitedLiabilityPartnership!.Value;
 

@@ -23,16 +23,16 @@
     <value>What role do you have within the limited partnership, as registered on Companies House?</value>
   </data>
   <data name="LimitedPartnershipRole.IndividualPartner" xml:space="preserve">
-    <value>Individual partner</value>
+    <value>Individual partner within the partnership</value>
   </data>
   <data name="LimitedPartnershipRole.CompanyDirector" xml:space="preserve">
-    <value>Company director within an organisation partner</value>
+    <value>Company director of a corporate partner within the partnership</value>
   </data>
   <data name="LimitedPartnershipRole.CompanySecretary" xml:space="preserve">
-    <value>Company secretary within an organisation partner</value>
+    <value>Company secretary of a corporate partner within the partnership</value>
   </data>
     <data name="LimitedPartnershipRole.None" xml:space="preserve">
-    <value>None</value>
+    <value>None of the above</value>
   </data>
   <data name="LimitedPartnershipRole.ErrorMessage" xml:space="preserve">
     <value>Select your role in your organisation</value>
