@@ -83,7 +83,7 @@ public class NonUkRoleInOrganisationTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotImplemented));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.ManageControl));
     }
 
     [TestMethod]

@@ -939,8 +939,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.ReExManualInputSession.NonUkRoleInOrganisation = model.NonUkRoleInOrganisation!;
 
-        return await SaveSessionAndRedirect(session, nameof(NotImplemented), PagePath.NonUkRoleInOrganisation,
-            PagePath.NotImplemented);
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.NonUkRoleInOrganisation,
+            PagePath.ManageControl);
     }
 
     [HttpGet]
