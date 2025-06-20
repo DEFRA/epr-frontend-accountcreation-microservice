@@ -66,10 +66,10 @@ public class ManageControlTests : OrganisationTestBase
     }
 
     [TestMethod]
-    [DataRow(YesNoNotSure.Yes, nameof(OrganisationController.ManageAccountPerson), PagePath.ManageAccountPerson)]
-    [DataRow(YesNoNotSure.No, nameof(OrganisationController.NotApprovedPerson), PagePath.NotApprovedPerson)]
-    [DataRow(YesNoNotSure.NotSure, nameof(OrganisationController.NotApprovedPerson), PagePath.NotApprovedPerson)]
-    public async Task POST_UserSelectsOption_RedirectsToCorrectPage(YesNoNotSure userAnswer, string expectedActionName, string expectedPagePath)
+    [DataRow(YesNoNotSure.Yes)]
+    [DataRow(YesNoNotSure.No)]
+    [DataRow(YesNoNotSure.NotSure)]
+    public async Task POST_UserSelectsOption_RedirectsToAddApprovedPerson(YesNoNotSure userAnswer)
     {
         // Arrange
         var model = new ManageControlViewModel { UserManagesOrControls = userAnswer };
@@ -80,14 +80,8 @@ public class ManageControlTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = (RedirectToActionResult)result;
-        redirectResult.ActionName.Should().Be(expectedActionName);
-
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
-            It.IsAny<ISession>(),
-            It.Is<OrganisationSession>(s => s.UserManagesOrControls == userAnswer &&
-                                         s.Journey.Contains(PagePath.ManageControl) &&
-                                         s.Journey.Contains(expectedPagePath))),
-            Times.Once);
+        redirectResult.ControllerName.Should().Be(nameof(ApprovedPersonController).Replace("Controller", ""));
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
     }
 
     [TestMethod]

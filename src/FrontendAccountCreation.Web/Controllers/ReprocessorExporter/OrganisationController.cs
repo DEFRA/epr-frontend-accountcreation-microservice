@@ -304,40 +304,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.UserManagesOrControls = model.UserManagesOrControls;
 
-        string nextAction, nextPagePath;
-
-        if (session.UserManagesOrControls == YesNoNotSure.Yes)
-        {
-            //todo: supposed to be an existing page, but i can't find it
-            nextAction = nameof(ManageAccountPerson);
-            nextPagePath = PagePath.ManageAccountPerson;
-        }
-        else
-        {
-            //todo: not-approved-person
-            nextAction = nameof(NotApprovedPerson);
-            nextPagePath = PagePath.NotApprovedPerson;
-        }
-
-        return await SaveSessionAndRedirect(session, nextAction, PagePath.ManageControl, nextPagePath);
-    }
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.ManageAccountPerson)]
-    [OrganisationJourneyAccess(PagePath.ManageAccountPerson)]
-    public Task<IActionResult> ManageAccountPerson()
-    {
-        return PlaceholderPageGet(PagePath.ManageAccountPerson);
-    }
-
-    [ExcludeFromCodeCoverage]
-    [HttpGet]
-    [Route(PagePath.NotApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.NotApprovedPerson)]
-    public Task<IActionResult> NotApprovedPerson()
-    {
-        return PlaceholderPageGet(PagePath.NotApprovedPerson);
+        return await SaveSessionAndRedirect(session, 
+            nameof(ApprovedPersonController),
+            nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.ManageControl,
+            PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]
