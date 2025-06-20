@@ -85,6 +85,7 @@ public static class PagePath
 
     // Non Uk Non Companies House paths
     public const string NonUkOrganisationName = "nonuk-organisation-name";
+    public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
