@@ -123,6 +123,12 @@
   <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
     <value>[Welsh]Submit and verify data returns</value>
   </data>
+  <data name="AddAnApprovedPerson.CEO" xml:space="preserve">
+    <value>Chief Executive Officer</value>
+  </data>
+  <data name="AddAnApprovedPerson.CompanyDirectorOrSecretary" xml:space="preserve">
+    <value>Company Director or Secretary</value>
+  </data>
   <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
     <value>[Welsh]company secretary</value>
   </data>
@@ -150,8 +156,17 @@
   <data name="AddAnApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
     <value>[Welsh]I will invite an approved person later</value>
   </data>
+  <data name="AddAnApprovedPerson.NonUk.RolesInstruction" xml:space="preserve">
+    <value>A person who has control or management of a business that does not have a registered office, head office or principal place of business in the UK. For example</value>
+  </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
     <value>[Welsh]Select an option</value>
+  </data>
+  <data name="AddAnApprovedPerson.Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="AddAnApprovedPerson.Partner" xml:space="preserve">
+    <value>Partner</value>
   </data>
   <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
     <value>[Welsh]Roles eligible to be an approved person</value>
@@ -164,6 +179,9 @@
   </data>
   <data name="AddAnApprovedPerson.Title" xml:space="preserve">
     <value>[Welsh]Add an approved person </value>
+  </data>
+  <data name="AddAnApprovedPerson.UnincorporatedRoles" xml:space="preserve">
+    <value>Chair, Treasurer or Secretary of an unincorporated organisation</value>
   </data>
   <data name="AddAnApprovedPerson.UserHeading" xml:space="preserve">
     <value>[Welsh]Invite users in your team</value>
