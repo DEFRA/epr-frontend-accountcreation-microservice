@@ -26,7 +26,7 @@
 
     <div class="section">
         <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.RolesHeading"]</h3>
-        @if (true) // Model.UK
+        @if (Model.IsUkMainAddress)
         {
             <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
             <ul class="govuk-list govuk-list--bullet">
@@ -34,7 +34,7 @@
                 <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
             </ul>
         }
-        else // non uk
+        else // non-UK
         {
             <p class="govuk-body">@Localizer["AddAnApprovedPerson.NonUk.RolesInstruction"]:</p>
             <ul class="govuk-list govuk-list--bullet">

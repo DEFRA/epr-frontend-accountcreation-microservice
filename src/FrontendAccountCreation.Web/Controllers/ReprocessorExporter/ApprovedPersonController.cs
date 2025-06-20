@@ -51,11 +51,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
-                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsUkMainAddress = session.IsUkMainAddress!.Value
             };
 
             return View(model);
         }
+
+        //todo: global content change?
+        // I will invite another eligible person to be an approved person instead
+        // =>
+        // I will invite an eligible person to be an approved person
 
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
@@ -73,6 +79,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
                 model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
+                model.IsUkMainAddress = session.IsUkMainAddress!.Value;
                 var errorMessage = model.IsSoleTrader ? "AddNotApprovedPerson.SoleTrader.ErrorMessage" : "AddAnApprovedPerson.OptionError";
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
                 ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
