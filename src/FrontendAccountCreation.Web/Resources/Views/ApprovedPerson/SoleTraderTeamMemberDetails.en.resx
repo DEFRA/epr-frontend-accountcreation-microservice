@@ -151,7 +151,7 @@
     <value>Telephone</value>
   </data>
   <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>What are their details?</value>
+    <value>Team Member Details</value>
   </data>
   <data name="TeamMemberDetails.TelephoneNumberEmptyErrorMessage" xml:space="preserve">
     <value>Enter a telephone number</value>
