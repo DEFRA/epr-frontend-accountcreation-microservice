@@ -21,7 +21,7 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
 
         _organisationSession = new OrganisationSession
         {
-            Journey = new List<string> { PagePath.UnincorporatedRoleInOrganisation }
+            Journey = new List<string> { PagePath.BusinessAddress, PagePath.UnincorporatedRoleInOrganisation }
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
@@ -41,6 +41,7 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
         var model = viewResult.Model.Should().BeOfType<ReExRoleInOrganisationViewModel>().Subject;
 
+        AssertBackLink(viewResult, PagePath.BusinessAddress);
         model.Role.Should().Be(role);
     }
 
@@ -57,6 +58,7 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        AssertBackLink(viewResult, PagePath.BusinessAddress);
         viewResult.Model.Should().Be(viewModel);
     }
 
