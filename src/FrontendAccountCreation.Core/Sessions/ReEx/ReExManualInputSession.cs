@@ -13,7 +13,7 @@ public class ReExManualInputSession
     public string NonUkRoleInOrganisation { get; set; }
 
     /// <summary>
-    /// Sets nation for the non-UK organisation.
+    /// Sets regulator's nation for the non-UK organisation.
     /// </summary>
     public Nation? UkRegulatorNation { get; set; }
 
