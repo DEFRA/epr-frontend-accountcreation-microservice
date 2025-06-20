@@ -19,7 +19,7 @@ public class ManageControlTests : UnincorporatedTestBase
 
         _organisationSession = new OrganisationSession
         {
-            Journey = new List<string> { PagePath.UnincorporatedRoleInOrganisation }
+            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
@@ -31,9 +31,12 @@ public class ManageControlTests : UnincorporatedTestBase
     {
         // Arrange
         const ManageControlAnswer expectedAnswer = ManageControlAnswer.Yes;
-        var session = new OrganisationSession { ManageControlAnswer = expectedAnswer };
-        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(session);
+        var session = new OrganisationSession
+        {
+            ManageControlAnswer = expectedAnswer, 
+            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
+        };
+        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
 
         // Act
         var result = await _systemUnderTest.ManageControl();
@@ -44,7 +47,7 @@ public class ManageControlTests : UnincorporatedTestBase
         Assert.IsInstanceOfType(viewResult.Model, typeof(ReExManageControlViewModel));
         var model = (ReExManageControlViewModel)viewResult.Model;
         Assert.AreEqual(expectedAnswer, model.ManageControlInUKAnswer);
-        AssertBackLink(viewResult, PagePath.UnincorporatedManageControl);
+        AssertBackLink(viewResult, PagePath.UnincorporatedRoleInOrganisation);
     }
 
     [TestMethod]
@@ -61,7 +64,7 @@ public class ManageControlTests : UnincorporatedTestBase
         Assert.IsInstanceOfType(result, typeof(ViewResult));
         var viewResult = (ViewResult)result;
         Assert.AreSame(viewModel, viewResult.Model);
-        AssertBackLink(viewResult, PagePath.UnincorporatedManageControl);
+        AssertBackLink(viewResult, PagePath.UnincorporatedRoleInOrganisation);
     }
 
     [TestMethod]
@@ -76,16 +79,19 @@ public class ManageControlTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
+        // TODO: Update when ManageAccountPerson story completed
         //Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
         Assert.AreEqual(ManageControlAnswer.Yes, _organisationSession.ManageControlAnswer);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), _organisationSession), Times.Once());
     }
 
     [TestMethod]
-    public async Task ManageControl_Post_ValidModel_NotYesAnswer_RedirectsToManageAccountPerson()
+    [DataRow(ManageControlAnswer.No)]
+    [DataRow(ManageControlAnswer.NotSure)]
+    public async Task ManageControl_Post_ValidModel_NotYesAnswer_RedirectsToManageAccountPerson(ManageControlAnswer expectedAnswer)
     {
         // Arrange
-        var viewModel = new ReExManageControlViewModel { ManageControlInUKAnswer = ManageControlAnswer.No };
+        var viewModel = new ReExManageControlViewModel { ManageControlInUKAnswer = expectedAnswer };
 
         // Act
         var result = await _systemUnderTest.ManageControl(viewModel);
@@ -93,8 +99,9 @@ public class ManageControlTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
+        // TODO: Update when ManageAccountPerson story completed
         //Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
-        Assert.AreEqual(ManageControlAnswer.No, _organisationSession.ManageControlAnswer);
+        Assert.AreEqual(expectedAnswer, _organisationSession.ManageControlAnswer);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), _organisationSession), Times.Once());
     }
 }

@@ -23,7 +23,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> RoleInOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        
+        SetBackLink(session, PagePath.UnincorporatedRoleInOrganisation);
         return View(new ReExRoleInOrganisationViewModel { Role = session.RoleInOrganisation });
     }
 
