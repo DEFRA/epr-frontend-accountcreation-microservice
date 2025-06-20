@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -28,6 +29,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
+    //to-do: this is only used by one method, so we should inject it directly into the method
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
@@ -271,6 +273,42 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
+    }
+
+    [HttpGet]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.ManageControl);
+
+        return View(new ManageControlViewModel
+        {
+            UserManagesOrControls = session.UserManagesOrControls
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl(ManageControlViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.ManageControl);
+            return View(model);
+        }
+
+        session.UserManagesOrControls = model.UserManagesOrControls;
+
+        return await SaveSessionAndRedirect(session, 
+            nameof(ApprovedPersonController),
+            nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.ManageControl,
+            PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]

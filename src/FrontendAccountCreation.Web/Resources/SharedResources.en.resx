@@ -189,4 +189,7 @@
   <data name="Partner" xml:space="preserve">
     <value>Individual partner</value>
   </data>
+  <data name="NotSure" xml:space="preserve">
+    <value>Not sure</value>
+  </data>
 </root>
