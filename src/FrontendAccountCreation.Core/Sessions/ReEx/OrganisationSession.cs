@@ -41,7 +41,6 @@ public class OrganisationSession : ILocalSession
 
     public bool IsUserChangingDetails { get; set; }
 
-    //todo: in manualinput??
     public YesNoNotSure? UserManagesOrControls { get; set; }
 
     public List<string> Journey { get; set; } = [];
