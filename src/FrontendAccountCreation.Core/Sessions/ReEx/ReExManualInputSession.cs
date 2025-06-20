@@ -10,6 +10,8 @@ public class ReExManualInputSession
 
     public string NonUkOrganisationName { get; set; }
 
+    public string NonUkRoleInOrganisation { get; set; }
+
     public ProducerType? ProducerType { get; set; }
 
     public Address? BusinessAddress { get; set; }

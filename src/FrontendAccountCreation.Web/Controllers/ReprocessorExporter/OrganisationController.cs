@@ -906,6 +906,44 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     [HttpGet]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+        var viewModel = new NonUkRoleInOrganisationViewModel()
+        {
+            NonUkRoleInOrganisation = session?.ReExManualInputSession?.NonUkRoleInOrganisation,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation(NonUkRoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+
+        session.ReExManualInputSession.NonUkRoleInOrganisation = model.NonUkRoleInOrganisation!;
+
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.NonUkRoleInOrganisation,
+            PagePath.ManageControl);
+    }
+
+    [HttpGet]
     [Route(PagePath.Declaration)]
     [OrganisationJourneyAccess(PagePath.Declaration)]
     public async Task<IActionResult> Declaration()
