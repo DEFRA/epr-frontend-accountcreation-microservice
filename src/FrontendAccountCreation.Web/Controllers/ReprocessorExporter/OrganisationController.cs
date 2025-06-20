@@ -305,7 +305,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.UserManagesOrControls = model.UserManagesOrControls;
 
-        return await SaveSessionAndRedirect(session, 
+        return await SaveSessionAndRedirect(session,
             nameof(ApprovedPersonController),
             nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.ManageControl,
@@ -361,6 +361,10 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             PagePath.AddressOverseas, PagePath.UkRegulator);
     }
 
+    /// <summary>
+    /// Non-Uk organisation flow to select regulator's UK nation.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route(PagePath.UkRegulator)]
     [OrganisationJourneyAccess(PagePath.UkRegulator)]
@@ -394,7 +398,10 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         session.ReExManualInputSession ??= new ReExManualInputSession();
         session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
 
-        return View(model);
+        return await SaveSessionAndRedirect(session, 
+            actionName: nameof(NonUkRoleInOrganisation), 
+            currentPagePath: PagePath.UkRegulator, 
+            nextPagePath: PagePath.NonUkRoleInOrganisation);
     }
 
     [HttpGet]
