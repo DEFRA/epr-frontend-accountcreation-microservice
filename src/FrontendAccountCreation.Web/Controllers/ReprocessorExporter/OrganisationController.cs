@@ -745,6 +745,14 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.ReExManualInputSession.TypesOfPartner = null;
+        if (session.OrganisationType == OrganisationType.NonCompaniesHouseCompany && session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody)
+        {
+            return await SaveSessionAndRedirect(session, 
+            controllerName: nameof(UnincorporatedController),
+            actionName: nameof(UnincorporatedController.RoleInOrganisation),
+            currentPagePath: PagePath.BusinessAddress, 
+            nextPagePath: PagePath.UnincorporatedRoleInOrganisation);
+        }
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
             PagePath.BusinessAddress, PagePath.SoleTrader);
     }
