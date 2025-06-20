@@ -409,7 +409,13 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        if (model.ProducerType != ProducerType.Partnership || await featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney))
+        bool admitToNextPage = true;
+        if (model.ProducerType == ProducerType.Partnership)
+        {
+            admitToNextPage = await featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney);
+        }
+
+        if (admitToNextPage)
         {
             session.ReExManualInputSession ??= new ReExManualInputSession();
             session.ReExManualInputSession.ProducerType = model.ProducerType;
