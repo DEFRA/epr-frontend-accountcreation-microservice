@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
@@ -9,6 +10,8 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -98,9 +101,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
-                return session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true }
-                    ? await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.AddAnApprovedPerson, PagePath.MemberPartnership)
-                    : await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+                string actionName, nextPagePath;
+
+                if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
+                {
+                    actionName = nameof(MemberPartnership);
+                    nextPagePath = PagePath.MemberPartnership;
+                }
+                else if (session.IsCompaniesHouseFlow)
+                {
+                    actionName = nameof(TeamMemberRoleInOrganisation);
+                    nextPagePath = PagePath.MemberPartnership;
+                }
+                else
+                {
+                    actionName = nameof(ManageControlOrganisation);
+                    nextPagePath = PagePath.ManageControlOrganisation;
+                }
+
+                return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
             }
 
             var id = GetFocusId();
@@ -113,10 +132,20 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 }
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+                //to-do: code is unreachable, should it come before the redirect, or can it be deleted?
                 SetFocusId(id.Value);
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
+        }
+
+        [ExcludeFromCodeCoverage]
+        [HttpGet]
+        [Route(PagePath.ManageControlOrganisation)]
+        [OrganisationJourneyAccess(PagePath.ManageControlOrganisation)]
+        public Task<IActionResult> ManageControlOrganisation()
+        {
+            return PlaceholderPageGet(PagePath.ManageControlOrganisation);
         }
 
         [HttpGet]
