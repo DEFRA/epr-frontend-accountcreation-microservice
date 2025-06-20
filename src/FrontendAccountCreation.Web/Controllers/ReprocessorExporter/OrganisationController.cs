@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Reflection;
 using System.Text.Json;
 using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Models;
@@ -304,7 +305,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.UserManagesOrControls = model.UserManagesOrControls;
 
-        return await SaveSessionAndRedirect(session, 
+        return await SaveSessionAndRedirect(session,
             nameof(ApprovedPersonController),
             nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.ManageControl,
@@ -360,13 +361,47 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             PagePath.AddressOverseas, PagePath.UkRegulator);
     }
 
-    [ExcludeFromCodeCoverage]
+    /// <summary>
+    /// Non-Uk organisation flow to select regulator's UK nation.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route(PagePath.UkRegulator)]
     [OrganisationJourneyAccess(PagePath.UkRegulator)]
-    public Task<IActionResult> UkRegulator()
+    public async Task<IActionResult> UkRegulator()
     {
-        return PlaceholderPageGet(PagePath.UkRegulator);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UkRegulator);
+
+        var viewModel = new UkRegulatorForNonUKViewModel();
+        if (session?.ReExManualInputSession?.UkRegulatorNation != null)
+        {
+            viewModel.UkRegulatorNation = session.ReExManualInputSession.UkRegulatorNation;
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.UkRegulator)]
+    [OrganisationJourneyAccess(PagePath.UkRegulator)]
+    public async Task<IActionResult> UkRegulator(UkRegulatorForNonUKViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UkRegulator);
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+        session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
+
+        return await SaveSessionAndRedirect(session, 
+            actionName: nameof(NonUkRoleInOrganisation), 
+            currentPagePath: PagePath.UkRegulator, 
+            nextPagePath: PagePath.NonUkRoleInOrganisation);
     }
 
     [HttpGet]
