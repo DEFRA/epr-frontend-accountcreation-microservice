@@ -356,11 +356,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Postcode = model.Postcode;
         address.IsManualAddress = true;
 
-        //todo: just for testing
-        //return await SaveSessionAndRedirect(session, nameof(UkRegulator),
-        //    PagePath.AddressOverseas, PagePath.UkRegulator);
-        return await SaveSessionAndRedirect(session, nameof(ManageControl),
-            PagePath.AddressOverseas, PagePath.ManageControl);
+        return await SaveSessionAndRedirect(session, nameof(UkRegulator),
+            PagePath.AddressOverseas, PagePath.UkRegulator);
     }
 
     [ExcludeFromCodeCoverage]
