@@ -26,11 +26,25 @@
 
     <div class="section">
         <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.RolesHeading"]</h3>
-        <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@Localizer["AddAnApprovedPerson.Director"]</li>
-            <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
-        </ul>
+        @if (Model.IsNonUk)
+        {
+            <p class="govuk-body">@Localizer["AddAnApprovedPerson.NonUk.RolesInstruction"]:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Localizer["AddAnApprovedPerson.CEO"]</li>
+                <li>@Localizer["AddAnApprovedPerson.Owner"]</li>
+                <li>@Localizer["AddAnApprovedPerson.Partner"]</li>
+                <li>@Localizer["AddAnApprovedPerson.CompanyDirectorOrSecretary"]</li>
+                <li>@Localizer["AddAnApprovedPerson.UnincorporatedRoles"]</li>
+            </ul>
+        }
+        else // UK
+        {
+            <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Localizer["AddAnApprovedPerson.Director"]</li>
+                <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
+            </ul>
+        }
     </div>
 
     <div class="section">

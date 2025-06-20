@@ -123,6 +123,12 @@
   <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
     <value>submit and verify data returns</value>
   </data>
+  <data name="AddAnApprovedPerson.CEO" xml:space="preserve">
+    <value>Chief Executive Officer</value>
+  </data>
+  <data name="AddAnApprovedPerson.CompanyDirectorOrSecretary" xml:space="preserve">
+    <value>Company Director or Secretary</value>
+  </data>
   <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
     <value>company secretary</value>
   </data>
@@ -133,7 +139,7 @@
     <value>I agree to be an approved person</value>
   </data>
   <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can</value>
   </data>
   <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
     <value>You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
@@ -145,13 +151,22 @@
     <value>More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
   </data>
   <data name="AddAnApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
-    <value>I will invite another eligible person to be an approved person instead</value>
+    <value>I will invite another eligible person to be an approved person</value>
   </data>
   <data name="AddAnApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
     <value>I will invite an approved person later</value>
   </data>
+  <data name="AddAnApprovedPerson.NonUk.RolesInstruction" xml:space="preserve">
+    <value>A person who has control or management of a business that does not have a registered office, head office or principal place of business in the UK. For example</value>
+  </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
     <value>Select an option</value>
+  </data>
+  <data name="AddAnApprovedPerson.Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="AddAnApprovedPerson.Partner" xml:space="preserve">
+    <value>Partner</value>
   </data>
   <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
     <value>Roles eligible to be an approved person</value>
@@ -164,6 +179,9 @@
   </data>
   <data name="AddAnApprovedPerson.Title" xml:space="preserve">
     <value>Add an approved person </value>
+  </data>
+  <data name="AddAnApprovedPerson.UnincorporatedRoles" xml:space="preserve">
+    <value>Chair, Treasurer or Secretary of an unincorporated organisation</value>
   </data>
   <data name="AddAnApprovedPerson.UserHeading" xml:space="preserve">
     <value>Invite users in your team</value>
