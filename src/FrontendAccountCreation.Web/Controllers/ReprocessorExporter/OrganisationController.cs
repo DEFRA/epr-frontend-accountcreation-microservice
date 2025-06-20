@@ -863,8 +863,46 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.ReExManualInputSession.NonUkOrganisationName = model.NonUkOrganisationName!;
 
-        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.TradingName,
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.NonUkOrganisationName,
             PagePath.IsTradingNameDifferent);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+        var viewModel = new NonUkRoleInOrganisationViewModel()
+        {
+            NonUkRoleInOrganisation = session?.ReExManualInputSession?.NonUkRoleInOrganisation,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation(NonUkRoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+
+        session.ReExManualInputSession.NonUkRoleInOrganisation = model.NonUkRoleInOrganisation!;
+
+        return await SaveSessionAndRedirect(session, nameof(NotImplemented), PagePath.NonUkRoleInOrganisation,
+            PagePath.NotImplemented);
     }
 
     [HttpGet]
