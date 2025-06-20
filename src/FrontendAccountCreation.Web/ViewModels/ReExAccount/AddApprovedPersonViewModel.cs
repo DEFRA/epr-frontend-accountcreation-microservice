@@ -24,7 +24,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
 
         public bool IsSoleTrader { get; set; }
         
-        public bool IsUkMainAddress { get; set; }
+        public bool IsNonUk { get; set; }
     }
 }
         

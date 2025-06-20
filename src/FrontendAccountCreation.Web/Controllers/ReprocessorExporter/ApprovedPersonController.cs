@@ -55,7 +55,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsUkMainAddress = session.IsUkMainAddress!.Value
+                IsNonUk = session.IsUkMainAddress == false
             };
 
             return View(model);
@@ -82,7 +82,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
                 model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
-                model.IsUkMainAddress = session.IsUkMainAddress!.Value;
+                model.IsNonUk = session.IsUkMainAddress == false;
                 var errorMessage = model.IsSoleTrader ? "AddNotApprovedPerson.SoleTrader.ErrorMessage" : "AddAnApprovedPerson.OptionError";
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
                 ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
