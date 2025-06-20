@@ -10,6 +10,11 @@ public class ReExManualInputSession
 
     public string NonUkOrganisationName { get; set; }
 
+    /// <summary>
+    /// Sets nation for the non-UK organisation.
+    /// </summary>
+    public Nation? UkRegulatorNation { get; set; }
+
     public ProducerType? ProducerType { get; set; }
 
     public Address? BusinessAddress { get; set; }
