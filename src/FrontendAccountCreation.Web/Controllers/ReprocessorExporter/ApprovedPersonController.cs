@@ -61,11 +61,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(model);
         }
 
-        //todo: global content change?
-        // I will invite another eligible person to be an approved person instead
-        // =>
-        // I will invite an eligible person to be an approved person
-
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
