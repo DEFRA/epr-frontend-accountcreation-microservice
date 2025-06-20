@@ -684,7 +684,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpGet]
     [Route(PagePath.UkNation)]
     [OrganisationJourneyAccess(PagePath.UkNation)]
-    [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     public async Task<IActionResult> UkNation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
