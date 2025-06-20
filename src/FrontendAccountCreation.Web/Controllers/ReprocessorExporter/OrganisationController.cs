@@ -399,7 +399,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     [HttpPost]
     [Route(PagePath.TypeOfOrganisation)]
     [OrganisationJourneyAccess(PagePath.TypeOfOrganisation)]
-    public async Task<IActionResult> TypeOfOrganisation(ReExTypeOfOrganisationViewModel model)
+    public async Task<IActionResult> TypeOfOrganisation([FromServices] IFeatureManager featureManager, ReExTypeOfOrganisationViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -409,12 +409,17 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        session.ReExManualInputSession ??= new ReExManualInputSession();
-        session.ReExManualInputSession.ProducerType = model.ProducerType;
-        session.ReExCompaniesHouseSession = null;
+        if (model.ProducerType != ProducerType.Partnership || await featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney))
+        {
+            session.ReExManualInputSession ??= new ReExManualInputSession();
+            session.ReExManualInputSession.ProducerType = model.ProducerType;
+            session.ReExCompaniesHouseSession = null;
 
-        return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.TypeOfOrganisation,
-            PagePath.UkNation);
+            return await SaveSessionAndRedirect(session, nameof(UkNation), PagePath.TypeOfOrganisation,
+                PagePath.UkNation);
+        }
+
+        return Redirect(PagePath.PageNotFoundReEx);
     }
 
     [HttpGet]
