@@ -139,10 +139,14 @@ public class ManageControlTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task POST_UserSelectsOption_SessionIsUpdated()
+    [DataRow(YesNoNotSure.Yes)]
+    [DataRow(YesNoNotSure.No)]
+    [DataRow(YesNoNotSure.NotSure)]
+    [DataRow(null)]
+    public async Task POST_UserSelectsOption_SessionIsUpdated(YesNoNotSure? yesNoSure)
     {
         // Arrange
-        var model = new ManageControlViewModel { UserManagesOrControls = YesNoNotSure.Yes };
+        var model = new ManageControlViewModel { UserManagesOrControls = yesNoSure };
 
         // Act
         await _systemUnderTest.ManageControl(model);
@@ -150,7 +154,7 @@ public class ManageControlTests : OrganisationTestBase
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
-            It.Is<OrganisationSession>(s => s.UserManagesOrControls == YesNoNotSure.Yes)),
+            It.Is<OrganisationSession>(s => s.UserManagesOrControls == yesNoSure)),
             Times.Once);
     }
 }
