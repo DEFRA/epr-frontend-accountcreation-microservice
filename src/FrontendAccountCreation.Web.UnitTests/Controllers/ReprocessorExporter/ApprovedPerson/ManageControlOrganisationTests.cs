@@ -13,11 +13,6 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
     [TestClass]
     public class ManageControlOrganisationTests : ApprovedPersonTestBase
     {
-        //private Mock<ISessionManager<OrganisationSession>> _sessionManagerMock;
-        //private Mock<IOptions<ExternalUrlsOptions>> _urlOptionsMock;
-        //private DefaultHttpContext _httpContext;
-        //private ApprovedPersonController _controller;
-
         private OrganisationSession _orgSessionMock;
 
         [TestInitialize]
