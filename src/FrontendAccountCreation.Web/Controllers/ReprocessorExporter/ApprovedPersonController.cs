@@ -546,7 +546,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var approvedPersonViewModel = new ApprovedPersonViewModel
             {
                 IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
-                IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false)
+                IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
+                ProducerType = session.ReExManualInputSession?.ProducerType
             };
 
             var id = GetFocusId();
