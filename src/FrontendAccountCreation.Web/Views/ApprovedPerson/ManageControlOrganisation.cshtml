@@ -24,54 +24,56 @@
 				<form asp-controller="ApprovedPerson" asp-action="ManageControlOrganisation" method="post">
 					<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
 						<fieldset class="govuk-fieldset">
-							<h1 class="fieldset__heading govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-								@Localizer["ManageControlOrganisation.Question"]
-							</h1>
+							<legend class="govuk-fieldset__legend">
+								<h1 class="fieldset__heading govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+									@Localizer["ManageControlOrganisation.Question"]
+								</h1>
+							</legend>
 						</fieldset>
 
-							<div class="govuk-hint" id="sole-trader-hint">
-								@Localizer["ManageControlOrganisation.Hint"]
+						<div class="govuk-hint" id="sole-trader-hint">
+							@Localizer["ManageControlOrganisation.Hint"]
+						</div>
+
+						@await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+						<div class="govuk-radios" data-module="govuk-radios">
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" type="radio" id="rdoMCOYes"
+									   gov-for="UkNation"
+									   gov-value="@nameof(YesNoNotSure.Yes)"
+									   gov-first-option="true">
+								<label class="govuk-label govuk-radios__label"
+									   gov-for="UkNation"
+									   gov-value="@nameof(YesNoNotSure.Yes)"
+									   gov-first-option="true">
+									@SharedLocalizer["Yes"]
+								</label>
 							</div>
 
-							@await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
-
-							<div class="govuk-radios" data-module="govuk-radios">
-								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" type="radio" id="rdoMCOYes"
-										   gov-for="UkNation"
-										   gov-value="@nameof(YesNoNotSure.Yes)"
-										   gov-first-option="true">
-									<label class="govuk-label govuk-radios__label"
-										   gov-for="UkNation"
-										   gov-value="@nameof(YesNoNotSure.Yes)"
-										   gov-first-option="true">
-										@SharedLocalizer["Yes"]
-									</label>
-								</div>
-
-								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" type="radio" id="rdoMCONo"
-										   gov-for="UkNation"
-										   gov-value="@nameof(YesNoNotSure.No)">
-									<label class="govuk-label govuk-radios__label"
-										   gov-for="UkNation"
-										   gov-value="@nameof(YesNoNotSure.No)">
-										@SharedLocalizer["No"]
-									</label>
-								</div>
-
-								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" type="radio" id="rdoMCONotsure"
-										   gov-for="UkNation"
-										   gov-value="@nameof(YesNoNotSure.NotSure)">
-									<label class="govuk-label govuk-radios__label"
-										   gov-for="UkNation"
-										   gov-value="@nameof(YesNoNotSure.NotSure)">
-										@SharedLocalizer["NotSure"]
-									</label>
-								</div>
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" type="radio" id="rdoMCONo"
+									   gov-for="UkNation"
+									   gov-value="@nameof(YesNoNotSure.No)">
+								<label class="govuk-label govuk-radios__label"
+									   gov-for="UkNation"
+									   gov-value="@nameof(YesNoNotSure.No)">
+									@SharedLocalizer["No"]
+								</label>
 							</div>
-				
+
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" type="radio" id="rdoMCONotsure"
+									   gov-for="UkNation"
+									   gov-value="@nameof(YesNoNotSure.NotSure)">
+								<label class="govuk-label govuk-radios__label"
+									   gov-for="UkNation"
+									   gov-value="@nameof(YesNoNotSure.NotSure)">
+									@SharedLocalizer["NotSure"]
+								</label>
+							</div>
+						</div>
+
 					</div>
 
 					<button class="govuk-button" data-module="govuk-button">
