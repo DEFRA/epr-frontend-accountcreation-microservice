@@ -1,11 +1,12 @@
 ﻿@using FrontendAccountCreation.Core.Models
 @using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Core.Sessions
 @using FrontendAccountCreation.Web.Constants
 
-@model UkNationViewModel
+@model ManageControlOrganisationViewModel
 
 @{
 	ViewData["Title"] = Localizer["ManageControlOrganisation.Title"];
@@ -31,20 +32,18 @@
 							</legend>
 						</fieldset>
 
-						<div class="govuk-hint" id="sole-trader-hint">
-							@Localizer["ManageControlOrganisation.Hint"]
-						</div>
+						<p class="govuk-body">@Localizer["ManageControlOrganisation.Hint"].Value</p>
 
 						@await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
 						<div class="govuk-radios" data-module="govuk-radios">
 							<div class="govuk-radios__item">
 								<input class="govuk-radios__input" type="radio" id="rdoMCOYes"
-									   gov-for="UkNation"
+									   gov-for="TheyManageOrControlOrganisation"
 									   gov-value="@nameof(YesNoNotSure.Yes)"
 									   gov-first-option="true">
 								<label class="govuk-label govuk-radios__label"
-									   gov-for="UkNation"
+									   gov-for="TheyManageOrControlOrganisation"
 									   gov-value="@nameof(YesNoNotSure.Yes)"
 									   gov-first-option="true">
 									@SharedLocalizer["Yes"]
@@ -53,10 +52,10 @@
 
 							<div class="govuk-radios__item">
 								<input class="govuk-radios__input" type="radio" id="rdoMCONo"
-									   gov-for="UkNation"
+									   gov-for="TheyManageOrControlOrganisation"
 									   gov-value="@nameof(YesNoNotSure.No)">
 								<label class="govuk-label govuk-radios__label"
-									   gov-for="UkNation"
+									   gov-for="TheyManageOrControlOrganisation"
 									   gov-value="@nameof(YesNoNotSure.No)">
 									@SharedLocalizer["No"]
 								</label>
@@ -64,18 +63,16 @@
 
 							<div class="govuk-radios__item">
 								<input class="govuk-radios__input" type="radio" id="rdoMCONotsure"
-									   gov-for="UkNation"
+									   gov-for="TheyManageOrControlOrganisation"
 									   gov-value="@nameof(YesNoNotSure.NotSure)">
 								<label class="govuk-label govuk-radios__label"
-									   gov-for="UkNation"
+									   gov-for="TheyManageOrControlOrganisation"
 									   gov-value="@nameof(YesNoNotSure.NotSure)">
 									@SharedLocalizer["NotSure"]
 								</label>
 							</div>
 						</div>
-
 					</div>
-
 					<button class="govuk-button" data-module="govuk-button">
 						@SharedLocalizer["Continue"]
 					</button>
