@@ -8,7 +8,7 @@
 @model UkNationViewModel
 
 @{
-	ViewData["Title"] = Localizer["UkNation.Title"];
+	ViewData["Title"] = Localizer["ManageControlOrganisation.Title"];
 	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
 	ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
@@ -21,11 +21,11 @@
 			<div class="govuk-grid-column-two-thirds">
 				@await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-				<form asp-controller="ApprovedPerson" asp-action="ManageControlOrganisation" method="post">
+				<form asp-controller="ApprovedPerson" asp-action="ManageControlOrganisation" method="post" novalidate>
 					<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
 						<fieldset class="govuk-fieldset">
-							<legend class="govuk-fieldset__legend">
-								<h1 class="fieldset__heading govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+								<h1 class="govuk-heading-l govuk-!-margin-bottom-4">
 									@Localizer["ManageControlOrganisation.Question"]
 								</h1>
 							</legend>
