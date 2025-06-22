@@ -547,6 +547,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
                 IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
+                IsApprovedUser = session.IsApprovedUser,
                 ProducerType = session.ReExManualInputSession?.ProducerType
             };
 

@@ -17,5 +17,5 @@ else if (Model.IsLimitedLiabilityPartnership)
 }
 else
 {
-    @Html.Partial("Partials/_NonPartnershipApprovedPerson", Model)
+    <partial name="Partials/_NonPartnershipApprovedPerson" model="Model" />
 }

@@ -8,6 +8,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
     {
         public bool IsLimitedLiabilityPartnership { get; set; }
         public bool IsLimitedPartnership { get; set; }
+        public bool IsApprovedUser { get; set; }
         public ProducerType? ProducerType { get; set; }
     }
 }
