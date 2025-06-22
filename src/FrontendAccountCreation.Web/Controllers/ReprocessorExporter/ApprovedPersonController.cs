@@ -140,6 +140,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [OrganisationJourneyAccess(PagePath.ManageControlOrganisation)]
         public Task<IActionResult> ManageControlOrganisation()
         {
+            // to be replaced
             return PlaceholderPageGet(PagePath.ManageControlOrganisation);
         }
 
