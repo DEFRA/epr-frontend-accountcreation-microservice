@@ -18,6 +18,7 @@
 				<p class="govuk-body">
 					@if (Model.ProducerType != null && Model.ProducerType == ProducerType.NonUkOrganisation)
 					{
+						// approvded person for a nonCompanyhouse non-UK organisation flow
 						@Localizer["_NonPartnershipApprovedPerson.NonUkOrganisation.ApprovedPerson.Description"].Value
 					}
 					else
