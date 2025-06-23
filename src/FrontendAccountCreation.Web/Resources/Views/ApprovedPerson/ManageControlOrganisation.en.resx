@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ManageControlOrganisation.ErrorMessage" xml:space="preserve">
-    <value>Select 'Yes' if they manage or control the organisation, 'No' if you do not or 'Not sure' if you are not sure</value>
+    <value>Select Yes if they manage or control the organisation, No if you do not or Not sure if you are not sure</value>
   </data>
   <data name="ManageControlOrganisation.Hint" xml:space="preserve">
     <value>This means control or management of an unincorporated associattion which has a registered office, head office or principal place of business in the United Kingdom.</value>
