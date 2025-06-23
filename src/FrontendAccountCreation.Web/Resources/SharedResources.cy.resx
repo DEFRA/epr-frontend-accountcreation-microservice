@@ -186,10 +186,25 @@
   <data name="Member" xml:space="preserve">
     <value>[Welsh]Member</value>
   </data>
-  <data name="Partner" xml:space="preserve">
-    <value>[Welsh]Individual partner</value>
-  </data>
   <data name="NotSure" xml:space="preserve">
     <value>Ddim yn siŵr</value>
+  </data>
+  <data name="CEO" xml:space="preserve">
+    <value>Chief Executive Officer</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="CompanyDirectorOrSecretary" xml:space="preserve">
+    <value>Company Director or Secretary</value>
+  </data>
+  <data name="UnincorporatedRoles" xml:space="preserve">
+    <value>Chair, Treasurer or Secretary of an unincorporated organisation</value>
+  </data>
+  <data name="ForExample" xml:space="preserve">
+    <value>For example:</value>
   </data>
 </root>
