@@ -261,15 +261,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
         else
         {
-            if (session.IsUkMainAddress == true)
-            {
-                nextAction = nameof(IsOrganisationAPartner);
-                nextPagePath = PagePath.IsPartnership;
-            }
-            else
+            if (session.IsUkMainAddress == false)
             {
                 nextAction = nameof(AddressOverseas);
                 nextPagePath = PagePath.AddressOverseas;
+            }
+            else
+            {
+                nextAction = nameof(IsOrganisationAPartner);
+                nextPagePath = PagePath.IsPartnership;
             }
         }
 
@@ -304,6 +304,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.UserManagesOrControls = model.UserManagesOrControls;
+        session.ReExManualInputSession!.IsEligibleToBeApprovedPerson = model.UserManagesOrControls == YesNoNotSure.Yes;
 
         return await SaveSessionAndRedirect(session,
             nameof(ApprovedPersonController),

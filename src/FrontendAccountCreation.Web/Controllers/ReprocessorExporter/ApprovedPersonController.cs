@@ -9,7 +9,6 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -47,8 +46,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 InviteUserOption = session.InviteUserOption?.ToString(),
                 IsOrganisationAPartnership = session.IsOrganisationAPartnership,
-                IsInEligibleToBeApprovedPerson =
-                    session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
+                IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session),
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
@@ -57,6 +55,32 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             };
 
             return View(model);
+        }
+
+        private bool IsEligibleToBeApprovedPerson(OrganisationSession session)
+        {
+            bool isEligibleToBeApprovedPerson = false;
+            if (session.ReExCompaniesHouseSession != null)
+            {
+                isEligibleToBeApprovedPerson = !session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson;
+            }
+            else if (session.ReExManualInputSession != null)
+            {
+                isEligibleToBeApprovedPerson = session.ReExManualInputSession.IsEligibleToBeApprovedPerson == true;
+            }
+
+            return isEligibleToBeApprovedPerson;
+        }
+
+        private string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
+        {
+            return model switch
+            {
+                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
+                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
+                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
+                _ => "AddAnApprovedPerson.OptionError"
+            };
         }
 
         [HttpPost]
@@ -74,9 +98,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsOrganisationAPartnership = session.IsOrganisationAPartnership;
                 model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
-                model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
+                model.IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session);
                 model.IsNonUk = session.IsUkMainAddress == false;
-                var errorMessage = model.IsSoleTrader ? "AddNotApprovedPerson.SoleTrader.ErrorMessage" : "AddAnApprovedPerson.OptionError";
+
+                string errorMessage = GetAddApprovedPersonErrorMessageKey(model);
+
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
                 ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
                 return View(model);
