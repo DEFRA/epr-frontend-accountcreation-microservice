@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;

@@ -160,14 +160,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpGet]
         [Route(PagePath.ManageControlOrganisation)]
         [OrganisationJourneyAccess(PagePath.ManageControlOrganisation)]
-        public async Task<IActionResult> ManageControlOrganisation()
+        public async Task<IActionResult> ManageControlOrganisation(bool invitePerson = false)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.ManageControlOrganisation);
 
             return View(new ManageControlOrganisationViewModel
             {
-                TheyManageOrControlOrganisation = session.TheyManageOrControlOrganisation
+                TheyManageOrControlOrganisation = invitePerson ? null : session.TheyManageOrControlOrganisation
             });
         }
 
