@@ -9,9 +9,6 @@
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
-    Model.IndividualPartnersLocalizer = "LimitedPartnershipType.IndividualPartners";
-    Model.CompanyPartnersLocalizer = "LimitedPartnershipType.CompanyPartners";
-
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
@@ -30,7 +27,7 @@
                             </legend>
 
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
-                            @await Html.PartialAsync("Partials/_WhatSortOfPartnerRadios", Model)
+                            @await Html.PartialAsync("Partials/_WhatSortOfPartnerCheckBoxes", Model)
 
                         </fieldset>
                     </div>

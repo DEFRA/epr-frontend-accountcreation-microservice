@@ -22,12 +22,6 @@
   <data name="LimitedPartnershipType.Question" xml:space="preserve">
     <value>Which type of partners are in your limited partnership?</value>
   </data>
-  <data name="LimitedPartnershipType.IndividualPartners" xml:space="preserve">
-    <value>Individual partners</value>
-  </data>
-  <data name="LimitedPartnershipType.CompanyPartners" xml:space="preserve">
-    <value>Corporate partners</value>
-  </data>
   <data name="LimitedPartnershipType.ErrorMessage" xml:space="preserve">
     <value>Select at least one checkbox</value>
   </data>

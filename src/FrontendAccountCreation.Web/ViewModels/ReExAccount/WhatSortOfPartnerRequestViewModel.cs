@@ -7,10 +7,6 @@ public class WhatSortOfPartnerRequestViewModel : IValidatableObject
     public bool HasIndividualPartners { get; set; }
     public bool HasCompanyPartners { get; set; }
 
-    public string? IndividualPartnersLocalizer { get; set; }
-
-    public string? CompanyPartnersLocalizer { get; set; }
-
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (!HasIndividualPartners && !HasCompanyPartners)
@@ -22,4 +18,3 @@ public class WhatSortOfPartnerRequestViewModel : IValidatableObject
         }
     }
 }
-
