@@ -1,5 +1,6 @@
 ﻿@using FrontendAccountCreation.Web.Constants
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using FrontendAccountCreation.Core.Models
 
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
 
@@ -21,13 +22,13 @@
 							@SharedLocalizer["Continue"]
 						</button>
 
-						@if (Model.TheyManageOrControlOrganisation.HasValue && Model.TheyManageOrControlOrganisation.Value != FrontendAccountCreation.Core.Models.YesNoNotSure.Yes)
+						@if (Model.TheyManageOrControlOrganisation.HasValue && Model.TheyManageOrControlOrganisation.Value != YesNoNotSure.Yes)
 						{
 							<a class="govuk-link"
 							   asp-action="ManageControlOrganisation"
 							   asp-controller="ApprovedPerson"
 							   asp-route-invitePerson="true">
-								@Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
+							   @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
 							</a>
 						}
 						else
@@ -36,7 +37,7 @@
 							   asp-action="TeamMemberRoleInOrganisation"
 							   asp-controller="ApprovedPerson"
 							   asp-route-id="@Model.Id">
-								@Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
+							   @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
 							</a>
 						}
 					</div>

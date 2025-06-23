@@ -882,11 +882,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.ApprovedPersonPartnershipCanNotBeInvited);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel
-            {
-                Id = id,
-                TheyManageOrControlOrganisation = session.TheyManageOrControlOrganisation
-            });
+            return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id, TheyManageOrControlOrganisation = session.TheyManageOrControlOrganisation });
         }
 
         [HttpPost]
