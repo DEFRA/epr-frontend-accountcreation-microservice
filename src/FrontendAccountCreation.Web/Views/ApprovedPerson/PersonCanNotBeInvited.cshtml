@@ -1,16 +1,19 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using FrontendAccountCreation.Web.Constants
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
 
 @{
     ViewData["Title"] = Localizer["PersonCanNotBeInvited.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
 }
 
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-
+                <form method="post">
                 @await Html.PartialAsync("Partials/_CannotBeInvited")
 
                 <div class="govuk-button-group">
@@ -25,7 +28,7 @@
                         @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
                     </a>
                 </div>
-
+                </form>
             </div>
         </div>
     </main>
