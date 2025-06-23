@@ -72,6 +72,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return isEligibleToBeApprovedPerson;
         }
 
+        private string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
+        {
+            return model switch
+            {
+                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
+                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
+                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
+                _ => "AddAnApprovedPerson.OptionError"
+            };
+        }
+
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
@@ -90,29 +101,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session);
                 model.IsNonUk = session.IsUkMainAddress == false;
 
-                string errorMessage;
-                if (model.IsSoleTrader)
-                {
-                    errorMessage = "AddNotApprovedPerson.SoleTrader.ErrorMessage";
-                }
-                else
-                {
-                    if (model.IsNonUk)
-                    {
-                        if (model.IsInEligibleToBeApprovedPerson)
-                        {
-                            errorMessage = "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage";
-                        }
-                        else
-                        {
-                            errorMessage = "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage";
-                        }
-                    }
-                    else
-                    {
-                        errorMessage = "AddAnApprovedPerson.OptionError";
-                    }
-                }
+                string errorMessage = GetAddApprovedPersonErrorMessageKey(model);
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
                 ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
