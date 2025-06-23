@@ -6,7 +6,7 @@
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.TeamMemberRoleInOrganisationViewModel
 
 @{
-    ViewData["Title"] = Localizer["PartnershipApprovedPersonRole.Title"];
+    ViewData["Title"] = Localizer["ApprovedPersonPartnershipRole.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
@@ -36,7 +36,7 @@
                             @await Html.PartialAsync("Partials/_TeamMemberRoleRadios", Model)
                         </fieldset>
                     </div>
-                    
+
                     <div class="govuk-button-group">
                         <button class="govuk-button" asp-controller="ApprovedPerson" asp-action="TeamMemberRoleInOrganisation" type="submit">
                             @SharedLocalizer["Continue"]
