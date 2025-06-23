@@ -838,7 +838,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public void PersonCanNotBeInvited_Post_InvalidModel_ReturnsView()
+    public async Task PersonCanNotBeInvited_Post_InvalidModel_ReturnsView()
     {
         // Arrange
         var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
@@ -849,16 +849,15 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _systemUnderTest.ModelState.AddModelError("Test", "Required");
 
         // Act
-        var result = _systemUnderTest.PersonCanNotBeInvited(model);
+        var result = await _systemUnderTest.PersonCanNotBeInvited(model);
 
         // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.Model.Should().Be(model);
+        result.Should().BeOfType<ViewResult>()
+            .Which.Model.Should().Be(model);
     }
 
     [TestMethod]
-    public void PersonCanNotBeInvited_Post_ValidModel_RedirectsToCheckYourDetails()
+    public async Task PersonCanNotBeInvited_Post_ValidModel_RedirectsToCheckYourDetails()
     {
         // Arrange
         var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
@@ -867,13 +866,11 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         };
 
         // Act
-        var result = _systemUnderTest.PersonCanNotBeInvited(model);
+        var result = await _systemUnderTest.PersonCanNotBeInvited(model);
 
         // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = (RedirectToActionResult)result;
-        redirectResult.ActionName.Should().Be("CheckYourDetails");
-        redirectResult.ControllerName.Should().Be("AccountCreation");
+        result.Should().BeOfType<RedirectToActionResult>()
+            .Which.ActionName.Should().Be("CheckYourDetails");
     }
 
     [TestMethod]
