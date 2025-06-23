@@ -481,9 +481,41 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var viewResult = (ViewResult)result;
         var model = viewResult.Model as AddApprovedPersonViewModel;
         model.Should().NotBeNull();
-        model.IsInEligibleToBeApprovedPerson.Should().BeFalse();
         model.IsLimitedPartnership.Should().BeFalse();
         model.IsLimitedLiablePartnership.Should().BeFalse();
+    }
+
+    [TestMethod]
+    [DataRow(true, false)]
+    [DataRow(false, true)]
+    [DataRow(null, true)]
+    public async Task AddApprovedPerson_Get_WhenReExManualInputSessionIsNotNull_SetsIsInEligibleToBeApprovedPersonCorrectly(
+        bool? sessionIsEligibleToBeApprovedPerson,
+        bool expectedViewModelIsIneligibleToBeApprovedPerson)
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            ReExCompaniesHouseSession = null,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                IsEligibleToBeApprovedPerson = sessionIsEligibleToBeApprovedPerson
+            }
+        };
+
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        _sessionManagerMock.Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), session)).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as AddApprovedPersonViewModel;
+        model.Should().NotBeNull();
+        model.IsInEligibleToBeApprovedPerson.Should().Be(expectedViewModelIsIneligibleToBeApprovedPerson);
     }
 
     [TestMethod]
