@@ -97,7 +97,7 @@
                 <input class="govuk-radios__input"
                        type="radio"
                        gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)"5
+                       gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)"
                        gov-first-option="true">
                 <label class="govuk-label govuk-radios__label"
                        gov-for="InviteUserOption"
@@ -105,11 +105,6 @@
                        gov-first-option="true">
                     @Localizer[$"{localizerPrefix}InviteAnotherApprovedPerson"]
                 </label>
-@*                 <input class="govuk-radios__input" type="radio" id="rdoInviteNow"
-                       name="InviteUserOption" value="@nameof(InviteUserOptions.InviteAnotherPerson)">
-                <label class="govuk-label govuk-radios__label" for="rdoInviteNow">
-                    @Localizer[$"{localizerPrefix}InviteAnotherApprovedPerson"]
-                </label> *@
             </div>
 
             <div class="govuk-radios__item">
@@ -122,12 +117,6 @@
                        gov-value="@nameof(InviteUserOptions.InviteLater)">
                     @Localizer[$"{localizerPrefix}InviteApprovedPersonLater"]
                 </label>
-
-                @*                 <input class="govuk-radios__input" type="radio" id="rdoInviteLater"
-                       name="InviteUserOption" value="@nameof(InviteUserOptions.InviteLater)">
-                <label class="govuk-label govuk-radios__label" for="rdoInviteLater">
-                    @Localizer[$"{localizerPrefix}InviteApprovedPersonLater"]
-                </label> *@
             </div>
 
         </div>

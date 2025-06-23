@@ -62,16 +62,19 @@
             <div class="govuk-radios__item">
                 <input class="govuk-radios__input" type="radio" id="rdoIAgreeToBeAnApprovedPerson"
                        gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
+                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)"
+                       gov-first-option="true">
                 <label class="govuk-label govuk-radios__label"
                        gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
+                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)"
+                       gov-first-option="true">
                     @Localizer["AddAnApprovedPerson.IAgreeToBeAnApprovedPerson"]
                 </label>
             </div>
 
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" type="radio" id="rdoIWillInviteAnotherApprovedPerson"
+                <input class="govuk-radios__input"
+                       type="radio"
                        gov-for="InviteUserOption"
                        gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
                 <label class="govuk-label govuk-radios__label"
@@ -82,7 +85,8 @@
             </div>
 
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" type="radio" id="rdoIWillInviteApprovedPersonLater"
+                <input class="govuk-radios__input"
+                       type="radio"
                        gov-for="InviteUserOption"
                        gov-value="@nameof(InviteUserOptions.InviteLater)">
                 <label class="govuk-label govuk-radios__label"
