@@ -74,8 +74,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
         {
-            //TODO: Redirect to ManageAccountPerson
-            return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
         }
 
         //TODO: Redirect to AddApprovedPerson
@@ -88,8 +87,9 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> ManageAccountPerson()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.UnincorporatedManageControl);
-        return View("ManageAccountPerson");
+        SetBackLink(session, PagePath.UnincorporatedManageAccountPerson);
+        // return View("ManageAccountPerson");
+        return View(new ReExManageAccountPersonViewModel());
     }
 
     [HttpPost]
@@ -100,19 +100,25 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.UnincorporatedManageControl);
+            SetBackLink(session, PagePath.UnincorporatedManageAccountPerson);
             return View(viewModel);
         }
 
-        //session.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
+        session.ManageAccountPersonAnswer = viewModel.ManageAccountPersonAnswer.Value;
 
-        //if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
-        //{
-        //    //TODO: Redirect to ManageAccountPerson
-        //    return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
-        //}
+        if (viewModel.ManageAccountPersonAnswer.GetValueOrDefault(ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson) == ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)
+        {
+            //TODO: Redirect to 'approved-person' page
+            return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        }
 
-        //TODO: Redirect to AddApprovedPerson
+        if (viewModel.ManageAccountPersonAnswer.GetValueOrDefault(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead) == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)
+        {
+            //TODO: Redirect to 'manage-control-organisation' page
+            return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        }
+
+        //TODO: Redirect to 'check-your-answers' page
         return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
     }
 }
