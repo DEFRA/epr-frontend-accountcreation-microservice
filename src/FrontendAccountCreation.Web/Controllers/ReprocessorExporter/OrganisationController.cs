@@ -304,6 +304,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.UserManagesOrControls = model.UserManagesOrControls;
+        session.ReExManualInputSession!.IsEligibleToBeApprovedPerson = model.UserManagesOrControls == YesNoNotSure.Yes;
 
         return await SaveSessionAndRedirect(session,
             nameof(ApprovedPersonController),

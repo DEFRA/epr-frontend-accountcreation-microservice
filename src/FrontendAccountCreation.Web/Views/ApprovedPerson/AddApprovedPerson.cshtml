@@ -36,6 +36,7 @@
                         }
                         else
                         {
+                            //todo: should the second part be calculated in the controller?
                             if (Model.IsInEligibleToBeApprovedPerson || (Model.IsSoleTrader && !Model.IsIndividualInCharge))
                             {
                                 @await Html.PartialAsync("Partials/_AddNotApprovedPerson", Model)

@@ -22,4 +22,7 @@ public class ReExManualInputSession
     public Address? BusinessAddress { get; set; }
 
     public ReExCompanyTeamMember? TeamMember { get; set; }
+
+    //todo: in both ReExCompaniesHouseSession and here. should we move it out of both into the session?
+    public bool? IsEligibleToBeApprovedPerson { get; set; }
 }

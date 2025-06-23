@@ -43,12 +43,21 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 SetFocusId(id.Value);
             }
 
+            bool isEligibleToBeApprovedPerson = false;
+            if (session.ReExCompaniesHouseSession != null)
+            {
+                isEligibleToBeApprovedPerson = !session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson;
+            }
+            else if (session.ReExManualInputSession != null)
+            {
+                isEligibleToBeApprovedPerson = session.ReExManualInputSession.IsEligibleToBeApprovedPerson == true;
+            }
+
             var model = new AddApprovedPersonViewModel
             {
                 InviteUserOption = session.InviteUserOption?.ToString(),
                 IsOrganisationAPartnership = session.IsOrganisationAPartnership,
-                IsInEligibleToBeApprovedPerson =
-                    session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
+                IsInEligibleToBeApprovedPerson = !isEligibleToBeApprovedPerson,
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
