@@ -9,9 +9,11 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
+    [ExcludeFromCodeCoverage]
     [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
     [Route("re-ex/organisation")]
     public class ApprovedPersonController : ControllerBase<OrganisationSession>
