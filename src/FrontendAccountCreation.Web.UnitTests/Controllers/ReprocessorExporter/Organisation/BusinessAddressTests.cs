@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using Azure.Core;
+using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -197,5 +199,35 @@ public class BusinessAddressTests : OrganisationTestBase
         viewResult.Model.Should().BeOfType<ReExBusinessAddressViewModel?>();
         var resultViewModel = (ReExBusinessAddressViewModel?)viewResult.Model;
         resultViewModel!.Town.Should().Be(tooLongTown);
+    }
+
+    [TestMethod]
+    public async Task POST_WhenNonCompaniesHouseAndUnincorporatedBody_ThenNavigateToUnincorporatedFlow()
+    {
+        //Arrange
+        var request = new ReExBusinessAddressViewModel();
+
+        _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            BusinessAddress = new Core.Addresses.Address
+            {
+                BuildingName = "building name",
+                BuildingNumber = "building number",
+                Street = "street",
+                Town = "town",
+                County = "county",
+                Postcode = "b1 2AA",
+                IsManualAddress = true,
+            },
+            ProducerType = ProducerType.UnincorporatedBody
+        };
+
+        var result = await _systemUnderTest.BusinessAddress(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(UnincorporatedController.RoleInOrganisation));
     }
 }

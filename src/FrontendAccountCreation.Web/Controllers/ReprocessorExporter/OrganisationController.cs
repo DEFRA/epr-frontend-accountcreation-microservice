@@ -709,6 +709,14 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Postcode = model.Postcode;
         address.IsManualAddress = true;
 
+        if (session.OrganisationType == OrganisationType.NonCompaniesHouseCompany && session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody)
+        {
+            return await SaveSessionAndRedirect(session, 
+            controllerName: nameof(UnincorporatedController),
+            actionName: nameof(UnincorporatedController.RoleInOrganisation),
+            currentPagePath: PagePath.BusinessAddress, 
+            nextPagePath: PagePath.UnincorporatedRoleInOrganisation);
+        }
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
             PagePath.BusinessAddress, PagePath.SoleTrader);
     }

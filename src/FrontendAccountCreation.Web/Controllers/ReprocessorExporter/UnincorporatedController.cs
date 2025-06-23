@@ -23,7 +23,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> RoleInOrganisation()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        
+        SetBackLink(session, PagePath.UnincorporatedRoleInOrganisation);
         return View(new ReExRoleInOrganisationViewModel { Role = session.RoleInOrganisation });
     }
 
@@ -41,7 +41,11 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         session.RoleInOrganisation = viewModel.Role;
 
-        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl);
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(ManageControl),
+            PagePath.UnincorporatedRoleInOrganisation,
+            PagePath.UnincorporatedManageControl);
     }
 
     [HttpGet]
