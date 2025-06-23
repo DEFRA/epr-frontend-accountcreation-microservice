@@ -77,4 +77,38 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         //TODO: Redirect to AddApprovedPerson
         return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
     }
+
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedManageAccountPerson)]
+    public async Task<IActionResult> ManageAccountPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedManageControl);
+        return View("ManageAccountPerson");
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedManageAccountPerson)]
+    public async Task<IActionResult> ManageAccountPerson(ReExManageAccountPersonViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedManageControl);
+            return View(viewModel);
+        }
+
+        //session.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
+
+        //if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
+        //{
+        //    //TODO: Redirect to ManageAccountPerson
+        //    return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        //}
+
+        //TODO: Redirect to AddApprovedPerson
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+    }
 }
