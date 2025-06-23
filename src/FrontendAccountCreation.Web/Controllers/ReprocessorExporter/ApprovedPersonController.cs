@@ -9,7 +9,6 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -47,8 +46,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 InviteUserOption = session.InviteUserOption?.ToString(),
                 IsOrganisationAPartnership = session.IsOrganisationAPartnership,
-                IsInEligibleToBeApprovedPerson =
-                    session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
+                IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session),
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
@@ -57,6 +55,32 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             };
 
             return View(model);
+        }
+
+        private bool IsEligibleToBeApprovedPerson(OrganisationSession session)
+        {
+            bool isEligibleToBeApprovedPerson = false;
+            if (session.ReExCompaniesHouseSession != null)
+            {
+                isEligibleToBeApprovedPerson = !session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson;
+            }
+            else if (session.ReExManualInputSession != null)
+            {
+                isEligibleToBeApprovedPerson = session.ReExManualInputSession.IsEligibleToBeApprovedPerson == true;
+            }
+
+            return isEligibleToBeApprovedPerson;
+        }
+
+        private string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
+        {
+            return model switch
+            {
+                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
+                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
+                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
+                _ => "AddAnApprovedPerson.OptionError"
+            };
         }
 
         [HttpPost]
@@ -74,9 +98,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsOrganisationAPartnership = session.IsOrganisationAPartnership;
                 model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
-                model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
+                model.IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session);
                 model.IsNonUk = session.IsUkMainAddress == false;
-                var errorMessage = model.IsSoleTrader ? "AddNotApprovedPerson.SoleTrader.ErrorMessage" : "AddAnApprovedPerson.OptionError";
+
+                string errorMessage = GetAddApprovedPersonErrorMessageKey(model);
+
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
                 ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
                 return View(model);
@@ -118,6 +144,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var id = GetFocusId();
             if (id.HasValue)
             {
+                SetFocusId(id.Value);
                 if (model.IsSoleTrader && !model.IsIndividualInCharge)
                 {
                     return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberDetails),
@@ -125,8 +152,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 }
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
-                //to-do: code is unreachable, should it come before the redirect, or can it be deleted?
-                SetFocusId(id.Value);
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
@@ -867,14 +892,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpPost]
         [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
         [OrganisationJourneyAccess(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-        public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        public async Task<IActionResult> PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            return RedirectToAction("CheckYourDetails", "AccountCreation");
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails);
         }
 
         [HttpGet]
