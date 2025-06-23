@@ -1,7 +1,10 @@
-﻿@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
+﻿@using FrontendAccountCreation.Web.Constants
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
 
 @{
     ViewData["Title"] = Localizer["CannotInviteThisPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 }
 
 <div class="govuk-width-container">
