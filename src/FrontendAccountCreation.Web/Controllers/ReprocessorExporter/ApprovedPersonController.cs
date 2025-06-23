@@ -118,6 +118,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var id = GetFocusId();
             if (id.HasValue)
             {
+                SetFocusId(id.Value);
                 if (model.IsSoleTrader && !model.IsIndividualInCharge)
                 {
                     return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberDetails),
@@ -125,8 +126,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 }
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
-                //to-do: code is unreachable, should it come before the redirect, or can it be deleted?
-                SetFocusId(id.Value);
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
