@@ -186,9 +186,6 @@
   <data name="Member" xml:space="preserve">
     <value>[Welsh]Member</value>
   </data>
-  <data name="Partner" xml:space="preserve">
-    <value>[Welsh]Individual partner</value>
-  </data>
   <data name="NotSure" xml:space="preserve">
     <value>Ddim yn siŵr</value>
   </data>
@@ -198,7 +195,7 @@
   <data name="Owner" xml:space="preserve">
     <value>Owner</value>
   </data>
-  <data name="JustPartner" xml:space="preserve">
+  <data name="Partner" xml:space="preserve">
     <value>Partner</value>
   </data>
   <data name="CompanyDirectorOrSecretary" xml:space="preserve">
