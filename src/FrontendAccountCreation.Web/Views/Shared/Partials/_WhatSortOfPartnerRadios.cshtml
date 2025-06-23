@@ -1,0 +1,28 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@model WhatSortOfPartnerRequestViewModel
+@inject IViewLocalizer Localizer
+
+<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+    <div class="govuk-checkboxes__item">
+        <input class="govuk-checkboxes__input"
+               id="hasIndividualPartners"
+               type="checkbox"
+               asp-for="HasIndividualPartners"
+               name="hasIndividualPartners">
+        <label class="govuk-label govuk-checkboxes__label"
+               for="hasIndividualPartners">
+            @Localizer[Model.IndividualPartnersLocalizer].Value
+        </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+        <input class="govuk-checkboxes__input"
+               id="hasCompanyPartners"
+               type="checkbox"
+               asp-for="HasCompanyPartners"
+               name="hasCompanyPartners">
+        <label class="govuk-label govuk-checkboxes__label"
+               for="hasCompanyPartners">
+            @Localizer[Model.CompanyPartnersLocalizer].Value
+        </label>
+    </div>
+</div>

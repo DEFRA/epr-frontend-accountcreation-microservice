@@ -283,17 +283,17 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             hasCompanyPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners;
         }
 
-        return View(new LimitedPartnershipTypeRequestViewModel
+        return View(new WhatSortOfPartnerRequestViewModel
         {
-            hasCompanyPartners = hasCompanyPartners,
-            hasIndividualPartners = hasIndividualPartners
+            HasCompanyPartners = hasCompanyPartners,
+            HasIndividualPartners = hasIndividualPartners
         });
     }
 
     [HttpPost]
     [Route(PagePath.LimitedPartnershipType)]
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipType)]
-    public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
+    public async Task<IActionResult> LimitedPartnershipType(WhatSortOfPartnerRequestViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -310,8 +310,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
                 IsLimitedPartnership = true,
                 LimitedPartnership = new ReExLimitedPartnership
                 {
-                    HasIndividualPartners = model.hasIndividualPartners,
-                    HasCompanyPartners = model.hasCompanyPartners
+                    HasIndividualPartners = model.HasIndividualPartners,
+                    HasCompanyPartners = model.HasCompanyPartners
                 }
             };
         }
@@ -324,8 +324,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
                 partnership.LimitedPartnership = new ReExLimitedPartnership();
             }
 
-            partnership.LimitedPartnership.HasIndividualPartners = model.hasIndividualPartners;
-            partnership.LimitedPartnership.HasCompanyPartners = model.hasCompanyPartners;
+            partnership.LimitedPartnership.HasIndividualPartners = model.HasIndividualPartners;
+            partnership.LimitedPartnership.HasCompanyPartners = model.HasCompanyPartners;
         }
 
         return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipNamesOfPartners);

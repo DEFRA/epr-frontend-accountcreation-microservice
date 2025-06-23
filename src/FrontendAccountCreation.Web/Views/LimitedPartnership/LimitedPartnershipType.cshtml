@@ -3,11 +3,15 @@
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 
-@model LimitedPartnershipTypeRequestViewModel
+@model WhatSortOfPartnerRequestViewModel
 @{
     ViewData["Title"] = Localizer["LimitedPartnershipType.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    Model.IndividualPartnersLocalizer = "LimitedPartnershipType.IndividualPartners";
+    Model.CompanyPartnersLocalizer = "LimitedPartnershipType.CompanyPartners";
+
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
@@ -26,31 +30,8 @@
                             </legend>
 
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+                            @await Html.PartialAsync("Partials/_WhatSortOfPartnerRadios", Model)
 
-                            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" 
-                                           id="hasIndividualPartners"
-                                           type="checkbox"
-                                           asp-for="hasIndividualPartners"
-                                           name="hasIndividualPartners">
-                                    <label class="govuk-label govuk-checkboxes__label"
-                                           for="hasIndividualPartners">
-                                        @Localizer["LimitedPartnershipType.IndividualPartners"]
-                                    </label>
-                                </div>
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" 
-                                           id="hasCompanyPartners"
-                                           type="checkbox"
-                                           asp-for="hasCompanyPartners"
-                                           name="hasCompanyPartners">
-                                    <label class="govuk-label govuk-checkboxes__label"
-                                           for="hasCompanyPartners">
-                                        @Localizer["LimitedPartnershipType.CompanyPartners"]
-                                    </label>
-                                </div>
-                            </div>
                         </fieldset>
                     </div>
 
