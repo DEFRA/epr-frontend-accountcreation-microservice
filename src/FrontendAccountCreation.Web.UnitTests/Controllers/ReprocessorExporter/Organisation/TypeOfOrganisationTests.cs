@@ -22,7 +22,7 @@ public class TypeOfOrganisationTests : OrganisationTestBase
 
         _organisationSession = new OrganisationSession
         {
-            Journey = new List<string> { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.IsUkMainAddress, PagePath.TradingName, PagePath.TypeOfOrganisation },
+            Journey = new List<string> { PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse,PagePath.IsUkMainAddress, PagePath.TradingName, PagePath.TypeOfOrganisation },
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession()
         };
 
@@ -52,15 +52,12 @@ public class TypeOfOrganisationTests : OrganisationTestBase
     public async Task TypeOfOrganisation_Post_InvalidModelState_ReturnsViewWithModel()
     {
         // Arrange
-        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney))
-            .ReturnsAsync(true);
-
         var request = new ReExTypeOfOrganisationViewModel(); // missing ProducerType
 
         _systemUnderTest.ModelState.AddModelError("ProducerType", "Required");
 
         // Act
-        var result = await _systemUnderTest.TypeOfOrganisation(_featureManagerMock.Object, request);
+        var result = await _systemUnderTest.TypeOfOrganisation(request);
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -74,16 +71,13 @@ public class TypeOfOrganisationTests : OrganisationTestBase
     public async Task TypeOfOrganisation_Post_ValidModel_SavesSessionAndRedirectsToUkNation()
     {
         // Arrange
-        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney))
-            .ReturnsAsync(true);
-
         var request = new ReExTypeOfOrganisationViewModel
         {
             ProducerType = ProducerType.Partnership
         };
 
         // Act
-        var result = await _systemUnderTest.TypeOfOrganisation(_featureManagerMock.Object, request);
+        var result = await _systemUnderTest.TypeOfOrganisation(request);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -96,14 +90,12 @@ public class TypeOfOrganisationTests : OrganisationTestBase
                 s.ReExCompaniesHouseSession == null
             )), Times.Once);
     }
+
 
     [TestMethod]
     public async Task TypeOfOrganisation_Post_WhenReExManualInputSessionIsNull_InitializesSessionAndSaves()
     {
         // Arrange
-        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney))
-            .ReturnsAsync(true);
-
         _organisationSession.ReExManualInputSession = null;
         var request = new ReExTypeOfOrganisationViewModel
         {
@@ -111,7 +103,7 @@ public class TypeOfOrganisationTests : OrganisationTestBase
         };
 
         // Act
-        var result = await _systemUnderTest.TypeOfOrganisation(_featureManagerMock.Object, request);
+        var result = await _systemUnderTest.TypeOfOrganisation(request);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -124,58 +116,5 @@ public class TypeOfOrganisationTests : OrganisationTestBase
                 s.ReExManualInputSession.ProducerType == ProducerType.Partnership &&
                 s.ReExCompaniesHouseSession == null
             )), Times.Once);
-    }
-
-    [TestMethod]
-    [DataRow(ProducerType.SoleTrader)]
-    [DataRow(ProducerType.UnincorporatedBody)]
-    public async Task TypeOfOrganisation_Post_WhenGivenNonPartnership_FeatureFlagIsNotRequired(ProducerType producerType)
-    {
-        // Arrange
-        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney))
-            .ReturnsAsync(false);
-
-        _organisationSession.ReExManualInputSession = null;
-        var request = new ReExTypeOfOrganisationViewModel
-        {
-            ProducerType = producerType
-        };
-
-        // Act
-        var result = await _systemUnderTest.TypeOfOrganisation(_featureManagerMock.Object, request);
-
-        // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.UkNation));
-
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
-            It.IsAny<ISession>(),
-            It.Is<OrganisationSession>(s =>
-                s.ReExManualInputSession != null &&
-                s.ReExManualInputSession.ProducerType == producerType &&
-                s.ReExCompaniesHouseSession == null
-            )), Times.Once);
-    }
-
-    [TestMethod]
-    public async Task TypeOfOrganisation_Post_WhenGivenPartnership_FeatureFlagIsRequired()
-    {
-        // Arrange
-        _featureManagerMock.Setup(f => f.IsEnabledAsync(FeatureFlags.AddOrganisationNonCompanyHousePartnerJourney))
-            .ReturnsAsync(false);
-
-        _organisationSession.ReExManualInputSession = null;
-        var request = new ReExTypeOfOrganisationViewModel
-        {
-            ProducerType = ProducerType.Partnership
-        };
-
-        // Act
-        var result = await _systemUnderTest.TypeOfOrganisation(_featureManagerMock.Object, request);
-
-        // Assert
-        result.Should().BeOfType<RedirectResult>();
-
-        ((RedirectResult)result).Url.Should().Be(PagePath.PageNotFoundReEx);
     }
 }
