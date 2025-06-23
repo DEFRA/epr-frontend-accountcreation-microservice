@@ -23,6 +23,6 @@ public class ReExManualInputSession
 
     public ReExCompanyTeamMember? TeamMember { get; set; }
 
-    // this is both in ReExCompaniesHouseSession and here. we cove it out of both, into the root session
+    // this is both in ReExCompaniesHouseSession and here. we could move it out of both, into the root session
     public bool? IsEligibleToBeApprovedPerson { get; set; }
 }
