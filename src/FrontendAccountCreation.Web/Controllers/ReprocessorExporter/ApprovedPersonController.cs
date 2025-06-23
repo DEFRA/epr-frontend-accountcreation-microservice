@@ -46,15 +46,41 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 InviteUserOption = session.InviteUserOption?.ToString(),
                 IsOrganisationAPartnership = session.IsOrganisationAPartnership,
-                IsInEligibleToBeApprovedPerson =
-                    session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false,
+                IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session),
                 IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false,
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
-                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsNonUk = session.IsUkMainAddress == false
             };
 
             return View(model);
+        }
+
+        private bool IsEligibleToBeApprovedPerson(OrganisationSession session)
+        {
+            bool isEligibleToBeApprovedPerson = false;
+            if (session.ReExCompaniesHouseSession != null)
+            {
+                isEligibleToBeApprovedPerson = !session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson;
+            }
+            else if (session.ReExManualInputSession != null)
+            {
+                isEligibleToBeApprovedPerson = session.ReExManualInputSession.IsEligibleToBeApprovedPerson == true;
+            }
+
+            return isEligibleToBeApprovedPerson;
+        }
+
+        private string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
+        {
+            return model switch
+            {
+                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
+                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
+                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
+                _ => "AddAnApprovedPerson.OptionError"
+            };
         }
 
         [HttpPost]
@@ -72,8 +98,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsOrganisationAPartnership = session.IsOrganisationAPartnership;
                 model.IsLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false;
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
-                model.IsInEligibleToBeApprovedPerson = session.ReExCompaniesHouseSession?.IsInEligibleToBeApprovedPerson ?? false;
-                var errorMessage = model.IsSoleTrader ? "AddNotApprovedPerson.SoleTrader.ErrorMessage" : "AddAnApprovedPerson.OptionError";
+                model.IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session);
+                model.IsNonUk = session.IsUkMainAddress == false;
+
+                string errorMessage = GetAddApprovedPersonErrorMessageKey(model);
+
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
                 ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
                 return View(model);
@@ -86,30 +115,81 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
             {
                 session.IsApprovedUser = true;
-				return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
+                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
             }
 
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
-                return session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true }
-                    ? await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.AddAnApprovedPerson, PagePath.MemberPartnership)
-                    : await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+                string actionName, nextPagePath;
+
+                if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
+                {
+                    actionName = nameof(MemberPartnership);
+                    nextPagePath = PagePath.MemberPartnership;
+                }
+                else if (session.IsCompaniesHouseFlow)
+                {
+                    actionName = nameof(TeamMemberRoleInOrganisation);
+                    nextPagePath = PagePath.MemberPartnership;
+                }
+                else
+                {
+                    actionName = nameof(ManageControlOrganisation);
+                    nextPagePath = PagePath.ManageControlOrganisation;
+                }
+
+                return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
             }
 
             var id = GetFocusId();
             if (id.HasValue)
             {
-                if(model.IsSoleTrader && !model.IsIndividualInCharge)
+                SetFocusId(id.Value);
+                if (model.IsSoleTrader && !model.IsIndividualInCharge)
                 {
                     return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberDetails),
                     PagePath.AddAnApprovedPerson, PagePath.SoleTraderTeamMemberDetails);
                 }
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
-                SetFocusId(id.Value);
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
+        }
+
+        [HttpGet]
+        [Route(PagePath.ManageControlOrganisation)]
+        [OrganisationJourneyAccess(PagePath.ManageControlOrganisation)]
+        public async Task<IActionResult> ManageControlOrganisation()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.ManageControlOrganisation);
+
+            return View(new ManageControlOrganisationViewModel
+            {
+                TheyManageOrControlOrganisation = session.TheyManageOrControlOrganisation
+            });
+        }
+
+        [HttpPost]
+        [Route(PagePath.ManageControlOrganisation)]
+        [OrganisationJourneyAccess(PagePath.ManageControlOrganisation)]
+        public async Task<IActionResult> ManageControlOrganisation(ManageControlOrganisationViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.ManageControlOrganisation);
+                return View(model);
+            }
+
+            session.TheyManageOrControlOrganisation = model.TheyManageOrControlOrganisation;
+
+            return await SaveSessionAndRedirect(session,
+                nameof(TeamMemberDetails), 
+                PagePath.ManageControlOrganisation,
+                PagePath.TeamMemberDetails);
         }
 
         [HttpGet]
@@ -127,7 +207,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var viewModel = new TeamMemberRoleInOrganisationViewModel();
             var llpViewModel = new IsMemberPartnershipViewModel();
-            
+
             var id = GetFocusId();
 
             if (id.HasValue)
@@ -157,8 +237,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View("ApprovedPersonPartnershipRole", viewModel);
             }
 
-            return isLimitedLiabilityPartnership ? 
-                View("MemberPartnership", llpViewModel) : 
+            return isLimitedLiabilityPartnership ?
+                View("MemberPartnership", llpViewModel) :
                 View(viewModel);
         }
 
@@ -491,7 +571,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var approvedPersonViewModel = new ApprovedPersonViewModel
             {
                 IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
-                IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false)
+                IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
+                IsApprovedUser = session.IsApprovedUser,
+                ProducerType = session.ReExManualInputSession?.ProducerType
             };
 
             var id = GetFocusId();
@@ -541,7 +623,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             //to-do: will this mean going back will loop forward?
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPersonSoleTrader);
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderContinue,  PagePath.CheckYourDetails);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderContinue, PagePath.CheckYourDetails);
         }
 
         [HttpGet]
@@ -562,7 +644,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 var index = session.ReExCompaniesHouseSession.TeamMembers.FindIndex(0, x => x.Id.Equals(id));
                 isMember = index is >= 0 ? YesNoAnswer.Yes : YesNoAnswer.No;
             }
-            
+
             var viewModel = new IsMemberPartnershipViewModel
             {
                 IsMemberPartnership = isMember
@@ -762,7 +844,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     viewModel.reExCompanyTeamMembers.Add(teamMember);
                 }
             }
-            
+
             _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(viewModel);
@@ -774,10 +856,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> CheckYourDetailsPost()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            return await SaveSessionAndRedirect(session, 
-                controllerName: nameof(OrganisationController), 
+            return await SaveSessionAndRedirect(session,
+                controllerName: nameof(OrganisationController),
                 actionName: nameof(OrganisationController.Declaration),
-                currentPagePath: PagePath.CheckYourDetails, 
+                currentPagePath: PagePath.CheckYourDetails,
                 nextPagePath: PagePath.Declaration);
         }
 
@@ -796,14 +878,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpPost]
         [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
         [OrganisationJourneyAccess(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-        public IActionResult PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        public async Task<IActionResult> PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            return RedirectToAction("CheckYourDetails", "AccountCreation");
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails);
         }
 
         [HttpGet]
@@ -817,7 +899,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
         }
-        
+
         [HttpPost]
         [Route(PagePath.CanNotInviteThisPerson)]
         [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]

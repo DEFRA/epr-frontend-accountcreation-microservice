@@ -1,4 +1,9 @@
-﻿<div class="govuk-width-container">
+﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Core.Sessions
+
+@model ApprovedPersonViewModel
+
+<div class="govuk-width-container">
 	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
 		<div class="govuk-grid-row">
 			<div class="govuk-grid-column-two-thirds">
@@ -10,7 +15,17 @@
 					</legend>
 				</fieldset>
 
-				<p class="govuk-body">@Localizer["_NonPartnershipApprovedPerson.Description"].Value</p>
+				<p class="govuk-body">
+					@if (Model.ProducerType != null && Model.ProducerType == ProducerType.NonUkOrganisation && Model.IsApprovedUser)
+					{
+						// approvded person for a nonCompanyhouse non-UK organisation flow
+						@Localizer["_NonPartnershipApprovedPerson.NonUkOrganisation.ApprovedPerson.Description"].Value
+					}
+					else
+					{
+						@Localizer["_NonPartnershipApprovedPerson.Description"].Value
+					}
+				</p>
 
 				<p class="govuk-body">@Localizer["_NonPartnershipApprovedPerson.YouCanNow"].Value</p>
 

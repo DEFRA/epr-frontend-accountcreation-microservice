@@ -121,7 +121,7 @@
     <value>As an individual named on Companies House you are now an 'approved person' for your organisation.</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.Title" xml:space="preserve">
-    <value>approved-person</value>
+    <value>Approved person</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.Header" xml:space="preserve">
     <value>You are now an approved person</value>
@@ -135,10 +135,10 @@
   <data name="_NonPartnershipApprovedPerson.Invite" xml:space="preserve">
     <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
   </data>
-  <data name="_NonPartnershipApprovedPerson.Title" xml:space="preserve">
-    <value>Approved person</value>
-  </data>
   <data name="_NonPartnershipApprovedPerson.YouCanNow" xml:space="preserve">
     <value>You can now:</value>
+  </data>
+  <data name="_NonPartnershipApprovedPerson.NonUkOrganisation.ApprovedPerson.Description" xml:space="preserve">
+    <value>As a person with control of management of your business, you are now an approved person for your organisation.</value>
   </data>
 </root>

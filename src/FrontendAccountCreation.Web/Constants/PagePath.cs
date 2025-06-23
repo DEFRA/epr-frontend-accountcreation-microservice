@@ -47,6 +47,8 @@ public static class PagePath
     public const string NotImplemented = "not-implemented";
     public const string AddressOverseas = "address-overseas";
     public const string UkRegulator = "uk-regulator";
+    public const string ManageControl = "manage-control";
+    public const string ManageControlOrganisation = "manage-control-organisation";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
@@ -84,6 +86,7 @@ public static class PagePath
 
     // Non Uk Non Companies House paths
     public const string NonUkOrganisationName = "nonuk-organisation-name";
+    public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";

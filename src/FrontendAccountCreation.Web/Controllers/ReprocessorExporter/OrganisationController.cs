@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Reflection;
 using System.Text.Json;
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
@@ -28,6 +30,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
+    //to-do: this is only used by one method, so we should inject it directly into the method
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
@@ -258,19 +261,56 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
         else
         {
-            if (session.IsUkMainAddress == true)
-            {
-                nextAction = nameof(IsOrganisationAPartner);
-                nextPagePath = PagePath.IsPartnership;
-            }
-            else
+            if (session.IsUkMainAddress == false)
             {
                 nextAction = nameof(AddressOverseas);
                 nextPagePath = PagePath.AddressOverseas;
             }
+            else
+            {
+                nextAction = nameof(IsOrganisationAPartner);
+                nextPagePath = PagePath.IsPartnership;
+            }
         }
 
         return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
+    }
+
+    [HttpGet]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.ManageControl);
+
+        return View(new ManageControlViewModel
+        {
+            UserManagesOrControls = session.UserManagesOrControls
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl(ManageControlViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.ManageControl);
+            return View(model);
+        }
+
+        session.UserManagesOrControls = model.UserManagesOrControls;
+        session.ReExManualInputSession!.IsEligibleToBeApprovedPerson = model.UserManagesOrControls == YesNoNotSure.Yes;
+
+        return await SaveSessionAndRedirect(session,
+            nameof(ApprovedPersonController),
+            nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.ManageControl,
+            PagePath.AddAnApprovedPerson);
     }
 
     [HttpGet]
@@ -322,13 +362,47 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             PagePath.AddressOverseas, PagePath.UkRegulator);
     }
 
-    [ExcludeFromCodeCoverage]
+    /// <summary>
+    /// Non-Uk organisation flow to select regulator's UK nation.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route(PagePath.UkRegulator)]
     [OrganisationJourneyAccess(PagePath.UkRegulator)]
-    public Task<IActionResult> UkRegulator()
+    public async Task<IActionResult> UkRegulator()
     {
-        return PlaceholderPageGet(PagePath.UkRegulator);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UkRegulator);
+
+        var viewModel = new UkRegulatorForNonUKViewModel();
+        if (session?.ReExManualInputSession?.UkRegulatorNation != null)
+        {
+            viewModel.UkRegulatorNation = session.ReExManualInputSession.UkRegulatorNation;
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.UkRegulator)]
+    [OrganisationJourneyAccess(PagePath.UkRegulator)]
+    public async Task<IActionResult> UkRegulator(UkRegulatorForNonUKViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UkRegulator);
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+        session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
+
+        return await SaveSessionAndRedirect(session, 
+            actionName: nameof(NonUkRoleInOrganisation), 
+            currentPagePath: PagePath.UkRegulator, 
+            nextPagePath: PagePath.NonUkRoleInOrganisation);
     }
 
     [HttpGet]
@@ -869,8 +943,46 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.ReExManualInputSession.NonUkOrganisationName = model.NonUkOrganisationName!;
 
-        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.TradingName,
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.NonUkOrganisationName,
             PagePath.IsTradingNameDifferent);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+        var viewModel = new NonUkRoleInOrganisationViewModel()
+        {
+            NonUkRoleInOrganisation = session?.ReExManualInputSession?.NonUkRoleInOrganisation,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation(NonUkRoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+
+        session.ReExManualInputSession.NonUkRoleInOrganisation = model.NonUkRoleInOrganisation!;
+
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.NonUkRoleInOrganisation,
+            PagePath.ManageControl);
     }
 
     [HttpGet]
