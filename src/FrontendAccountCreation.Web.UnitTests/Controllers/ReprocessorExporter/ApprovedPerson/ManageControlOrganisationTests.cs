@@ -123,7 +123,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Assert
             var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
 
-            var actionMethod = yesNoNotSure == YesNoNotSure.Yes ? nameof(ApprovedPersonController.SoleTraderTeamMemberDetails) : nameof(ApprovedPersonController.PersonCanNotBeInvited);
+            var actionMethod = yesNoNotSure == YesNoNotSure.Yes ? nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails) : nameof(ApprovedPersonController.PersonCanNotBeInvited);
             redirectResult.ActionName.Should().Be(actionMethod);
             session.TheyManageOrControlOrganisation.Should().Be(yesNoNotSure);
         }

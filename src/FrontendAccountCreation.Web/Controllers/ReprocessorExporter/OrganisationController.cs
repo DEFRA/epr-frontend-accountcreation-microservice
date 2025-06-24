@@ -895,7 +895,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
-            session.ReExManualInputSession.TeamMember = null;
+            session.ReExManualInputSession.TeamMembers = null;
             return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
@@ -1013,23 +1013,27 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
         var viewModel = new ReExOrganisationSuccessViewModel
         {
-            IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
         };
 
-        if (viewModel.IsSoleTrader)
+        if (viewModel.IsCompaniesHouseFlow)
         {
-            viewModel.CompanyName = session.ReExManualInputSession?.TradingName;
-            if (session.ReExManualInputSession?.TeamMember != null)
-            {
-                viewModel.ReExCompanyTeamMembers = [session.ReExManualInputSession.TeamMember];
-            }
+            var company = session.ReExCompaniesHouseSession?.Company;
+            viewModel.CompanyName = company?.Name;
+            viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
         }
         else
         {
-            viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
-            viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+            var manualInput = session.ReExManualInputSession;
+            viewModel.IsSoleTrader = manualInput?.ProducerType == ProducerType.SoleTrader;
+            viewModel.CompanyName = viewModel.IsSoleTrader
+                ? manualInput?.TradingName
+                : manualInput?.NonUkOrganisationName;
+
+            viewModel.ReExCompanyTeamMembers = manualInput?.TeamMembers;
         }
 
         return View(viewModel);

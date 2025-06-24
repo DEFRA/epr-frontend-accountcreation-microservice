@@ -9,6 +9,8 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -147,8 +149,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 SetFocusId(id.Value);
                 if (model.IsSoleTrader && !model.IsIndividualInCharge)
                 {
-                    return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberDetails),
-                    PagePath.AddAnApprovedPerson, PagePath.SoleTraderTeamMemberDetails);
+                    return await SaveSessionAndRedirect(session, nameof(NonCompaniesHouseTeamMemberDetails),
+                    PagePath.AddAnApprovedPerson, PagePath.NonCompaniesHouseTeamMemberDetails);
                 }
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation),
                     PagePath.AddAnApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
@@ -189,9 +191,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (model.TheyManageOrControlOrganisation.HasValue && model.TheyManageOrControlOrganisation.Value == Core.Models.YesNoNotSure.Yes)
             {
                 return await SaveSessionAndRedirect(session,
-                    nameof(SoleTraderTeamMemberDetails),
+                    nameof(NonCompaniesHouseTeamMemberDetails),
                     PagePath.ManageControlOrganisation,
-                    PagePath.SoleTraderTeamMemberDetails);
+                    PagePath.NonCompaniesHouseTeamMemberDetails);
             }
             else
             {
@@ -358,82 +360,129 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.SoleTraderTeamMemberDetails)]
-        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberDetails)]
-        public async Task<IActionResult> SoleTraderTeamMemberDetails()
+        [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(Guid? id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.SoleTraderTeamMemberDetails);
 
+            SetBackLink(session, PagePath.NonCompaniesHouseTeamMemberDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var viewModel = new SoleTraderTeamMemberViewModel();
+            var viewModel = new NonCompaniesHouseTeamMemberViewModel();
 
-            if (session.ReExManualInputSession?.TeamMember != null)
+            if (id.HasValue)
             {
-                viewModel.FirstName = session.ReExManualInputSession.TeamMember.FirstName;
-                viewModel.LastName = session.ReExManualInputSession.TeamMember.LastName;
-                viewModel.Telephone = session.ReExManualInputSession.TeamMember.TelephoneNumber;
-                viewModel.Email = session.ReExManualInputSession.TeamMember.Email;
+                var teamMember = session.ReExManualInputSession?.TeamMembers?
+                    .FirstOrDefault(member => member.Id == id.Value);
+
+                if (teamMember != null)
+                {
+                    viewModel = new NonCompaniesHouseTeamMemberViewModel
+                    {
+                        Id = teamMember.Id,
+                        FirstName = teamMember.FirstName,
+                        LastName = teamMember.LastName,
+                        Telephone = teamMember.TelephoneNumber,
+                        Email = teamMember.Email
+                    };
+                }
             }
 
             return View(viewModel);
         }
 
         [HttpPost]
-        [Route(PagePath.SoleTraderTeamMemberDetails)]
-        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberDetails)]
-        public async Task<IActionResult> SoleTraderTeamMemberDetails(SoleTraderTeamMemberViewModel model)
+        [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(NonCompaniesHouseTeamMemberViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
             if (!ModelState.IsValid)
             {
-                SetBackLink(session!, PagePath.SoleTraderTeamMemberDetails);
+                SetBackLink(session, PagePath.NonCompaniesHouseTeamMemberDetails);
                 return View(model);
             }
 
-            var teamMember = session!.ReExManualInputSession!.TeamMember ??= new ReExCompanyTeamMember();
+            var teamMembers = session.ReExManualInputSession!.TeamMembers ??= new List<ReExCompanyTeamMember>();
+            var existingMember = teamMembers.FirstOrDefault(m => m.Id == model.Id);
 
-            teamMember.FirstName = model.FirstName;
-            teamMember.LastName = model.LastName;
-            teamMember.TelephoneNumber = model.Telephone;
-            teamMember.Email = model.Email;
-            teamMember.Role = ReExTeamMemberRole.SoleTrader;
+            if (existingMember != null)
+            {
+                existingMember.FirstName = model.FirstName;
+                existingMember.LastName = model.LastName;
+                existingMember.TelephoneNumber = model.Telephone;
+                existingMember.Email = model.Email;
+            }
+            else
+            {
+                teamMembers.Add(new ReExCompanyTeamMember
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    TelephoneNumber = model.Telephone,
+                    Email = model.Email,
+                });
+            }
 
-            return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberCheckInvitationDetails), PagePath.SoleTraderTeamMemberDetails,
-                PagePath.SoleTraderTeamMemberCheckInvitationDetails);
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(NonCompaniesHouseTeamMemberCheckInvitationDetails),
+                PagePath.NonCompaniesHouseTeamMemberDetails,
+                PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails);
         }
 
+
         [HttpGet]
-        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
-        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
-        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetails()
+        [Route(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberCheckInvitationDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(session.ReExManualInputSession?.TeamMember);
+            var model = new NonCompaniesHouseTeamMemberCheckInvitationDetailsViewModel
+            {
+                TeamMembers = session.ReExManualInputSession?.TeamMembers,
+                IsNonUk = session.IsUkMainAddress == false,
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [Route(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberCheckInvitationDetailsPost()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails, PagePath.CheckYourDetails);
         }
 
         [HttpPost]
-        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
-        [OrganisationJourneyAccess(PagePath.SoleTraderTeamMemberCheckInvitationDetails)]
-        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetailsPost()
+        [Route(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete(Guid? id)
         {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.SoleTraderTeamMemberCheckInvitationDetails, PagePath.CheckYourDetails);
-        }
+                var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        [HttpGet]
-        [Route(PagePath.SoleTraderTeamMemberCheckInvitationDetailsDelete)]
-        public async Task<IActionResult> SoleTraderTeamMemberCheckInvitationDetailsDelete()
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            session.ReExManualInputSession.TeamMember = null;
+                if (id.HasValue && session.ReExManualInputSession?.TeamMembers != null)
+                {
+                    session.ReExManualInputSession.TeamMembers =
+                        session.ReExManualInputSession.TeamMembers
+                            .Where(tm => tm.Id != id.Value)
+                            .ToList();
+                }
 
-            return await SaveSessionAndRedirect(session, nameof(SoleTraderTeamMemberCheckInvitationDetails),
-                PagePath.SoleTraderTeamMemberCheckInvitationDetails, null);
+                return await SaveSessionAndRedirect(
+                    session,
+                    nameof(NonCompaniesHouseTeamMemberCheckInvitationDetails),
+                    PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails,
+                    null
+                );
         }
 
         [HttpGet]
@@ -818,6 +867,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> CheckYourDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
             ViewBag.MakeChangesToYourLimitedCompanyLink = _urlOptions.MakeChangesToYourLimitedCompany;
 
             var viewModel = new ReExCheckYourDetailsViewModel
@@ -827,38 +877,56 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 OrganisationType = session.OrganisationType,
                 IsTradingNameDifferent = session.IsTradingNameDifferent,
                 IsManualInputFlow = !session.IsCompaniesHouseFlow,
-                Nation = session.UkNation
+                Nation = session.UkNation,
+                IsNonUk = !(session.IsUkMainAddress ?? true),
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
             };
+
             if (viewModel.IsCompaniesHouseFlow)
             {
-                viewModel.BusinessAddress = session.ReExCompaniesHouseSession.Company.BusinessAddress;
-                viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
-                viewModel.CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company.CompaniesHouseNumber;
-                viewModel.RoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation;
-                viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
-                viewModel.LimitedPartnershipPartners = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
-                viewModel.IsLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
-                viewModel.reExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
-            }
-            else if (viewModel.IsManualInputFlow)
-            {
-                viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
-                viewModel.ProducerType = session.ReExManualInputSession?.ProducerType;
-                viewModel.BusinessAddress = session.ReExManualInputSession?.BusinessAddress;
-                viewModel.TradingName = session.ReExManualInputSession?.TradingName;
-                var teamMember = session.ReExManualInputSession?.TeamMember;
-                viewModel.reExCompanyTeamMembers = new List<ReExCompanyTeamMember>();
+                var companyHouseSession = session.ReExCompaniesHouseSession;
+                var company = companyHouseSession?.Company;
 
+                viewModel.BusinessAddress = company?.BusinessAddress;
+                viewModel.CompanyName = company?.Name;
+                viewModel.CompaniesHouseNumber = company?.CompaniesHouseNumber;
+                viewModel.RoleInOrganisation = companyHouseSession?.RoleInOrganisation;
+                viewModel.IsOrganisationAPartnership = session.IsOrganisationAPartnership ?? false;
+                viewModel.LimitedPartnershipPartners = companyHouseSession?.Partnership?.LimitedPartnership?.Partners;
+                viewModel.IsLimitedLiabilityPartnership = companyHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
+                viewModel.reExCompanyTeamMembers = companyHouseSession?.TeamMembers;
+            }
+
+            if (viewModel.IsSoleTrader)
+            {
+                var manualInput = session.ReExManualInputSession;
+                viewModel.ProducerType = manualInput?.ProducerType;
+                viewModel.BusinessAddress = manualInput?.BusinessAddress;
+                viewModel.TradingName = manualInput?.TradingName;
+
+                viewModel.reExCompanyTeamMembers = new List<ReExCompanyTeamMember>();
+                var teamMember = manualInput?.TeamMembers?.FirstOrDefault();
                 if (teamMember != null)
                 {
                     viewModel.reExCompanyTeamMembers.Add(teamMember);
                 }
             }
 
-            _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            if (viewModel.IsNonUk)
+            {
+                var manualInput = session.ReExManualInputSession;
+                viewModel.ProducerType = manualInput?.ProducerType;
+                viewModel.BusinessAddress = manualInput?.BusinessAddress;
+                viewModel.TradingName = manualInput?.NonUkOrganisationName;
+                viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
+                viewModel.Nation = manualInput?.UkRegulatorNation;
+            }
+
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
             return View(viewModel);
         }
+
 
         [HttpPost]
         [Route(PagePath.CheckYourDetails)]

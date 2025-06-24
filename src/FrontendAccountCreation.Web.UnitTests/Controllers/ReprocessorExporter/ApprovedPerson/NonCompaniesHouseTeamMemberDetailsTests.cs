@@ -10,7 +10,7 @@ using Moq;
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
 [TestClass]
-public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
+public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
 {
     private OrganisationSession? _orgSessionMock;
 
@@ -24,7 +24,7 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
             Journey =
             [
                 PagePath.SoleTrader,
-                PagePath.SoleTraderTeamMemberDetails
+                PagePath.NonCompaniesHouseTeamMemberDetails
             ],
             ReExManualInputSession = new ReExManualInputSession(),
             IsUserChangingDetails = false
@@ -37,13 +37,14 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
     public async Task GET_WhenTeamMemberIsNotInSession_ThenViewIsReturnedWithoutTeamMemberDetails()
     {
         //Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails();
+        var id = Guid.NewGuid();
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(id);
 
         //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<SoleTraderTeamMemberViewModel>();
-        var viewModel = (SoleTraderTeamMemberViewModel?)viewResult.Model;
+        viewResult.Model.Should().BeOfType<NonCompaniesHouseTeamMemberViewModel>();
+        var viewModel = (NonCompaniesHouseTeamMemberViewModel?)viewResult.Model;
         viewModel!.FirstName.Should().BeNull();
         viewModel.LastName.Should().BeNull();
         viewModel.Email.Should().BeNull();
@@ -56,26 +57,30 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
         //Arrange
         _orgSessionMock!.ReExManualInputSession = new ReExManualInputSession
         {
-            TeamMember = new ReExCompanyTeamMember
-            {
-                FirstName = "Teddy",
-                LastName = "Drowns",
-                Email = "teammember@example.com",
-                TelephoneNumber = "01234567890"
-            }
+            TeamMembers = new List<ReExCompanyTeamMember>
+                {
+                    new ReExCompanyTeamMember
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "John",
+                        LastName = "Smith",
+                        Email = "teammember@email.com",
+                        TelephoneNumber = "01234567890"
+                    }
+                }
         };
 
         //Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails();
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(_orgSessionMock.ReExManualInputSession.TeamMembers[0].Id);
 
         //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<SoleTraderTeamMemberViewModel>();
-        var viewModel = (SoleTraderTeamMemberViewModel?)viewResult.Model;
-        viewModel!.FirstName.Should().Be("Teddy");
-        viewModel.LastName.Should().Be("Drowns");
-        viewModel.Email.Should().Be("teammember@example.com");
+        viewResult.Model.Should().BeOfType<NonCompaniesHouseTeamMemberViewModel>();
+        var viewModel = (NonCompaniesHouseTeamMemberViewModel?)viewResult.Model;
+        viewModel!.FirstName.Should().Be("John");
+        viewModel.LastName.Should().Be("Smith");
+        viewModel.Email.Should().Be("teammember@email.com");
         viewModel.Telephone.Should().Be("01234567890");
     }
 
@@ -83,7 +88,8 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
     public async Task GET_ThenBackLinkIsCorrect()
     {
         //Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails();
+        var id = Guid.NewGuid();
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(id);
 
         //Assert
         result.Should().BeOfType<ViewResult>();
@@ -92,10 +98,10 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenTeamMemberDetails_ThenRedirectToSoleTraderTeamMemberCheckInvitationDetails()
+    public async Task POST_GivenTeamMemberDetails_ThenRedirectToNonCompaniesHouseTeamMemberCheckInvitationDetails()
     {
         // Arrange
-        var request = new SoleTraderTeamMemberViewModel
+        var request = new NonCompaniesHouseTeamMemberViewModel
         {
             FirstName = "Teddy",
             LastName = "Drowns",
@@ -104,19 +110,19 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
         };
 
         // Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails(request);
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(request);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.SoleTraderTeamMemberCheckInvitationDetails));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberCheckInvitationDetails));
     }
 
     [TestMethod]
     public async Task POST_GivenTeamMemberDetails_ThenUpdatesSession()
     {
         // Arrange
-        var request = new SoleTraderTeamMemberViewModel
+        var request = new NonCompaniesHouseTeamMemberViewModel
         {
             FirstName = "Teddy",
             LastName = "Drowns",
@@ -124,30 +130,45 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
             Telephone = "01234567890"
         };
 
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
         // Act
-        await _systemUnderTest.SoleTraderTeamMemberDetails(request);
+        await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(request);
 
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
             It.IsAny<ISession>(),
             It.Is<OrganisationSession>(s =>
                 s.ReExManualInputSession != null &&
-                s.ReExManualInputSession.TeamMember != null &&
-                s.ReExManualInputSession.TeamMember.FirstName == "Teddy" &&
-                s.ReExManualInputSession.TeamMember.LastName == "Drowns" &&
-                s.ReExManualInputSession.TeamMember.Email == "teammember@example.com" &&
-                s.ReExManualInputSession.TeamMember.TelephoneNumber == "01234567890")),
-            Times.Once);
+                s.ReExManualInputSession.TeamMembers != null &&
+                s.ReExManualInputSession.TeamMembers.Any(tm =>
+                    tm.FirstName == "Teddy" &&
+                    tm.LastName == "Drowns" &&
+                    tm.Email == "teammember@example.com" &&
+                    tm.TelephoneNumber == "01234567890"
+                )
+            )),
+            Times.Once
+        );
     }
+
 
     [TestMethod]
     public async Task POST_GivenMissingTeamMemberDetails_ThenSessionNotUpdated()
     {
         // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(SoleTraderTeamMemberViewModel.FirstName), "Enter their first name");
+        _systemUnderTest.ModelState.AddModelError(nameof(NonCompaniesHouseTeamMemberViewModel.FirstName), "Enter their first name");
 
         // Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails(new SoleTraderTeamMemberViewModel());
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(new NonCompaniesHouseTeamMemberViewModel());
 
         // Assert
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
@@ -158,8 +179,8 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
     public async Task POST_GivenMissingTeamMemberDetails_ThenReturnView()
     {
         // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(SoleTraderTeamMemberViewModel.FirstName), "Enter their first name");
-        var viewModel = new SoleTraderTeamMemberViewModel
+        _systemUnderTest.ModelState.AddModelError(nameof(NonCompaniesHouseTeamMemberViewModel.FirstName), "Enter their first name");
+        var viewModel = new NonCompaniesHouseTeamMemberViewModel
         {
             FirstName = null,
             LastName = "Drowns",
@@ -168,7 +189,7 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
         };
 
         // Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails(viewModel);
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(viewModel);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -180,8 +201,8 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
         // Arrange
         const string tooLongFirstName = "123456789 123456789 123456789 123456789 123456789 1";
 
-        _systemUnderTest.ModelState.AddModelError(nameof(SoleTraderTeamMemberViewModel.FirstName), "First name must be 50 characters or less");
-        var viewModel = new SoleTraderTeamMemberViewModel
+        _systemUnderTest.ModelState.AddModelError(nameof(NonCompaniesHouseTeamMemberViewModel.FirstName), "First name must be 50 characters or less");
+        var viewModel = new NonCompaniesHouseTeamMemberViewModel
         {
             FirstName = tooLongFirstName,
             LastName = "Drowns",
@@ -190,14 +211,14 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
         };
 
         // Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails(viewModel);
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(viewModel);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
 
-        viewResult.Model.Should().BeOfType<SoleTraderTeamMemberViewModel?>();
-        var resultViewModel = (SoleTraderTeamMemberViewModel?)viewResult.Model;
+        viewResult.Model.Should().BeOfType<NonCompaniesHouseTeamMemberViewModel?>();
+        var resultViewModel = (NonCompaniesHouseTeamMemberViewModel?)viewResult.Model;
         resultViewModel!.FirstName.Should().Be(tooLongFirstName);
     }
 
@@ -205,10 +226,10 @@ public class SoleTraderTeamMemberDetailsTests : ApprovedPersonTestBase
     public async Task POST_GivenMissingTeamMemberDetails_ThenViewHasCorrectBackLink()
     {
         // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(SoleTraderTeamMemberViewModel.FirstName), "Enter their first name");
+        _systemUnderTest.ModelState.AddModelError(nameof(NonCompaniesHouseTeamMemberViewModel.FirstName), "Enter their first name");
 
         // Act
-        var result = await _systemUnderTest.SoleTraderTeamMemberDetails(new SoleTraderTeamMemberViewModel());
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(new NonCompaniesHouseTeamMemberViewModel());
 
         // Assert
         result.Should().BeOfType<ViewResult>();

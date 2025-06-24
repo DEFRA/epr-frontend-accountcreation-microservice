@@ -20,9 +20,8 @@ public class ReExManualInputSession
     public ProducerType? ProducerType { get; set; }
 
     public Address? BusinessAddress { get; set; }
-
-    public ReExCompanyTeamMember? TeamMember { get; set; }
-
     // this is both in ReExCompaniesHouseSession and here. we could move it out of both, into the root session
     public bool? IsEligibleToBeApprovedPerson { get; set; }
+
+    public List<ReExCompanyTeamMember>? TeamMembers { get; set; }
 }

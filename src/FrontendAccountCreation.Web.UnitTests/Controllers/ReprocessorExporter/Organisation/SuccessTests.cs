@@ -98,20 +98,28 @@ public class SuccessTests : OrganisationTestBase
 	[TestMethod]
 	public async Task GET_Success_ReturnsCorrectViewAndModel()
 	{
-		// Arrange
 		var session = new OrganisationSession
 		{
+			OrganisationType = OrganisationType.CompaniesHouseCompany,
 			ReExCompaniesHouseSession = new ReExCompaniesHouseSession
 			{
 				Company = new Company { Name = "Test Ltd" },
-				TeamMembers =
-                [
-                    new ReExCompanyTeamMember { FirstName = "Alice" }
-				]
+				TeamMembers = new List<ReExCompanyTeamMember>
+			{
+				new ReExCompanyTeamMember { FirstName = "Alice" }
 			}
-		};
+				}
+			};
 
-		_sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+		// Mock the session manager to return a session with IsCompaniesHouseFlow = true
+		_sessionManagerMock
+			.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+			.ReturnsAsync(session);
+
+		// Optionally, you can also mock other session properties, if needed:
+		_sessionManagerMock
+			.Setup(x => x.SaveSessionAsync(It.IsAny<ISession>(), session))
+			.Returns(Task.CompletedTask);
 
 		// Act
 		var result = await _systemUnderTest.Success();
@@ -121,10 +129,13 @@ public class SuccessTests : OrganisationTestBase
 		var viewResult = (ViewResult)result;
 		viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>();
 		var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+
 		viewModel.CompanyName.Should().Be("Test Ltd");
 		viewModel.ReExCompanyTeamMembers.Should().HaveCount(1);
-		viewModel.ReExCompanyTeamMembers![0].FirstName.Should().Be("Alice");
+		viewModel.ReExCompanyTeamMembers[0].FirstName.Should().Be("Alice");
 	}
+
+
 
 	[TestMethod]
 	public async Task GET_Success_WithCompaniesHouseSession_ReturnsCorrectViewAndModel()
@@ -132,7 +143,8 @@ public class SuccessTests : OrganisationTestBase
 		// Arrange
 		var session = new OrganisationSession
 		{
-			ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
 			{
 				Company = new Company { Name = "Test Ltd" },
 				TeamMembers = new List<ReExCompanyTeamMember>
@@ -166,11 +178,19 @@ public class SuccessTests : OrganisationTestBase
 		// Arrange
 		var session = new OrganisationSession
 		{
-			ReExManualInputSession = new ReExManualInputSession
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
 			{
 				ProducerType = ProducerType.SoleTrader,
 				TradingName = "Sole Trader Ltd",
-				TeamMember = new ReExCompanyTeamMember { FirstName = "Bob" }
+				TeamMembers = new List<ReExCompanyTeamMember>
+				   {
+					   new ReExCompanyTeamMember
+					   {
+						   Id = Guid.NewGuid(),
+						   FirstName = "Bob"
+					   }
+				   }
 			}
 		};
 
@@ -198,11 +218,12 @@ public class SuccessTests : OrganisationTestBase
 		// Arrange
 		var session = new OrganisationSession
 		{
-			ReExManualInputSession = new ReExManualInputSession
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
 			{
 				ProducerType = ProducerType.SoleTrader,
 				TradingName = "Solo Ltd",
-				TeamMember = null
+				TeamMembers = null
 			}
 		};
 
