@@ -133,6 +133,43 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
+    public async Task AddApprovedPerson_InviteAnotherApprovedPerson_CompanyHouseFlow_AddsTeamMemberRoleInOrganisationToJourney()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = nameof(InviteUserOptions.InviteAnotherPerson)
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            Journey = ["PreviousPage"]
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Capture the session that gets saved
+        OrganisationSession? savedSession = null;
+        _sessionManagerMock
+            .Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()))
+            .Callback<ISession, OrganisationSession>((_, s) => savedSession = s)
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+
+        // Verify the session was saved with PagePath.TeamMemberRoleInOrganisation as the last page in the Journey
+        savedSession.Should().NotBeNull("Session should have been saved");
+        savedSession!.Journey.Should().NotBeNull("Journey should not be null");
+        savedSession.Journey.Last().Should().Be(PagePath.TeamMemberRoleInOrganisation, "TeamMemberRoleInOrganisation should be the last entry in Journey");
+    }
+
+    [TestMethod]
     public async Task AddApprovedPerson_InviteApprovedPersonLater_RedirectsToCheckYourDetails()
     {
         // Arrange
