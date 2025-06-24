@@ -920,19 +920,12 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
                 IsInEligibleToBeApprovedPerson = isIneligible
             },
             ReExManualInputSession = isSoleTrader
-                ? new ReExManualInputSession()
+                ? new ReExManualInputSession
+                {
+                    ProducerType = ProducerType.SoleTrader
+                }
                 : null
         };
-
-        if (isSoleTrader)
-        {
-            // Simulate sole trader by setting ProducerType
-            session.ReExManualInputSession = new ReExManualInputSession();
-            // You may need to set ProducerType = ProducerType.SoleTrader if your logic checks for this
-            typeof(ReExManualInputSession)
-                .GetProperty("ProducerType")
-                ?.SetValue(session.ReExManualInputSession, ProducerType.SoleTrader);
-        }
 
         _sessionManagerMock
             .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
