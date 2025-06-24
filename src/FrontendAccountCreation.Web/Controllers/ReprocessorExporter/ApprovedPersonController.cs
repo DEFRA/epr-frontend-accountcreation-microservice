@@ -57,7 +57,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(model);
         }
 
-        private bool IsEligibleToBeApprovedPerson(OrganisationSession session)
+        private static string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
+        {
+            return model switch
+            {
+                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
+                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
+                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
+                _ => "AddAnApprovedPerson.OptionError"
+            };
+        }
+
+        private static bool IsEligibleToBeApprovedPerson(OrganisationSession session)
         {
             bool isEligibleToBeApprovedPerson = false;
             if (session.ReExCompaniesHouseSession != null)
@@ -70,17 +81,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             return isEligibleToBeApprovedPerson;
-        }
-
-        private string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
-        {
-            return model switch
-            {
-                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
-                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
-                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
-                _ => "AddAnApprovedPerson.OptionError"
-            };
         }
 
         [HttpPost]
