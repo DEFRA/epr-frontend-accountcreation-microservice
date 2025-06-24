@@ -12,6 +12,10 @@ public class ReExManualInputSession
 
     public string NonUkRoleInOrganisation { get; set; }
 
+    // this will hold current user role in organisation it is set once irrespective
+    // of flow can be in root session but that means refactoring all other flow
+    public RoleInOrganisation? RoleInOrganisation { get; set; }
+
     /// <summary>
     /// Sets regulator's nation for the non-UK organisation.
     /// </summary>

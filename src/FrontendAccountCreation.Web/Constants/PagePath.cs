@@ -88,6 +88,10 @@ public static class PagePath
     public const string NonUkOrganisationName = "nonuk-organisation-name";
     public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
+    //Non Companies House Partnership paths
+    public const string NonCompaniesHousePartnershipRole = "non-companies-house-your-partnership-role";
+    public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
+
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
     public const string LimitedPartnershipNamesOfPartnersDelete = "organisation-enter-corporate-individual-partner-names/delete";

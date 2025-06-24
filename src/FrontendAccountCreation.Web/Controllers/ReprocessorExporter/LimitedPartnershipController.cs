@@ -415,6 +415,41 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
     }
 
+    //Non company house User Role in Paternship
+    [HttpGet]
+    [Route(PagePath.NonCompaniesHousePartnershipRole)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipRole()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.NonCompaniesHousePartnershipRole);
+
+        return View(new NonCompaniesHousePartnershipRoleModel
+        {
+            RoleInOrganisation = session.ReExManualInputSession.RoleInOrganisation
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipRole)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipRole(NonCompaniesHousePartnershipRoleModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipRole);
+            return View(model);
+        }
+
+        session.ReExManualInputSession.RoleInOrganisation = model.RoleInOrganisation;
+        session.ReExManualInputSession.IsEligibleToBeApprovedPerson = model.RoleInOrganisation != RoleInOrganisation.NoneOfTheAbove;
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
+                    PagePath.NonCompaniesHousePartnershipRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+    }
+
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
     List<LimitedPartnershipPersonOrCompanyViewModel> partners)
     {

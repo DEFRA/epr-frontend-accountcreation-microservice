@@ -9,6 +9,7 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -57,6 +58,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(model);
         }
 
+        // Non companies house add approved person
+        [ExcludeFromCodeCoverage(Justification = "This is a placeholder for future implementation.")]
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson()
+        {
+            return Ok("This is a place holder and should be replaced once add approved person for non companies house partnership flow is ready");
+        }
         private bool IsEligibleToBeApprovedPerson(OrganisationSession session)
         {
             bool isEligibleToBeApprovedPerson = false;
