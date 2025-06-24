@@ -74,11 +74,43 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
         {
-            //TODO: Redirect to ManageAccountPerson
-            return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
         }
 
         //TODO: Redirect to AddApprovedPerson
         return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
     }
+
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedManageAccountPerson)]
+    public async Task<IActionResult> ManageAccountPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedManageAccountPerson);
+        return View(new ReExManageAccountPersonViewModel());
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedManageAccountPerson)]
+    public async Task<IActionResult> ManageAccountPerson(ReExManageAccountPersonViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedManageAccountPerson);
+            return View(viewModel);
+        }
+
+        var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
+        session.ManageAccountPersonAnswer = answer;
+
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(ManageControl),
+            PagePath.UnincorporatedManageControl,
+            PagePath.UnincorporatedManageAccountPerson);
+    }
+
 }
