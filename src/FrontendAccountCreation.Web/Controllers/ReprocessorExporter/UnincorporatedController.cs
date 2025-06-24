@@ -24,7 +24,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedRoleInOrganisation);
-        return View(new ReExRoleInOrganisationViewModel { Role = session.RoleInOrganisation });
+        return View(new ReExRoleInOrganisationViewModel { Role = session.ReExUnincorporatedFlowSession.RoleInOrganisation });
     }
 
     [HttpPost]
@@ -39,7 +39,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.RoleInOrganisation = viewModel.Role;
+        session.ReExUnincorporatedFlowSession.RoleInOrganisation = viewModel.Role;
 
         return await SaveSessionAndRedirect(
             session,
@@ -55,7 +55,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedManageControl);
 
-        return View(new ReExManageControlViewModel { ManageControlInUKAnswer = session.ManageControlAnswer });
+        return View(new ReExManageControlViewModel { ManageControlInUKAnswer = session.ReExUnincorporatedFlowSession.ManageControlAnswer });
     }
 
     [HttpPost]
@@ -70,7 +70,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
+        session.ReExUnincorporatedFlowSession.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
 
         if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
         {
@@ -104,7 +104,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         }
 
         var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
-        session.ManageAccountPersonAnswer = answer;
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
 
         return await SaveSessionAndRedirect(
             session,
