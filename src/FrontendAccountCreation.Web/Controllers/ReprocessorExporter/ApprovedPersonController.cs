@@ -130,7 +130,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 else if (session.IsCompaniesHouseFlow)
                 {
                     actionName = nameof(TeamMemberRoleInOrganisation);
-                    nextPagePath = PagePath.MemberPartnership;
+                    nextPagePath = PagePath.TeamMemberRoleInOrganisation;
                 }
                 else
                 {
