@@ -3,12 +3,9 @@
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 
-@* TODO: This page is a stub, to test redirection from Business Address Non Companies House journey
-The real page is to be developed next, and will require new actions and localizers, and unit tests *@
-
 @model WhatSortOfPartnerRequestViewModel
 @{
-    ViewData["Title"] = "Which type of partners are in your partnership?";
+    ViewData["Title"] = Localizer["NonCompaniesHousePartnershipType.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
@@ -25,7 +22,7 @@ The real page is to be developed next, and will require new actions and localize
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                    Which type of partners are in your partnership?
+                                    @Localizer["NonCompaniesHousePartnershipType.Question"]
                                 </h1>
                             </legend>
 

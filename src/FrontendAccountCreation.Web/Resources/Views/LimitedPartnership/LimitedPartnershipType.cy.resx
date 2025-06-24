@@ -22,7 +22,7 @@
   <data name="LimitedPartnershipType.Question" xml:space="preserve">
     <value>[Welsh]Which type of partners are in your limited partnership?</value>
   </data>
-  <data name="LimitedPartnershipType.ErrorMessage" xml:space="preserve">
+  <data name="Partial._WhatSortOfPartnerCheckBoxes.ErrorMessage" xml:space="preserve">
     <value>[Welsh]Select at least one checkbox</value>
   </data>
 </root>
