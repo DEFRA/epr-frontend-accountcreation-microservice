@@ -901,4 +901,46 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _systemUnderTest.GetFocusId().Should().BeNull();
     }
 
+    [DataTestMethod]
+    [DataRow(true, false, false, "AddNotApprovedPerson.SoleTrader.ErrorMessage", DisplayName = "SoleTrader error")]
+    [DataRow(false, true, true, "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage", DisplayName = "NonUk and ineligible error")]
+    [DataRow(false, true, false, "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage", DisplayName = "NonUk and eligible error")]
+    [DataRow(false, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "Default error")]
+    public async Task AddApprovedPerson_ModelStateInvalid_SetsCorrectErrorMessage(
+        bool isSoleTrader, bool isNonUk, bool isIneligible, string expectedError)
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel();
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            IsUkMainAddress = !isNonUk,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                IsInEligibleToBeApprovedPerson = isIneligible
+            },
+            ReExManualInputSession = isSoleTrader
+                ? new ReExManualInputSession
+                {
+                    ProducerType = ProducerType.SoleTrader
+                }
+                : null
+        };
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var modelState = viewResult.ViewData.ModelState;
+        modelState[nameof(AddApprovedPersonViewModel.InviteUserOption)].Errors
+            .Should().ContainSingle()
+            .Which.ErrorMessage.Should().Be(expectedError);
+    }
 }
