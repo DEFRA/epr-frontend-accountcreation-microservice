@@ -179,4 +179,7 @@
 	<data name="ReExManageAccountPerson.Option.Later" xml:space="preserve">
 		<value>I will invite an approved person later</value>
 	</data>
+	<data name="ReExManageAccountPerson.Confirm" xml:space="preserve">
+		<value>Confirm</value>
+	</data>
 </root>

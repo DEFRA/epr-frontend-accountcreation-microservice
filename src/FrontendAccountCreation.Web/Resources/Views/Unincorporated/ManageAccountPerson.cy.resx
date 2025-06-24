@@ -159,7 +159,7 @@
 		<value>W secretary</value>
 	</data>
 	<data name="ReExManageAccountPerson.Role.Manager" xml:space="preserve">
-		<value>manager</value>
+		<value>W manager</value>
 	</data>
 	<data name="ReExManageAccountPerson.Role.Owner" xml:space="preserve">
 		<value>W owner</value>
@@ -178,5 +178,8 @@
 	</data>
 	<data name="ReExManageAccountPerson.Option.Later" xml:space="preserve">
 		<value>W I will invite an approved person later</value>
+	</data>
+	<data name="ReExManageAccountPerson.Confirm" xml:space="preserve">
+		<value>W Confirm</value>
 	</data>
 </root>
