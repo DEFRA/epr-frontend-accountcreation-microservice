@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -240,7 +241,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         var wasLlp = partnershipSession.IsLimitedLiabilityPartnership;
 
         var isLp = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
-        var isLlp  = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+        var isLlp = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
 
         // clear existing session values when the user changes their original decision
         if ((wasLp && !isLp) || (wasLlp && !isLlp))
@@ -418,6 +419,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [HttpGet]
     [Route(PagePath.NonCompaniesHousePartnershipType)]
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
+    [ExcludeFromCodeCoverage(Justification = "Stub page, to dev test redirection from Business Address page. Will be developned next")]
     public async Task<IActionResult> NonCompaniesHousePartnershipType()
     {
         return View(new WhatSortOfPartnerRequestViewModel());
