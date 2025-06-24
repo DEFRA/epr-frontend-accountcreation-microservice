@@ -1,4 +1,5 @@
 ﻿namespace FrontendAccountCreation.Core.Sessions.ReEx;
+
 public enum ManageAccountPersonAnswer
 {
     IAgreeToBeAnApprovedPerson = 1,
