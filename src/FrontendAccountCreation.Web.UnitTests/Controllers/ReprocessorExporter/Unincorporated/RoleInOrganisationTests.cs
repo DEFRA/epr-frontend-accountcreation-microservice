@@ -32,7 +32,7 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
     {
         // Arrange
         var role = "test";
-        _organisationSession.RoleInOrganisation = role;
+        _organisationSession.ReExUnincorporatedFlowSession.RoleInOrganisation = role;
 
         // Act
         var result = await _systemUnderTest.RoleInOrganisation();
@@ -75,6 +75,6 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
 
-        _organisationSession.RoleInOrganisation.Should().Be(viewModel.Role);
+        _organisationSession.ReExUnincorporatedFlowSession.RoleInOrganisation.Should().Be(viewModel.Role);
     }
 }

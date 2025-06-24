@@ -1,5 +1,6 @@
 ﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,10 @@ public class ManageControlTests : UnincorporatedTestBase
         const ManageControlAnswer expectedAnswer = ManageControlAnswer.Yes;
         var session = new OrganisationSession
         {
-            ManageControlAnswer = expectedAnswer, 
+            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
+            {
+                ManageControlAnswer = expectedAnswer
+            },
             Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
         };
         _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
@@ -79,9 +83,8 @@ public class ManageControlTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
-        // TODO: Update when ManageAccountPerson story completed
-        //Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
-        Assert.AreEqual(ManageControlAnswer.Yes, _organisationSession.ManageControlAnswer);
+        Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
+        Assert.AreEqual(ManageControlAnswer.Yes, _organisationSession.ReExUnincorporatedFlowSession.ManageControlAnswer);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), _organisationSession), Times.Once());
     }
 
@@ -99,9 +102,9 @@ public class ManageControlTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
-        // TODO: Update when ManageAccountPerson story completed
-        //Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
-        Assert.AreEqual(expectedAnswer, _organisationSession.ManageControlAnswer);
+        // TODO: Fix this test once AddApprovedPerson is implemented
+        // Assert.AreEqual(nameof(UnincorporatedController.AddApprovedPerson), redirectResult.ActionName);
+        Assert.AreEqual(expectedAnswer, _organisationSession.ReExUnincorporatedFlowSession.ManageControlAnswer);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), _organisationSession), Times.Once());
     }
 }
