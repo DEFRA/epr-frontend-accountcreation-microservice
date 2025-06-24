@@ -293,4 +293,48 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
         redirectResult!.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHouseTeamMemberCheckInvitationDetails));
     }
 
+    [TestMethod]
+    public async Task POST_NonCompaniesHouseTeamMemberDetails_WhenIdMatches_UpdatesExistingMember()
+    {
+        // Arrange
+        var memberId = Guid.NewGuid();
+
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>
+            {
+                new ReExCompanyTeamMember
+                {
+                    Id = memberId,
+                    FirstName = "Old",
+                    LastName = "Name"
+                }
+            }
+            }
+        };
+
+        var model = new NonCompaniesHouseTeamMemberViewModel
+        {
+            Id = memberId,
+            FirstName = "Updated",
+            LastName = "User"
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock.Setup(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+
+        // Assert
+        var updated = session.ReExManualInputSession.TeamMembers.Single();
+        updated.FirstName.Should().Be("Updated");
+        updated.LastName.Should().Be("User");
+    }
+
 }
