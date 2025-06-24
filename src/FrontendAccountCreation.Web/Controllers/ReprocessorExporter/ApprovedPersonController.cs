@@ -895,7 +895,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.CanNotInviteThisPerson, PagePath.CheckYourDetails);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.ApprovedPersonPartnershipCanNotBeInvited, PagePath.CheckYourDetails);
         }
 
         [HttpGet]

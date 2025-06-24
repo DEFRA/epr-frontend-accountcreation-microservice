@@ -850,6 +850,12 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Postcode = model.Postcode;
         address.IsManualAddress = true;
 
+        if (session.ReExManualInputSession?.ProducerType == ProducerType.Partnership)
+        {
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.NonCompaniesHousePartnershipType),
+                PagePath.BusinessAddress, PagePath.NonCompaniesHousePartnershipType);
+        }
+
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
             PagePath.BusinessAddress, PagePath.SoleTrader);
     }

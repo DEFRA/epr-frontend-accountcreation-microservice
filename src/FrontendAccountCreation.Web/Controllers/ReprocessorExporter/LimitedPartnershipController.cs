@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -240,7 +241,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         var wasLlp = partnershipSession.IsLimitedLiabilityPartnership;
 
         var isLp = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedPartnership;
-        var isLlp  = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
+        var isLlp = model.TypeOfPartnership == Core.Sessions.PartnershipType.LimitedLiabilityPartnership;
 
         // clear existing session values when the user changes their original decision
         if ((wasLp && !isLp) || (wasLlp && !isLlp))
@@ -283,17 +284,17 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             hasCompanyPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners;
         }
 
-        return View(new LimitedPartnershipTypeRequestViewModel
+        return View(new WhatSortOfPartnerRequestViewModel
         {
-            hasCompanyPartners = hasCompanyPartners,
-            hasIndividualPartners = hasIndividualPartners
+            HasCompanyPartners = hasCompanyPartners,
+            HasIndividualPartners = hasIndividualPartners
         });
     }
 
     [HttpPost]
     [Route(PagePath.LimitedPartnershipType)]
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipType)]
-    public async Task<IActionResult> LimitedPartnershipType(LimitedPartnershipTypeRequestViewModel model)
+    public async Task<IActionResult> LimitedPartnershipType(WhatSortOfPartnerRequestViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -310,8 +311,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
                 IsLimitedPartnership = true,
                 LimitedPartnership = new ReExLimitedPartnership
                 {
-                    HasIndividualPartners = model.hasIndividualPartners,
-                    HasCompanyPartners = model.hasCompanyPartners
+                    HasIndividualPartners = model.HasIndividualPartners,
+                    HasCompanyPartners = model.HasCompanyPartners
                 }
             };
         }
@@ -324,8 +325,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
                 partnership.LimitedPartnership = new ReExLimitedPartnership();
             }
 
-            partnership.LimitedPartnership.HasIndividualPartners = model.hasIndividualPartners;
-            partnership.LimitedPartnership.HasCompanyPartners = model.hasCompanyPartners;
+            partnership.LimitedPartnership.HasIndividualPartners = model.HasIndividualPartners;
+            partnership.LimitedPartnership.HasCompanyPartners = model.HasCompanyPartners;
         }
 
         return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipNamesOfPartners);
@@ -414,6 +415,24 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
     }
+
+    [HttpGet]
+    [Route(PagePath.NonCompaniesHousePartnershipType)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
+    [ExcludeFromCodeCoverage(Justification = "Stub page, to dev test redirection from Business Address page. Will be developned next")]
+    public async Task<IActionResult> NonCompaniesHousePartnershipType()
+    {
+        return View(new WhatSortOfPartnerRequestViewModel());
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipType)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
+    [ExcludeFromCodeCoverage(Justification = "Stub page, to dev test redirection from Business Address page. Will be developned next")]
+    public async Task<IActionResult> NonCompaniesHousePartnershipType(WhatSortOfPartnerRequestViewModel model)
+    {
+        return View(model);
+     }
 
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
     List<LimitedPartnershipPersonOrCompanyViewModel> partners)
