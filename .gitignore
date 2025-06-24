@@ -367,4 +367,3 @@ FodyWeavers.xsd
 *.DS_Store
 /src/FrontendAccountCreation.Web/appsettings.development.json
 /src/FrontendAccountCreation.Web/appsettings.development.json
-/src/FrontendAccountCreation.Web/appsettings.development 2.json
