@@ -415,6 +415,14 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
     }
 
+    [HttpGet]
+    [Route(PagePath.NonCompaniesHousePartnershipType)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipType()
+    {
+        return View(new WhatSortOfPartnerRequestViewModel());
+    }
+
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
     List<LimitedPartnershipPersonOrCompanyViewModel> partners)
     {

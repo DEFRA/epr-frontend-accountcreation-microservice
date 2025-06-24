@@ -49,6 +49,7 @@ public static class PagePath
     public const string UkRegulator = "uk-regulator";
     public const string ManageControl = "manage-control";
     public const string ManageControlOrganisation = "manage-control-organisation";
+    public const string NonCompaniesHousePartnershipType = "non-companies-house-partner-type";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";

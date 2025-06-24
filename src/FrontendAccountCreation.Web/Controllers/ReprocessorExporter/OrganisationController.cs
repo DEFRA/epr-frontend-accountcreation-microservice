@@ -853,8 +853,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.ReExManualInputSession?.ProducerType == ProducerType.Partnership)
         {
-            return await SaveSessionAndRedirect(session, nameof(SoleTrader),
-                PagePath.BusinessAddress, PagePath.SoleTrader);
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.NonCompaniesHousePartnershipType),
+                PagePath.BusinessAddress, PagePath.NonCompaniesHousePartnershipType);
         }
 
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
