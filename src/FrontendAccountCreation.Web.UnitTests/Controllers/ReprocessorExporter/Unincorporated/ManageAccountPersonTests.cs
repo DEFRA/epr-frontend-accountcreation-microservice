@@ -26,14 +26,6 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
     {
         SetupBase();
 
-        //_organisationSession = new OrganisationSession
-        //{
-        //    Journey = new List<string> { PagePath.BusinessAddress, PagePath.UnincorporatedManageAccountPerson }
-        //};
-        //_organisationSession = new OrganisationSession
-        //{
-        //    Journey = new List<string> { PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson }
-        //};
         _organisationSession = new OrganisationSession
         {
             Journey = new List<string>
@@ -50,18 +42,16 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
     }
 
     [TestMethod]
-    public async Task ManageAccountPerson_Get_ReturnsViewWithExpectedModelAndBackLink()
+    public async Task ManageAccountPerson_Get_ReturnsExpectedViewAndBackLink()
     {
-        // Act
         var result = await _systemUnderTest.ManageAccountPerson();
 
-        // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        var model = viewResult.Model.Should().BeOfType<ReExManageAccountPersonViewModel>().Subject;
+        viewResult.Model.Should().BeOfType<ReExManageAccountPersonViewModel>();
 
-        // Assert correct back link was set
         AssertBackLink(viewResult, PagePath.UnincorporatedManageControl);
     }
+
 
 
     [TestMethod]
@@ -97,10 +87,6 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
-
-        // TODO: Correct test to reflect redirect
-        //redirect.RouteValues["fromPage"].Should().Be(PagePath.UnincorporatedManageControl);
-        //redirect.RouteValues["returnToPage"].Should().Be(PagePath.UnincorporatedManageAccountPerson);
     }
 
     [TestMethod]
@@ -118,10 +104,6 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
-
-        // TODO: Correct test to reflect redirect
-        //redirect.RouteValues["fromPage"].Should().Be(PagePath.UnincorporatedManageAccountPerson);
-        //redirect.RouteValues["returnToPage"].Should().Be(PagePath.UnincorporatedManageControl);
     }
 
     [TestMethod]
@@ -139,9 +121,5 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
-
-        // TODO: Correct test to reflect redirect
-        //redirect.RouteValues["fromPage"].Should().Be(PagePath.UnincorporatedManageAccountPerson);
-        //redirect.RouteValues["returnToPage"].Should().Be(PagePath.UnincorporatedManageControl);
     }
 }

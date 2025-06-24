@@ -88,7 +88,6 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedManageAccountPerson);
-        // return View("ManageAccountPerson");
         return View(new ReExManageAccountPersonViewModel());
     }
 
@@ -104,21 +103,14 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.ManageAccountPersonAnswer = viewModel.ManageAccountPersonAnswer.Value;
+        var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
+        session.ManageAccountPersonAnswer = answer;
 
-        if (viewModel.ManageAccountPersonAnswer.GetValueOrDefault(ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson) == ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)
-        {
-            //TODO: Redirect to 'approved-person' page
-            return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
-        }
-
-        if (viewModel.ManageAccountPersonAnswer.GetValueOrDefault(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead) == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)
-        {
-            //TODO: Redirect to 'manage-control-organisation' page
-            return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
-        }
-
-        //TODO: Redirect to 'check-your-answers' page
-        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(ManageControl),
+            PagePath.UnincorporatedManageControl,
+            PagePath.UnincorporatedManageAccountPerson);
     }
+
 }
