@@ -901,4 +901,53 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _systemUnderTest.GetFocusId().Should().BeNull();
     }
 
+    [DataTestMethod]
+    [DataRow(true, false, false, false, "AddNotApprovedPerson.SoleTrader.ErrorMessage", DisplayName = "SoleTrader error")]
+    [DataRow(false, true, true, false, "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage", DisplayName = "NonUk and ineligible error")]
+    [DataRow(false, true, false, false, "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage", DisplayName = "NonUk and eligible error")]
+    [DataRow(false, false, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "Default error")]
+    public async Task AddApprovedPerson_ModelStateInvalid_SetsCorrectErrorMessage(
+        bool isSoleTrader, bool isNonUk, bool isIneligible, bool isPartnership, string expectedError)
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel();
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = isPartnership,
+            IsUkMainAddress = !isNonUk,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                IsInEligibleToBeApprovedPerson = isIneligible
+            },
+            ReExManualInputSession = isSoleTrader
+                ? new ReExManualInputSession()
+                : null
+        };
+
+        if (isSoleTrader)
+        {
+            // Simulate sole trader by setting ProducerType
+            session.ReExManualInputSession = new ReExManualInputSession();
+            // You may need to set ProducerType = ProducerType.SoleTrader if your logic checks for this
+            typeof(ReExManualInputSession)
+                .GetProperty("ProducerType")
+                ?.SetValue(session.ReExManualInputSession, ProducerType.SoleTrader);
+        }
+
+        _sessionManagerMock
+            .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
+
+        // Act
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var modelState = viewResult.ViewData.ModelState;
+        modelState[nameof(AddApprovedPersonViewModel.InviteUserOption)].Errors
+            .Should().ContainSingle()
+            .Which.ErrorMessage.Should().Be(expectedError);
+    }
 }
