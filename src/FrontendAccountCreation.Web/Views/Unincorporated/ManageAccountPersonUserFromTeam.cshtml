@@ -1,0 +1,115 @@
+﻿@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+
+@model ReExManageAccountPersonViewModel
+
+@{
+    ViewData["Title"] = Localizer["ReExManageAccountPersonUserFromTeam.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+
+    </div>
+</div>
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <span class="govuk-caption-xl govuk-!-margin-bottom-2">PROTOTYPE</span>
+                <h1 class="govuk-heading-l">@Localizer["ReExManageAccountPersonUserFromTeam.PageTitle"]</h1>
+
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Intro.Paragraph1"]</p>
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Intro.Paragraph2"]</p>
+
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Bullet.Apply"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Bullet.DataReturns"]</li>
+                </ul>
+
+                <div class="govuk-inset-text">
+                    @Localizer["ReExManageAccountPersonUserFromTeam.Inset"]
+                </div>
+
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Note.MultiplePersons"]</p>
+
+                <h2 class="govuk-heading-m">@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Heading"]</h2>
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Description"]</p>
+
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.CEO"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Director"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Owner"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Partner"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.CompanyDirector"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Charity"]</li>
+                </ul>
+
+                <form method="post">
+
+                    <div class="govuk-form-group @(ViewData.ModelState["ManageAccountPersonAnswer"]?.Errors.Any() == true ? "govuk-form-group--error" : "")">
+                        <fieldset class="govuk-fieldset" aria-describedby="ManageAccountPersonAnswer-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h3 class="govuk-fieldset__heading">
+                                    @Localizer["ReExManageAccountPersonUserFromTeam.Invite.Heading"]
+                                </h3>
+                            </legend>
+
+                            <span id="ManageAccountPersonAnswer-hint" class="govuk-hint">
+                                @Localizer["ReExManageAccountPersonUserFromTeam.Invite.Instruction"]
+                            </span>
+
+                            @if (ViewData.ModelState["ManageAccountPersonAnswer"]?.Errors.Any() == true)
+                            {
+                                <span class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>
+                                    @ViewData.ModelState["ManageAccountPersonAnswer"].Errors.First().ErrorMessage
+                                </span>
+                            }
+
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           type="radio"
+                                           id="Answer1"
+                                           name="ManageAccountPersonAnswer"
+                                           value="@ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead"
+                                           checked="@(Model.ManageAccountPersonAnswer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)">
+                                    <label class="govuk-label govuk-radios__label" for="Answer1">
+                                        @Localizer["ReExManageAccountPersonUserFromTeam.Option.TeamMember"]
+                                    </label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           type="radio"
+                                           id="Answer2"
+                                           name="ManageAccountPersonAnswer"
+                                           value="@ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater"
+                                           checked="@(Model.ManageAccountPersonAnswer == ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
+                                    <label class="govuk-label govuk-radios__label" for="Answer2">
+                                        @Localizer["ReExManageAccountPersonUserFromTeam.Option.Later"]
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @Localizer["ReExManageAccountPersonUserFromTeam.Button.Confirm"]
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+
+

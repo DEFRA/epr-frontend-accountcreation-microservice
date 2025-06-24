@@ -72,13 +72,14 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         session.ReExUnincorporatedFlowSession.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
 
-        if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
+        if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.Yes) == ManageControlAnswer.Yes)
         {
             return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
         }
-
-        //TODO: Redirect to AddApprovedPerson
-        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(ManageAccountPersonUserFromTeam), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        }
     }
 
 
@@ -113,4 +114,34 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             PagePath.UnincorporatedManageAccountPerson);
     }
 
+    [HttpGet]
+    [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
+    public async Task<IActionResult> ManageAccountPersonUserFromTeam()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        return View(new ReExManageAccountPersonViewModel());
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
+    public async Task<IActionResult> ManageAccountPersonUserFromTeam(ReExManageAccountPersonViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+            return View(viewModel);
+        }
+
+        var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
+
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(ManageControl),
+            PagePath.UnincorporatedManageControl,
+            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+    }
 }
