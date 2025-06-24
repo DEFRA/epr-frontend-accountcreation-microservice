@@ -425,6 +425,15 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         return View(new WhatSortOfPartnerRequestViewModel());
     }
 
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipType)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
+    [ExcludeFromCodeCoverage(Justification = "Stub page, to dev test redirection from Business Address page. Will be developned next")]
+    public async Task<IActionResult> NonCompaniesHousePartnershipType(WhatSortOfPartnerRequestViewModel model)
+    {
+        return View(model);
+     }
+
     private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
     List<LimitedPartnershipPersonOrCompanyViewModel> partners)
     {
