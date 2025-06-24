@@ -238,4 +238,59 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
 
         AssertBackLink(viewResult, PagePath.SoleTrader);
     }
+
+    [TestMethod]
+    public async Task POST_NonCompaniesHouseTeamMemberDetails_WhenExistingMember_UpdatesMemberDetails()
+    {
+        // Arrange
+        var existingId = Guid.NewGuid();
+        var existingMember = new ReExCompanyTeamMember
+        {
+            Id = existingId,
+            FirstName = "OldFirst",
+            LastName = "OldLast",
+            TelephoneNumber = "0000000000",
+            Email = "old@example.com"
+        };
+
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember> { existingMember }
+            }
+        };
+
+        var model = new NonCompaniesHouseTeamMemberViewModel
+        {
+            Id = existingId,
+            FirstName = "NewFirst",
+            LastName = "NewLast",
+            Telephone = "1234567890",
+            Email = "new@example.com"
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock
+            .Setup(x => x.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+
+        // Assert
+        var updatedMember = session.ReExManualInputSession.TeamMembers.First();
+        updatedMember.FirstName.Should().Be("NewFirst");
+        updatedMember.LastName.Should().Be("NewLast");
+        updatedMember.TelephoneNumber.Should().Be("1234567890");
+        updatedMember.Email.Should().Be("new@example.com");
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHouseTeamMemberCheckInvitationDetails));
+    }
+
 }

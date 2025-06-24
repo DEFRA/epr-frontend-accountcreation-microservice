@@ -374,7 +374,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (id.HasValue)
             {
                 var teamMember = session.ReExManualInputSession?.TeamMembers?
-                    .FirstOrDefault(member => member.Id == id.Value);
+                    .Find(member => member.Id == id.Value);
 
                 if (teamMember != null)
                 {
@@ -406,7 +406,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             var teamMembers = session.ReExManualInputSession!.TeamMembers ??= new List<ReExCompanyTeamMember>();
-            var existingMember = teamMembers.FirstOrDefault(m => m.Id == model.Id);
+            var existingMember = teamMembers.Find(m => m.Id == model.Id);
 
             if (existingMember != null)
             {
