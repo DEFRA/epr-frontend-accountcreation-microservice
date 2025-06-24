@@ -34,7 +34,10 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
                 PagePath.UnincorporatedManageControl,  // source of redirect
                 PagePath.UnincorporatedManageAccountPerson  // target of redirect
             },
-            ManageAccountPersonAnswer = ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson
+            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
+            {
+                ManageAccountPersonAnswer = ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson
+            }
         };
 
 
