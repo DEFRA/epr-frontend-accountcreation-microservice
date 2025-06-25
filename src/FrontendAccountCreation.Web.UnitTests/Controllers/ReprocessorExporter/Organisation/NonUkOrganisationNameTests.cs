@@ -181,4 +181,25 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
 
         AssertBackLink(viewResult, PagePath.IsUkMainAddress);
     }
+
+    [TestMethod]
+    public async Task GET_WhenReExManualInputSessionIsNull_ThenViewModelHasNullOrganisationName()
+    {
+        // Arrange
+        _organisationSession.ReExManualInputSession = null;
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_organisationSession);
+
+        // Act
+        var result = await _systemUnderTest.NonUkOrganisationName();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<NonUkOrganisationNameViewModel>();
+        var viewModel = (NonUkOrganisationNameViewModel)viewResult.Model!;
+        viewModel.NonUkOrganisationName.Should().BeNull();
+    }
 }

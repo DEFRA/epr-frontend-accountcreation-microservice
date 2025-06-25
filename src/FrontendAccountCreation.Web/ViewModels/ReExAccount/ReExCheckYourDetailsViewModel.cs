@@ -39,6 +39,8 @@ public class ReExCheckYourDetailsViewModel
 
     public bool IsSoleTrader { get; set; }
 
+    public bool IsNonUk {  get; set; }
+
     private static string GetCheckYourDetailsKey<TEnum>(TEnum? enumValue) where TEnum : struct, Enum
     {
         if (enumValue == null || !Enum.IsDefined(typeof(TEnum), enumValue))
