@@ -891,7 +891,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
 
     [TestMethod]
     public async Task NonCompaniesHousePartnershipAddApprovedPerson_Get_ReturnsViewWithCorrectModel()
-    {      
+    {
         // Act
         var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson();
 
@@ -902,5 +902,22 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
 
         var model = (AddApprovedPersonViewModel)viewResult.Model;
         model.IsNonCompaniesHousePartnership.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipAddApprovedPerson_Post_InvalidModel_ReturnsView()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel();
+        _systemUnderTest.ModelState.AddModelError("Test", "Required");
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().Be(model);
     }
 }

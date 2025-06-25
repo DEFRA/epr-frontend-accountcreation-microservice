@@ -1015,7 +1015,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             return View(new AddApprovedPersonViewModel { IsNonCompaniesHousePartnership = true });
-
         }
 
         [HttpPost]
@@ -1055,11 +1054,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     nextPagePath = PagePath.ManageControlOrganisation;
                 }
 
-                return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
+                return await SaveSessionAndRedirect(session, actionName, PagePath.NonCompaniesHousePartnershipAddApprovedPerson, nextPagePath);
             }
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
             {
-                return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
+                return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
             }
 
             return View(model);
