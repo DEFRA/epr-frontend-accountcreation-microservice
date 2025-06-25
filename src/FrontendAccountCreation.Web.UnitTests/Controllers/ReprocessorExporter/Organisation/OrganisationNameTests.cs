@@ -3,7 +3,6 @@ using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,7 @@ using Moq;
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 [TestClass]
-public class NonUkOrganisationNameTests : OrganisationTestBase
+public class OrganisationNameTests : OrganisationTestBase
 {
     private OrganisationSession _organisationSession = null!;
 
@@ -180,5 +179,26 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
         var viewResult = (ViewResult)result;
 
         AssertBackLink(viewResult, PagePath.IsUkMainAddress);
+    }
+
+    [TestMethod]
+    public async Task GET_WhenReExManualInputSessionIsNull_ThenViewModelHasNullOrganisationName()
+    {
+        // Arrange
+        _organisationSession.ReExManualInputSession = null;
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_organisationSession);
+
+        // Act
+        var result = await _systemUnderTest.OrganisationName();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<OrganisationNameViewModel>();
+        var viewModel = (OrganisationNameViewModel)viewResult.Model!;
+        viewModel.OrganisationName.Should().BeNull();
     }
 }

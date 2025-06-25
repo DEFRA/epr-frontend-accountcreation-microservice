@@ -49,6 +49,7 @@ public static class PagePath
     public const string UkRegulator = "uk-regulator";
     public const string ManageControl = "manage-control";
     public const string ManageControlOrganisation = "manage-control-organisation";
+    public const string NonCompaniesHousePartnershipType = "non-companies-house-partner-type";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
@@ -58,13 +59,13 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationAdd = "check-companies-house-role/add";
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
 
-    public const string SoleTraderTeamMemberDetails = "team-member-details";
+    public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
 
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";
 
-    public const string SoleTraderTeamMemberCheckInvitationDetails = "soletrader-check-invitation-details";
-    public const string SoleTraderTeamMemberCheckInvitationDetailsDelete = "soletrader-check-invitation-details/delete";
+    public const string NonCompaniesHouseTeamMemberCheckInvitationDetails = "non-companies-house-check-invitation-details";
+    public const string NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete = "non-companies-house-check-invitation-details/delete";
 
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";

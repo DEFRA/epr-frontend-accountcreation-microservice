@@ -16,11 +16,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LimitedPartnershipType.Title" xml:space="preserve">
-    <value>Type of partners</value>
+  <data name="NonCompaniesHousePartnershipType.Title" xml:space="preserve">
+    <value>partner-type-2</value>
   </data>
-  <data name="LimitedPartnershipType.Question" xml:space="preserve">
-    <value>Which type of partners are in your limited partnership?</value>
+  <data name="NonCompaniesHousePartnershipType.Question" xml:space="preserve">
+    <value>Which type of partners are in your partnership?</value>
   </data>
   <data name="Partial._WhatSortOfPartnerCheckBoxes.ErrorMessage" xml:space="preserve">
     <value>Select at least one checkbox</value>

@@ -58,7 +58,7 @@ public class LimitedPartnershipPersonOrCompanyViewModelTests
     [TestMethod]
     public void Maps_To_Person_From_ReExLimitedPartnershipPersonOrCompany()
     {
-        ReExLimitedPartnershipPersonOrCompany fromModel = new()
+        ReExPersonOrCompanyPartner fromModel = new()
         {
             Id = Guid.NewGuid(),
             IsPerson = true,
@@ -75,7 +75,7 @@ public class LimitedPartnershipPersonOrCompanyViewModelTests
     [TestMethod]
     public void Maps_To_Company_From_ReExLimitedPartnershipPersonOrCompany()
     {
-        ReExLimitedPartnershipPersonOrCompany fromModel = new()
+        ReExPersonOrCompanyPartner fromModel = new()
         {
             Id = Guid.NewGuid(),
             IsPerson = false,
