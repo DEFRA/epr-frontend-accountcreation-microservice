@@ -120,12 +120,12 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
-        return View(new ReExManageAccountPersonViewModel());
+        return View(new ReExManageAccountPersonUserFromTeamViewModel());
     }
 
     [HttpPost]
     [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
-    public async Task<IActionResult> ManageAccountPersonUserFromTeam(ReExManageAccountPersonViewModel viewModel)
+    public async Task<IActionResult> ManageAccountPersonUserFromTeam(ReExManageAccountPersonUserFromTeamViewModel viewModel)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -135,13 +135,23 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
+        var answer = viewModel.ManageAccountPersonAnswer!.Value;
         session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
 
-        return await SaveSessionAndRedirect(
-            session,
-            nameof(ManageControl),
-            PagePath.UnincorporatedManageControl,
-            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        var (action, returnToPage) = answer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead
+            ? (nameof(ManageControl), PagePath.UnincorporatedManageControl)
+            : (nameof(UnincorporatedCheckYourDetails), PagePath.UnincorporatedCheckYourDetails);
+
+        return await SaveSessionAndRedirect(session, action, returnToPage, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+    }
+
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedCheckYourDetails)]
+    public async Task<IActionResult> UnincorporatedCheckYourDetails()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedCheckYourDetails);
+        return View(new ReExCheckYourDetailsViewModel());
     }
 }

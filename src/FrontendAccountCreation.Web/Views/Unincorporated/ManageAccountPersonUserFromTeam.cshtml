@@ -3,7 +3,7 @@
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 
-@model ReExManageAccountPersonViewModel
+@model ReExManageAccountPersonUserFromTeamViewModel
 
 @{
     ViewData["Title"] = Localizer["ReExManageAccountPersonUserFromTeam.Title"];
@@ -22,7 +22,8 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
 
-                <span class="govuk-caption-xl govuk-!-margin-bottom-2">PROTOTYPE</span>
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
                 <h1 class="govuk-heading-l">@Localizer["ReExManageAccountPersonUserFromTeam.PageTitle"]</h1>
 
                 <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Intro.Paragraph1"]</p>
@@ -44,7 +45,6 @@
 
                 <ul class="govuk-list govuk-list--bullet">
                     <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.CEO"]</li>
-                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Director"]</li>
                     <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Owner"]</li>
                     <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Partner"]</li>
                     <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.CompanyDirector"]</li>
@@ -61,17 +61,11 @@
                                 </h3>
                             </legend>
 
-                            <span id="ManageAccountPersonAnswer-hint" class="govuk-hint">
+                            <p id="ManageAccountPersonAnswer-hint" class="govuk-hint govuk-!-margin-bottom-6">
                                 @Localizer["ReExManageAccountPersonUserFromTeam.Invite.Instruction"]
-                            </span>
+                            </p>
 
-                            @if (ViewData.ModelState["ManageAccountPersonAnswer"]?.Errors.Any() == true)
-                            {
-                                <span class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span>
-                                    @ViewData.ModelState["ManageAccountPersonAnswer"].Errors.First().ErrorMessage
-                                </span>
-                            }
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item">
