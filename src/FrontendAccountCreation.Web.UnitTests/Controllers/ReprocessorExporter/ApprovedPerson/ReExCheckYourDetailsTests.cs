@@ -898,18 +898,6 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         CompaniesHouseNumber = "12345678"
         };
 
-        var partnership = new ReExPartnership
-        {
-            IsLimitedLiabilityPartnership = true,
-            LimitedPartnership = new ReExLimitedPartnership
-            {
-                Partners = new List<ReExLimitedPartnershipPersonOrCompany>
-            {
-                new ReExLimitedPartnershipPersonOrCompany { Name = "Partner" }
-            }
-            }
-        };
-
         var teamMembers = new List<ReExCompanyTeamMember>
     {
         new ReExCompanyTeamMember { FirstName = "Alice", LastName = "Smith" }
@@ -923,7 +911,6 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
             {
                 Company = company,
                 RoleInOrganisation = RoleInOrganisation.Director,
-                Partnership = partnership,
                 TeamMembers = teamMembers
             }
         };
