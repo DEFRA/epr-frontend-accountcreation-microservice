@@ -903,7 +903,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> OrganisationName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
         SetBackLink(session, PagePath.OrganisationName);
 
         var viewModel = new OrganisationNameViewModel()
