@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership;
 
 [TestClass]
-public class NonCompaniesHousePartnershipType : LimitedPartnershipTestBase
+public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
 {
     private OrganisationSession _orgSessionMock = null!;
 
