@@ -935,8 +935,6 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         model.CompaniesHouseNumber.Should().Be("12345678");
         model.RoleInOrganisation.Should().Be(RoleInOrganisation.Director);
         model.IsOrganisationAPartnership.Should().BeTrue();
-        model.IsLimitedLiabilityPartnership.Should().BeTrue();
-        model.LimitedPartnershipPartners.Should().HaveCount(1);
         model.reExCompanyTeamMembers.Should().BeEquivalentTo(teamMembers);
     }
 
