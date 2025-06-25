@@ -6,7 +6,6 @@ using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -31,11 +30,11 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         LimitedPartnershipPartnersViewModel model = new();
 
-        ReExLimitedPartnership ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
+        ReExTypesOfPartner ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
         model.ExpectsIndividualPartners = ltdPartnershipSession?.HasIndividualPartners ?? true;
         model.ExpectsCompanyPartners = ltdPartnershipSession?.HasCompanyPartners ?? true;
 
-        List<ReExLimitedPartnershipPersonOrCompany>? partnersSession = ltdPartnershipSession?.Partners;
+        List<ReExPersonOrCompanyPartner>? partnersSession = ltdPartnershipSession?.Partners;
         List<LimitedPartnershipPersonOrCompanyViewModel> partnerList = [];
         if (partnersSession != null)
         {
@@ -105,14 +104,14 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         async Task SyncSessionWithModel(
             bool hasCompanyPartners,
             bool hasIndividualPartners,
-            List<ReExLimitedPartnershipPersonOrCompany> partners)
+            List<ReExPersonOrCompanyPartner> partners)
         {
             // Organisation > Company > Partnership > Limited Partnership
             ReExCompaniesHouseSession companySession = session.ReExCompaniesHouseSession;
             ReExPartnership partnershipSession = companySession.Partnership ?? new();
 
             // refresh limited partnership session from the view model
-            ReExLimitedPartnership ltdPartnershipSession = new()
+            ReExTypesOfPartner ltdPartnershipSession = new()
             {
                 Partners = partners,
                 HasCompanyPartners = hasCompanyPartners,
@@ -167,7 +166,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         SetBackLink(session, PagePath.LimitedPartnershipCheckNamesOfPartners);
 
         // there is no validation on this page, so work directly on the session rather than a separate view model
-        List<ReExLimitedPartnershipPersonOrCompany> model = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners ?? new();
+        List<ReExPersonOrCompanyPartner> model = session.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners ?? new();
 
         return View(model);
     }
@@ -179,7 +178,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [HttpPost]
     [Route(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipCheckNamesOfPartners)]
-    public async Task<IActionResult> CheckNamesOfPartners(List<ReExLimitedPartnershipPersonOrCompany> modelNotUsed)
+    public async Task<IActionResult> CheckNamesOfPartners(List<ReExPersonOrCompanyPartner> modelNotUsed)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
         return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
@@ -309,7 +308,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             session.ReExCompaniesHouseSession.Partnership = new ReExPartnership
             {
                 IsLimitedPartnership = true,
-                LimitedPartnership = new ReExLimitedPartnership
+                LimitedPartnership = new ReExTypesOfPartner
                 {
                     HasIndividualPartners = model.HasIndividualPartners,
                     HasCompanyPartners = model.HasCompanyPartners
@@ -322,7 +321,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
             if (partnership.LimitedPartnership == null)
             {
-                partnership.LimitedPartnership = new ReExLimitedPartnership();
+                partnership.LimitedPartnership = new ReExTypesOfPartner();
             }
 
             partnership.LimitedPartnership.HasIndividualPartners = model.HasIndividualPartners;
@@ -419,28 +418,63 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [HttpGet]
     [Route(PagePath.NonCompaniesHousePartnershipType)]
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
-    [ExcludeFromCodeCoverage(Justification = "Stub page, to dev test redirection from Business Address page. Will be developned next")]
     public async Task<IActionResult> NonCompaniesHousePartnershipType()
     {
-        return View(new WhatSortOfPartnerRequestViewModel());
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.NonCompaniesHousePartnershipType);
+
+        bool hasIndividualPartners = false;
+        bool hasCompanyPartners = false;
+        if (session.ReExManualInputSession != null && session.ReExManualInputSession.TypesOfPartner != null)
+        {
+            hasIndividualPartners = session.ReExManualInputSession.TypesOfPartner.HasIndividualPartners;
+            hasCompanyPartners = session.ReExManualInputSession.TypesOfPartner.HasCompanyPartners;
+        }
+
+        return View(new WhatSortOfPartnerRequestViewModel
+        {
+            HasCompanyPartners = hasCompanyPartners,
+            HasIndividualPartners = hasIndividualPartners
+        });
     }
 
     [HttpPost]
     [Route(PagePath.NonCompaniesHousePartnershipType)]
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
-    [ExcludeFromCodeCoverage(Justification = "Stub page, to dev test redirection from Business Address page. Will be developned next")]
     public async Task<IActionResult> NonCompaniesHousePartnershipType(WhatSortOfPartnerRequestViewModel model)
     {
-        return View(model);
-     }
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-    private static async Task<List<ReExLimitedPartnershipPersonOrCompany>> GetSessionPartners(
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipType);
+            return View(model);
+        }
+
+        if (session.ReExManualInputSession.TypesOfPartner != null)
+        {
+            session.ReExManualInputSession.TypesOfPartner.HasIndividualPartners = model.HasIndividualPartners;
+            session.ReExManualInputSession.TypesOfPartner.HasCompanyPartners = model.HasCompanyPartners;
+        }
+        else
+        {
+            session.ReExManualInputSession.TypesOfPartner = new ReExTypesOfPartner
+            {
+                HasIndividualPartners = model.HasIndividualPartners,
+                HasCompanyPartners = model.HasCompanyPartners
+            };
+        }
+
+        return await SaveSessionAndRedirect(session, nameof(NamesOfPartners), PagePath.LimitedPartnershipType, PagePath.LimitedPartnershipNamesOfPartners);
+    }
+
+    private static async Task<List<ReExPersonOrCompanyPartner>> GetSessionPartners(
     List<LimitedPartnershipPersonOrCompanyViewModel> partners)
     {
-        List<ReExLimitedPartnershipPersonOrCompany> partnersSession = [];
+        List<ReExPersonOrCompanyPartner> partnersSession = [];
         foreach (var partner in partners)
         {
-            ReExLimitedPartnershipPersonOrCompany sessionPartner = new()
+            ReExPersonOrCompanyPartner sessionPartner = new()
             {
                 Id = partner.Id,
                 IsPerson = partner.IsPerson,

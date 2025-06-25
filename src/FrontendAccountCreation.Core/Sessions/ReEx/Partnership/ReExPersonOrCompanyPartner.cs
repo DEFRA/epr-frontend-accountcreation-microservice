@@ -3,7 +3,7 @@
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 [ExcludeFromCodeCoverage]
-public class ReExLimitedPartnershipPersonOrCompany
+public class ReExPersonOrCompanyPartner
 {
     public Guid Id { get; set; }
 

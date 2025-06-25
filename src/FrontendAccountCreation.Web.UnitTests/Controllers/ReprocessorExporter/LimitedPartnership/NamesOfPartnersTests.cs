@@ -34,7 +34,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership()
+                    LimitedPartnership = new ReExTypesOfPartner()
                 }
             }
         };
@@ -74,34 +74,34 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task NamesOfPartners_Get_ReturnsViewPopulatedFromSession(bool hasCompanyPartners, bool hasIndividualPartners, int expectedCount)
     {
         // Arrange
-        var abduls = new ReExLimitedPartnershipPersonOrCompany
+        var abduls = new ReExPersonOrCompanyPartner
         {
             Name = "Abduls Skip Hire"
         };
 
-        var biffa = new ReExLimitedPartnershipPersonOrCompany
+        var biffa = new ReExPersonOrCompanyPartner
         {
             Name = "Biffa Waste Inc"
         };
 
-        var copper = new ReExLimitedPartnershipPersonOrCompany
+        var copper = new ReExPersonOrCompanyPartner
         {
             Name = "Propper Copper Recycling"
         };
 
-        var joanne = new ReExLimitedPartnershipPersonOrCompany
+        var joanne = new ReExPersonOrCompanyPartner
         {
             Name = "Joanne Smith",
             IsPerson = true,
         };
 
-        var raj = new ReExLimitedPartnershipPersonOrCompany
+        var raj = new ReExPersonOrCompanyPartner
         {
             Name = "Raj Singh",
             IsPerson = true,
         };
 
-        List<ReExLimitedPartnershipPersonOrCompany> partners = [abduls, biffa, copper, joanne, raj];
+        List<ReExPersonOrCompanyPartner> partners = [abduls, biffa, copper, joanne, raj];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners = hasCompanyPartners;
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners = hasIndividualPartners;
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
@@ -123,25 +123,25 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task NamesOfPartners_Get_WhenGivenNewPartner_ReturnsViewPopulatedFromSession(bool hasCompanyPartners, bool hasIndividualPartners, int expectedCount)
     {
         // Arrange
-        var abduls = new ReExLimitedPartnershipPersonOrCompany
+        var abduls = new ReExPersonOrCompanyPartner
         {
             Name = "Abduls Skip Hire"
         };
 
-        var biffa = new ReExLimitedPartnershipPersonOrCompany
+        var biffa = new ReExPersonOrCompanyPartner
         {
             Name = "Biffa Waste Inc"
         };
 
-        var joanne = new ReExLimitedPartnershipPersonOrCompany
+        var joanne = new ReExPersonOrCompanyPartner
         {
             Name = "Joanne Smith",
             IsPerson = true,
         };
 
-        var newbie = new ReExLimitedPartnershipPersonOrCompany();
+        var newbie = new ReExPersonOrCompanyPartner();
 
-        List<ReExLimitedPartnershipPersonOrCompany> partners = [abduls, biffa, joanne, newbie];
+        List<ReExPersonOrCompanyPartner> partners = [abduls, biffa, joanne, newbie];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners = hasCompanyPartners;
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners = hasIndividualPartners;
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
@@ -175,21 +175,21 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task NamesOfPartnersDelete_Get_RemovesPartnerFromSession()
     {
         // Arrange
-        var jack = new ReExLimitedPartnershipPersonOrCompany
+        var jack = new ReExPersonOrCompanyPartner
         {
             Id = Guid.NewGuid(),
             Name = "Jack",
             IsPerson = true,
         };
 
-        var jill = new ReExLimitedPartnershipPersonOrCompany
+        var jill = new ReExPersonOrCompanyPartner
         {
             Id = Guid.NewGuid(),
             Name = "Jill",
             IsPerson = true,
         };
 
-        List<ReExLimitedPartnershipPersonOrCompany> partners = [jack, jill];
+        List<ReExPersonOrCompanyPartner> partners = [jack, jill];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
 
         LimitedPartnershipPartnersViewModel model = new()
@@ -249,14 +249,14 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task NamesOfPartners_Post_Add_AppendsEmptyPartnerToSession()
     {
         // Arrange
-        var jill = new ReExLimitedPartnershipPersonOrCompany
+        var jill = new ReExPersonOrCompanyPartner
         {
             Id = Guid.NewGuid(),
             Name = "Jill",
             IsPerson = true,
         };
 
-        List<ReExLimitedPartnershipPersonOrCompany> partners = [jill];
+        List<ReExPersonOrCompanyPartner> partners = [jill];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
 
         LimitedPartnershipPartnersViewModel model = new()
@@ -288,21 +288,21 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task NamesOfPartners_Post_Save_UpdatesSessionAndRedirects()
     {
         // Arrange
-        var jack = new ReExLimitedPartnershipPersonOrCompany
+        var jack = new ReExPersonOrCompanyPartner
         {
             Id = Guid.NewGuid(),
             Name = "Jack",
             IsPerson = true,
         };
 
-        var biffa = new ReExLimitedPartnershipPersonOrCompany
+        var biffa = new ReExPersonOrCompanyPartner
         {
             Id = Guid.NewGuid(),
             Name = "Biffa Waste Inc",
             IsPerson = false,
         };
 
-        List<ReExLimitedPartnershipPersonOrCompany> partners = [jack, biffa];
+        List<ReExPersonOrCompanyPartner> partners = [jack, biffa];
 
         LimitedPartnershipPartnersViewModel model = new()
         {

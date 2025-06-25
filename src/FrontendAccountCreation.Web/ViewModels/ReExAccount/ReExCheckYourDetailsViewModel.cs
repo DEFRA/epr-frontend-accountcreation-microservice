@@ -32,7 +32,7 @@ public class ReExCheckYourDetailsViewModel
     public string UkNation => GetCheckYourDetailsKey(Nation);
     public List<ReExCompanyTeamMember> reExCompanyTeamMembers { get; set; }
     public bool IsOrganisationAPartnership { get; set; }
-    public List<ReExLimitedPartnershipPersonOrCompany>? LimitedPartnershipPartners { get; set; }
+    public List<ReExPersonOrCompanyPartner>? LimitedPartnershipPartners { get; set; }
     public bool IsLimitedLiabilityPartnership { get; set; }
 
     public bool IsManualInputFlow { get; set; }

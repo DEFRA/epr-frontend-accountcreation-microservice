@@ -856,6 +856,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 PagePath.BusinessAddress, PagePath.NonCompaniesHousePartnershipType);
         }
 
+        session.ReExManualInputSession.TypesOfPartner = null;
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
             PagePath.BusinessAddress, PagePath.SoleTrader);
     }
