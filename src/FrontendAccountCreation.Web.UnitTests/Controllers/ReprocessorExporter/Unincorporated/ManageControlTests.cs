@@ -11,20 +11,10 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 [TestClass]
 public class ManageControlTests : UnincorporatedTestBase
 {
-    private OrganisationSession _organisationSession = null!;
-
     [TestInitialize]
     public void Setup()
     {
         SetupBase();
-
-        _organisationSession = new OrganisationSession
-        {
-            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
-        };
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
-        _sessionManagerMock.Setup(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>())).Returns(Task.CompletedTask);
     }
 
     [TestMethod]
@@ -32,15 +22,7 @@ public class ManageControlTests : UnincorporatedTestBase
     {
         // Arrange
         const ManageControlAnswer expectedAnswer = ManageControlAnswer.Yes;
-        var session = new OrganisationSession
-        {
-            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
-            {
-                ManageControlAnswer = expectedAnswer
-            },
-            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
-        };
-        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        SetupOrganisationSession();
 
         // Act
         var result = await _systemUnderTest.ManageControl();
@@ -59,6 +41,7 @@ public class ManageControlTests : UnincorporatedTestBase
     {
         // Arrange
         var viewModel = new ReExManageControlViewModel();
+        SetupOrganisationSession();
         _systemUnderTest.ModelState.AddModelError("ManageControlInUKAnswer", "Required");
 
         // Act
@@ -77,15 +60,7 @@ public class ManageControlTests : UnincorporatedTestBase
         // Arrange
         const ManageControlAnswer expectedAnswer = ManageControlAnswer.Yes;
         var viewModel = new ReExManageControlViewModel { ManageControlInUKAnswer = expectedAnswer };
-        var session = new OrganisationSession
-        {
-            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
-            {
-                ManageControlAnswer = expectedAnswer
-            },
-            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
-        };
-        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        var session = SetupOrganisationSession();
 
         // Act
         var result = await _systemUnderTest.ManageControl(viewModel);
@@ -104,15 +79,7 @@ public class ManageControlTests : UnincorporatedTestBase
     {
         // Arrange
         var viewModel = new ReExManageControlViewModel { ManageControlInUKAnswer = expectedAnswer };
-        var session = new OrganisationSession
-        {
-            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
-            {
-                ManageControlAnswer = expectedAnswer
-            },
-            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
-        };
-        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        var session = SetupOrganisationSession(expectedAnswer);
 
         // Act
         var result = await _systemUnderTest.ManageControl(viewModel);
@@ -124,5 +91,19 @@ public class ManageControlTests : UnincorporatedTestBase
         // Assert.AreEqual(nameof(UnincorporatedController.AddApprovedPerson), redirectResult.ActionName);
         Assert.AreEqual(expectedAnswer, session.ReExUnincorporatedFlowSession.ManageControlAnswer);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
+    }
+
+    private OrganisationSession SetupOrganisationSession(ManageControlAnswer expectedAnswer = ManageControlAnswer.Yes)
+    {
+        var session = new OrganisationSession
+        {
+            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
+            {
+                ManageControlAnswer = expectedAnswer
+            },
+            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
+        };
+        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        return session;
     }
 }

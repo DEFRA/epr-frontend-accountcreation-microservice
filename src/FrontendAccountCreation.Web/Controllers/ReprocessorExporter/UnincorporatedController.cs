@@ -146,9 +146,9 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         }
 
         return inviteApprovedPerson
-            ? // TODO: continue path - Redirect to Check your details - final page
+            ? // TODO: invite user path - Redirect to page 5 when implemented
             await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson)
-            : // TODO: invite user path - Redirect to page 5 when implemented
+            : // TODO: continue path - Redirect to Check your details - final page
             await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson);
     }
 }
