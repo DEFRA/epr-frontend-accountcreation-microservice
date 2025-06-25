@@ -122,6 +122,7 @@ public static class PagePath
     public const string UnincorporatedRoleInOrganisation = "unincorporated-role-in-organisation";
     public const string UnincorporatedManageControl = "unincorporated-manage-control";
     public const string UnincorporatedManageAccountPerson = "unincorporated-manage-account-person";
+    public const string UnincorporatedApprovedPerson = "unincorporated-approved-person";
 
     // Non journey paths
     public const string Accessibility = "accessibility";

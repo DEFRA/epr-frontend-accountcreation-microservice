@@ -75,7 +75,17 @@ public class ManageControlTests : UnincorporatedTestBase
     public async Task ManageControl_Post_ValidModel_YesAnswer_RedirectsToManageAccountPerson()
     {
         // Arrange
-        var viewModel = new ReExManageControlViewModel { ManageControlInUKAnswer = ManageControlAnswer.Yes };
+        const ManageControlAnswer expectedAnswer = ManageControlAnswer.Yes;
+        var viewModel = new ReExManageControlViewModel { ManageControlInUKAnswer = expectedAnswer };
+        var session = new OrganisationSession
+        {
+            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
+            {
+                ManageControlAnswer = expectedAnswer
+            },
+            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
+        };
+        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
 
         // Act
         var result = await _systemUnderTest.ManageControl(viewModel);
@@ -84,8 +94,7 @@ public class ManageControlTests : UnincorporatedTestBase
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
         Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
-        Assert.AreEqual(ManageControlAnswer.Yes, _organisationSession.ReExUnincorporatedFlowSession.ManageControlAnswer);
-        _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), _organisationSession), Times.Once());
+        _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
     }
 
     [TestMethod]
@@ -95,6 +104,15 @@ public class ManageControlTests : UnincorporatedTestBase
     {
         // Arrange
         var viewModel = new ReExManageControlViewModel { ManageControlInUKAnswer = expectedAnswer };
+        var session = new OrganisationSession
+        {
+            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession
+            {
+                ManageControlAnswer = expectedAnswer
+            },
+            Journey = [PagePath.UnincorporatedRoleInOrganisation, PagePath.UnincorporatedManageControl]
+        };
+        _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
 
         // Act
         var result = await _systemUnderTest.ManageControl(viewModel);
@@ -104,7 +122,7 @@ public class ManageControlTests : UnincorporatedTestBase
         var redirectResult = (RedirectToActionResult)result;
         // TODO: Fix this test once AddApprovedPerson is implemented
         // Assert.AreEqual(nameof(UnincorporatedController.AddApprovedPerson), redirectResult.ActionName);
-        Assert.AreEqual(expectedAnswer, _organisationSession.ReExUnincorporatedFlowSession.ManageControlAnswer);
-        _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), _organisationSession), Times.Once());
+        Assert.AreEqual(expectedAnswer, session.ReExUnincorporatedFlowSession.ManageControlAnswer);
+        _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
     }
 }
