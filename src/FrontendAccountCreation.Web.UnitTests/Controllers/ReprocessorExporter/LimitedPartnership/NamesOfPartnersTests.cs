@@ -54,7 +54,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>().Which;
+        var viewModel = viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>().Which;
         viewModel.Partners.Should().ContainSingle();
 
         viewModel.Partners.Should().HaveCount(1);
@@ -111,7 +111,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>().Which;
+        var viewModel = viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>().Which;
         viewModel.Partners.Should().HaveCount(expectedCount);
     }
 
@@ -151,7 +151,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>().Which;
+        var viewModel = viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>().Which;
         viewModel.Partners.Should().HaveCount(expectedCount);
     }
 
@@ -165,7 +165,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         result.Should().BeOfType<ViewResult>();
 
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+        viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>();
 
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Never);
         viewResult.ViewData["BackLinkToDisplay"].Should().Be(PagePath.LimitedPartnershipType);
@@ -192,7 +192,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         List<ReExPersonOrCompanyPartner> partners = [jack, jill];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
 
-        LimitedPartnershipPartnersViewModel model = new()
+        PartnershipPartnersViewModel model = new()
         {
             ExpectsIndividualPartners = true,
             Partners = partners.Select(item => (PartnershipPersonOrCompanyViewModel)item).ToList()
@@ -219,7 +219,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task NamesOfPartners_Post_ModelStateInvalid_ReturnsError(bool hasCompanyPartners, bool hasIndividualPartners, string expectedError)
     {
         // Arrange
-        LimitedPartnershipPartnersViewModel model = new()
+        PartnershipPartnersViewModel model = new()
         {
             ExpectsCompanyPartners = hasCompanyPartners,
             ExpectsIndividualPartners = hasIndividualPartners
@@ -232,7 +232,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>();
+        viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>();
 
         _systemUnderTest.ModelState.IsValid.Should().BeFalse();
         var errors = _systemUnderTest.ModelState.Select(x => x.Value.Errors)
@@ -259,7 +259,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         List<ReExPersonOrCompanyPartner> partners = [jill];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
 
-        LimitedPartnershipPartnersViewModel model = new()
+        PartnershipPartnersViewModel model = new()
         {
             ExpectsIndividualPartners = true,
             Partners = partners.Select(item => (PartnershipPersonOrCompanyViewModel)item).ToList()
@@ -270,7 +270,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Which;
-        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPartnersViewModel>().Which;
+        var viewModel = viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>().Which;
         viewModel.Partners.Should().HaveCount(2);
         viewModel.Partners[0].Id.Should().Be(jill.Id);
         viewModel.Partners[0].PersonName.Should().Be("Jill");
@@ -304,7 +304,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
 
         List<ReExPersonOrCompanyPartner> partners = [jack, biffa];
 
-        LimitedPartnershipPartnersViewModel model = new()
+        PartnershipPartnersViewModel model = new()
         {
             ExpectsCompanyPartners = true,
             ExpectsIndividualPartners = true,

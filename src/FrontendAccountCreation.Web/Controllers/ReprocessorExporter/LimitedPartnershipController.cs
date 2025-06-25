@@ -28,7 +28,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
 
-        LimitedPartnershipPartnersViewModel model = new();
+        PartnershipPartnersViewModel model = new();
 
         ReExTypesOfPartner ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
         model.ExpectsIndividualPartners = ltdPartnershipSession?.HasIndividualPartners ?? true;
@@ -68,7 +68,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [HttpPost]
     [Route(PagePath.LimitedPartnershipNamesOfPartners)]
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipNamesOfPartners)]
-    public async Task<IActionResult> NamesOfPartners(LimitedPartnershipPartnersViewModel model, string command)
+    public async Task<IActionResult> NamesOfPartners(PartnershipPartnersViewModel model, string command)
     {
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -123,7 +123,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             session.ReExCompaniesHouseSession = companySession;
         }
 
-        static string OverrideValidationErrorMessage(LimitedPartnershipPartnersViewModel model)
+        static string OverrideValidationErrorMessage(PartnershipPartnersViewModel model)
         {
             string errorMessage = "ValidationError_Both";
             if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)

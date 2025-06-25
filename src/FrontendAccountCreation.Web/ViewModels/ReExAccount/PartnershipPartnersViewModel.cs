@@ -1,6 +1,6 @@
 ﻿namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
-public class LimitedPartnershipPartnersViewModel
+public class PartnershipPartnersViewModel
 {
     public bool ExpectsIndividualPartners { get; set; }
 
