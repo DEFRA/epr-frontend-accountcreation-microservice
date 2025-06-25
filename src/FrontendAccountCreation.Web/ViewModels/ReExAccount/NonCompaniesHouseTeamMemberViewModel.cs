@@ -6,8 +6,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 [ExcludeFromCodeCoverage]
-public class SoleTraderTeamMemberViewModel
+public class NonCompaniesHouseTeamMemberViewModel
 {
+    public Guid? Id { get; set; }
+
     [Required(ErrorMessage = "TeamMemberDetails.EmailEmptyErrorMessage")]
     [PublicEmailAddress(ErrorMessage= "TeamMemberDetails.EmailInvalidErrorMessage")]
     public string? Email { get; set; }

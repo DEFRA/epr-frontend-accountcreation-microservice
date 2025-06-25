@@ -68,9 +68,9 @@ public class ReExAccountMapper : IReExAccountMapper
     {
         List<ReExInvitedApprovedPerson> approvedPeople = [];
 
-        if (reExManualInput != null && reExManualInput.TeamMember != null)
+        if (reExManualInput != null && reExManualInput.TeamMembers != null)
         {
-            var teamMember = reExManualInput.TeamMember;
+            var teamMember = reExManualInput.TeamMembers[0];
             approvedPeople.Add(new ReExInvitedApprovedPerson
             {
                 Email = teamMember.Email,
