@@ -77,10 +77,9 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
         }
 
-        //TODO: Redirect to AddApprovedPerson
+        //TODO: Redirect to AddApprovedPerson (page 3b) when implemented
         return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
     }
-
 
     [HttpGet]
     [Route(PagePath.UnincorporatedManageAccountPerson)]
@@ -88,7 +87,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedManageAccountPerson);
-        return View(new ReExManageAccountPersonViewModel());
+        return View(new ReExManageAccountPersonViewModel{ ManageAccountPersonAnswer = session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer });
     }
 
     [HttpPost]
@@ -106,11 +105,50 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
         session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
 
+        if (answer == ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)
+        {
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ApprovedPerson),
+                PagePath.UnincorporatedManageAccountPerson,
+                PagePath.UnincorporatedApprovedPerson);
+        }
+
+        // TODO: Redirect to page 5 when implemented
         return await SaveSessionAndRedirect(
             session,
             nameof(ManageControl),
-            PagePath.UnincorporatedManageControl,
-            PagePath.UnincorporatedManageAccountPerson);
+            PagePath.UnincorporatedManageAccountPerson,
+            PagePath.UnincorporatedManageControl);
+        
     }
 
+    [HttpGet]
+    [Route(PagePath.UnincorporatedApprovedPerson)]
+    public async Task<IActionResult> ApprovedPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedApprovedPerson);
+
+        return View();
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedApprovedPerson)]
+    public async Task<IActionResult> ApprovedPerson(bool inviteApprovedPerson)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedApprovedPerson);
+            return View();
+        }
+
+        return inviteApprovedPerson
+            ? // TODO: continue path - Redirect to Check your details - final page
+            await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson)
+            : // TODO: invite user path - Redirect to page 5 when implemented
+            await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson);
+    }
 }

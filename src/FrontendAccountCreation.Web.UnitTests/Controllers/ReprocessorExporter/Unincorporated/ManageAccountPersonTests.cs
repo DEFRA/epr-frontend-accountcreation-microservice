@@ -76,7 +76,7 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
     }
 
     [TestMethod]
-    public async Task ManageAccountPerson_Post_IAgreeToBeAnApprovedPerson_RedirectsToManageControl()
+    public async Task ManageAccountPerson_Post_IAgreeToBeAnApprovedPerson_RedirectsToApprovedPerson()
     {
         // Arrange
         var viewModel = new ReExManageAccountPersonViewModel
@@ -89,7 +89,7 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ApprovedPerson));
     }
 
     [TestMethod]
