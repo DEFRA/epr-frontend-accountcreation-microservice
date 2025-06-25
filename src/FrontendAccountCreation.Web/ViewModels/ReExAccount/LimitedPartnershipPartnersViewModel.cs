@@ -6,5 +6,5 @@ public class LimitedPartnershipPartnersViewModel
 
     public bool ExpectsCompanyPartners { get; set; }
 
-    public List<LimitedPartnershipPersonOrCompanyViewModel>? Partners { get; set; }   
+    public List<PartnershipPersonOrCompanyViewModel>? Partners { get; set; }   
 }

@@ -195,7 +195,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         LimitedPartnershipPartnersViewModel model = new()
         {
             ExpectsIndividualPartners = true,
-            Partners = partners.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item).ToList()
+            Partners = partners.Select(item => (PartnershipPersonOrCompanyViewModel)item).ToList()
         };
 
         // Act
@@ -262,7 +262,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         LimitedPartnershipPartnersViewModel model = new()
         {
             ExpectsIndividualPartners = true,
-            Partners = partners.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item).ToList()
+            Partners = partners.Select(item => (PartnershipPersonOrCompanyViewModel)item).ToList()
         };
 
         // Act
@@ -308,7 +308,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         {
             ExpectsCompanyPartners = true,
             ExpectsIndividualPartners = true,
-            Partners = partners.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item).ToList()
+            Partners = partners.Select(item => (PartnershipPersonOrCompanyViewModel)item).ToList()
         };
 
         // Act

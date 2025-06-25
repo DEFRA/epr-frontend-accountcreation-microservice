@@ -35,10 +35,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         model.ExpectsCompanyPartners = ltdPartnershipSession?.HasCompanyPartners ?? true;
 
         List<ReExPersonOrCompanyPartner>? partnersSession = ltdPartnershipSession?.Partners;
-        List<LimitedPartnershipPersonOrCompanyViewModel> partnerList = [];
+        List<PartnershipPersonOrCompanyViewModel> partnerList = [];
         if (partnersSession != null)
         {
-            partnerList = partnersSession.Select(item => (LimitedPartnershipPersonOrCompanyViewModel)item)
+            partnerList = partnersSession.Select(item => (PartnershipPersonOrCompanyViewModel)item)
                 .Where(x => (
                         (!x.IsPersonOrCompanyButNotBoth) ||
                         (x.IsPerson && model.ExpectsIndividualPartners) ||
@@ -48,7 +48,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         if (partnerList.Count.Equals(0))
         {
-            LimitedPartnershipPersonOrCompanyViewModel newPartner = new()
+            PartnershipPersonOrCompanyViewModel newPartner = new()
             {
                 Id = Guid.NewGuid()
             };
@@ -84,7 +84,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         if (command == "add")
         {
-            LimitedPartnershipPersonOrCompanyViewModel newPartner = new()
+            PartnershipPersonOrCompanyViewModel newPartner = new()
             {
                 Id = Guid.NewGuid()
             };
@@ -469,7 +469,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     }
 
     private static async Task<List<ReExPersonOrCompanyPartner>> GetSessionPartners(
-    List<LimitedPartnershipPersonOrCompanyViewModel> partners)
+    List<PartnershipPersonOrCompanyViewModel> partners)
     {
         List<ReExPersonOrCompanyPartner> partnersSession = [];
         foreach (var partner in partners)
