@@ -21,7 +21,8 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
 
         _organisationSession = new OrganisationSession
         {
-            Journey = new List<string> { PagePath.BusinessAddress, PagePath.UnincorporatedRoleInOrganisation }
+            Journey = new List<string> { PagePath.BusinessAddress, PagePath.UnincorporatedRoleInOrganisation },
+            ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession()
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
