@@ -934,5 +934,27 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             DeleteFocusId();
             return await SaveSessionAndRedirect(session, nameof(MemberPartnership), PagePath.CanNotInviteThisPerson, PagePath.MemberPartnership);
         }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        // [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            return View(new AddApprovedPersonViewModel { IsNonCompaniesHousePartnership = true });
+
+        }
+
+        [HttpPost]
+        [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        // [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson(AddApprovedPersonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return View(model); //TODO:
+        }
     }
 }

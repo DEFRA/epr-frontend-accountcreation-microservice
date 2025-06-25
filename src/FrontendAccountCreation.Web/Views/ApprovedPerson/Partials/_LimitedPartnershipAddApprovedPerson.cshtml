@@ -27,7 +27,7 @@
 
     <div class="section">
         <h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.RolesHeading"]</h3>
-        @if (Model.IsLimitedPartnership)
+        @if (Model.IsLimitedPartnership || (Model.IsNonCompaniesHousePartnership ?? false))
         {
             <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.RolesInstruction"]:</p>
             <ul class="govuk-list govuk-list--bullet">

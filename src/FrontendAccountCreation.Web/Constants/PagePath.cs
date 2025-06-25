@@ -50,6 +50,7 @@ public static class PagePath
     public const string ManageControl = "manage-control";
     public const string ManageControlOrganisation = "manage-control-organisation";
     public const string NonCompaniesHousePartnershipType = "non-companies-house-partner-type";
+    public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
