@@ -5,7 +5,7 @@
 
 @model WhatSortOfPartnerRequestViewModel
 @{
-    ViewData["Title"] = Localizer["LimitedPartnershipType.Title"];
+    ViewData["Title"] = Localizer["NonCompaniesHousePartnershipType.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
@@ -17,12 +17,12 @@
         <div class="govuk-grid-row ">
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
-                <form asp-controller="LimitedPartnership" asp-action="LimitedPartnershipType" method="post">
+                <form asp-controller="LimitedPartnership" asp-action="NonCompaniesHousePartnershipType" method="post">
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                    @Localizer["LimitedPartnershipType.Question"]
+                                    @Localizer["NonCompaniesHousePartnershipType.Question"]
                                 </h1>
                             </legend>
 

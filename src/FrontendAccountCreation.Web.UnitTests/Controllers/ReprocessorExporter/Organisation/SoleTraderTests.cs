@@ -51,7 +51,7 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
         {
             ReExManualInputSession = new ReExManualInputSession
             {
-                TeamMember = null
+                TeamMembers = null
             }
         });
 
@@ -73,7 +73,7 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
         {
             ReExManualInputSession = new ReExManualInputSession
             {
-                TeamMember = null
+                TeamMembers = null
             }
         });
 

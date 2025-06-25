@@ -34,7 +34,7 @@ public class LimitedLiabilityPartnershipTests : LimitedPartnershipTestBase
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership()
+                    LimitedPartnership = new ReExTypesOfPartner()
                 }
             }
         };
