@@ -177,4 +177,7 @@
   <data name="AddressOverseas.CountryInvalidError" xml:space="preserve">
     <value>Countries must only include letters, spaces, hyphens, apostrophes and accented characters</value>
   </data>
+  <data name="AddressOverseas.Hint" xml:space="preserve">
+    <value>This is a registered office or head office or principal place of business address.</value>
+  </data>
 </root>

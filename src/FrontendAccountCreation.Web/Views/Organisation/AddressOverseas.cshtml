@@ -30,6 +30,10 @@
                                     @Localizer["AddressOverseas.Question"]
                                 </h1>
                             </legend>
+                            
+                            <div class="govuk-hint govuk-!-margin-bottom-6" id="address-overseas-hint">
+                                @Localizer["AddressOverseas.Hint"]
+                            </div>
 
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.Country)) ? " govuk-form-group--error" : "")">
                                 <label gov-for="Country" class="govuk-label">@Localizer["AddressOverseas.CountryLabel"]</label>
@@ -37,7 +41,8 @@
                                 <input class="govuk-input govuk-!-width-full @(errorsViewModel.HasErrorKey(nameof(Model.Country)) ? errorClass : "")"
                                        type="text"
                                        gov-for="Country"
-                                       gov-value="@Model.Country">
+                                       gov-value="@Model.Country"
+                                       aria-describedby="address-overseas-hint">
                             </div>
 
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.AddressLine1)) ? " govuk-form-group--error" : "")">
@@ -46,7 +51,8 @@
                                 <input class="govuk-input govuk-!-width-full @(errorsViewModel.HasErrorKey(nameof(Model.AddressLine1)) ? errorClass : "")"
                                        type="text"
                                        gov-for="AddressLine1"
-                                       gov-value="@Model.AddressLine1">
+                                       gov-value="@Model.AddressLine1"
+                                       aria-describedby="address-overseas-hint">
                             </div>
 
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.AddressLine2)) ? " govuk-form-group--error" : "")">
@@ -55,7 +61,8 @@
                                 <input class="govuk-input govuk-!-width-full @(errorsViewModel.HasErrorKey(nameof(Model.AddressLine2)) ? errorClass : "")"
                                        type="text"
                                        gov-for="AddressLine2"
-                                       gov-value="@Model.AddressLine2">
+                                       gov-value="@Model.AddressLine2"
+                                       aria-describedby="address-overseas-hint">
                             </div>
 
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.TownOrCity)) ? " govuk-form-group--error" : "")">
@@ -64,7 +71,8 @@
                                 <input class="govuk-input govuk-!-width-two-thirds @(errorsViewModel.HasErrorKey(nameof(Model.TownOrCity)) ? errorClass : "")"
                                        type="text"
                                        gov-for="TownOrCity"
-                                       gov-value="@Model.TownOrCity">
+                                       gov-value="@Model.TownOrCity"
+                                       aria-describedby="address-overseas-hint">
                             </div>
                             
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.StateProvinceRegion)) ? " govuk-form-group--error" : "")">
@@ -77,7 +85,7 @@
                                        type="text"
                                        gov-for="StateProvinceRegion"
                                        gov-value="@Model.StateProvinceRegion"
-                                       aria-describedby="state-province-region-hint">
+                                       aria-describedby="address-overseas-hint state-province-region-hint">
                             </div>
 
                             <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.Postcode)) ? " govuk-form-group--error" : "")">
@@ -91,7 +99,7 @@
                                        type="text"
                                        gov-for="Postcode"
                                        gov-value="@Model.Postcode"
-                                       aria-describedby="postcode-hint">
+                                       aria-describedby="address-overseas-hint postcode-hint">
                             </div>
                         </fieldset>
                     </div>
