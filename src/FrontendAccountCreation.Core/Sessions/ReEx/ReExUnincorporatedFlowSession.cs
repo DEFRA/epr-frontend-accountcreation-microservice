@@ -1,5 +1,8 @@
-﻿namespace FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace FrontendAccountCreation.Core.Sessions.ReEx;
+
+[ExcludeFromCodeCoverage]
 public class ReExUnincorporatedFlowSession
 {
     public string? RoleInOrganisation { get; set; }
