@@ -27,7 +27,7 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
             [
                 PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
                 PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent,
-                PagePath.TradingName,PagePath.IsUkMainAddress,PagePath.NonUkOrganisationName
+                PagePath.TradingName,PagePath.IsUkMainAddress,PagePath.OrganisationName
             ]
         };
 
@@ -38,14 +38,14 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
     public async Task GET_WhenNonUkOrganisationNameIsNotInSession_ThenViewIsReturnedWithoutNonUkOrganisationName()
     {
         //Act
-        var result = await _systemUnderTest.NonUkOrganisationName();
+        var result = await _systemUnderTest.OrganisationName();
 
         //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<NonUkOrganisationNameViewModel>();
-        var viewModel = (NonUkOrganisationNameViewModel?)viewResult.Model;
-        viewModel!.NonUkOrganisationName.Should().BeNull();
+        viewResult.Model.Should().BeOfType<OrganisationNameViewModel>();
+        var viewModel = (OrganisationNameViewModel?)viewResult.Model;
+        viewModel!.OrganisationName.Should().BeNull();
     }
 
     [TestMethod]
@@ -55,25 +55,25 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
         const string nonUkOrganisationName = "NonUk Company";
         _organisationSession.ReExManualInputSession = new ReExManualInputSession
         {
-            NonUkOrganisationName = nonUkOrganisationName
+            OrganisationName = nonUkOrganisationName
         };
 
         //Act
-        var result = await _systemUnderTest.NonUkOrganisationName();
+        var result = await _systemUnderTest.OrganisationName();
 
         //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<NonUkOrganisationNameViewModel>();
-        var viewModel = (NonUkOrganisationNameViewModel?)viewResult.Model;
-        viewModel!.NonUkOrganisationName.Should().Be(nonUkOrganisationName);
+        viewResult.Model.Should().BeOfType<OrganisationNameViewModel>();
+        var viewModel = (OrganisationNameViewModel?)viewResult.Model;
+        viewModel!.OrganisationName.Should().Be(nonUkOrganisationName);
     }
 
     [TestMethod]
     public async Task GET_ThenBackLinkIsCorrect()
     {
         //Act
-        var result = await _systemUnderTest.NonUkOrganisationName();
+        var result = await _systemUnderTest.OrganisationName();
 
         //Assert
         result.Should().BeOfType<ViewResult>();
@@ -85,11 +85,11 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
     public async Task POST_GivenNonUkOrganisationName_NonCompaniesHouseFlow_ThenRedirectToIsTradingNameDifferent()
     {
         // Arrange
-        var request = new NonUkOrganisationNameViewModel { NonUkOrganisationName = "German Greengrocers" };
+        var request = new OrganisationNameViewModel { OrganisationName = "German Greengrocers" };
         _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
 
         // Act
-        var result = await _systemUnderTest.NonUkOrganisationName(request);
+        var result = await _systemUnderTest.OrganisationName(request);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -101,10 +101,10 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
     public async Task POST_GivenNonUkOrganisationName_ThenUpdatesSession()
     {
         // Arrange
-        var request = new NonUkOrganisationNameViewModel { NonUkOrganisationName = "German Greengrocers" };
+        var request = new OrganisationNameViewModel { OrganisationName = "German Greengrocers" };
 
         // Act
-        await _systemUnderTest.NonUkOrganisationName(request);
+        await _systemUnderTest.OrganisationName(request);
 
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
@@ -114,10 +114,10 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
     public async Task POST_GivenNoNonUkOrganisationName_ThenSessionNotUpdated()
     {
         // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(NonUkOrganisationNameViewModel.NonUkOrganisationName), "Organisation name field is required");
+        _systemUnderTest.ModelState.AddModelError(nameof(OrganisationNameViewModel.OrganisationName), "Organisation name field is required");
 
         // Act
-        await _systemUnderTest.NonUkOrganisationName(new NonUkOrganisationNameViewModel());
+        await _systemUnderTest.OrganisationName(new OrganisationNameViewModel());
 
         // Assert
         _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
@@ -128,14 +128,14 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
     public async Task POST_GivenNoTradingName_ThenReturnView()
     {
         // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(NonUkOrganisationNameViewModel.NonUkOrganisationName), "Organisation name field is required");
-        var viewModel = new NonUkOrganisationNameViewModel
+        _systemUnderTest.ModelState.AddModelError(nameof(OrganisationNameViewModel.OrganisationName), "Organisation name field is required");
+        var viewModel = new OrganisationNameViewModel
         {
-            NonUkOrganisationName = ""
+            OrganisationName = ""
         };
 
         // Act
-        var result = await _systemUnderTest.NonUkOrganisationName(viewModel);
+        var result = await _systemUnderTest.OrganisationName(viewModel);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -147,32 +147,32 @@ public class NonUkOrganisationNameTests : OrganisationTestBase
         // Arrange
         const string badNonUkOrganisationName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
 
-        _systemUnderTest.ModelState.AddModelError(nameof(NonUkOrganisationNameViewModel.NonUkOrganisationName), "Organisation name must be 170 characters or less");
-        var viewModel = new NonUkOrganisationNameViewModel
+        _systemUnderTest.ModelState.AddModelError(nameof(OrganisationNameViewModel.OrganisationName), "Organisation name must be 170 characters or less");
+        var viewModel = new OrganisationNameViewModel
         {
-            NonUkOrganisationName = badNonUkOrganisationName
+            OrganisationName = badNonUkOrganisationName
         };
 
         // Act
-        var result = await _systemUnderTest.NonUkOrganisationName(viewModel);
+        var result = await _systemUnderTest.OrganisationName(viewModel);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
 
-        viewResult.Model.Should().BeOfType<NonUkOrganisationNameViewModel?>();
-        var resultViewModel = (NonUkOrganisationNameViewModel?)viewResult.Model;
-        resultViewModel!.NonUkOrganisationName.Should().Be(badNonUkOrganisationName);
+        viewResult.Model.Should().BeOfType<OrganisationNameViewModel?>();
+        var resultViewModel = (OrganisationNameViewModel?)viewResult.Model;
+        resultViewModel!.OrganisationName.Should().Be(badNonUkOrganisationName);
     }
 
     [TestMethod]
     public async Task POST_GivenNoNonUkOrganisationName_ThenViewHasCorrectBackLink()
     {
         // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(NonUkOrganisationNameViewModel.NonUkOrganisationName), "Organisation name field is required");
+        _systemUnderTest.ModelState.AddModelError(nameof(OrganisationNameViewModel.OrganisationName), "Organisation name field is required");
 
         // Act
-        var result = await _systemUnderTest.NonUkOrganisationName(new NonUkOrganisationNameViewModel());
+        var result = await _systemUnderTest.OrganisationName(new OrganisationNameViewModel());
 
         // Assert
         result.Should().BeOfType<ViewResult>();

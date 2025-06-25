@@ -8,7 +8,7 @@ public class ReExManualInputSession
 {
     public string TradingName { get; set; }
 
-    public string NonUkOrganisationName { get; set; }
+    public string OrganisationName { get; set; }
 
     public string NonUkRoleInOrganisation { get; set; }
 
