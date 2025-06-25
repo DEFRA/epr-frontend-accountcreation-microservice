@@ -888,4 +888,19 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().Be(model);
     }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipAddApprovedPerson_Get_ReturnsViewWithCorrectModel()
+    {      
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<AddApprovedPersonViewModel>();
+
+        var model = (AddApprovedPersonViewModel)viewResult.Model;
+        model.IsNonCompaniesHousePartnership.Should().BeTrue();
+    }
 }
