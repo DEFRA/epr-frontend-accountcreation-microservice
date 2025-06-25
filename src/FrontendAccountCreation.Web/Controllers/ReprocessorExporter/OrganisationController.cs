@@ -202,17 +202,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
-        if (session.IsUkMainAddress != true)
-        {
-            session.ReExManualInputSession ??= new ReExManualInputSession();
-            session.ReExManualInputSession.ProducerType = ProducerType.NonUkOrganisation;
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+        session.ReExManualInputSession.ProducerType = model.IsUkMainAddress == YesNoAnswer.No ? ProducerType.NonUkOrganisation : null;
 
-            return await SaveSessionAndRedirect(session, nameof(NonUkOrganisationName),
-                PagePath.IsUkMainAddress, PagePath.NonUkOrganisationName);
-        }
-
-        return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
-            PagePath.TradingName);
+        return await SaveSessionAndRedirect(session, nameof(OrganisationName),
+            PagePath.IsUkMainAddress, PagePath.OrganisationName);
     }
 
     [HttpGet]
@@ -232,7 +226,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return View(new IsTradingNameDifferentViewModel
         {
             IsTradingNameDifferent = isTradingNameDifferent,
-            IsNonUk = session.IsUkMainAddress == false
+            IsNonUk = session.IsUkMainAddress == false,
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
         });
     }
 
@@ -398,9 +393,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         session.ReExManualInputSession ??= new ReExManualInputSession();
         session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
 
-        return await SaveSessionAndRedirect(session, 
-            actionName: nameof(NonUkRoleInOrganisation), 
-            currentPagePath: PagePath.UkRegulator, 
+        return await SaveSessionAndRedirect(session,
+            actionName: nameof(NonUkRoleInOrganisation),
+            currentPagePath: PagePath.UkRegulator,
             nextPagePath: PagePath.NonUkRoleInOrganisation);
     }
 
@@ -416,7 +411,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         var viewModel = new TradingNameViewModel()
         {
             TradingName = session?.ReExManualInputSession?.TradingName,
-            ProducerType = session?.ReExManualInputSession?.ProducerType
+            IsCompaniesHouseFlow = session?.IsCompaniesHouseFlow ?? false
         };
         return View(viewModel);
     }
@@ -910,40 +905,39 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     [HttpGet]
-    [Route(PagePath.NonUkOrganisationName)]
-    [OrganisationJourneyAccess(PagePath.NonUkOrganisationName)]
-    public async Task<IActionResult> NonUkOrganisationName()
+    [Route(PagePath.OrganisationName)]
+    [OrganisationJourneyAccess(PagePath.OrganisationName)]
+    public async Task<IActionResult> OrganisationName()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.OrganisationName);
 
-        SetBackLink(session, PagePath.NonUkOrganisationName);
-
-        var viewModel = new NonUkOrganisationNameViewModel()
+        var viewModel = new OrganisationNameViewModel()
         {
-            NonUkOrganisationName = session.ReExManualInputSession?.NonUkOrganisationName,
+            OrganisationName = session?.ReExManualInputSession?.OrganisationName,
         };
         return View(viewModel);
     }
 
     [HttpPost]
-    [Route(PagePath.NonUkOrganisationName)]
-    [OrganisationJourneyAccess(PagePath.NonUkOrganisationName)]
-    public async Task<IActionResult> NonUkOrganisationName(NonUkOrganisationNameViewModel model)
+    [Route(PagePath.OrganisationName)]
+    [OrganisationJourneyAccess(PagePath.OrganisationName)]
+    public async Task<IActionResult> OrganisationName(OrganisationNameViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.NonUkOrganisationName);
+            SetBackLink(session, PagePath.OrganisationName);
 
             return View(model);
         }
 
         session.ReExManualInputSession ??= new ReExManualInputSession();
 
-        session.ReExManualInputSession.NonUkOrganisationName = model.NonUkOrganisationName!;
+        session.ReExManualInputSession.OrganisationName = model.OrganisationName!;
 
-        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.NonUkOrganisationName,
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.OrganisationName,
             PagePath.IsTradingNameDifferent);
     }
 
@@ -1032,7 +1026,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             viewModel.IsSoleTrader = manualInput?.ProducerType == ProducerType.SoleTrader;
             viewModel.CompanyName = viewModel.IsSoleTrader
                 ? manualInput?.TradingName
-                : manualInput?.NonUkOrganisationName;
+                : manualInput?.OrganisationName;
 
             viewModel.ReExCompanyTeamMembers = manualInput?.TeamMembers;
         }

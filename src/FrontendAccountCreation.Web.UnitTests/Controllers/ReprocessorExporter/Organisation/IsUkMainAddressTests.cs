@@ -22,6 +22,6 @@ public class IsUkMainAddressTests() : YesNoPageTestBase<IsUkMainAddressViewModel
     ];
 
     // Redirect targets
-    protected override string RedirectActionNameOnYes => nameof(OrganisationController.TradingName);
-    protected override string RedirectActionNameOnNo => nameof(OrganisationController.NonUkOrganisationName);
+    protected override string RedirectActionNameOnYes => nameof(OrganisationController.OrganisationName);
+    protected override string RedirectActionNameOnNo => nameof(OrganisationController.OrganisationName);
 }

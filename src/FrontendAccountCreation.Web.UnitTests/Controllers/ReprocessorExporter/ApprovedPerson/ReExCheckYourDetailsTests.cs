@@ -513,11 +513,8 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
             ReExManualInputSession = new ReExManualInputSession
             {
                 ProducerType = ProducerType.NonUkOrganisation,
-                NonUkOrganisationName = "Non-UK Ltd",
-                TeamMembers = new List<ReExCompanyTeamMember>
-            {
-                new ReExCompanyTeamMember { FirstName = "Charlie", LastName = "Davis" }
-            }
+                OrganisationName = "Non-UK Ltd",
+                TeamMembers = [new ReExCompanyTeamMember { FirstName = "Charlie", LastName = "Davis" }]
             }
         };
 
@@ -599,7 +596,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
                 Postcode = "75001",
                 IsManualAddress = true
             },
-            NonUkOrganisationName = "Non UK Org Ltd",
+            OrganisationName = "Non UK Org Ltd",
             TeamMembers = new List<ReExCompanyTeamMember>
         {
             new ReExCompanyTeamMember { FirstName = "Jane", LastName = "Doe" }
@@ -719,7 +716,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         var manualInputSession = new ReExManualInputSession
         {
             ProducerType = ProducerType.SoleTrader,
-            BusinessAddress =  new Address
+            BusinessAddress = new Address
             {
                 Country = "UK",
                 BuildingName = "address line 1",
@@ -767,7 +764,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
     public async Task GET_CheckYourDetails_WhenIsNonUk_AssignsAllManualInputFields()
     {
         // Arrange
-        var expectedAddress =  new Address
+        var expectedAddress = new Address
         {
             Country = "France",
             BuildingName = "address line 1",
@@ -790,7 +787,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
             {
                 ProducerType = ProducerType.NonUkOrganisation,
                 BusinessAddress = expectedAddress,
-                NonUkOrganisationName = "Global Org Ltd",
+                OrganisationName = "Global Org Ltd",
                 TeamMembers = expectedTeamMembers,
                 UkRegulatorNation = Nation.England
             }
@@ -895,7 +892,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
                 County = "London",
                 Postcode = "AB1 2BC"
             },
-        CompaniesHouseNumber = "12345678"
+            CompaniesHouseNumber = "12345678"
         };
 
         var teamMembers = new List<ReExCompanyTeamMember>
@@ -1151,7 +1148,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
                 Postcode = "75001",
                 IsManualAddress = true
             },
-            NonUkOrganisationName = "NonUk Org",
+            OrganisationName = "NonUk Org",
             TeamMembers = new List<ReExCompanyTeamMember> { new ReExCompanyTeamMember { FirstName = "Team Member 1" } },
             UkRegulatorNation = Nation.Wales
         };

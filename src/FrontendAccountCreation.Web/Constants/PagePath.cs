@@ -86,8 +86,10 @@ public static class PagePath
     public const string YouAreApprovedPersonSoleTrader = "soletrader-approved-person";
     public const string SoleTraderContinue = "soletrader-continue";
 
-    // Non Uk Non Companies House paths
-    public const string NonUkOrganisationName = "nonuk-organisation-name";
+    // UK & Non-UK Non-Companies-House path
+    public const string OrganisationName = "organisation-name";
+
+    // Non Uk Non Companies House paths    
     public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
     // Limited partnership paths
