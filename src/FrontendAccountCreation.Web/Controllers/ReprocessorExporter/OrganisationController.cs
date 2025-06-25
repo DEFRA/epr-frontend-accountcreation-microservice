@@ -857,7 +857,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.ReExManualInputSession.TypesOfPartner = null;
-        if (session.OrganisationType == OrganisationType.NonCompaniesHouseCompany && session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody)
+        if (session.OrganisationType == OrganisationType.NonCompaniesHouseCompany && session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
         {
             session.ReExUnincorporatedFlowSession ??= new ReExUnincorporatedFlowSession();
             return await SaveSessionAndRedirect(session, 
