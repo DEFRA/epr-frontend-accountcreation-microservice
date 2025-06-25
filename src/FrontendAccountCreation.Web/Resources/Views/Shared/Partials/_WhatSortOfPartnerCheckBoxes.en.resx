@@ -22,7 +22,4 @@
   <data name="_WhatSortOfPartnerCheckBoxes.CompanyPartners" xml:space="preserve">
     <value>Corporate partners</value>
   </data>
-  <data name="_WhatSortOfPartnerCheckBoxes.ErrorMessage" xml:space="preserve">
-    <value>Select at least one checkbox</value>
-  </data>
 </root>
