@@ -362,7 +362,7 @@ public class SuccessTests : OrganisationTestBase
             ReExManualInputSession = new ReExManualInputSession
             {
                 ProducerType = ProducerType.NonUkOrganisation,
-                NonUkOrganisationName = expectedName,
+                OrganisationName = expectedName,
                 TeamMembers = teamMembers
             }
         };
@@ -447,7 +447,7 @@ public class SuccessTests : OrganisationTestBase
         {
             ProducerType = ProducerType.SoleTrader,
             TradingName = null, 
-            NonUkOrganisationName = null
+            OrganisationName = null
         };
 
         var session = new OrganisationSession

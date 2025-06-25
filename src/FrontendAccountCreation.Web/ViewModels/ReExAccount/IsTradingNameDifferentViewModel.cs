@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FrontendAccountCreation.Core.Sessions;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
@@ -9,6 +10,8 @@ public class IsTradingNameDifferentViewModel : IValidatableObject
     public YesNoAnswer? IsTradingNameDifferent { get; set; }
 
     public bool IsNonUk { get; set; }
+
+    public bool IsCompaniesHouseFlow { get; set; }
     
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

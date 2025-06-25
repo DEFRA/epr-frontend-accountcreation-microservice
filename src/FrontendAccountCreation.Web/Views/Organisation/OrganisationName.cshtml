@@ -3,10 +3,10 @@
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 
-@model NonUkOrganisationNameViewModel
+@model OrganisationNameViewModel
 
 @{
-    ViewData["Title"] = Localizer["NonUkOrganisationName.Title"];
+    ViewData["Title"] = Localizer["OrganisationName.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
@@ -19,16 +19,16 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="Organisation" asp-action="NonUkOrganisationName" method="post">
+                <form asp-controller="Organisation" asp-action="OrganisationName" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                            <label for="NonUkOrganisationName">
-                                @Localizer["NonUkOrganisationName.Question"]
+                            <label for="OrganisationName">
+                                @Localizer["OrganisationName.Question"]
                             </label>
                         </h1>
 
-                        <div class="govuk-hint" id="NonUkOrganisationName-hint">
-                            @Localizer["NonUkOrganisationName.Hint"]
+                        <div class="govuk-hint" id="OrganisationName-hint">
+                            @Localizer["OrganisationName.Hint"]
                         </div>
 
                         @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
@@ -36,9 +36,9 @@
                         <div class="govuk-form-group">
                             <input class="govuk-input govuk-!-width-full @Html.Raw(ViewData.ModelState.Count > 0 ? "govuk-input--error" : "")"
                                    type="text"
-                                   gov-for="NonUkOrganisationName"
-                                   gov-value="@Model.NonUkOrganisationName"
-                                   aria-describedby="NonUkOrganisationName-hint">
+                                   gov-for="OrganisationName"
+                                   gov-value="@Model.OrganisationName"
+                                   aria-describedby="OrganisationName-hint">
                         </div>
                     </div>
 

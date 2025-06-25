@@ -25,7 +25,7 @@
 					<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
 						<h1 class="govuk-heading-l govuk-!-margin-bottom-4">
 							<label for="TradingName">
-								@if (@Model.ProducerType.HasValue && @Model.ProducerType  == ProducerType.NonUkOrganisation)
+								@if (!Model.IsCompaniesHouseFlow)
 								{
 									@Localizer["TradingName.QuestionUnincorporatedBody"].Value
 								}
