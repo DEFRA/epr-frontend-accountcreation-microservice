@@ -130,6 +130,6 @@
     <value>Is your organisation's trading name different to its Companies House name?</value>
   </data>
   <data name="IsTradingNameDifferent.Title" xml:space="preserve">
-    <value>Trading name different</value>
+    <value>Confirm trading name</value>
   </data>
 </root>
