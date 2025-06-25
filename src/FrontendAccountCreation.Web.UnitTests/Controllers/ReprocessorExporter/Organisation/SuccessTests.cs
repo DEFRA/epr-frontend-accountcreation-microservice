@@ -268,4 +268,209 @@ public class SuccessTests : OrganisationTestBase
 		viewModel.ReExCompanyTeamMembers.Should().BeNull();
 		viewModel.IsSoleTrader.Should().BeFalse();
 	}
+
+    [TestMethod]
+    public async Task Success_WhenIsCompaniesHouseFlow_PopulatesCompanyDetails()
+    {
+        // Arrange
+        var expectedCompanyName = "Companies House Ltd";
+        var teamMembers = new List<ReExCompanyTeamMember>
+    {
+        new ReExCompanyTeamMember { FirstName = "Alice", LastName = "Smith" }
+    };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Company
+                {
+                    Name = expectedCompanyName
+                },
+                TeamMembers = teamMembers
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.Success();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var model = viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>().Subject;
+
+        model.IsCompaniesHouseFlow.Should().BeTrue();
+        model.CompanyName.Should().Be(expectedCompanyName);
+        model.ReExCompanyTeamMembers.Should().BeEquivalentTo(teamMembers);
+    }
+
+    [TestMethod]
+    public async Task Success_WhenSoleTrader_PopulatesCompanyNameWithTradingName()
+    {
+        // Arrange
+        var expectedTradingName = "Sole Trader Ltd";
+        var teamMembers = new List<ReExCompanyTeamMember>
+    {
+        new ReExCompanyTeamMember { FirstName = "Bob" }
+    };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.SoleTrader,
+                TradingName = expectedTradingName,
+                TeamMembers = teamMembers
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.Success();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var viewModel = viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>().Subject;
+
+        viewModel.IsCompaniesHouseFlow.Should().BeFalse();
+        viewModel.IsSoleTrader.Should().BeTrue();
+        viewModel.CompanyName.Should().Be(expectedTradingName);
+        viewModel.ReExCompanyTeamMembers.Should().BeEquivalentTo(teamMembers);
+    }
+
+    [TestMethod]
+    public async Task Success_WhenNonUk_PopulatesCompanyNameWithNonUkOrganisationName()
+    {
+        // Arrange
+        var expectedName = "Non-UK Org Ltd";
+        var teamMembers = new List<ReExCompanyTeamMember>
+    {
+        new ReExCompanyTeamMember { FirstName = "Alice" }
+    };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.NonUkOrganisation,
+                NonUkOrganisationName = expectedName,
+                TeamMembers = teamMembers
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.Success();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var viewModel = viewResult.Model.Should().BeOfType<ReExOrganisationSuccessViewModel>().Subject;
+
+        viewModel.IsCompaniesHouseFlow.Should().BeFalse();
+        viewModel.IsSoleTrader.Should().BeFalse();
+        viewModel.CompanyName.Should().Be(expectedName);
+        viewModel.ReExCompanyTeamMembers.Should().BeEquivalentTo(teamMembers);
+    }
+
+    [TestMethod]
+    public async Task Success_WhenCompaniesHouseFlowIsTrue_ButCompanyOrTeamMembersAreNull_DoesNotThrowAndSetsNulls()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = null,
+                TeamMembers = null
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.Success();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+
+        viewModel.IsCompaniesHouseFlow.Should().BeTrue();
+        viewModel.CompanyName.Should().BeNull();
+        viewModel.ReExCompanyTeamMembers.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task Success_WhenCompaniesHouseFlowIsFalse_AndManualInputIsNull_CompanyNameIsNull()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = null
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.Success();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+
+        viewModel.IsCompaniesHouseFlow.Should().BeFalse();
+        viewModel.CompanyName.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task Success_WhenCompaniesHouseFlowIsFalse_AndManualInputNamesAreNull_CompanyNameIsNull()
+    {
+        // Arrange
+        var manualInput = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader,
+            TradingName = null, 
+            NonUkOrganisationName = null
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = manualInput
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.Success();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var viewModel = (ReExOrganisationSuccessViewModel)viewResult.Model!;
+
+        viewModel.IsCompaniesHouseFlow.Should().BeFalse();
+        viewModel.IsSoleTrader.Should().BeTrue();
+        viewModel.CompanyName.Should().BeNull();
+    }
+
+
 }

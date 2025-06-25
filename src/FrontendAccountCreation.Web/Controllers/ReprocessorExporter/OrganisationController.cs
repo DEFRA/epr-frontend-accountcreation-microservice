@@ -919,7 +919,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var viewModel = new NonUkOrganisationNameViewModel()
         {
-            NonUkOrganisationName = session?.ReExManualInputSession?.NonUkOrganisationName,
+            NonUkOrganisationName = session.ReExManualInputSession?.NonUkOrganisationName,
         };
         return View(viewModel);
     }
@@ -957,7 +957,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var viewModel = new NonUkRoleInOrganisationViewModel()
         {
-            NonUkRoleInOrganisation = session?.ReExManualInputSession?.NonUkRoleInOrganisation,
+            NonUkRoleInOrganisation = session.ReExManualInputSession?.NonUkRoleInOrganisation,
         };
         return View(viewModel);
     }

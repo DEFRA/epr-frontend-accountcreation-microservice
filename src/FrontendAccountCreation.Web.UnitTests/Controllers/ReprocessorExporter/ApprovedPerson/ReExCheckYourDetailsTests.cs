@@ -953,5 +953,249 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         model.reExCompanyTeamMembers.Should().BeEquivalentTo(teamMembers);
     }
 
+    [TestMethod]
+    public async Task CheckYourDetails_WhenCompaniesHouseFlowAndNestedPropertiesNull_SetsViewModelPropertiesToNullOrDefaults()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = null,
+                Partnership = null,
+                RoleInOrganisation = null,
+                TeamMembers = null
+            },
+            IsOrganisationAPartnership = null
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var model = (ReExCheckYourDetailsViewModel)viewResult.Model!;
+
+        model.IsCompaniesHouseFlow.Should().BeTrue();
+        model.BusinessAddress.Should().BeNull();
+        model.CompanyName.Should().BeNull();
+        model.CompaniesHouseNumber.Should().BeNull();
+        model.RoleInOrganisation.Should().BeNull();
+        model.IsOrganisationAPartnership.Should().BeFalse();
+        model.LimitedPartnershipPartners.Should().BeNull();
+        model.IsLimitedLiabilityPartnership.Should().BeFalse();
+        model.reExCompanyTeamMembers.Should().BeNull();
+
+        _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenIsSoleTraderAndManualInputSessionIsNull_SetsPropertiesSafely()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = null
+        };
+        session.ReExManualInputSession = null;
+        session.ReExManualInputSession = null;
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var model = (ReExCheckYourDetailsViewModel)viewResult.Model!;
+        model.BusinessAddress.Should().BeNull();
+        model.TradingName.Should().BeNull();
+
+        model.reExCompanyTeamMembers.Should().BeNull();
+
+        _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenIsSoleTraderAndTeamMembersNull_DoesNotThrowAndAddsNoMembers()
+    {
+        // Arrange
+        var manualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader,
+            BusinessAddress = new Address
+            {
+                Country = "UK",
+                BuildingName = "address line 1",
+                Street = "address line 2",
+                Town = "London",
+                County = "London",
+                Postcode = "AB1 2BC"
+            },
+            TradingName = "Sole Trader Trading",
+            TeamMembers = null
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = manualInputSession
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var model = (ReExCheckYourDetailsViewModel)viewResult.Model!;
+
+        model.ProducerType.Should().Be(ProducerType.SoleTrader);
+        model.TradingName.Should().Be("Sole Trader Trading");
+        model.reExCompanyTeamMembers.Should().BeEmpty();
+
+        _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenIsSoleTraderAndHasTeamMembers_AddsFirstMember()
+    {
+        // Arrange
+        var teamMember = new ReExCompanyTeamMember { FirstName = "Member1" };
+
+        var manualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader,
+            BusinessAddress = new Address
+            {
+                Country = "UK",
+                BuildingName = "address line 1",
+                Street = "address line 2",
+                Town = "London",
+                County = "London",
+                Postcode = "AB1 2BC"
+            },
+            TradingName = "Trading",
+            TeamMembers = new List<ReExCompanyTeamMember> { teamMember }
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = manualInputSession
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var model = (ReExCheckYourDetailsViewModel)viewResult.Model!;
+
+        model.ProducerType.Should().Be(ProducerType.SoleTrader);
+        model.TradingName.Should().Be("Trading");
+
+        model.reExCompanyTeamMembers.Should().ContainSingle();
+        model.reExCompanyTeamMembers[0].Should().Be(teamMember);
+
+        _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenIsNonUkAndManualInputSessionIsNull_SetsPropertiesSafely()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            IsUkMainAddress = false,
+            ReExManualInputSession = null
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var model = (ReExCheckYourDetailsViewModel)viewResult.Model!;
+
+        model.IsNonUk.Should().BeTrue();
+
+        model.ProducerType.Should().BeNull();
+        model.BusinessAddress.Should().BeNull();
+        model.TradingName.Should().BeNull();
+        model.reExCompanyTeamMembers.Should().BeNull();
+        model.Nation.Should().BeNull();
+
+        _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckYourDetails_WhenIsNonUkAndManualInputSessionPropertiesAreSet_AssignsPropertiesCorrectly()
+    {
+        // Arrange
+        var manualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.NonUkOrganisation,
+            BusinessAddress = new Address
+            {
+                Country = "France",
+                BuildingName = "address line 1",
+                Street = "address line 2",
+                Town = "Paris",
+                County = "Île-de-France",
+                Postcode = "75001",
+                IsManualAddress = true
+            },
+            NonUkOrganisationName = "NonUk Org",
+            TeamMembers = new List<ReExCompanyTeamMember> { new ReExCompanyTeamMember { FirstName = "Team Member 1" } },
+            UkRegulatorNation = Nation.Wales
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            IsUkMainAddress = false,
+            ReExManualInputSession = manualInputSession
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var model = (ReExCheckYourDetailsViewModel)viewResult.Model!;
+
+        model.IsNonUk.Should().BeTrue();
+        model.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
+        model.TradingName.Should().Be("NonUk Org");
+        model.reExCompanyTeamMembers.Should().ContainSingle();
+        model.Nation.Should().Be(Nation.Wales);
+
+        _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
+    }
 
 }
