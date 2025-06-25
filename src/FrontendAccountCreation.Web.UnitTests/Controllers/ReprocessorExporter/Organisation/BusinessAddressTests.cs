@@ -216,7 +216,7 @@ public class BusinessAddressTests : OrganisationTestBase
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipType));
     }
-}
+
 
     [TestMethod]
     public async Task POST_WhenNonCompaniesHouseAndUnincorporatedBody_ThenNavigateToUnincorporatedFlow()
