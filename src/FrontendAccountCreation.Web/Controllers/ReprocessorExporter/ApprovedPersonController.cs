@@ -1023,11 +1023,46 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         // [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson(AddApprovedPersonViewModel model)
         {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
-            {
+            {               
+                SetBackLink(session, PagePath.AddAnApprovedPerson);
                 return View(model);
             }
-            return View(model); //TODO:
+
+            if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
+            {
+                session.IsApprovedUser = true;
+                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson);
+            }
+            if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
+            {
+                string actionName, nextPagePath;
+
+                if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
+                {
+                    actionName = nameof(MemberPartnership);
+                    nextPagePath = PagePath.MemberPartnership;
+                }
+                else if (session.IsCompaniesHouseFlow)
+                {
+                    actionName = nameof(TeamMemberRoleInOrganisation);
+                    nextPagePath = PagePath.TeamMemberRoleInOrganisation;
+                }
+                else
+                {
+                    actionName = nameof(ManageControlOrganisation);
+                    nextPagePath = PagePath.ManageControlOrganisation;
+                }
+
+                return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
+            }
+            if (model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
+            {
+                return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
+            }
+
+            return View(model);
         }
     }
 }
