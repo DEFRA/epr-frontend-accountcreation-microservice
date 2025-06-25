@@ -117,13 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NonCompaniesHousePartnershipRole.Title" xml:space="preserve">
-    <value>What Role Do You Have</value>
+  <data name="PartnershipRole.IndividualPartner" xml:space="preserve">
+    <value>Individual partner within the partnership</value>
   </data>
-  <data name="NonCompaniesHousePartnershipRole.Question" xml:space="preserve">
-    <value>What role do you have within the partnership?</value>
+  <data name="PartnershipRole.CompanyDirector" xml:space="preserve">
+    <value>Company director of a corporate partner within the partnership</value>
   </data>
-  <data name="NonCompaniesHousePartnershipRole.ErrorMessage" xml:space="preserve">
-    <value>Select your role in your organisation</value>
+  <data name="PartnershipRole.CompanySecretary" xml:space="preserve">
+    <value>Company secretary of a corporate partner within the partnership</value>
+  </data>
+  <data name="PartnershipRole.None" xml:space="preserve">
+    <value>None of the above</value>
   </data>
 </root>
