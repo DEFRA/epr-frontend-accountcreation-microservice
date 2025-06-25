@@ -10,6 +10,8 @@
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
+    Model.DeleteAction = nameof(LimitedPartnershipController.NamesOfPartnersDelete);
+
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
@@ -31,58 +33,8 @@
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
                 <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                     <form method="post">
-                        @Html.HiddenFor(m => m.ExpectsCompanyPartners)
-                        @Html.HiddenFor(m => m.ExpectsIndividualPartners)
-                        @for (int i = 0; i < Model.Partners.Count; ++i)
-                        {
-                            <fieldset class="govuk-fieldset">
-                                <legend class="govuk-visually-hidden">@Localizer["NamesOfPartners.Legend"]</legend>
-                                <p></p>
-                                <div class="govuk-form-group">
-                                    @Html.HiddenFor(m => m.Partners[i].Id)
-
-                                    @if (Model.ExpectsCompanyPartners)
-                                    {
-                                        <!-- Company partner name -->
-                                        @Html.LabelFor(m => m.Partners[i].CompanyName, @Localizer["NamesOfPartners.CompanyName"].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
-                                        @Html.EditorFor(m => m.Partners[i].CompanyName, new { htmlAttributes = new { @class = "govuk-input" } })
-                                    }
-
-                                    @if (Model.ExpectsCompanyPartners && Model.ExpectsIndividualPartners)
-                                    {
-                                        <br /><br />
-                                        <p class="govuk-body"><strong>@Localizer["NamesOfPartners.Or"]</strong></p>
-                                    }
-
-                                    @if (Model.ExpectsIndividualPartners)
-                                    {
-                                        string personNameLabel = Model.ExpectsCompanyPartners ? "NamesOfPartners.IndividualPartnersFullName" : "NamesOfPartners.FullName";
-                                        <!-- Individual partner’s full name -->
-                                        @Html.LabelFor(m => m.Partners[i].PersonName, @Localizer[personNameLabel].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
-                                        @Html.EditorFor(m => m.Partners[i].PersonName, new { htmlAttributes = new { @class = "govuk-input" } })
-                                    }
-
-                                    <br /><br />
-
-                                    @if (Model.Partners.Count > 1)
-                                    {
-                                        <!-- remove partner -->
-                                        <div class="govuk-!-text-align-right">
-                                            @Html.ActionLink(@SharedLocalizer["Remove"].Value, nameof(LimitedPartnershipController.NamesOfPartnersDelete), "LimitedPartnership",
-                                                     new
-                                                     {
-                                                         @id = @Model.Partners[i].Id
-                                                     },
-                                                     new
-                                                     {
-                                                         @class = "govuk-button govuk-button--secondary"
-                                                     })
-                                        </div>
-                                    }
-                                    <hr>
-                                </div>
-                            </fieldset>
-                        }
+                        
+                        @await Html.PartialAsync("Partials/_NamesOfPartnersInputs", Model)
 
                         <div class="govuk-button-group">
 

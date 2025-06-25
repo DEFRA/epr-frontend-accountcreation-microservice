@@ -6,5 +6,7 @@ public class PartnershipPartnersViewModel
 
     public bool ExpectsCompanyPartners { get; set; }
 
-    public List<PartnershipPersonOrCompanyViewModel>? Partners { get; set; }   
+    public List<PartnershipPersonOrCompanyViewModel>? Partners { get; set; }
+
+    public string? DeleteAction { get; set; }
 }
