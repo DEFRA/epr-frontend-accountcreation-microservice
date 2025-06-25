@@ -21,7 +21,7 @@ public class LimitedPartnershipPersonOrCompanyViewModel
     [RegularExpression("True|true")]
     public bool IsPersonOrCompanyButNotBoth => ((IsPerson && !IsCompany) || (IsCompany && !IsPerson));
 
-    public static implicit operator LimitedPartnershipPersonOrCompanyViewModel(ReExLimitedPartnershipPersonOrCompany partner)
+    public static implicit operator LimitedPartnershipPersonOrCompanyViewModel(ReExPersonOrCompanyPartner partner)
     {
         return new LimitedPartnershipPersonOrCompanyViewModel
         {

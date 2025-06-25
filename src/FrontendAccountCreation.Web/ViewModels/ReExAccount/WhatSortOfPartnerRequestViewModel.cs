@@ -12,7 +12,7 @@ public class WhatSortOfPartnerRequestViewModel : IValidatableObject
         if (!HasIndividualPartners && !HasCompanyPartners)
         {
             yield return new ValidationResult(
-                "LimitedPartnershipType.ErrorMessage",
+                "Partial._WhatSortOfPartnerCheckBoxes.ErrorMessage",
                 new[] { nameof(HasIndividualPartners) }  // Only attach to one field to avoid duplicate messages
             );
         }

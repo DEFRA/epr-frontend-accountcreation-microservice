@@ -51,9 +51,9 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
 
         _partnership = new ReExPartnership
         {
-            LimitedPartnership = new ReExLimitedPartnership
+            LimitedPartnership = new ReExTypesOfPartner
             {
-                Partners = new List<ReExLimitedPartnershipPersonOrCompany>
+                Partners = new List<ReExPersonOrCompanyPartner>
                 {
                     new()
                     {

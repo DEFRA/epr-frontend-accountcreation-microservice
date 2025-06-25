@@ -38,7 +38,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership()
+                    LimitedPartnership = new ReExTypesOfPartner()
                 }
             }
         };
@@ -100,7 +100,7 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         _orgSessionMock.ReExCompaniesHouseSession.Partnership = new ReExPartnership
         {
             IsLimitedPartnership = true,
-            LimitedPartnership = new ReExLimitedPartnership
+            LimitedPartnership = new ReExTypesOfPartner
             {
                 HasIndividualPartners = true,
                 HasCompanyPartners = false
