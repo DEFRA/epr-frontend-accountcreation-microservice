@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
+namespace FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated;
 
 [ExcludeFromCodeCoverage]
 public class ReExManageAccountPersonViewModel
