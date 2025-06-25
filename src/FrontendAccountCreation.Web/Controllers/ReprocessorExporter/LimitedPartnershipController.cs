@@ -347,7 +347,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         return View(new LimitedPartnershipRoleViewModel
         {
-            LimitedPartnershipRole = limitedPartnershipRole
+            RoleInOrganisation = limitedPartnershipRole
         });
     }
 
@@ -364,8 +364,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        session.ReExCompaniesHouseSession.RoleInOrganisation = model.LimitedPartnershipRole;
-        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.LimitedPartnershipRole == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation;
+        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
                     PagePath.LimitedPartnershipRole, PagePath.AddAnApprovedPerson);
@@ -417,7 +417,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     //Non company house User Role in Paternship
     [HttpGet]
     [Route(PagePath.NonCompaniesHousePartnershipRole)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
     public async Task<IActionResult> NonCompaniesHousePartnershipRole()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -431,7 +431,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
     [HttpPost]
     [Route(PagePath.NonCompaniesHousePartnershipRole)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
     public async Task<IActionResult> NonCompaniesHousePartnershipRole(NonCompaniesHousePartnershipRoleModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
