@@ -528,8 +528,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         await SyncSessionWithModel(model.ExpectsCompanyPartners, model.ExpectsIndividualPartners, await GetSessionPartners(model.Partners));
 
-        return await SaveSessionAndRedirect(session, nameof(CheckNamesOfPartners),
-            PagePath.NonCompaniesHousePartnershipNamesOfPartners, PagePath.LimitedPartnershipCheckNamesOfPartners);
+        return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipCheckNamesOfPartners),
+            PagePath.NonCompaniesHousePartnershipNamesOfPartners, PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners);
 
         // synchronise Non Companies House session
         async Task SyncSessionWithModel(
@@ -562,6 +562,42 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipNamesOfPartners),
             PagePath.NonCompaniesHousePartnershipNamesOfPartnersDelete, null);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipCheckNamesOfPartners()
+    {
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners);
+
+        List<ReExPersonOrCompanyPartner> model = session.ReExManualInputSession?.TypesOfPartner?.Partners ?? new();
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipCheckNamesOfPartners(List<ReExPersonOrCompanyPartner> modelNotUsed)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
+        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipRole), PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, PagePath.NonCompaniesHousePartnershipRole);
+    }
+
+    [HttpGet]
+    [Route(PagePath.LimitedPartnershipCheckNamesOfPartnersDelete)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipCheckNamesOfPartnersDelete([FromQuery] Guid id)
+    {
+        DeleteFocusId();
+
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        session?.ReExManualInputSession?.TypesOfPartner?.Partners?.RemoveAll(x => x.Id == id);
+
+        return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipCheckNamesOfPartners),
+            PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, null);
     }
 
     private static async Task<List<ReExPersonOrCompanyPartner>> GetSessionPartners(List<PartnershipPersonOrCompanyViewModel> partners)

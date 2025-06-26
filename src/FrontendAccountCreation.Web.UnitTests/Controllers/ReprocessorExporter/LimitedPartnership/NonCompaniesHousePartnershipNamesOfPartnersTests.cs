@@ -327,7 +327,7 @@ public class NonCompaniesHousePartnershipNamesOfPartnersTests : LimitedPartnersh
         _orgSessionMock.ReExManualInputSession.TypesOfPartner.Partners[0].Should().BeEquivalentTo(jack);
         _orgSessionMock.ReExManualInputSession.TypesOfPartner.Partners[1].Should().BeEquivalentTo(biffa);
 
-        redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+        redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipCheckNamesOfPartners));
     }
 
     [TestMethod]
