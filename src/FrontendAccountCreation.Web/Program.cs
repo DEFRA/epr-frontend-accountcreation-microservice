@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Logging;
-using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +19,14 @@ builder.Services
     .RegisterWebComponents(builder.Configuration)
     .ConfigureMsalDistributedTokenOptions(builder.Configuration);
 
+string pathBase = builder.Configuration.GetValue<string>("PATH_BASE") ?? "";
+
 builder.Services
     .AddAntiforgery(options => {
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.Name = builder.Configuration.GetValue<string>("CookieOptions:AntiForgeryCookieName");
-        options.Cookie.Path = builder.Configuration.GetValue<string>("PATH_BASE") ?? "/";
+        options.Cookie.Path = pathBase;
     })
     .AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
     .AddViewLocalization(options =>
@@ -80,7 +81,7 @@ builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 
 var app = builder.Build();
 
-app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
+app.UsePathBase(pathBase);
 
 if (app.Environment.IsDevelopment())
 {
@@ -91,9 +92,15 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/error");
+    app.UseExceptionHandler($"{pathBase}/error");
 }
-app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
+app.UseStatusCodePagesWithReExecute($"{pathBase}/error", "?statusCode={0}");
+
+//app.Use(async (context, next) =>
+//{
+//    Console.WriteLine($"PathBase: {context.Request.PathBase}, Path: {context.Request.Path}");
+//    await next();
+//});
 
 app.UseForwardedHeaders();
 
