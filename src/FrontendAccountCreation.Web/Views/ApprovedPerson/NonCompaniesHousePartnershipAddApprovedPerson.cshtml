@@ -19,9 +19,7 @@
             <div class="govuk-grid-column-two-thirds">
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
-
                 <form method="post" novalidate>
-                    @Html.HiddenFor(model => model.IsNonCompaniesHousePartnership)
                     @await Html.PartialAsync("Partials/_LimitedPartnershipAddApprovedPerson", Model)
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                     </legend>

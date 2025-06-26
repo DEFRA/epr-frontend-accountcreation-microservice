@@ -1013,8 +1013,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson()
+        
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            session.IsNonCompaniesHousePartnership = true;
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
             return View(new AddApprovedPersonViewModel { IsNonCompaniesHousePartnership = true });
         }
 
@@ -1026,7 +1030,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                SetBackLink(session, PagePath.AddAnApprovedPerson);
+                model.IsNonCompaniesHousePartnership = session.IsNonCompaniesHousePartnership ?? false;
+                SetBackLink(session, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
                 return View(model);
             }
 
@@ -1035,34 +1040,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 session.IsApprovedUser = true;
                 return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson);
             }
-            if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
+            else if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
-                string actionName, nextPagePath;
 
-                if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
-                {
-                    actionName = nameof(MemberPartnership);
-                    nextPagePath = PagePath.MemberPartnership;
-                }
-                else if (session.IsCompaniesHouseFlow)
-                {
-                    actionName = nameof(TeamMemberRoleInOrganisation);
-                    nextPagePath = PagePath.TeamMemberRoleInOrganisation;
-                }
-                else
-                {
-                    actionName = nameof(ManageControlOrganisation);
-                    nextPagePath = PagePath.ManageControlOrganisation;
-                }
-
-                return await SaveSessionAndRedirect(session, actionName, PagePath.NonCompaniesHousePartnershipAddApprovedPerson, nextPagePath);
+                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
             }
-            if (model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
+            else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
             {
                 return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
             }
-
-            return View(model);
         }
     }
 }

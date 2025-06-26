@@ -50,4 +50,5 @@ public class OrganisationSession : ILocalSession
     public HashSet<string> WhiteList { get; set; } = [];
     
     public InviteUserOptions? InviteUserOption { get; set; }
+    public bool? IsNonCompaniesHousePartnership { get; set; }
 }
