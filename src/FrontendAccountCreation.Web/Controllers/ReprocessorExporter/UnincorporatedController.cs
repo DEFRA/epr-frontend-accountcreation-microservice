@@ -2,6 +2,7 @@
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated;
 using Microsoft.AspNetCore.Mvc;
 
@@ -70,16 +71,16 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.ReExUnincorporatedFlowSession.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
+        var answer = viewModel.ManageControlInUKAnswer!.Value;
+        session.ReExUnincorporatedFlowSession.ManageControlAnswer = answer;
 
-        if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
-        {
-            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
-        }
+        var (nextAction, returnToPage) = answer == ManageControlAnswer.Yes
+            ? (nameof(ManageAccountPerson), PagePath.UnincorporatedManageAccountPerson)
+            : (nameof(ManageAccountPersonUserFromTeam), PagePath.UnincorporatedManageAccountPersonUserFromTeam);
 
-        //TODO: Redirect to AddApprovedPerson (page 3b) when implemented
-        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        return await SaveSessionAndRedirect(session, nextAction, PagePath.UnincorporatedManageControl, returnToPage);
     }
+
 
     [HttpGet]
     [Route(PagePath.UnincorporatedManageAccountPerson)]
@@ -150,5 +151,45 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             await SaveSessionAndRedirect(session, nameof(ApprovedPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson)
             : // TODO: continue path - Redirect to Check your details - final page
             await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
+    public async Task<IActionResult> ManageAccountPersonUserFromTeam()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        return View(new ReExManageAccountPersonUserFromTeamViewModel());
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
+    public async Task<IActionResult> ManageAccountPersonUserFromTeam(ReExManageAccountPersonUserFromTeamViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+            return View(viewModel);
+        }
+
+        var answer = viewModel.ManageAccountPersonAnswer!.Value;
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
+
+        var (action, returnToPage) = answer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead
+            ? (nameof(ManageControl), PagePath.UnincorporatedManageControl)
+            : (nameof(UnincorporatedCheckYourDetails), PagePath.UnincorporatedCheckYourDetails);
+
+        return await SaveSessionAndRedirect(session, action, returnToPage, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedCheckYourDetails)]
+    public async Task<IActionResult> UnincorporatedCheckYourDetails()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedCheckYourDetails);
+        return View(new ReExCheckYourDetailsViewModel());
     }
 }
