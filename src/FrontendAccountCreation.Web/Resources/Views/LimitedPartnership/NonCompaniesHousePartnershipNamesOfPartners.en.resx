@@ -17,10 +17,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NonCompaniesHousePartnershipNamesOfPartners.Title_Individual" xml:space="preserve">
-    <value>[Welsh]Name Individual Partners</value>
+    <value>Name Individual Partners</value>
   </data>
   <data name="NonCompaniesHousePartnershipNamesOfPartners.Title_Company" xml:space="preserve">
-    <value>[Welsh]Name Corporate Partners</value>
+    <value>Name Company Partners</value>
   </data>
   <data name="NonCompaniesHousePartnershipNamesOfPartners.Title_Both" xml:space="preserve">
     <value>Name-All-Partners</value>
