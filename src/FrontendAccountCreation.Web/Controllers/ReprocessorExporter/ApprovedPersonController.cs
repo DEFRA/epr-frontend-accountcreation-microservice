@@ -472,22 +472,22 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete)]
         public async Task<IActionResult> NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete(Guid? id)
         {
-                var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-                if (id.HasValue && session.ReExManualInputSession?.TeamMembers != null)
-                {
-                    session.ReExManualInputSession.TeamMembers =
-                        session.ReExManualInputSession.TeamMembers
-                            .Where(tm => tm.Id != id.Value)
-                            .ToList();
-                }
+            if (id.HasValue && session.ReExManualInputSession?.TeamMembers != null)
+            {
+                session.ReExManualInputSession.TeamMembers =
+                    session.ReExManualInputSession.TeamMembers
+                        .Where(tm => tm.Id != id.Value)
+                        .ToList();
+            }
 
-                return await SaveSessionAndRedirect(
-                    session,
-                    nameof(NonCompaniesHouseTeamMemberCheckInvitationDetails),
-                    PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails,
-                    null
-                );
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(NonCompaniesHouseTeamMemberCheckInvitationDetails),
+                PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails,
+                null
+            );
         }
 
         [HttpGet]
@@ -1010,7 +1010,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
-        // [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -1019,12 +1019,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
-        // [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
-            {               
+            {
                 SetBackLink(session, PagePath.AddAnApprovedPerson);
                 return View(model);
             }
