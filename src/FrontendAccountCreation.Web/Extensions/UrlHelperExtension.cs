@@ -8,11 +8,12 @@ public static class UrlHelperExtension
     {
         return url.Action("RegisteredAsCharity", "AccountCreation");
     }
+    
     public static string HomePathReExUser(this IUrlHelper url)
     {
         return url.Action("ReExAccountFullName", "User");
     }
-    //todo: remove this?
+
     public static string CurrentPath(this IUrlHelper url)
     {
         return url.Action(null, "AccountCreation");
