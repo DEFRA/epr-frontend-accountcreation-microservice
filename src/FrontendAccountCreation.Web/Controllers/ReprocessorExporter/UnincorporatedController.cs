@@ -179,19 +179,11 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
                 PagePath.UnincorporatedManageAccountPersonUserFromTeam);
         }
 
+        //TODO Check Your Details
         return await SaveSessionAndRedirect(
             session,
-            nameof(UnincorporatedCheckYourDetails),
+            nameof(ManageAccountPersonUserFromTeam),
             PagePath.UnincorporatedNotImplemented,
             PagePath.UnincorporatedManageAccountPersonUserFromTeam);
     }
-
-
-    [HttpGet]
-    [Route(PagePath.UnincorporatedNotImplemented)]
-    public async Task<IActionResult> UnincorporatedCheckYourDetails()
-    {
-        throw new NotImplementedException("UnincorporatedCheckYourDetails is not yet implemented.");
-    }
-
 }

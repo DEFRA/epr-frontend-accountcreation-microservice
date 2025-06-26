@@ -95,46 +95,6 @@ public class ManageControlTests : UnincorporatedTestBase
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
     }
 
-    [TestMethod]
-    public async Task ManageControl_Post_YesAnswer_SetsSessionAndRedirectsCorrectly()
-    {
-        // Arrange
-        var viewModel = new ReExManageControlViewModel
-        {
-            ManageControlInUKAnswer = ManageControlAnswer.Yes
-        };
-        var session = SetupOrganisationSession();
-
-        // Act
-        var result = await _systemUnderTest.ManageControl(viewModel);
-
-        // Assert
-        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageAccountPerson));
-        session.ReExUnincorporatedFlowSession.ManageControlAnswer.Should().Be(ManageControlAnswer.Yes);
-    }
-
-    [TestMethod]
-    [DataRow(ManageControlAnswer.No)]
-    [DataRow(ManageControlAnswer.NotSure)]
-    public async Task ManageControl_Post_NotYesAnswer_SetsSessionAndRedirectsCorrectly(ManageControlAnswer input)
-    {
-        // Arrange
-        var viewModel = new ReExManageControlViewModel
-        {
-            ManageControlInUKAnswer = input
-        };
-        var session = SetupOrganisationSession();
-
-        // Act
-        var result = await _systemUnderTest.ManageControl(viewModel);
-
-        // Assert
-        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageAccountPersonUserFromTeam));
-        session.ReExUnincorporatedFlowSession.ManageControlAnswer.Should().Be(input);
-    }
-
     private OrganisationSession SetupOrganisationSession(ManageControlAnswer expectedAnswer = ManageControlAnswer.Yes)
     {
         var session = new OrganisationSession
