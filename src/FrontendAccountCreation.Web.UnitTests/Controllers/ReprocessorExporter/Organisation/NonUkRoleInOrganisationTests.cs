@@ -27,7 +27,7 @@ public class NonUkRoleInOrganisationTests : OrganisationTestBase
             [
                 PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
                 PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent,
-                PagePath.TradingName,PagePath.IsUkMainAddress,PagePath.NonUkOrganisationName,PagePath.NonUkRoleInOrganisation,
+                PagePath.TradingName,PagePath.IsUkMainAddress,PagePath.OrganisationName,PagePath.NonUkRoleInOrganisation,
                 PagePath.NotImplemented
             ]
         };
@@ -127,7 +127,7 @@ public class NonUkRoleInOrganisationTests : OrganisationTestBase
 
         var viewResult = (ViewResult)result;
 
-        AssertBackLink(viewResult, PagePath.NonUkOrganisationName);
+        AssertBackLink(viewResult, PagePath.OrganisationName);
     }
 
     [TestMethod]
