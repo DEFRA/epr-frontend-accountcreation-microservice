@@ -1,13 +1,12 @@
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.Constants
-@using FrontendAccountCreation.Core.Sessions
 
 @model ReExCheckYourDetailsViewModel
 
 @{
     ViewData["Title"] = Localizer["CheckYourDetails.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 }
 
 <div class="govuk-width-container">

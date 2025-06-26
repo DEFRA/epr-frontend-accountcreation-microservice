@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -83,6 +84,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             return isEligibleToBeApprovedPerson;
+        }
+
+        // Non companies house add approved person
+        [ExcludeFromCodeCoverage(Justification = "This is a placeholder for future implementation.")]
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson()
+        {
+            return Ok("This is a place holder and should be replaced once add approved person for non companies house partnership flow is ready");
         }
 
         [HttpPost]

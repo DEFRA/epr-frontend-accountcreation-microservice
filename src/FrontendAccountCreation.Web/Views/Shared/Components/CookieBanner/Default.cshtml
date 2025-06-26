@@ -8,16 +8,10 @@
 
 @{
     string cookiesLink = ($"{ExternalUrlsOptions.Value.CookiesLink}?returnurl={Model.ReturnUrl}");
-    LocalizedHtmlString cookieBannerTitle;
 
-    if (ViewData["ApplicationTitleOverride"] == LayoutOverrides.ReExTitleOverride)
-    {
-        cookieBannerTitle = Localizer["CookieBanner.ReExTitle"];
-    }
-    else
-    {
-        cookieBannerTitle = Localizer["CookieBanner.Title"];
-    }
+    var cookieBannerTitle = (string?)ViewData["ApplicationTitleOverride"] == LayoutOverrides.ReExTitleOverride
+        ? Localizer["CookieBanner.ReExTitle"]
+        : Localizer["CookieBanner.Title"];
 }
 
 @if (Model.ShowBanner)

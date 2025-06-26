@@ -4,7 +4,7 @@ using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 namespace FrontendAccountCreation.Web.UnitTests.ViewModels;
 
 [TestClass]
-public class LimitedPartnershipPersonOrCompanyViewModelTests
+public class PartnershipPersonOrCompanyViewModelTests
 {
     [TestMethod]
     [DataRow(null, false)]
@@ -13,7 +13,7 @@ public class LimitedPartnershipPersonOrCompanyViewModelTests
     [DataRow("Joanne Smith", true)]
     public void IsPerson_Returns_CorrectState(string personName, bool expectedValue)
     {
-        LimitedPartnershipPersonOrCompanyViewModel model = new LimitedPartnershipPersonOrCompanyViewModel
+        PartnershipPersonOrCompanyViewModel model = new PartnershipPersonOrCompanyViewModel
         {
             PersonName = personName
         };
@@ -28,7 +28,7 @@ public class LimitedPartnershipPersonOrCompanyViewModelTests
     [DataRow("Biffa Waste Inc", true)]
     public void IsCompany_Returns_CorrectState(string companyName, bool expectedValue)
     {
-        LimitedPartnershipPersonOrCompanyViewModel model = new LimitedPartnershipPersonOrCompanyViewModel
+        PartnershipPersonOrCompanyViewModel model = new PartnershipPersonOrCompanyViewModel
         {
             CompanyName = companyName
         };
@@ -46,7 +46,7 @@ public class LimitedPartnershipPersonOrCompanyViewModelTests
     [DataRow("Joanne Smith", "Biffa Waste Inc", false)]
     public void IsPersonOrCompanyButNotBoth_Returns_CorrectState(string personName, string companyName, bool expectedValue)
     {
-        LimitedPartnershipPersonOrCompanyViewModel model = new LimitedPartnershipPersonOrCompanyViewModel
+        PartnershipPersonOrCompanyViewModel model = new PartnershipPersonOrCompanyViewModel
         {
             PersonName = personName,
             CompanyName = companyName
@@ -65,7 +65,7 @@ public class LimitedPartnershipPersonOrCompanyViewModelTests
             Name = "Joanne Smith"
         };
 
-        LimitedPartnershipPersonOrCompanyViewModel model = (LimitedPartnershipPersonOrCompanyViewModel)fromModel;
+        PartnershipPersonOrCompanyViewModel model = (PartnershipPersonOrCompanyViewModel)fromModel;
 
         model.Id.Should().Be(fromModel.Id);
         model.PersonName.Should().Be(fromModel.Name);
@@ -82,7 +82,7 @@ public class LimitedPartnershipPersonOrCompanyViewModelTests
             Name = "Biffa Waste Inc"
         };
 
-        LimitedPartnershipPersonOrCompanyViewModel model = (LimitedPartnershipPersonOrCompanyViewModel)fromModel;
+        PartnershipPersonOrCompanyViewModel model = (PartnershipPersonOrCompanyViewModel)fromModel;
 
         model.Id.Should().Be(fromModel.Id);
         model.PersonName.Should().BeNull();

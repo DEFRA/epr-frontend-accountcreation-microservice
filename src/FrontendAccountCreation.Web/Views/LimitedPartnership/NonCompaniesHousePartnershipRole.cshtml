@@ -1,13 +1,13 @@
-@using FrontendAccountCreation.Web.Constants
+﻿@using FrontendAccountCreation.Web.Constants
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Core.Sessions
 
-@model LimitedPartnershipRoleViewModel
+@model NonCompaniesHousePartnershipRoleModel
 
 @{
-    ViewData["Title"] = Localizer["LimitedPartnershipRole.Title"];
+    ViewData["Title"] = Localizer["NonCompaniesHousePartnershipRole.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
@@ -19,17 +19,17 @@
             <div class="govuk-grid-column-two-thirds">
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="LimitedPartnership" asp-action="LimitedPartnershipRole" method="post">
+                <form asp-controller="LimitedPartnership" asp-action="NonCompaniesHousePartnershipRole" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                    @Localizer["LimitedPartnershipRole.Question"]
+                                    @Localizer["NonCompaniesHousePartnershipRole.Question"]
                                 </h1>
                             </legend>
 
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
-                            @await Html.PartialAsync("Partials/_PartnershipRole", new PartnershipRoleModel() { RoleInOrganisation = Model.RoleInOrganisation })
+                            @await Html.PartialAsync("Partials/_PartnershipRole", new PartnershipRoleModel() {RoleInOrganisation = Model.RoleInOrganisation })
                         </fieldset>
                     </div>
 
