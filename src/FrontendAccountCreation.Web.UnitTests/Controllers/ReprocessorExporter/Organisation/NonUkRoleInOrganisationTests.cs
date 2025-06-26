@@ -27,7 +27,7 @@ public class NonUkRoleInOrganisationTests : OrganisationTestBase
             [
                 PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
                 PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent,
-                PagePath.TradingName,PagePath.IsUkMainAddress,PagePath.NonUkOrganisationName,PagePath.NonUkRoleInOrganisation,
+                PagePath.TradingName,PagePath.IsUkMainAddress,PagePath.OrganisationName,PagePath.NonUkRoleInOrganisation,
                 PagePath.NotImplemented
             ]
         };
@@ -127,6 +127,48 @@ public class NonUkRoleInOrganisationTests : OrganisationTestBase
 
         var viewResult = (ViewResult)result;
 
-        AssertBackLink(viewResult, PagePath.NonUkOrganisationName);
+        AssertBackLink(viewResult, PagePath.OrganisationName);
+    }
+
+    [TestMethod]
+    public async Task GET_WhenNonUkRoleInOrganisationIsPresent_ThenViewModelIsPopulated()
+    {
+        // Arrange
+        const string expectedRole = "CEO";
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            NonUkRoleInOrganisation = expectedRole
+        };
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_organisationSession);
+
+        // Act
+        var result = await _systemUnderTest.NonUkRoleInOrganisation();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var viewModel = (NonUkRoleInOrganisationViewModel)viewResult.Model!;
+        viewModel.NonUkRoleInOrganisation.Should().Be(expectedRole);
+    }
+
+    [TestMethod]
+    public async Task GET_WhenReExManualInputSessionIsNull_ThenViewModelHasNullRole()
+    {
+        // Arrange
+        _organisationSession.ReExManualInputSession = null;
+
+        _sessionManagerMock
+            .Setup(m => m.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(_organisationSession);
+
+        // Act
+        var result = await _systemUnderTest.NonUkRoleInOrganisation();
+
+        // Assert
+        var viewResult = (ViewResult)result;
+        var viewModel = (NonUkRoleInOrganisationViewModel)viewResult.Model!;
+        viewModel.NonUkRoleInOrganisation.Should().BeNull();
     }
 }

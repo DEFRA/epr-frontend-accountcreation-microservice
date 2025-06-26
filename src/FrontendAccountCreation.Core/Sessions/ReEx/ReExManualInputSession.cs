@@ -9,7 +9,7 @@ public class ReExManualInputSession
 {
     public string TradingName { get; set; }
 
-    public string NonUkOrganisationName { get; set; }
+    public string OrganisationName { get; set; }
 
     public string NonUkRoleInOrganisation { get; set; }
 
@@ -21,12 +21,12 @@ public class ReExManualInputSession
     public ProducerType? ProducerType { get; set; }
 
     public Address? BusinessAddress { get; set; }
-
-    public ReExCompanyTeamMember? TeamMember { get; set; }
-
     // this is both in ReExCompaniesHouseSession and here. we could move it out of both, into the root session
     public bool? IsEligibleToBeApprovedPerson { get; set; }
-
+  
+    public List<ReExCompanyTeamMember>? TeamMembers { get; set; }
+  
     // will be null unless ProducerType equals Partnership
     public ReExTypesOfPartner? TypesOfPartner { get; set; }
+  
 }

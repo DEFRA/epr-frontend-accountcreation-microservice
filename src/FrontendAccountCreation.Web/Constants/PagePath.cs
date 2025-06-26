@@ -59,13 +59,13 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationAdd = "check-companies-house-role/add";
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
 
-    public const string SoleTraderTeamMemberDetails = "team-member-details";
+    public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
 
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";
 
-    public const string SoleTraderTeamMemberCheckInvitationDetails = "soletrader-check-invitation-details";
-    public const string SoleTraderTeamMemberCheckInvitationDetailsDelete = "soletrader-check-invitation-details/delete";
+    public const string NonCompaniesHouseTeamMemberCheckInvitationDetails = "non-companies-house-check-invitation-details";
+    public const string NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete = "non-companies-house-check-invitation-details/delete";
 
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
@@ -85,8 +85,10 @@ public static class PagePath
     public const string YouAreApprovedPersonSoleTrader = "soletrader-approved-person";
     public const string SoleTraderContinue = "soletrader-continue";
 
-    // Non Uk Non Companies House paths
-    public const string NonUkOrganisationName = "nonuk-organisation-name";
+    // UK & Non-UK Non-Companies-House path
+    public const string OrganisationName = "organisation-name";
+
+    // Non Uk Non Companies House paths    
     public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
     // Limited partnership paths

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,37 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.Title" xml:space="preserve">
-    <value>Check invitation details</value>
+  <data name="OrganisationName.ErrorMessage" xml:space="preserve">
+    <value>Enter your organisation's name</value>
   </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.CheckInvitationDetails" xml:space="preserve">
-    <value>Check invitation details</value>
+  <data name="OrganisationName.Hint" xml:space="preserve">
+    <value>You may trade under your own name, or a name you have given to your business.</value>
   </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.Help" xml:space="preserve">
-    <value>An invite created for the individual in charge of the business will be sent once the organisation is added.</value>
+  <data name="OrganisationName.LengthErrorMessage" xml:space="preserve">
+    <value>Organisation name must be 170 characters or less</value>
   </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.Role" xml:space="preserve">
-    <value>Role</value>
+  <data name="OrganisationName.Question" xml:space="preserve">
+    <value>What is the name of your organisation?</value>
   </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.FirstName" xml:space="preserve">
-    <value>First name</value>
-  </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.Email" xml:space="preserve">
-    <value>Email</value>
-  </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.Telephone" xml:space="preserve">
-    <value>Telephone</value>
-  </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.Remove" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.ContactDetails" xml:space="preserve">
-    <value>contact details</value>
-  </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.LastName" xml:space="preserve">
-    <value>Last name</value>
-  </data>
-  <data name="SoleTraderTeamMemberCheckInvitationDetails.SoleTrader" xml:space="preserve">
-    <value>Sole trader</value>
+  <data name="OrganisationName.Title" xml:space="preserve">
+    <value>Organisation Name</value>
   </data>
 </root>

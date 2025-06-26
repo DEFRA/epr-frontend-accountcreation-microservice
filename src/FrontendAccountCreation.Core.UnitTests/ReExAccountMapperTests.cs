@@ -234,13 +234,17 @@ public class ReExAccountMapperTests
                     Country = "England"
                 },
                 ProducerType = ProducerType.SoleTrader,
-                TeamMember = new ReExCompanyTeamMember
+                TeamMembers = new List<ReExCompanyTeamMember>
                 {
-                    FirstName = "John",
-                    LastName = "Smith",
-                    Role = memberRole,
-                    Email = "john.smith@tester.com",
-                    TelephoneNumber = "07880809087"
+                new ReExCompanyTeamMember
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "John",
+                        LastName = "Smith",
+                        Role = memberRole,
+                        Email = "john.smith@tester.com",
+                        TelephoneNumber = "07880809087"
+                    } 
                 },
                 TradingName = "test sole trader"
             }
@@ -340,14 +344,17 @@ public class ReExAccountMapperTests
                 Country = "Manual Country",
                 Postcode = "PC2 2BB"
             },
-            TeamMember = new ReExCompanyTeamMember
-            {
+            TeamMembers = new List<ReExCompanyTeamMember>
+                {
+                new ReExCompanyTeamMember
+                {
                 Id = Guid.NewGuid(),
                 FirstName = "Bob",
                 LastName = "Brown",
                 Email = "bob@example.com",
                 Role = ReExTeamMemberRole.Director,
                 TelephoneNumber = "444555666"
+                } 
             }
         };
         var session = new OrganisationSession
@@ -508,14 +515,17 @@ public class ReExAccountMapperTests
                     Country = "Country2",
                     Postcode = "PC2"
                 },
-                TeamMember = new ReExCompanyTeamMember
+                TeamMembers = new List<ReExCompanyTeamMember>
                 {
-                    Id = Guid.NewGuid(),
-                    FirstName = "Bob",
-                    LastName = "Brown",
-                    Email = "bob@company.com",
-                    Role = ReExTeamMemberRole.Director,
-                    TelephoneNumber = "555-456"
+                new ReExCompanyTeamMember
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "Bob",
+                        LastName = "Brown",
+                        Email = "bob@company.com",
+                        Role = ReExTeamMemberRole.Director,
+                        TelephoneNumber = "555-456"
+                    }
                 }
             }
         };

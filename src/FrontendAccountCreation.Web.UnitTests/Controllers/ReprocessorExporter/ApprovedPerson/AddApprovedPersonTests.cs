@@ -188,7 +188,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
-        redirect.ActionName.Should().Be("CheckYourDetails");
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.CheckYourDetails));
     }
 
     [TestMethod]
