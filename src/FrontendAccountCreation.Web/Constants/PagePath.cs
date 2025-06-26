@@ -96,7 +96,6 @@ public static class PagePath
 
     //Non Companies House Partnership paths
     public const string NonCompaniesHousePartnershipRole = "non-companies-house-your-partnership-role";
-    public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
