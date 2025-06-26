@@ -74,11 +74,14 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         var answer = viewModel.ManageControlInUKAnswer!.Value;
         session.ReExUnincorporatedFlowSession.ManageControlAnswer = answer;
 
-        var (nextAction, returnToPage) = answer == ManageControlAnswer.Yes
-            ? (nameof(ManageAccountPerson), PagePath.UnincorporatedManageAccountPerson)
-            : (nameof(ManageAccountPersonUserFromTeam), PagePath.UnincorporatedManageAccountPersonUserFromTeam);
-
-        return await SaveSessionAndRedirect(session, nextAction, PagePath.UnincorporatedManageControl, returnToPage);
+        if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
+        {
+            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(ManageAccountPersonUserFromTeam), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        }
     }
 
 
@@ -103,25 +106,13 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
-        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
 
-        if (answer == ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)
-        {
-            return await SaveSessionAndRedirect(
-                session,
-                nameof(ApprovedPerson),
-                PagePath.UnincorporatedManageAccountPerson,
-                PagePath.UnincorporatedApprovedPerson);
-        }
-
-        // TODO: Redirect to page 5 when implemented
         return await SaveSessionAndRedirect(
             session,
             nameof(ManageControl),
-            PagePath.UnincorporatedManageAccountPerson,
-            PagePath.UnincorporatedManageControl);
-        
+            PagePath.UnincorporatedManageControl,
+            PagePath.UnincorporatedManageAccountPerson);
     }
 
     [HttpGet]
@@ -162,6 +153,9 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         return View(new ReExManageAccountPersonUserFromTeamViewModel());
     }
 
+
+
+
     [HttpPost]
     [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
     public async Task<IActionResult> ManageAccountPersonUserFromTeam(ReExManageAccountPersonUserFromTeamViewModel viewModel)
@@ -174,22 +168,30 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        var answer = viewModel.ManageAccountPersonAnswer!.Value;
-        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = viewModel.ManageAccountPersonAnswer!.Value;
 
-        var (action, returnToPage) = answer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead
-            ? (nameof(ManageControl), PagePath.UnincorporatedManageControl)
-            : (nameof(UnincorporatedCheckYourDetails), PagePath.UnincorporatedCheckYourDetails);
+        if (viewModel.ManageAccountPersonAnswer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)
+        {
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageControl),
+                PagePath.UnincorporatedManageControl,
+                PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        }
 
-        return await SaveSessionAndRedirect(session, action, returnToPage, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(UnincorporatedCheckYourDetails),
+            PagePath.UnincorporatedNotImplemented,
+            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
     }
+
 
     [HttpGet]
-    [Route(PagePath.UnincorporatedCheckYourDetails)]
+    [Route(PagePath.UnincorporatedNotImplemented)]
     public async Task<IActionResult> UnincorporatedCheckYourDetails()
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.UnincorporatedCheckYourDetails);
-        return View(new ReExCheckYourDetailsViewModel());
+        throw new NotImplementedException("UnincorporatedCheckYourDetails is not yet implemented.");
     }
+
 }

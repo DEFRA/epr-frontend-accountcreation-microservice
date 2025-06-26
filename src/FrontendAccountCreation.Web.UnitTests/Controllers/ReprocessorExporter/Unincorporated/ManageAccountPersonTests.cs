@@ -90,7 +90,7 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ApprovedPerson));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
     }
 
     [TestMethod]
@@ -223,7 +223,7 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
             {
                 PagePath.UnincorporatedManageControl,
                 PagePath.UnincorporatedManageAccountPersonUserFromTeam,
-                PagePath.UnincorporatedCheckYourDetails
+                PagePath.UnincorporatedNotImplemented
             },
             ReExUnincorporatedFlowSession = new ReExUnincorporatedFlowSession()
         };
