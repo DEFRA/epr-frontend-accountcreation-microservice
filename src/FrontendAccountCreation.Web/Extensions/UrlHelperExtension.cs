@@ -4,7 +4,6 @@ namespace FrontendAccountCreation.Web.Extensions;
 
 public static class UrlHelperExtension
 {
-    //todo: remove the non home versions?
     public static string HomePath(this IUrlHelper url)
     {
         return url.Action("RegisteredAsCharity", "AccountCreation");
@@ -13,20 +12,9 @@ public static class UrlHelperExtension
     {
         return url.Action("ReExAccountFullName", "User");
     }
-    public static string HomePathReExOrganisation(this IUrlHelper url)
-    {
-        return url.Action("RegisteredAsCharity", "Organisation");
-    }
+    //todo: remove this?
     public static string CurrentPath(this IUrlHelper url)
     {
         return url.Action(null, "AccountCreation");
-    }
-    public static string CurrentPathReExUser(this IUrlHelper url)
-    {
-        return url.Action(null, "User");
-    }
-    public static string CurrentPathReExOrganisation(this IUrlHelper url)
-    {
-        return url.Action(null, "Organisation");
     }
 }
