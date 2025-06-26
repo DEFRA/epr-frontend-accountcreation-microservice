@@ -25,6 +25,7 @@ builder.Services
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.Name = builder.Configuration.GetValue<string>("CookieOptions:AntiForgeryCookieName");
+        options.Cookie.Path = builder.Configuration.GetValue<string>("PATH_BASE") ?? "/";
     })
     .AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
     .AddViewLocalization(options =>
