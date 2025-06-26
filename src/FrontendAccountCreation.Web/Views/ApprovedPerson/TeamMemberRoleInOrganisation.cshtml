@@ -1,6 +1,6 @@
 ﻿@using FrontendAccountCreation.Core.Sessions;
 @using FrontendAccountCreation.Web.Constants
-@using FrontendAccountCreation.Web.Controllers.AccountCreation
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
@@ -75,7 +75,7 @@
                         </button>
 
                         <!-- goes to check your details -->
-                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueWithoutInvitation"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
+                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueWithoutInvitation"].Value, nameof(ApprovedPersonController.CheckYourDetails), nameof(ApprovedPersonController).WithoutControllerSuffix(), null,
                                  new
                                  {
                                      @class = "govuk-button govuk-button--secondary"
