@@ -1,6 +1,5 @@
 ﻿@using FrontendAccountCreation.Web.Configs
 @using FrontendAccountCreation.Web.Constants;
-@using FrontendAccountCreation.Web.Extensions;
 @using Microsoft.Extensions.Options
 
 @inject IOptions<ExternalUrlsOptions> ExternalUrlsOptions;
@@ -12,11 +11,7 @@
 
     string applicationTitle = ViewData["ApplicationTitleOverride"] as string ?? "ApplicationTitle";
     string headerPartial = ViewData["HeaderOverride"] as string ?? "_Header";
-    string headerOverride = ViewData["HeaderOverride"]?.ToString();
-    string returnUrl = (string)ViewBag.CurrentPage
-        ?? (headerOverride == LayoutOverrides.ReExOrganisationHeaderOverride ? Url.CurrentPathReExOrganisation()
-        : headerOverride == LayoutOverrides.ReExUserHeaderOverride ? Url.CurrentPathReExUser()
-        : Url.CurrentPath());
+    string returnUrl = Context.Request.Path;
 }
 
 <!DOCTYPE html>
