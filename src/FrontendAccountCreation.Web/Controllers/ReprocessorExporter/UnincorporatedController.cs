@@ -2,6 +2,7 @@
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated;
 using Microsoft.AspNetCore.Mvc;
 
@@ -70,16 +71,19 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.ReExUnincorporatedFlowSession.ManageControlAnswer = viewModel.ManageControlInUKAnswer.Value;
+        var answer = viewModel.ManageControlInUKAnswer!.Value;
+        session.ReExUnincorporatedFlowSession.ManageControlAnswer = answer;
 
         if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
         {
             return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
         }
-
-        //TODO: Redirect to AddApprovedPerson (page 3b) when implemented
-        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(ManageAccountPersonUserFromTeam), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        }
     }
+
 
     [HttpGet]
     [Route(PagePath.UnincorporatedManageAccountPerson)]
@@ -102,25 +106,13 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
-        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
 
-        if (answer == ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)
-        {
-            return await SaveSessionAndRedirect(
-                session,
-                nameof(ApprovedPerson),
-                PagePath.UnincorporatedManageAccountPerson,
-                PagePath.UnincorporatedApprovedPerson);
-        }
-
-        // TODO: Redirect to page 5 when implemented
         return await SaveSessionAndRedirect(
             session,
             nameof(ManageControl),
-            PagePath.UnincorporatedManageAccountPerson,
-            PagePath.UnincorporatedManageControl);
-        
+            PagePath.UnincorporatedManageControl,
+            PagePath.UnincorporatedManageAccountPerson);
     }
 
     [HttpGet]
@@ -150,5 +142,48 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             await SaveSessionAndRedirect(session, nameof(ApprovedPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson)
             : // TODO: continue path - Redirect to Check your details - final page
             await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
+    public async Task<IActionResult> ManageAccountPersonUserFromTeam()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        return View(new ReExManageAccountPersonUserFromTeamViewModel());
+    }
+
+
+
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
+    public async Task<IActionResult> ManageAccountPersonUserFromTeam(ReExManageAccountPersonUserFromTeamViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+            return View(viewModel);
+        }
+
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = viewModel.ManageAccountPersonAnswer!.Value;
+
+        if (viewModel.ManageAccountPersonAnswer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)
+        {
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageControl),
+                PagePath.UnincorporatedManageControl,
+                PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+        }
+
+        //TODO Check Your Details
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(ManageAccountPersonUserFromTeam),
+            PagePath.UnincorporatedNotImplemented,
+            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
     }
 }
