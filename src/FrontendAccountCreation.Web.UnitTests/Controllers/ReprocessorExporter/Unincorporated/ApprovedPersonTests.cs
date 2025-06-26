@@ -75,7 +75,7 @@ public class ApprovedPersonTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
-        Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
+        Assert.AreEqual(nameof(UnincorporatedController.ApprovedPerson), redirectResult.ActionName);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
     }
     
