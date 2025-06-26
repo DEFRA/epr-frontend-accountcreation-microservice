@@ -260,10 +260,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 nextAction = nameof(AddressOverseas);
                 nextPagePath = PagePath.AddressOverseas;
             }
-            else
+            else if (session.IsCompaniesHouseFlow)
             {
                 nextAction = nameof(IsOrganisationAPartner);
                 nextPagePath = PagePath.IsPartnership;
+            }
+            else
+            {
+                nextAction = nameof(TypeOfOrganisation);
+                nextPagePath = PagePath.TypeOfOrganisation;
             }
         }
 
