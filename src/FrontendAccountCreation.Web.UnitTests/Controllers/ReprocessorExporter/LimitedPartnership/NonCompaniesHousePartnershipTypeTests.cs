@@ -112,7 +112,7 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = (RedirectToActionResult)result;
-        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.NamesOfPartners));
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHousePartnershipNamesOfPartners));
 
         // Verify the session save
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
@@ -171,7 +171,7 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirectResult = (RedirectToActionResult)result;
-        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.NamesOfPartners));
+        redirectResult.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHousePartnershipNamesOfPartners));
 
         // Verify the session save
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
