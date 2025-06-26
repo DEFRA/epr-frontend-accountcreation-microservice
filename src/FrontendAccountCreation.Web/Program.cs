@@ -96,12 +96,6 @@ else
 }
 app.UseStatusCodePagesWithReExecute($"{pathBase}/error", "?statusCode={0}");
 
-//app.Use(async (context, next) =>
-//{
-//    Console.WriteLine($"PathBase: {context.Request.PathBase}, Path: {context.Request.Path}");
-//    await next();
-//});
-
 app.UseForwardedHeaders();
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
