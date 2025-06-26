@@ -347,7 +347,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         return View(new LimitedPartnershipRoleViewModel
         {
-            LimitedPartnershipRole = limitedPartnershipRole
+            RoleInOrganisation = limitedPartnershipRole
         });
     }
 
@@ -364,8 +364,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        session.ReExCompaniesHouseSession.RoleInOrganisation = model.LimitedPartnershipRole;
-        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.LimitedPartnershipRole == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
+        session.ReExCompaniesHouseSession.RoleInOrganisation = model.RoleInOrganisation;
+        session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = model.RoleInOrganisation == Core.Sessions.RoleInOrganisation.NoneOfTheAbove;
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
                     PagePath.LimitedPartnershipRole, PagePath.AddAnApprovedPerson);
@@ -413,6 +413,40 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
+    }
+    //Non company house User Role in Paternship
+    [HttpGet]
+    [Route(PagePath.NonCompaniesHousePartnershipRole)]
+    //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipRole()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.NonCompaniesHousePartnershipRole);
+
+        return View(new NonCompaniesHousePartnershipRoleModel
+        {
+            RoleInOrganisation = session.ReExManualInputSession.RoleInOrganisation
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipRole)]
+    //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipRole(NonCompaniesHousePartnershipRoleModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipRole);
+            return View(model);
+        }
+
+        session.ReExManualInputSession.RoleInOrganisation = model.RoleInOrganisation;
+        session.ReExManualInputSession.IsEligibleToBeApprovedPerson = model.RoleInOrganisation != RoleInOrganisation.NoneOfTheAbove;
+
+        return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
+                    PagePath.NonCompaniesHousePartnershipRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
     }
 
     [HttpGet]

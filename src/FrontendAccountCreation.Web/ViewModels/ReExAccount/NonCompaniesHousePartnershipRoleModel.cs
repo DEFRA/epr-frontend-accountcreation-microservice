@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
-public class LimitedPartnershipRoleViewModel
+public class NonCompaniesHousePartnershipRoleModel
 {
-    [Required(ErrorMessage = "LimitedPartnershipRole.ErrorMessage")]
+    [Required(ErrorMessage = "NonCompaniesHousePartnershipRole.ErrorMessage")]
     public RoleInOrganisation? RoleInOrganisation { get; set; }
 }
