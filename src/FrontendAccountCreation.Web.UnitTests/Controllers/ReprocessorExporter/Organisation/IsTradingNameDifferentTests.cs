@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -39,20 +40,24 @@ public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDiff
     }
 
     [TestMethod]
-    [DataRow(YesNoAnswer.Yes, true,  nameof(OrganisationController.TradingName))]
+    [DataRow(YesNoAnswer.Yes, true, nameof(OrganisationController.TradingName))]
     [DataRow(YesNoAnswer.Yes, false, nameof(OrganisationController.TradingName))]
-    [DataRow(YesNoAnswer.No,  true,  nameof(OrganisationController.IsOrganisationAPartner))]
+    [DataRow(YesNoAnswer.No,  true,  nameof(OrganisationController.IsOrganisationAPartner), OrganisationType.CompaniesHouseCompany)]
     [DataRow(YesNoAnswer.No,  false, nameof(OrganisationController.AddressOverseas))]
+    [DataRow(YesNoAnswer.No, true, nameof(OrganisationController.TypeOfOrganisation))]
     public async Task POST_UserSelectsYesOrNo_UserIsRedirected(
         YesNoAnswer userAnswer,
         bool sessionIsUkMainAddress,
-        string expectedRedirect)
+        string expectedRedirect,
+        OrganisationType? orgType = null)
     {
         var orgCreationSession = new OrganisationSession
         {
             Journey = [CurrentPagePath],
-            IsUkMainAddress = sessionIsUkMainAddress
+            IsUkMainAddress = sessionIsUkMainAddress,
+            OrganisationType = orgType
         };
+
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
 
         var requestViewModel = new IsTradingNameDifferentViewModel();
