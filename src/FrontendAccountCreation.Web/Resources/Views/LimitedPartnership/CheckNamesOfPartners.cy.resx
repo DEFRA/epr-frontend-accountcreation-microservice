@@ -34,22 +34,4 @@
   <data name="CheckNamesOfPartners.H1_Both" xml:space="preserve">
     <value>[Welsh]Check individual and corporate partner names in your limited partnership</value>
   </data>
-  <data name="CheckNamesOfPartners.H2_Individual" xml:space="preserve">
-    <value>[Welsh]Individual partners</value>
-  </data>
-  <data name="CheckNamesOfPartners.H2_Company" xml:space="preserve">
-    <value>[Welsh]Corporate partners</value>
-  </data>
-  <data name="CheckNamesOfPartners.Company" xml:space="preserve">
-    <value>[Welsh]Company</value>
-  </data>
-  <data name="CheckNamesOfPartners.FullName" xml:space="preserve">
-    <value>[Welsh]Full name</value>
-  </data>
-  <data name="CheckNamesOfPartners.PartnersName" xml:space="preserve">
-    <value>[Welsh]partners name</value>
-  </data>
-  <data name="CheckNamesOfPartners.Partner" xml:space="preserve">
-    <value>[Welsh]partner</value>
-  </data>
 </root>

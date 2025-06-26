@@ -1,0 +1,60 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@model List<ReExPersonOrCompanyPartner>
+@inject IViewLocalizer Localizer
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <p class="govuk-body"></p>
+    </div>
+
+    @{
+        bool hasIndividualPartners = Model.Exists(x => x.IsPerson);
+        bool hasCompanyPartners = Model.Exists(x => !x.IsPerson);
+        int counter = 0;
+    }
+    @foreach (var group in Model.GroupBy(p => p.IsPerson))
+    {
+        bool.TryParse(group.Key.ToString(), out bool isPerson);
+        string partnerNameLabel = isPerson ? "_CheckNamesOfPartnersLinks.FullName" : "_CheckNamesOfPartnersLinks.Company";
+
+        if (hasIndividualPartners && hasCompanyPartners)
+        {
+            string subHeaderText = isPerson ? "_CheckNamesOfPartnersLinks.H2_Individual" : "_CheckNamesOfPartnersLinks.H2_Company";
+            <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4">@Localizer[subHeaderText].Value</h2>
+        }
+
+        <hr />
+        var partnersPerType = group.ToList();
+        <div class="govuk-summary-card__content">
+            <dl class="govuk-summary-list">
+
+                @for (int i = 0; i < partnersPerType.Count; i++, counter++)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__value">
+                            @Localizer[partnerNameLabel].Value
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Html.DisplayFor(x => partnersPerType[i].Name)
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="@Url.Action((string) @ViewBag.ChangeAction, "LimitedPartnership", null)">
+                                @SharedLocalizer["Change"]
+                                <span class="govuk-visually-hidden">@Localizer["_CheckNamesOfPartnersLinks.PartnersName"]</span>
+                            </a>
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            @if (Model.Count > 1)
+                            {
+                                <a class="govuk-link" href="@Url.Action((string) ViewBag.DeleteAction, "LimitedPartnership", new { id=partnersPerType[i].Id })">
+                                    @SharedLocalizer["Remove"]
+                                    <span class="govuk-visually-hidden">@Localizer["_CheckNamesOfPartnersLinks.Partner"]</span>
+                                </a>
+                            }
+                        </dd>
+                    </div>
+                }
+            </dl>
+        </div>
+    }
+</div>

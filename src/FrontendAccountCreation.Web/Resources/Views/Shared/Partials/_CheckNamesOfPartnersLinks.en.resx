@@ -16,22 +16,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NamesOfPartners.Title_Individual" xml:space="preserve">
-    <value>Check Individual Partners Names</value>
+  <data name="_CheckNamesOfPartnersLinks.H2_Individual" xml:space="preserve">
+    <value>Individual partners</value>
   </data>
-  <data name="CheckNamesOfPartners.Title_Company" xml:space="preserve">
-    <value>Check Corporate Partners Names</value>
+  <data name="_CheckNamesOfPartnersLinks.H2_Company" xml:space="preserve">
+    <value>Corporate partners</value>
   </data>
-  <data name="CheckNamesOfPartners.Title_Both" xml:space="preserve">
-    <value>Check Partners Names</value>
+  <data name="_CheckNamesOfPartnersLinks.Company" xml:space="preserve">
+    <value>Company</value>
   </data>
-  <data name="CheckNamesOfPartners.H1_Individual" xml:space="preserve">
-    <value>Check individual partner names in your limited partnership</value>
+  <data name="_CheckNamesOfPartnersLinks.FullName" xml:space="preserve">
+    <value>Full name</value>
   </data>
-  <data name="CheckNamesOfPartners.H1_Company" xml:space="preserve">
-    <value>Check corporate partner names in your limited partnership</value>
+  <data name="_CheckNamesOfPartnersLinks.PartnersName" xml:space="preserve">
+    <value>partners name</value>
   </data>
-  <data name="CheckNamesOfPartners.H1_Both" xml:space="preserve">
-    <value>Check individual and corporate partner names in your limited partnership</value>
+  <data name="_CheckNamesOfPartnersLinks.Partner" xml:space="preserve">
+    <value>partner</value>
   </data>
 </root>
