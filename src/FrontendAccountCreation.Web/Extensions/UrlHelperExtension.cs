@@ -4,6 +4,7 @@ namespace FrontendAccountCreation.Web.Extensions;
 
 public static class UrlHelperExtension
 {
+    //todo: remove the non home versions?
     public static string HomePath(this IUrlHelper url)
     {
         return url.Action("RegisteredAsCharity", "AccountCreation");
