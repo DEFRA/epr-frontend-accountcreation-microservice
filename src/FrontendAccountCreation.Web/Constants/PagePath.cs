@@ -62,6 +62,7 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationAddAnother = "check-companies-house-role/add-another";
     public const string TeamMemberRoleInOrganisationAdd = "check-companies-house-role/add";
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
+    public const string TeamMemberRoleInOrganisationContinueWithoutInvitation = "check-companies-house-role/continue-without-invitation";
 
     public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
 
