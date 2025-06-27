@@ -1,0 +1,79 @@
+@using FrontendAccountCreation.Core.Models
+@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+
+@model ReExManageControlOrganisationViewModel
+
+@{
+    ViewData["Title"] = Localizer["ReExManageControlOrganisation.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form asp-controller="Unincorporated" asp-action="ManageControlOrganisation" method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-fieldset__heading">
+                                    @Localizer["ReExManageControlOrganisation.Title"]
+                                </h1>
+                            </legend>
+
+                            <p class="govuk-body">@Localizer["ReExManageControlOrganisation.Hint"]</p>
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           type="radio"
+                                           gov-for="Answer"
+                                           gov-value="@nameof(ManageControlAnswer.Yes)"
+                                           gov-first-option="true">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="Answer"
+                                           gov-value="@nameof(ManageControlAnswer.Yes)"
+                                           gov-first-option="true">
+                                        @SharedLocalizer["Yes"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           type="radio"
+                                           gov-for="Answer"
+                                           gov-value="@nameof(ManageControlAnswer.No)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="Answer"
+                                           gov-value="@nameof(ManageControlAnswer.No)">
+                                        @SharedLocalizer["No"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           type="radio"
+                                           gov-for="Answer"
+                                           gov-value="@nameof(ManageControlAnswer.NotSure)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="Answer"
+                                           gov-value="@nameof(ManageControlAnswer.NotSure)">
+                                        @SharedLocalizer["NotSure"]
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">@SharedLocalizer["Continue"]</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

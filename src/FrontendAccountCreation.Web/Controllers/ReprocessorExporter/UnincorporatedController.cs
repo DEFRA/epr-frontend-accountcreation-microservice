@@ -186,4 +186,48 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             PagePath.UnincorporatedNotImplemented,
             PagePath.UnincorporatedManageAccountPersonUserFromTeam);
     }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedManageControlOrganisation)]
+    public async Task<IActionResult> ManageControlOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedManageControlOrganisation);
+        return View(new ReExManageControlOrganisationViewModel
+        {
+            Answer = session.ReExUnincorporatedFlowSession.ManageControlOrganisationAnswer
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedManageControlOrganisation)]
+    public async Task<IActionResult> ManageControlOrganisation(ReExManageControlOrganisationViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedManageControlOrganisation);
+            return View(viewModel);
+        }
+
+        session.ReExUnincorporatedFlowSession.ManageControlOrganisationAnswer = viewModel.Answer.Value;
+
+        if (viewModel.Answer == ManageControlAnswer.Yes)
+        {
+            // TODO: Redirect to team-member-details
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageAccountPerson),
+                PagePath.UnincorporatedManageControlOrganisation,
+                PagePath.UnincorporatedManageAccountPerson);
+        }
+
+        // TODO: Redirect to approved-person-cannot-be-invited
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(ManageAccountPersonUserFromTeam),
+            PagePath.UnincorporatedManageControlOrganisation,
+            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+    }
 }

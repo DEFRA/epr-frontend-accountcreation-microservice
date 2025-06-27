@@ -116,6 +116,7 @@ public static class PagePath
     public const string UnincorporatedManageAccountPersonUserFromTeam = "unincorporated-manage-account-person-user-from-team";
     public const string UnincorporatedApprovedPerson = "unincorporated-approved-person";
     public const string UnincorporatedNotImplemented = "unincorporated-not-implemented";
+    public const string UnincorporatedManageControlOrganisation = "unincorporated-manage-control-organisation";
 
     // Non journey paths
     public const string Accessibility = "accessibility";
