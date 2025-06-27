@@ -1029,10 +1029,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         {
             var manualInput = session.ReExManualInputSession;
             viewModel.IsSoleTrader = manualInput?.ProducerType == ProducerType.SoleTrader;
-            viewModel.CompanyName = viewModel.IsSoleTrader
-                ? manualInput?.TradingName
-                : manualInput?.OrganisationName;
-
+            viewModel.CompanyName = manualInput?.OrganisationName;
             viewModel.ReExCompanyTeamMembers = manualInput?.TeamMembers;
         }
 
