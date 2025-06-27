@@ -44,6 +44,29 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
+    public async Task NamesOfPartners_Get_WhenCompaniesHouseSessionIsEmpty_ReturnsViewWithNewEmptyPartner()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession = null;
+
+        // Act
+        var result = await _systemUnderTest.NamesOfPartners();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Which;
+        var viewModel = viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>().Which;
+        viewModel.Partners.Should().ContainSingle();
+
+        viewModel.Partners.Should().HaveCount(1);
+        viewModel.Partners[0].Id.Should().NotBeEmpty();
+        viewModel.Partners[0].PersonName.Should().BeNull();
+        viewModel.Partners[0].CompanyName.Should().BeNull();
+
+        viewModel.ExpectsCompanyPartners.Should().BeTrue();
+        viewModel.ExpectsIndividualPartners.Should().BeTrue();
+    }
+
+    [TestMethod]
     public async Task NamesOfPartners_Get_WhenPartnershipSessionIsEmpty_ReturnsViewWithNewEmptyPartner()
     {
         // Arrange

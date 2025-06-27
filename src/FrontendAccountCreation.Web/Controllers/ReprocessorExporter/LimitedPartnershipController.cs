@@ -636,7 +636,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         return string.Concat(localizerPrefix, errorMessage);
     }
 
-    private List<PartnershipPersonOrCompanyViewModel> GetExistingPartners(List<ReExPersonOrCompanyPartner>? partnersSession,
+    private static List<PartnershipPersonOrCompanyViewModel> GetExistingPartners(List<ReExPersonOrCompanyPartner>? partnersSession,
         bool expectsPersons, bool expectsCompanys)
     {
         List<PartnershipPersonOrCompanyViewModel> partnerList = [];
