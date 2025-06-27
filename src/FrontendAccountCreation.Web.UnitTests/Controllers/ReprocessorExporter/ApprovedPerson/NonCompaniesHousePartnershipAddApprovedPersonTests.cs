@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -54,7 +52,6 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         var model = (AddApprovedPersonViewModel)viewResult.Model;
         model.IsNonCompaniesHousePartnership.Should().BeFalse();
     }
-
 
     [TestMethod]
     public async Task NonCompaniesHousePartnershipAddApprovedPerson_Get_ReturnsViewWithCorrectModel()
@@ -110,5 +107,39 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         _orgSessionMock.IsApprovedUser.Should().BeTrue();
     }
 
-}
+    [TestMethod]
+    public async Task Post_BeInviteAnotherPersonOption_RedirectsToTeamMemberRoleInOrganisation()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = nameof(InviteUserOptions.InviteAnotherPerson)
+        };
 
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be("TeamMemberRoleInOrganisation"); // need to revist
+    }
+
+    [TestMethod]
+    public async Task Post_BeInviteLaterOption_RedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = nameof(InviteUserOptions.InviteLater)
+        };
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be("CheckYourDetails");
+    }
+}
