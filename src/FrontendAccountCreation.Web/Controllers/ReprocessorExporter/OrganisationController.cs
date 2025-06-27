@@ -54,6 +54,13 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     [HttpGet]
+    [Route("inject-error")]
+    public IActionResult InjectError()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet]
     [Route("")]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.RegisteredAsCharity)]
