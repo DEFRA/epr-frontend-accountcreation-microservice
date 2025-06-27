@@ -218,16 +218,16 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             // TODO: Redirect to team-member-details
             return await SaveSessionAndRedirect(
                 session,
-                nameof(ManageControlOrganisation),
+                nameof(ManageAccountPersonUserFromTeam),
                 PagePath.UnincorporatedManageControlOrganisation,
-                PagePath.UnincorporatedManageControlOrganisation);
+                PagePath.UnincorporatedManageAccountPersonUserFromTeam);
         }
 
         // TODO: Redirect to approved-person-cannot-be-invited
         return await SaveSessionAndRedirect(
             session,
-            nameof(ManageControlOrganisation),
+            nameof(ManageAccountPersonUserFromTeam),
             PagePath.UnincorporatedManageControlOrganisation,
-            PagePath.UnincorporatedManageControlOrganisation);
+            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
     }
 }
