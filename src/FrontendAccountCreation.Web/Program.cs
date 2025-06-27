@@ -92,9 +92,9 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler($"{pathBase}/error");
+    app.UseExceptionHandler("/error");
 }
-app.UseStatusCodePagesWithReExecute($"{pathBase}/error", "?statusCode={0}");
+app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
 
 app.UseForwardedHeaders();
 
