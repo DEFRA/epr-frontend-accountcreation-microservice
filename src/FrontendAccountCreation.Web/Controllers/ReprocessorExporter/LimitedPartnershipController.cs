@@ -6,7 +6,6 @@ using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -145,8 +144,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [OrganisationJourneyAccess(PagePath.LimitedPartnershipCheckNamesOfPartners)]
     public async Task<IActionResult> CheckNamesOfPartners(List<ReExPersonOrCompanyPartner> modelNotUsed)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        return await SaveSessionAndRedirect(session!, nameof(LimitedPartnershipController.LimitedPartnershipRole), PagePath.LimitedPartnershipCheckNamesOfPartners, PagePath.LimitedPartnershipRole);
     }
 
     [HttpGet]
@@ -584,8 +583,8 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners)]
     public async Task<IActionResult> NonCompaniesHousePartnershipCheckNamesOfPartners(List<ReExPersonOrCompanyPartner> modelNotUsed)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session) ?? new OrganisationSession();
-        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipRole), PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, PagePath.NonCompaniesHousePartnershipRole);
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        return await SaveSessionAndRedirect(session!, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipRole), PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, PagePath.NonCompaniesHousePartnershipRole);
     }
 
     [HttpGet]
