@@ -21,7 +21,7 @@
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-label-wrapper">
-                                <label class="govuk-label govuk-label--l" for="role">
+                                <label class="govuk-label govuk-label--l" for="Role">
                                     @Localizer["ReExRoleInOrganisation.Question"]
                                 </label>
                             </h1>
@@ -33,7 +33,7 @@
                         @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
                         <div class="govuk-form-group">
-                            <input id="role" class="govuk-input" aria-describedby="hint" name="role" type="text" autocomplete="off" value="@Model.Role">
+                            <input id="Role" class="govuk-input" aria-describedby="hint" name="role" type="text" autocomplete="off" value="@Model.Role">
                         </div>
                     </div>
 

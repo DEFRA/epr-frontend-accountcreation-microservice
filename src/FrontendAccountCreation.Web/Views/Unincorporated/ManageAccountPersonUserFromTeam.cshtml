@@ -62,25 +62,26 @@
 
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input"
+                                    <input class="govuk-radios__input" id="Answer1"
                                            type="radio"
-                                           id="Answer1"
-                                           name="ManageAccountPersonAnswer"
-                                           value="@ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead"
-                                           checked="@(Model.ManageAccountPersonAnswer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)">
-                                    <label class="govuk-label govuk-radios__label" for="Answer1">
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)"
+                                           gov-first-option="true">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)"
+                                           gov-first-option="true">
                                         @Localizer["ReExManageAccountPersonUserFromTeam.Option.TeamMember"]
                                     </label>
                                 </div>
-
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input"
+                                    <input class="govuk-radios__input" id="Answer2"
                                            type="radio"
-                                           id="Answer2"
-                                           name="ManageAccountPersonAnswer"
-                                           value="@ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater"
-                                           checked="@(Model.ManageAccountPersonAnswer == ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
-                                    <label class="govuk-label govuk-radios__label" for="Answer2">
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
                                         @Localizer["ReExManageAccountPersonUserFromTeam.Option.Later"]
                                     </label>
                                 </div>
