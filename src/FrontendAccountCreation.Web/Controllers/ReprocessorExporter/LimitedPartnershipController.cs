@@ -449,18 +449,21 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
             return View(model);
         }
 
-        if (session.ReExManualInputSession.TypesOfPartner != null)
+        if (session != null && session.ReExManualInputSession != null)
         {
-            session.ReExManualInputSession.TypesOfPartner.HasIndividualPartners = model.HasIndividualPartners;
-            session.ReExManualInputSession.TypesOfPartner.HasCompanyPartners = model.HasCompanyPartners;
-        }
-        else
-        {
-            session.ReExManualInputSession.TypesOfPartner = new ReExTypesOfPartner
+            if (session.ReExManualInputSession.TypesOfPartner != null)
             {
-                HasIndividualPartners = model.HasIndividualPartners,
-                HasCompanyPartners = model.HasCompanyPartners
-            };
+                session.ReExManualInputSession.TypesOfPartner.HasIndividualPartners = model.HasIndividualPartners;
+                session.ReExManualInputSession.TypesOfPartner.HasCompanyPartners = model.HasCompanyPartners;
+            }
+            else
+            {
+                session.ReExManualInputSession.TypesOfPartner = new ReExTypesOfPartner
+                {
+                    HasIndividualPartners = model.HasIndividualPartners,
+                    HasCompanyPartners = model.HasCompanyPartners
+                };
+            }
         }
 
         return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipNamesOfPartners), PagePath.NonCompaniesHousePartnershipType, PagePath.NonCompaniesHousePartnershipNamesOfPartners);
