@@ -378,10 +378,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
     }
-    //Non company house User Role in Paternship
+    //Non company house User Role in Partnership
     [HttpGet]
     [Route(PagePath.NonCompaniesHousePartnershipRole)]
-    //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
     public async Task<IActionResult> NonCompaniesHousePartnershipRole()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -395,7 +395,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
     [HttpPost]
     [Route(PagePath.NonCompaniesHousePartnershipRole)]
-    //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
     public async Task<IActionResult> NonCompaniesHousePartnershipRole(NonCompaniesHousePartnershipRoleModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -588,7 +588,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     }
 
     [HttpGet]
-    [Route(PagePath.LimitedPartnershipCheckNamesOfPartnersDelete)]
+    [Route(PagePath.NonCompaniesHousePartnershipCheckNamesOfPartnersDelete)]
     public async Task<IActionResult> NonCompaniesHousePartnershipCheckNamesOfPartnersDelete([FromQuery] Guid id)
     {
         DeleteFocusId();
