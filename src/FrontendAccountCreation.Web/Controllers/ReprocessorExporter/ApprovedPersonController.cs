@@ -1013,13 +1013,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson()
-        
+
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            session.IsNonCompaniesHousePartnership = true;
+            bool isNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
             SetBackLink(session, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-            return View(new AddApprovedPersonViewModel { IsNonCompaniesHousePartnership = true });
+            return View(new AddApprovedPersonViewModel { IsNonCompaniesHousePartnership = isNonCompaniesHousePartnership });
         }
 
         [HttpPost]
@@ -1030,15 +1030,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             if (!ModelState.IsValid)
             {
-                model.IsNonCompaniesHousePartnership = session.IsNonCompaniesHousePartnership ?? false;
+                model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
                 SetBackLink(session, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
                 return View(model);
             }
 
+            session.InviteUserOption = session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+
             if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
             {
                 session.IsApprovedUser = true;
-                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson);
+                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson);// new get method
             }
             else if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
