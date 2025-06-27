@@ -58,53 +58,58 @@
 
                 @* <form method="post"> *@
                 <form asp-controller="Unincorporated" asp-action="ManageAccountPerson" method="post">
-                    <h2 class="govuk-heading-m">@Localizer["ReExManageAccountPerson.InviteHeading"]</h2>
-                    <p class="govuk-body">@Localizer["ReExManageAccountPerson.InviteInstruction"]</p>
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h2 class="govuk-heading-m">@Localizer["ReExManageAccountPerson.InviteHeading"]</h2>
+                            <p class="govuk-body">@Localizer["ReExManageAccountPerson.InviteInstruction"]</p>
+                        </legend>
+                        @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
 
-                    @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+                        <div class="govuk-radios" data-module="govuk-radios">
 
-                    <div class="govuk-radios" data-module="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="Option1"
+                                       type="radio"
+                                       gov-for="ManageAccountPersonAnswer"
+                                       gov-value="@nameof(ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)"
+                                       gov-first-option="true">
+                                <label class="govuk-label govuk-radios__label"
+                                       gov-for="ManageAccountPersonAnswer"
+                                       gov-value="@nameof(ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)"
+                                       gov-first-option="true">
+                                    @Localizer["ReExManageAccountPerson.Option.Self"]
+                                </label>
+                            </div>
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="Option1"
-                                   type="radio"
-                                   gov-for="ManageAccountPersonAnswer"
-                                   gov-value="@nameof(ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)">
-                            <label class="govuk-label govuk-radios__label"
-                                   gov-for="ManageAccountPersonAnswer"
-                                   gov-value="@nameof(ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)">
-                                @Localizer["ReExManageAccountPerson.Option.Self"]
-                            </label>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="Option2"
+                                       type="radio"
+                                       gov-for="ManageAccountPersonAnswer"
+                                       gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)">
+                                <label class="govuk-label govuk-radios__label"
+                                       gov-for="ManageAccountPersonAnswer"
+                                       gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)">
+                                    @Localizer["ReExManageAccountPerson.Option.TeamMember"]
+                                </label>
+                            </div>
+
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="Option3"
+                                       type="radio"
+                                       gov-for="ManageAccountPersonAnswer"
+                                       gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
+                                <label class="govuk-label govuk-radios__label"
+                                       gov-for="ManageAccountPersonAnswer"
+                                       gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
+                                    @Localizer["ReExManageAccountPerson.Option.Later"]
+                                </label>
+                            </div>
                         </div>
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="Option2"
-                                   type="radio"
-                                   gov-for="ManageAccountPersonAnswer"
-                                   gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)">
-                            <label class="govuk-label govuk-radios__label"
-                                   gov-for="ManageAccountPersonAnswer"
-                                   gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)">
-                                @Localizer["ReExManageAccountPerson.Option.TeamMember"]
-                            </label>
-                        </div>
-
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="Option3"
-                                   type="radio"
-                                   gov-for="ManageAccountPersonAnswer"
-                                   gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
-                            <label class="govuk-label govuk-radios__label"
-                                   gov-for="ManageAccountPersonAnswer"
-                                   gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
-                                @Localizer["ReExManageAccountPerson.Option.Later"]
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-                        @Localizer["ReExManageAccountPerson.Confirm"]
-                    </button>
+                        <button type="submit" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+                            @Localizer["ReExManageAccountPerson.Confirm"]
+                        </button>
+                    </fieldset>
                 </form>
 
             </div>
