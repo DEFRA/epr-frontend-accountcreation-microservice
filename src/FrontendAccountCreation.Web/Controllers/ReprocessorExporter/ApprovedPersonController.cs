@@ -67,6 +67,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
                 { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
                 { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
+                { IsNonCompaniesHousePartnership: true } => "NonCompaniesHousePartnershipAddApprovedPerson.OptionError",
                 _ => "AddAnApprovedPerson.OptionError"
             };
         }
@@ -1011,7 +1012,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
-        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson()
 
         {
@@ -1024,7 +1025,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpPost]
         [Route(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
-        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
+        //[OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)]
         public async Task<IActionResult> NonCompaniesHousePartnershipAddApprovedPerson(AddApprovedPersonViewModel model)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -1032,6 +1033,11 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
                 SetBackLink(session, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+
+                string errorMessage = GetAddApprovedPersonErrorMessageKey(model);
+                ModelState.ClearValidationState(nameof(model.InviteUserOption));
+                ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
+
                 return View(model);
             }
 
@@ -1040,12 +1046,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
             {
                 session.IsApprovedUser = true;
-                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson);// new get method
+                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson); // to do: new non companies house view
             }
             else if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
 
-                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation);
+                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: user should be directed to 'What role do they have within the partnership' screen
             }
             else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
             {
