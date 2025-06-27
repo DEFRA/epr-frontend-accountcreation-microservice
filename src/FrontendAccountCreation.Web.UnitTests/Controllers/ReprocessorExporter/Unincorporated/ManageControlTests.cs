@@ -1,8 +1,6 @@
-﻿using FluentAssertions;
-using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -89,8 +87,7 @@ public class ManageControlTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
-        // TODO: Fix this test once AddApprovedPerson is implemented
-        // Assert.AreEqual(nameof(UnincorporatedController.AddApprovedPerson), redirectResult.ActionName);
+        Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPersonUserFromTeam), redirectResult.ActionName);
         Assert.AreEqual(expectedAnswer, session.ReExUnincorporatedFlowSession.ManageControlAnswer);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
     }

@@ -59,12 +59,12 @@ public class ApprovedPersonTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
-        Assert.AreEqual(nameof(UnincorporatedController.ManageAccountPerson), redirectResult.ActionName);
+        Assert.AreEqual(nameof(UnincorporatedController.CheckYourDetails), redirectResult.ActionName);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
     }
     
     [TestMethod]
-    public async Task ApprovedPerson_Post_ValidModel_InvitePressed_RedirectsToInviteApprovedUser()
+    public async Task ApprovedPerson_Post_ValidModel_InvitePressed_RedirectsToManageControlOrganisation()
     {
         // Arrange
         var session = SetupOrganisationSession();
@@ -75,7 +75,7 @@ public class ApprovedPersonTests : UnincorporatedTestBase
         // Assert
         Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
         var redirectResult = (RedirectToActionResult)result;
-        Assert.AreEqual(nameof(UnincorporatedController.ApprovedPerson), redirectResult.ActionName);
+        Assert.AreEqual(nameof(UnincorporatedController.ManageControlOrganisation), redirectResult.ActionName);
         _sessionManagerMock.Verify(sm => sm.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once());
     }
     
