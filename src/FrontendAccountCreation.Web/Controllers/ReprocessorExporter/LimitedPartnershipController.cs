@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -114,7 +115,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         DeleteFocusId();
 
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.RemoveAll(x => x.Id == id);
+        DeleteCompaniesHousePartnerFromSession(session, id);
 
         return await SaveSessionAndRedirect(session, nameof(NamesOfPartners),
             PagePath.LimitedPartnershipNamesOfPartners, null);
@@ -155,7 +156,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         DeleteFocusId();
 
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.RemoveAll(x => x.Id == id);
+        DeleteCompaniesHousePartnerFromSession(session, id);
 
         return await SaveSessionAndRedirect(session, nameof(CheckNamesOfPartners),
             PagePath.LimitedPartnershipCheckNamesOfPartners, null);
@@ -558,7 +559,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         DeleteFocusId();
 
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        session?.ReExManualInputSession?.TypesOfPartner?.Partners?.RemoveAll(x => x.Id == id);
+        DeleteNonCompaniesHousePartnerFromSession(session, id);
 
         return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipNamesOfPartners),
             PagePath.NonCompaniesHousePartnershipNamesOfPartnersDelete, null);
@@ -594,7 +595,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         DeleteFocusId();
 
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        session?.ReExManualInputSession?.TypesOfPartner?.Partners?.RemoveAll(x => x.Id == id);
+        DeleteNonCompaniesHousePartnerFromSession(session, id);
 
         return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipCheckNamesOfPartners),
             PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, null);
@@ -660,5 +661,29 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         }
 
         return partnerList;
+    }
+
+    // Move into private method to keep SonarQube happy
+    private static void DeleteCompaniesHousePartnerFromSession(OrganisationSession? session, Guid id)
+    {
+        if (session != null 
+            && session.ReExCompaniesHouseSession != null 
+            && session.ReExCompaniesHouseSession.Partnership != null 
+            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null 
+            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners != null)
+        {
+            session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners.RemoveAll(x => x.Id == id);
+        }
+    }
+
+    private static void DeleteNonCompaniesHousePartnerFromSession(OrganisationSession? session, Guid id)
+    {
+        if (session != null
+            && session.ReExManualInputSession != null
+            && session.ReExManualInputSession.TypesOfPartner != null
+            && session.ReExManualInputSession.TypesOfPartner.Partners != null)
+        {
+            session.ReExManualInputSession.TypesOfPartner.Partners.RemoveAll(x => x.Id == id);
+        }
     }
 }
