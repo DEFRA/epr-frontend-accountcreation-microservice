@@ -60,6 +60,7 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationAddAnother = "check-companies-house-role/add-another";
     public const string TeamMemberRoleInOrganisationAdd = "check-companies-house-role/add";
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
+    public const string TeamMemberRoleInOrganisationContinueWithoutInvitation = "check-companies-house-role/continue-without-invitation";
 
     public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
 
@@ -127,8 +128,7 @@ public static class PagePath
     public const string ErrorReEx = "error-reex";
     public const string Culture = "culture";
 
-    //to-do: this page path doesn't exist, but if you redirect to it, you'll get "page not found" as the path doesn't exist :-)
-    public const string PageNotFound = "PageNotFound";
+    public const string PageNotFound = "page-not-found";
 
     public const string PageNotFoundReEx = "/page-not-found-reex";
     public const string AcknowledgeCookieAcceptance = "acknowledge-cookie-acceptance";

@@ -1,27 +1,17 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.Interfaces;
-using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers;
 
-public abstract class ControllerBase<T> : Controller where T : ILocalSession, new()
+public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Controller
+    where T : ILocalSession, new()
 {
-    private readonly ISessionManager<T> _sessionManager;
-
-    protected ControllerBase(ISessionManager<T> sessionManager)
-    {
-        _sessionManager = sessionManager;
-    }
-
     public void SetBackLink(T session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
@@ -90,7 +80,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         AddPageToWhiteList(session, currentPagePath);
         AddPageToWhiteList(session, nextPagePath);
 
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        await sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
 
     public Guid? GetFocusId()
@@ -118,7 +108,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
     [ExcludeFromCodeCoverage]
     protected async Task<IActionResult> PlaceholderPageGet(string pagePath, bool interstitial = false)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, pagePath);
         return PlaceholderPageView(pagePath, interstitial);
     }
@@ -127,7 +117,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
     protected async Task<IActionResult> PlaceholderPagePost(
         string actionName, string currentPagePath, string? nextPagePath)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await sessionManager.GetSessionAsync(HttpContext.Session);
         return await SaveSessionAndRedirect(session, actionName, currentPagePath, nextPagePath);
     }
 

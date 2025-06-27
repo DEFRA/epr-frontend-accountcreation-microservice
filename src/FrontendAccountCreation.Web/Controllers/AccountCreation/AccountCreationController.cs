@@ -58,6 +58,13 @@ public class AccountCreationController : Controller
     }
 
     [HttpGet]
+    [Route("inject-error")]
+    public IActionResult InjectError()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route("")]
     [Route(PagePath.RegisteredAsCharity)]

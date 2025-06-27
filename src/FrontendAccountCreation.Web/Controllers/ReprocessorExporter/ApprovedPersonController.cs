@@ -376,6 +376,16 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.TeamMemberRoleInOrganisationContinueWithoutInvitation)]
+        public async Task<IActionResult> TeamMemberRoleInOrganisationContinueWithoutInvitation()
+        {
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails),
+                PagePath.TeamMemberRoleInOrganisation, PagePath.CheckYourDetails);
+        }
+
+        [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
         public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(Guid? id)
