@@ -218,9 +218,9 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             // TODO: Redirect to team-member-details
             return await SaveSessionAndRedirect(
                 session,
-                nameof(ManageAccountPersonUserFromTeam),
+                nameof(ManageAccountPerson),
                 PagePath.UnincorporatedManageControlOrganisation,
-                PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+                PagePath.UnincorporatedManageAccountPerson);
         }
 
         // TODO: Redirect to approved-person-cannot-be-invited

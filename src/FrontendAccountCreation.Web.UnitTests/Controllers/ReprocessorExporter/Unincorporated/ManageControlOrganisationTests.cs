@@ -80,7 +80,7 @@ public class ManageControlOrganisationTests : UnincorporatedTestBase
         // Assert
         // TODO: Update when controller redirects to correct page
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControlOrganisation));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageAccountPerson));
 
         _organisationSession.ReExUnincorporatedFlowSession
             .ManageControlOrganisationAnswer
@@ -102,7 +102,7 @@ public class ManageControlOrganisationTests : UnincorporatedTestBase
         // Assert
         // TODO: Update when controller redirects to correct page
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControlOrganisation));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageAccountPersonUserFromTeam));
 
         _organisationSession.ReExUnincorporatedFlowSession
             .ManageControlOrganisationAnswer
