@@ -166,6 +166,23 @@ public class PartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
+    public async Task PartnershipType_Get_WhenReExPartnershipSessionIsNull_ReturnsViewWithNullPartnershipType()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
+
+        // Act
+        var result = await _systemUnderTest.PartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as PartnershipTypeRequestViewModel;
+        model.Should().NotBeNull();
+        model!.TypeOfPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
     public async Task PartnershipType_Post_WithInvalidModel_ReturnsViewWithModel()
     {
         // Arrange
