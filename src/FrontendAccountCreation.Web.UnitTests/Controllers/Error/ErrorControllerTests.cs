@@ -107,7 +107,7 @@ public class ErrorControllerTests
     [DataRow("User", null, 500)]
     [DataRow("Organisation", 500, 500)]
     [DataRow("Organisation", 500, 500, false, true)]
-    [DataRow("Account", 403, 403)]
+    [DataRow("Account", 403, 500)]
     [DataRow("User", 500, 500, true)]
     public void Error_NotPageNotFoundGivenSourceController_ReturnsSuppliedStatusCode(
         string? controllerName, int? passedStatusCode, int expectedStatusCode, bool mockFeatureReturnAsNull = false, bool hasEmptyRouteValues = false)
