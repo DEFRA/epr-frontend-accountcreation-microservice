@@ -10,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
-[ExcludeFromCodeCoverage(Justification = "Unable to get through SonarQube quality gate on new code, blocking testing")]
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
 public partial class LimitedPartnershipController : ControllerBase<OrganisationSession>
@@ -33,7 +32,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         ReExTypesOfPartner ltdPartnershipSession = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership;
         bool hasIndividualPartners = ltdPartnershipSession?.HasIndividualPartners ?? true;
         bool hasCompanyPartners = ltdPartnershipSession?.HasCompanyPartners ?? true;
-        
+
         List<PartnershipPersonOrCompanyViewModel> partnerList = GetExistingPartners(ltdPartnershipSession?.Partners, hasIndividualPartners, hasCompanyPartners);
 
         PartnershipPartnersViewModel model = new()
@@ -380,6 +379,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.LimitedLiabilityPartnership, PagePath.AddAnApprovedPerson);
     }
+
     //Non company house User Role in Partnership
     [HttpGet]
     [Route(PagePath.NonCompaniesHousePartnershipRole)]
@@ -589,7 +589,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     public async Task<IActionResult> NonCompaniesHousePartnershipCheckNamesOfPartners(List<ReExPersonOrCompanyPartner> modelNotUsed)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        return await SaveSessionAndRedirect(session!, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipRole), PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, PagePath.NonCompaniesHousePartnershipRole);
+        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipRole), PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, PagePath.NonCompaniesHousePartnershipRole);
     }
 
     [HttpGet]
@@ -670,10 +670,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     // Move into private method to keep SonarQube happy
     private static void DeleteCompaniesHousePartnerFromSession(OrganisationSession? session, Guid id)
     {
-        if (session != null 
-            && session.ReExCompaniesHouseSession != null 
-            && session.ReExCompaniesHouseSession.Partnership != null 
-            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null 
+        if (session != null
+            && session.ReExCompaniesHouseSession != null
+            && session.ReExCompaniesHouseSession.Partnership != null
+            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null
             && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners != null)
         {
             session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners.RemoveAll(x => x.Id == id);
