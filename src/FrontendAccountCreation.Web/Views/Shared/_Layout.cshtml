@@ -11,7 +11,6 @@
 
     string applicationTitle = ViewData["ApplicationTitleOverride"] as string ?? "ApplicationTitle";
     string headerPartial = ViewData["HeaderOverride"] as string ?? "_Header";
-    string returnUrl = Context.Request.Path;
 }
 
 <!DOCTYPE html>
@@ -67,7 +66,7 @@
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
-    @await Component.InvokeAsync("CookieBanner", new { returnUrl })
+    @await Component.InvokeAsync("CookieBanner")
 
     <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">@SharedLocalizer["SkipToMainContent"].Value</a>
     

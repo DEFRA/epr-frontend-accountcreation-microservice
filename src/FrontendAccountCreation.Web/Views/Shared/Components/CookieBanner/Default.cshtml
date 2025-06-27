@@ -7,7 +7,8 @@
 @inject IOptions<ExternalUrlsOptions> ExternalUrlsOptions;
 
 @{
-    string cookiesLink = ($"{ExternalUrlsOptions.Value.CookiesLink}?returnurl={Model.ReturnUrl}");
+    string returnUrl = $"{Context.Request.PathBase}{Context.Request.Path}";
+    string cookiesLink = ($"{ExternalUrlsOptions.Value.CookiesLink}?returnurl={returnUrl}");
 
     var cookieBannerTitle = (string?)ViewData["ApplicationTitleOverride"] == LayoutOverrides.ReExTitleOverride
         ? Localizer["CookieBanner.ReExTitle"]
@@ -16,7 +17,8 @@
 
 @if (Model.ShowBanner)
 {
-    <form method="POST" asp-controller="Cookies" asp-action="UpdateAcceptance" asp-route-returnUrl="@Model.ReturnUrl">
+    <form method="POST" asp-controller="Cookies" asp-action="UpdateAcceptance" asp-route-returnUrl="@returnUrl">
+        @Html.AntiForgeryToken()
         <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="@cookieBannerTitle">
             <div class="govuk-cookie-banner__message govuk-width-container">
                 <div class="govuk-grid-row">
@@ -43,7 +45,8 @@
 }
 else if (Model.ShowAcknowledgement)
 {
-    <form method="POST" asp-controller="Cookies" asp-action="AcknowledgeAcceptance" asp-route-returnUrl="@Model.ReturnUrl">
+    <form method="POST" asp-controller="Cookies" asp-action="AcknowledgeAcceptance" asp-route-returnUrl="@returnUrl">
+        @Html.AntiForgeryToken()
         <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="@cookieBannerTitle">
             <div class="govuk-cookie-banner__message govuk-width-container">
                 <div class="govuk-grid-row">
