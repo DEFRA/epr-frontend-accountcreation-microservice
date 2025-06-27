@@ -117,6 +117,10 @@ public static class PagePath
     public const string UnincorporatedApprovedPerson = "unincorporated-approved-person";
     public const string UnincorporatedNotImplemented = "unincorporated-not-implemented";
     public const string UnincorporatedManageControlOrganisation = "unincorporated-manage-control-organisation";
+    public const string UnincorporatedApprovedPersonCannotBeInvited = "unincorporated-approved-person-cannot-be-invited";
+    public const string UnincorporatedTeamMemberDetails = "unincorporated-team-member-details";
+    public const string UnincorporatedCheckInvitation = "unincorporated-check-invitation";
+    public const string UnincorporatedCheckYourDetails = "unincorporated-check-your-details";
 
     // Non journey paths
     public const string Accessibility = "accessibility";

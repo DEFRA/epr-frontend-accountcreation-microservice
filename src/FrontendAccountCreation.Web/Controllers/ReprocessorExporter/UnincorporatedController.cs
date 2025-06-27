@@ -5,6 +5,7 @@ using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -76,14 +77,21 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         if (viewModel.ManageControlInUKAnswer.GetValueOrDefault(ManageControlAnswer.NotSure) == ManageControlAnswer.Yes)
         {
-            return await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPerson);
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageAccountPerson),
+                PagePath.UnincorporatedManageControl,
+                PagePath.UnincorporatedManageAccountPerson);
         }
         else
         {
-            return await SaveSessionAndRedirect(session, nameof(ManageAccountPersonUserFromTeam), PagePath.UnincorporatedManageControl, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageAccountPersonUserFromTeam),
+                PagePath.UnincorporatedManageControl,
+                PagePath.UnincorporatedManageAccountPersonUserFromTeam);
         }
     }
-
 
     [HttpGet]
     [Route(PagePath.UnincorporatedManageAccountPerson)]
@@ -91,7 +99,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedManageAccountPerson);
-        return View(new ReExManageAccountPersonViewModel{ ManageAccountPersonAnswer = session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer });
+        return View(new ReExManageAccountPersonViewModel { ManageAccountPersonAnswer = session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer });
     }
 
     [HttpPost]
@@ -106,13 +114,31 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
+        var answer = viewModel.ManageAccountPersonAnswer.GetValueOrDefault();
+        session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer = answer;
+
+        if (answer == ManageAccountPersonAnswer.IAgreeToBeAnApprovedPerson)
+        {
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ApprovedPerson),
+                PagePath.UnincorporatedManageAccountPerson,
+                PagePath.UnincorporatedApprovedPerson);
+        }
+        else if (answer == ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)
+        {
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageControlOrganisation),
+                PagePath.UnincorporatedManageAccountPerson,
+                PagePath.UnincorporatedManageControlOrganisation);
+        }
 
         return await SaveSessionAndRedirect(
             session,
-            nameof(ManageControl),
-            PagePath.UnincorporatedManageControl,
-            PagePath.UnincorporatedManageAccountPerson);
+            nameof(CheckYourDetails),
+            PagePath.UnincorporatedManageAccountPerson,
+            PagePath.UnincorporatedCheckYourDetails);
     }
 
     [HttpGet]
@@ -137,11 +163,20 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View();
         }
 
-        return inviteApprovedPerson
-            ? // TODO: invite user path - Redirect to page 5 when implemented
-            await SaveSessionAndRedirect(session, nameof(ApprovedPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson)
-            : // TODO: continue path - Redirect to Check your details - final page
-            await SaveSessionAndRedirect(session, nameof(ManageAccountPerson), PagePath.UnincorporatedApprovedPerson, PagePath.UnincorporatedManageAccountPerson);
+        if (inviteApprovedPerson)
+        {
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageControlOrganisation),
+                PagePath.UnincorporatedApprovedPerson,
+                PagePath.UnincorporatedManageControlOrganisation);
+        }
+
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(CheckYourDetails),
+            PagePath.UnincorporatedApprovedPerson,
+            PagePath.UnincorporatedCheckYourDetails);
     }
 
     [HttpGet]
@@ -150,11 +185,11 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedManageAccountPersonUserFromTeam);
-        return View(new ReExManageAccountPersonUserFromTeamViewModel());
+        return View(new ReExManageAccountPersonUserFromTeamViewModel
+        {
+            ManageAccountPersonAnswer = session.ReExUnincorporatedFlowSession.ManageAccountPersonAnswer
+        });
     }
-
-
-
 
     [HttpPost]
     [Route(PagePath.UnincorporatedManageAccountPersonUserFromTeam)]
@@ -174,17 +209,16 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         {
             return await SaveSessionAndRedirect(
                 session,
-                nameof(ManageControl),
-                PagePath.UnincorporatedManageControl,
-                PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+                nameof(ManageControlOrganisation),
+                PagePath.UnincorporatedManageAccountPersonUserFromTeam,
+                PagePath.UnincorporatedManageControlOrganisation);
         }
 
-        //TODO Check Your Details
         return await SaveSessionAndRedirect(
             session,
-            nameof(ManageAccountPersonUserFromTeam),
-            PagePath.UnincorporatedNotImplemented,
-            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+            nameof(CheckYourDetails),
+            PagePath.UnincorporatedManageAccountPersonUserFromTeam,
+            PagePath.UnincorporatedCheckYourDetails);
     }
 
     [HttpGet]
@@ -215,19 +249,49 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         if (viewModel.Answer == ManageControlAnswer.Yes)
         {
-            // TODO: Redirect to team-member-details
             return await SaveSessionAndRedirect(
                 session,
-                nameof(ManageAccountPerson),
+                nameof(TeamMemberDetails),
                 PagePath.UnincorporatedManageControlOrganisation,
-                PagePath.UnincorporatedManageAccountPerson);
+                PagePath.UnincorporatedTeamMemberDetails);
         }
 
-        // TODO: Redirect to approved-person-cannot-be-invited
         return await SaveSessionAndRedirect(
             session,
-            nameof(ManageAccountPersonUserFromTeam),
+            nameof(ApprovedPersonCannotBeInvited),
             PagePath.UnincorporatedManageControlOrganisation,
-            PagePath.UnincorporatedManageAccountPersonUserFromTeam);
+            PagePath.UnincorporatedApprovedPersonCannotBeInvited);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedApprovedPersonCannotBeInvited)]
+    [ExcludeFromCodeCoverage]
+    public async Task<IActionResult> ApprovedPersonCannotBeInvited()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedTeamMemberDetails)]
+    [ExcludeFromCodeCoverage]
+    public async Task<IActionResult> TeamMemberDetails()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedCheckInvitation)]
+    [ExcludeFromCodeCoverage]
+    public async Task<IActionResult> CheckInvitation()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedCheckYourDetails)]
+    [ExcludeFromCodeCoverage]
+    public async Task<IActionResult> CheckYourDetails()
+    {
+        throw new NotImplementedException();
     }
 }

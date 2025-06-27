@@ -78,9 +78,8 @@ public class ManageControlOrganisationTests : UnincorporatedTestBase
         var result = await _systemUnderTest.ManageControlOrganisation(viewModel);
 
         // Assert
-        // TODO: Update when controller redirects to correct page
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageAccountPerson));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.TeamMemberDetails));
 
         _organisationSession.ReExUnincorporatedFlowSession
             .ManageControlOrganisationAnswer
@@ -100,9 +99,8 @@ public class ManageControlOrganisationTests : UnincorporatedTestBase
         var result = await _systemUnderTest.ManageControlOrganisation(viewModel);
 
         // Assert
-        // TODO: Update when controller redirects to correct page
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageAccountPersonUserFromTeam));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ApprovedPersonCannotBeInvited));
 
         _organisationSession.ReExUnincorporatedFlowSession
             .ManageControlOrganisationAnswer

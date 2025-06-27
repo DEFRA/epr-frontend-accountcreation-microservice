@@ -56,8 +56,6 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
         AssertBackLink(viewResult, PagePath.UnincorporatedManageControl);
     }
 
-
-
     [TestMethod]
     public async Task ManageAccountPerson_Post_InvalidModel_ReturnsViewWithModel()
     {
@@ -90,11 +88,11 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ApprovedPerson));
     }
 
     [TestMethod]
-    public async Task ManageAccountPerson_Post_IWillInviteATeamMember_RedirectsToManageControl()
+    public async Task ManageAccountPerson_Post_IWillInviteATeamMember_RedirectsToManageControlOrganisation()
     {
         // Arrange
         var viewModel = new ReExManageAccountPersonViewModel
@@ -107,11 +105,11 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControlOrganisation));
     }
 
     [TestMethod]
-    public async Task ManageAccountPerson_Post_IWillInviteLater_RedirectsToManageControl()
+    public async Task ManageAccountPerson_Post_IWillInviteLater_RedirectsToCheckYourDetails()
     {
         // Arrange
         var viewModel = new ReExManageAccountPersonViewModel
@@ -124,11 +122,11 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.CheckYourDetails));
     }
 
     [TestMethod]
-    public async Task ManageAccountPersonUserFromTeam_Post_ValidAnswer_RedirectsToManageControl()
+    public async Task ManageAccountPersonUserFromTeam_Post_ValidAnswer_RedirectsToManageControlOrganisation()
     {
         var viewModel = new ReExManageAccountPersonUserFromTeamViewModel
         {
@@ -138,7 +136,7 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
         var result = await _systemUnderTest.ManageAccountPersonUserFromTeam(viewModel);
 
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControlOrganisation));
     }
 
     [TestMethod]
@@ -196,24 +194,6 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
     }
 
     [TestMethod]
-    public async Task ManageAccountPersonUserFromTeam_Post_TeamMemberAnswer_RedirectsToManageControl()
-    {
-        // Arrange
-        var viewModel = new ReExManageAccountPersonUserFromTeamViewModel
-        {
-            ManageAccountPersonAnswer = ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead
-        };
-
-        // Act
-        var result = await _systemUnderTest.ManageAccountPersonUserFromTeam(viewModel);
-
-        // Assert
-        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
-        redirect.RouteValues.Should().BeNull("because SaveSessionAndRedirect does not currently set route values");
-    }
-
-    [TestMethod]
     public async Task ManageAccountPersonUserFromTeam_Post_InviteLaterAnswer_RedirectsToCheckYourDetails()
     {
         // Arrange
@@ -241,7 +221,6 @@ public class ManageAccountPersonTests : UnincorporatedTestBase
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
 
-        //TODO - Check Your Deatails
-        //redirect.ActionName.Should().Be(nameof(UnincorporatedController.UnincorporatedCheckYourDetails));
+        redirect.ActionName.Should().Be(nameof(UnincorporatedController.CheckYourDetails));
     }
 }
