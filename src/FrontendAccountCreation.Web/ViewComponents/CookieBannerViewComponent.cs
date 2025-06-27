@@ -19,7 +19,7 @@ public class CookieBannerViewComponent : ViewComponent
         _options = options.Value;
     }
 
-    public IViewComponentResult Invoke(string returnUrl)
+    public IViewComponentResult Invoke()
     {
         var consentCookie = Request.Cookies[_options.CookiePolicyCookieName];
 
@@ -29,11 +29,9 @@ public class CookieBannerViewComponent : ViewComponent
 
         var cookieBannerModel = new CookieBannerModel()
         {
-            CurrentPage = Request.Path,
             ShowBanner = !dontShowBanner && cookieAcknowledgement == null && consentCookie == null,
             ShowAcknowledgement = !dontShowBanner && cookieAcknowledgement != null,
-            AcceptAnalytics = cookieAcknowledgement == CookieAcceptance.Accept,
-            ReturnUrl = $"{returnUrl}{Request.QueryString}",
+            AcceptAnalytics = cookieAcknowledgement == CookieAcceptance.Accept
         };
 
         return View(cookieBannerModel);
