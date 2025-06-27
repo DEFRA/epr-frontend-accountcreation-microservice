@@ -10,8 +10,8 @@
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
     // pass data to Views\Shared\Partials\_CheckNamesOfPartnersLinks.cshtml
-    ViewBag.ChangeAction = nameof(LimitedPartnershipController.NamesOfPartners);
-    ViewBag.DeleteAction = nameof(LimitedPartnershipController.CheckNamesOfPartnersDelete);
+    ViewBag.ChangeAction = nameof(LimitedPartnershipController.NonCompaniesHousePartnershipNamesOfPartners);
+    ViewBag.DeleteAction = nameof(LimitedPartnershipController.NonCompaniesHousePartnershipCheckNamesOfPartnersDelete);
 }
 
 @model List<ReExPersonOrCompanyPartner>
@@ -26,7 +26,7 @@
             @await Html.PartialAsync("Partials/_CheckNamesOfPartnersLinks", Model)
 
             <form method="post">
-                <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.CheckNamesOfPartners)" type="submit">
+                <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NonCompaniesHousePartnershipCheckNamesOfPartners)" type="submit">
                     @SharedLocalizer["Continue"]
                 </button>
             </form>
@@ -52,6 +52,6 @@
         {
             localizer = person;
         }
-        return string.Concat("CheckNamesOfPartners.", localizer);
+        return string.Concat("NonCompaniesHousePartnershipCheckNamesOfPartners.", localizer);
     }
 }
