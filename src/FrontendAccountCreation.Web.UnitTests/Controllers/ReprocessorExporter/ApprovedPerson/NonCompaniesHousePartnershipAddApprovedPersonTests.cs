@@ -51,6 +51,25 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
     }
 
     [TestMethod]
+    public async Task NonCompaniesHousePartnershipAddApprovedPerson_Get_ReturnsViewWithCorrectModel_WhenNotPartnership()
+    {
+        // Arrange
+        _orgSessionMock.IsOrganisationAPartnership = false;
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().BeOfType<AddApprovedPersonViewModel>();
+
+        var model = (AddApprovedPersonViewModel)viewResult.Model;
+        model.IsNonCompaniesHousePartnership.Should().BeFalse();
+    }
+
+
+    [TestMethod]
     public async Task NonCompaniesHousePartnershipAddApprovedPerson_Get_ReturnsViewWithCorrectModel()
     {
         // Act
@@ -81,5 +100,25 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().Be(model);
     }
+
+    [TestMethod]
+    public async Task Post_BeAnApprovedPersonOption_RedirectsToYouAreApprovedPerson()
+    {
+        // Arrange
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = nameof(InviteUserOptions.BeAnApprovedPerson)
+        };
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be("YouAreApprovedPerson");
+        _orgSessionMock.IsApprovedUser.Should().BeTrue();
+    }
+
 }
 
