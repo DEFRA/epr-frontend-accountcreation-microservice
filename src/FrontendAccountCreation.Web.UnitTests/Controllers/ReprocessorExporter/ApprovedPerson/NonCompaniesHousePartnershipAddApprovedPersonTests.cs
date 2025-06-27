@@ -26,28 +26,15 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
 
         _orgSessionMock = new OrganisationSession
         {
-            Journey = new List<string>
-            {
-                PagePath.IsPartnership,
-                PagePath.PartnershipType,
-                PagePath.LimitedPartnershipType,
-                PagePath.LimitedPartnershipNamesOfPartners,
-                PagePath.LimitedPartnershipRole,
-                PagePath.AddAnApprovedPerson
-            },
-            IsOrganisationAPartnership = true,
-            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
-            {
-                Partnership = new ReExPartnership
-                {
-                    IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExTypesOfPartner()
-                }
-            }
+            Journey =
+            [
+                PagePath.NonCompaniesHousePartnershipAddApprovedPerson
+            ],
+            ReExManualInputSession = new ReExManualInputSession(),
+            IsUserChangingDetails = false
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(_orgSessionMock);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock);
     }
 
     [TestMethod]
@@ -72,6 +59,9 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
     [TestMethod]
     public async Task NonCompaniesHousePartnershipAddApprovedPerson_Get_ReturnsViewWithCorrectModel()
     {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession.ProducerType = ProducerType.Partnership;
+
         // Act
         var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson();
 

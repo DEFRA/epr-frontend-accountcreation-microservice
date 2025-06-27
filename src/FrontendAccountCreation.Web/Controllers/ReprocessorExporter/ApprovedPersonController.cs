@@ -223,7 +223,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             var isLimitedLiabilityPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership == true;
             var isLimitedPartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership == true;
 
-
             var viewModel = new TeamMemberRoleInOrganisationViewModel();
             var llpViewModel = new IsMemberPartnershipViewModel();
 
@@ -451,7 +450,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails);
         }
 
-
         [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails)]
@@ -469,7 +467,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return View(model);
         }
-
 
         [HttpPost]
         [Route(PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails)]
@@ -944,7 +941,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(viewModel);
         }
 
-
         [HttpPost]
         [Route(PagePath.CheckYourDetails)]
         [OrganisationJourneyAccess(PagePath.CheckYourDetails)]
@@ -1030,7 +1026,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             bool isNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
             SetBackLink(session, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-            return View(new AddApprovedPersonViewModel { IsNonCompaniesHousePartnership = isNonCompaniesHousePartnership });
+            return View(new AddApprovedPersonViewModel { IsNonCompaniesHousePartnership = isNonCompaniesHousePartnership, InviteUserOption = session.InviteUserOption?.ToString() });
         }
 
         [HttpPost]
@@ -1051,7 +1047,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            session.InviteUserOption = session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+            session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
             if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
             {
@@ -1060,7 +1056,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
-
                 return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: user should be directed to 'What role do they have within the partnership' screen
             }
             else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
