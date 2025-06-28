@@ -242,7 +242,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return View(new ManageControlOrganisationViewModel
             {
-                TheyManageOrControlOrganisationOrInCharge = invitePerson ? null : session.TheyManageOrControlOrganisation
+                TheyManageOrControlOrganisation = invitePerson ? null : session.TheyManageOrControlOrganisation
             });
         }
 
@@ -259,9 +259,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return View(model);
             }
 
-            session.TheyManageOrControlOrganisation = model.TheyManageOrControlOrganisationOrInCharge;
+            session.TheyManageOrControlOrganisation = model.TheyManageOrControlOrganisation;
 
-            if (model.TheyManageOrControlOrganisationOrInCharge.HasValue && model.TheyManageOrControlOrganisationOrInCharge.Value == Core.Models.YesNoNotSure.Yes)
+            if (model.TheyManageOrControlOrganisation.HasValue && model.TheyManageOrControlOrganisation.Value == Core.Models.YesNoNotSure.Yes)
             {
                 return await SaveSessionAndRedirect(session,
                     nameof(NonCompaniesHouseTeamMemberDetails),

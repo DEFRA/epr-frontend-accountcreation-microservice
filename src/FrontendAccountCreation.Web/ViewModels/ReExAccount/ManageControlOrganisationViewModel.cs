@@ -8,5 +8,5 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 public class ManageControlOrganisationViewModel
 {
     [Required(ErrorMessage = "ManageControlOrganisation.ErrorMessage")]
-    public YesNoNotSure? TheyManageOrControlOrganisationOrInCharge { get; set; }
+    public YesNoNotSure? TheyManageOrControlOrganisation { get; set; }
 }
