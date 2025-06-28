@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using System;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using System.Diagnostics.CodeAnalysis;
+using FrontendAccountCreation.Core.Models;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -116,38 +117,43 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             model.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
             session.InviteUserOption = session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
-            if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
+            switch (model.InviteUserOption)
             {
-                session.IsApprovedUser = true;
-                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
-            }
+                case nameof(InviteUserOptions.BeAnApprovedPerson):
+                    session.IsApprovedUser = true;
+                    return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
 
-            if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
-            {
-                string actionName, nextPagePath;
+                case nameof(InviteUserOptions.InviteAnotherPerson):
+                    string actionName, nextPagePath;
 
-                if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
-                {
-                    actionName = nameof(MemberPartnership);
-                    nextPagePath = PagePath.MemberPartnership;
-                }
-                else if (session.IsCompaniesHouseFlow)
-                {
-                    actionName = nameof(TeamMemberRoleInOrganisation);
-                    nextPagePath = PagePath.TeamMemberRoleInOrganisation;
-                }
-                else
-                {
-                    actionName = nameof(ManageControlOrganisation);
-                    nextPagePath = PagePath.ManageControlOrganisation;
-                }
+                    if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
+                    {
+                        actionName = nameof(MemberPartnership);
+                        nextPagePath = PagePath.MemberPartnership;
+                    }
+                    else if (session.IsCompaniesHouseFlow)
+                    {
+                        actionName = nameof(TeamMemberRoleInOrganisation);
+                        nextPagePath = PagePath.TeamMemberRoleInOrganisation;
+                    }
+                    else
+                    {
+                        if (session.IsUkMainAddress is false)
+                        {
+                            actionName = nameof(ManageControlOrganisation);
+                            nextPagePath = PagePath.ManageControlOrganisation;
+                        }
+                        else
+                        {
+                            actionName = nameof(AreTheyIndividualInCharge);
+                            nextPagePath = PagePath.IndividualIncharge;
+                        }
+                    }
 
-                return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
-            }
+                    return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
 
-            if (model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
-            {
-                return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
+                case nameof(InviteUserOptions.InviteLater):
+                    return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
             }
 
             var id = GetFocusId();
@@ -164,6 +170,57 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
+        }
+
+        [HttpGet]
+        [Route(PagePath.IndividualIncharge)]
+        [OrganisationJourneyAccess(PagePath.IndividualIncharge)]
+        public async Task<IActionResult> AreTheyIndividualInCharge(bool resetOptions = false)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.ManageControlOrganisation);
+
+            YesNoAnswer? theyInCharge = null;
+            if (session.AreTheyIndividualInCharge.HasValue && !resetOptions)
+            {
+                theyInCharge = session.AreTheyIndividualInCharge == true ? YesNoAnswer.Yes : YesNoAnswer.No;
+            }
+
+            return View(new TheyIndividualInChargeViewModel
+            {
+                AreTheyIndividualInCharge = resetOptions ? null : theyInCharge
+            });
+        }
+
+        [HttpPost]
+        [Route(PagePath.IndividualIncharge)]
+        [OrganisationJourneyAccess(PagePath.IndividualIncharge)]
+        public async Task<IActionResult> AreTheyIndividualInCharge(TheyIndividualInChargeViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.ManageControlOrganisation);
+                return View(model);
+            }
+
+            session.AreTheyIndividualInCharge = model.AreTheyIndividualInCharge == YesNoAnswer.Yes;
+
+            if (model.AreTheyIndividualInCharge.HasValue && model.AreTheyIndividualInCharge == YesNoAnswer.Yes)
+            {
+                return await SaveSessionAndRedirect(session,
+                    nameof(NonCompaniesHouseTeamMemberDetails),
+                    PagePath.IndividualIncharge,
+                    PagePath.NonCompaniesHouseTeamMemberDetails);
+            }
+            else
+            {
+                return await SaveSessionAndRedirect(session,
+                    nameof(PersonCanNotBeInvited),
+                    PagePath.IndividualIncharge,
+                    PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+            }
         }
 
         [HttpGet]
@@ -963,7 +1020,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.ApprovedPersonPartnershipCanNotBeInvited);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id, TheyManageOrControlOrganisation = session.TheyManageOrControlOrganisation });
+            return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel
+            {
+                Id = id,
+                TheyManageOrControlOrganisation = session.TheyManageOrControlOrganisation,
+                AreTheyIndividualInCharge = session.AreTheyIndividualInCharge
+            });
         }
 
         [HttpPost]

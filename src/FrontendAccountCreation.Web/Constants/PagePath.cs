@@ -49,6 +49,7 @@ public static class PagePath
     public const string UkRegulator = "uk-regulator";
     public const string ManageControl = "manage-control";
     public const string ManageControlOrganisation = "manage-control-organisation";
+    public const string IndividualIncharge = "individual-in-charge";
     public const string NonCompaniesHousePartnershipType = "non-companies-house-partner-type";
     public const string NonCompaniesHousePartnershipNamesOfPartners = "non-companies-house-partner-names";
     public const string NonCompaniesHousePartnershipNamesOfPartnersDelete = "non-companies-house-partner-names/delete";
