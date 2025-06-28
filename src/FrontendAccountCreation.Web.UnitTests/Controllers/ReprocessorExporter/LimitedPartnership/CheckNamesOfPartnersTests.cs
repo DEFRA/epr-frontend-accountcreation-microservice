@@ -34,7 +34,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
                 Partnership = new ReExPartnership
                 {
                     IsLimitedPartnership = true,
-                    LimitedPartnership = new ReExLimitedPartnership()
+                    LimitedPartnership = new ReExTypesOfPartner()
                 }
             }
         };
@@ -52,7 +52,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<List<ReExLimitedPartnershipPersonOrCompany>>();
+        viewResult.Model.Should().BeOfType<List<ReExPersonOrCompanyPartner>>();
     }
 
     [TestMethod]
@@ -73,21 +73,21 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task CheckNamesOfPartnersDelete_Get_RemovesPartnerFromSession()
     {
         // Arrange
-        var jack = new ReExLimitedPartnershipPersonOrCompany
+        var jack = new ReExPersonOrCompanyPartner
         {
             Id = Guid.NewGuid(),
             Name = "Jack",
             IsPerson = true,
         };
 
-        var jill = new ReExLimitedPartnershipPersonOrCompany
+        var jill = new ReExPersonOrCompanyPartner
         {
             Id = Guid.NewGuid(),
             Name = "Jill",
             IsPerson = true,
         };
 
-        List<ReExLimitedPartnershipPersonOrCompany> model = [jack, jill];
+        List<ReExPersonOrCompanyPartner> model = [jack, jill];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = model;
 
         // Act
@@ -110,7 +110,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
     public async Task NamesOfPartners_Post_Save_RedirectsToCorrectPage()
     {
         // Arrange
-        List<ReExLimitedPartnershipPersonOrCompany> modelNotUsed = new();
+        List<ReExPersonOrCompanyPartner> modelNotUsed = new();
 
         // Act
         var result = await _systemUnderTest.CheckNamesOfPartners(modelNotUsed);
@@ -136,7 +136,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        var model = viewResult.Model as List<ReExLimitedPartnershipPersonOrCompany>;
+        var model = viewResult.Model as List<ReExPersonOrCompanyPartner>;
         model.Should().NotBeNull();
         model.Should().BeEmpty(); // Model is empty as Partnership is null
     }
@@ -153,7 +153,7 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        var model = viewResult.Model as List<ReExLimitedPartnershipPersonOrCompany>;
+        var model = viewResult.Model as List<ReExPersonOrCompanyPartner>;
         model.Should().NotBeNull();
         model.Should().BeEmpty(); // Model is empty as LimitedPartnership is null
     }

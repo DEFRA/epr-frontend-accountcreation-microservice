@@ -1,4 +1,9 @@
-﻿using FrontendAccountCreation.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text.Json;
+using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Models;
+using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -15,10 +20,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation.Core.Addresses;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -28,6 +29,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
+    //to-do: this is only used by one method, so we should inject it directly into the method
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
@@ -49,6 +51,13 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         _urlOptions = multipleOptions.UrlOptions;
         _serviceKeyOptions = multipleOptions.ServiceKeysOptions;
         _logger = logger;
+    }
+
+    [HttpGet]
+    [Route("inject-error")]
+    public IActionResult InjectError()
+    {
+        throw new NotImplementedException();
     }
 
     [HttpGet]
@@ -200,14 +209,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
-        if (session.IsUkMainAddress != true)
-        {
-            return await SaveSessionAndRedirect(session, nameof(NotImplemented),
-                PagePath.IsUkMainAddress, PagePath.NotImplemented);
-        }
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+        session.ReExManualInputSession.ProducerType = model.IsUkMainAddress == YesNoAnswer.No ? ProducerType.NonUkOrganisation : null;
 
-        return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsUkMainAddress,
-            PagePath.TradingName);
+        return await SaveSessionAndRedirect(session, nameof(OrganisationName),
+            PagePath.IsUkMainAddress, PagePath.OrganisationName);
     }
 
     [HttpGet]
@@ -226,7 +232,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return View(new IsTradingNameDifferentViewModel
         {
-            IsTradingNameDifferent = isTradingNameDifferent
+            IsTradingNameDifferent = isTradingNameDifferent,
+            IsNonUk = session.IsUkMainAddress == false,
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
         });
     }
 
@@ -245,11 +253,162 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
+        string nextAction, nextPagePath;
+
         if (session.IsTradingNameDifferent == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(TradingName), PagePath.IsTradingNameDifferent, PagePath.TradingName);
+            nextAction = nameof(TradingName);
+            nextPagePath = PagePath.TradingName;
         }
-        return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.IsTradingNameDifferent, PagePath.IsPartnership);
+        else
+        {
+            if (session.IsUkMainAddress == false)
+            {
+                nextAction = nameof(AddressOverseas);
+                nextPagePath = PagePath.AddressOverseas;
+            }
+            else if (session.IsCompaniesHouseFlow)
+            {
+                nextAction = nameof(IsOrganisationAPartner);
+                nextPagePath = PagePath.IsPartnership;
+            }
+            else
+            {
+                nextAction = nameof(TypeOfOrganisation);
+                nextPagePath = PagePath.TypeOfOrganisation;
+            }
+        }
+
+        return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
+    }
+
+    [HttpGet]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.ManageControl);
+
+        return View(new ManageControlViewModel
+        {
+            UserManagesOrControls = session.UserManagesOrControls
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.ManageControl)]
+    [OrganisationJourneyAccess(PagePath.ManageControl)]
+    public async Task<IActionResult> ManageControl(ManageControlViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.ManageControl);
+            return View(model);
+        }
+
+        session.UserManagesOrControls = model.UserManagesOrControls;
+        session.ReExManualInputSession!.IsEligibleToBeApprovedPerson = model.UserManagesOrControls == YesNoNotSure.Yes;
+
+        return await SaveSessionAndRedirect(session,
+            nameof(ApprovedPersonController),
+            nameof(ApprovedPersonController.AddApprovedPerson),
+            PagePath.ManageControl,
+            PagePath.AddAnApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.AddressOverseas)]
+    [OrganisationJourneyAccess(PagePath.AddressOverseas)]
+    public async Task<IActionResult> AddressOverseas()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.AddressOverseas);
+
+        var viewModel = new BusinessAddressOverseasViewModel();
+
+        if (session.ReExManualInputSession?.BusinessAddress?.IsManualAddress == true)
+        {
+            viewModel.Country = session.ReExManualInputSession.BusinessAddress.Country;
+            viewModel.AddressLine1 = session.ReExManualInputSession.BusinessAddress.BuildingName;
+            viewModel.AddressLine2 = session.ReExManualInputSession.BusinessAddress.Street;
+            viewModel.TownOrCity = session.ReExManualInputSession.BusinessAddress.Town;
+            viewModel.StateProvinceRegion = session.ReExManualInputSession.BusinessAddress.County;
+            viewModel.Postcode = session.ReExManualInputSession.BusinessAddress.Postcode;
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.AddressOverseas)]
+    [OrganisationJourneyAccess(PagePath.AddressOverseas)]
+    public async Task<IActionResult> AddressOverseas(BusinessAddressOverseasViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.AddressOverseas);
+            return View(model);
+        }
+
+        var address = session!.ReExManualInputSession!.BusinessAddress ??= new Address();
+
+        address.Country = model.Country;
+        address.BuildingName = model.AddressLine1;
+        address.Street = model.AddressLine2;
+        address.Town = model.TownOrCity;
+        address.County = model.StateProvinceRegion;
+        address.Postcode = model.Postcode;
+        address.IsManualAddress = true;
+
+        return await SaveSessionAndRedirect(session, nameof(UkRegulator),
+            PagePath.AddressOverseas, PagePath.UkRegulator);
+    }
+
+    /// <summary>
+    /// Non-Uk organisation flow to select regulator's UK nation.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route(PagePath.UkRegulator)]
+    [OrganisationJourneyAccess(PagePath.UkRegulator)]
+    public async Task<IActionResult> UkRegulator()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UkRegulator);
+
+        var viewModel = new UkRegulatorForNonUKViewModel();
+        if (session?.ReExManualInputSession?.UkRegulatorNation != null)
+        {
+            viewModel.UkRegulatorNation = session.ReExManualInputSession.UkRegulatorNation;
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.UkRegulator)]
+    [OrganisationJourneyAccess(PagePath.UkRegulator)]
+    public async Task<IActionResult> UkRegulator(UkRegulatorForNonUKViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UkRegulator);
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+        session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
+
+        return await SaveSessionAndRedirect(session,
+            actionName: nameof(NonUkRoleInOrganisation),
+            currentPagePath: PagePath.UkRegulator,
+            nextPagePath: PagePath.NonUkRoleInOrganisation);
     }
 
     [HttpGet]
@@ -264,6 +423,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         var viewModel = new TradingNameViewModel()
         {
             TradingName = session?.ReExManualInputSession?.TradingName,
+            IsCompaniesHouseFlow = session?.IsCompaniesHouseFlow ?? false
         };
         return View(viewModel);
     }
@@ -283,16 +443,20 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.ReExManualInputSession ??= new ReExManualInputSession();
-
         session.ReExManualInputSession.TradingName = model.TradingName!;
 
         if (session.IsCompaniesHouseFlow)
         {
-            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName,
-                PagePath.IsPartnership);
+            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName, PagePath.IsPartnership);
         }
-        return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName,
-            PagePath.TypeOfOrganisation);
+        else if (session.ReExManualInputSession.ProducerType.HasValue && session.ReExManualInputSession.ProducerType.Value == ProducerType.NonUkOrganisation)
+        {
+            return await SaveSessionAndRedirect(session, nameof(AddressOverseas), PagePath.TradingName, PagePath.AddressOverseas);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName, PagePath.TypeOfOrganisation);
+        }
     }
 
     [HttpGet]
@@ -364,7 +528,20 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        session.IsOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+        var wasOrganisationAPartnership = session.IsOrganisationAPartnership;
+        var isOrganisationAPartnership = model.IsOrganisationAPartner == YesNoAnswer.Yes;
+
+        // clear existing session values when the user changes their original decision
+        if (wasOrganisationAPartnership.HasValue && (wasOrganisationAPartnership != isOrganisationAPartnership))
+        {
+            session.ReExCompaniesHouseSession.Partnership = null; // partnership details
+            session.ReExCompaniesHouseSession.TeamMembers = null; // invitee details
+            session.ReExCompaniesHouseSession.ProducerType = null; // setting producer to null as from here it can go to non paternship flow
+            session.ReExCompaniesHouseSession.RoleInOrganisation = null;
+            session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson = false;
+            session.InviteUserOption = null;
+        }
+        session.IsOrganisationAPartnership = isOrganisationAPartnership;
 
         if (session.IsOrganisationAPartnership == true)
         {
@@ -680,6 +857,13 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Postcode = model.Postcode;
         address.IsManualAddress = true;
 
+        if (session.ReExManualInputSession?.ProducerType == ProducerType.Partnership)
+        {
+            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.NonCompaniesHousePartnershipType),
+                PagePath.BusinessAddress, PagePath.NonCompaniesHousePartnershipType);
+        }
+
+        session.ReExManualInputSession.TypesOfPartner = null;
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
             PagePath.BusinessAddress, PagePath.SoleTrader);
     }
@@ -719,16 +903,92 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsIndividualInCharge == true)
         {
+            session.ReExManualInputSession.TeamMembers = null;
             return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
-                currentPagePath: PagePath.SoleTrader, 
+                currentPagePath: PagePath.SoleTrader,
                 nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
         }
 
         //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson),
             PagePath.SoleTrader, PagePath.AddAnApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.OrganisationName)]
+    [OrganisationJourneyAccess(PagePath.OrganisationName)]
+    public async Task<IActionResult> OrganisationName()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.OrganisationName);
+
+        var viewModel = new OrganisationNameViewModel()
+        {
+            OrganisationName = session?.ReExManualInputSession?.OrganisationName,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.OrganisationName)]
+    [OrganisationJourneyAccess(PagePath.OrganisationName)]
+    public async Task<IActionResult> OrganisationName(OrganisationNameViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.OrganisationName);
+
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+
+        session.ReExManualInputSession.OrganisationName = model.OrganisationName!;
+
+        return await SaveSessionAndRedirect(session, nameof(IsTradingNameDifferent), PagePath.OrganisationName,
+            PagePath.IsTradingNameDifferent);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+        var viewModel = new NonUkRoleInOrganisationViewModel()
+        {
+            NonUkRoleInOrganisation = session.ReExManualInputSession?.NonUkRoleInOrganisation,
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonUkRoleInOrganisation)]
+    [OrganisationJourneyAccess(PagePath.NonUkRoleInOrganisation)]
+    public async Task<IActionResult> NonUkRoleInOrganisation(NonUkRoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonUkRoleInOrganisation);
+
+            return View(model);
+        }
+
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+
+        session.ReExManualInputSession.NonUkRoleInOrganisation = model.NonUkRoleInOrganisation!;
+
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.NonUkRoleInOrganisation,
+            PagePath.ManageControl);
     }
 
     [HttpGet]
@@ -760,22 +1020,26 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> Success()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        var viewModel = new ReExOrganisationSuccessViewModel();
-        viewModel.IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader;
-        if (viewModel.IsSoleTrader)
+
+        var viewModel = new ReExOrganisationSuccessViewModel
         {
-            viewModel.CompanyName = session.ReExManualInputSession?.TradingName;
-			if (session.ReExManualInputSession?.TeamMember != null)
-			{
-                viewModel.ReExCompanyTeamMembers = new List<ReExCompanyTeamMember> { session.ReExManualInputSession.TeamMember };
-			}
-		}
+            IsCompaniesHouseFlow = session.IsCompaniesHouseFlow
+        };
+
+        if (viewModel.IsCompaniesHouseFlow)
+        {
+            var company = session.ReExCompaniesHouseSession?.Company;
+            viewModel.CompanyName = company?.Name;
+            viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
+        }
         else
         {
-            viewModel.CompanyName = session.ReExCompaniesHouseSession?.Company.Name;
-			viewModel.ReExCompanyTeamMembers = session.ReExCompaniesHouseSession?.TeamMembers;
-		}
-        
+            var manualInput = session.ReExManualInputSession;
+            viewModel.IsSoleTrader = manualInput?.ProducerType == ProducerType.SoleTrader;
+            viewModel.CompanyName = manualInput?.OrganisationName;
+            viewModel.ReExCompanyTeamMembers = manualInput?.TeamMembers;
+        }
+
         return View(viewModel);
     }
 

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -197,5 +198,21 @@ public class BusinessAddressTests : OrganisationTestBase
         viewResult.Model.Should().BeOfType<ReExBusinessAddressViewModel?>();
         var resultViewModel = (ReExBusinessAddressViewModel?)viewResult.Model;
         resultViewModel!.Town.Should().Be(tooLongTown);
+    }
+
+    [TestMethod]
+    public async Task POST_BusinessAddress_WhenGivenPartnership_ThenRedirectToPartnershipTypePage()
+    {
+        // Arrange
+        var request = new ReExBusinessAddressViewModel();
+        _organisationSession.ReExManualInputSession.ProducerType = ProducerType.Partnership;
+
+        // Act
+        var result = await _systemUnderTest.BusinessAddress(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipType));
     }
 }

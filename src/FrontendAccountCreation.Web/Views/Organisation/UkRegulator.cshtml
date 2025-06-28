@@ -1,0 +1,93 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.AccountCreation
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Core.Sessions
+@using FrontendAccountCreation.Web.Constants
+
+@model UkRegulatorForNonUKViewModel
+
+@{
+	ViewData["Title"] = Localizer["UkRegulator.Nation.Title"];
+	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+	ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
+				@await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+				<form asp-controller="Organisation" asp-action="UkRegulator" method="post">
+					<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+						<fieldset class="govuk-fieldset">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+								<h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
+									@Localizer["UkRegulator.NonUkOrganisation.Question"]
+								</h1>
+							</legend>
+						</fieldset>
+
+						<p class="govuk-body">@Localizer["UkRegulator.NonUkHint"].Value</p>
+
+						@await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+						<div class="govuk-radios" data-module="govuk-radios">
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" type="radio" id="rdoEngland"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.England)"
+									   gov-first-option="true">
+								<label class="govuk-label govuk-radios__label"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.England)"
+									   gov-first-option="true">
+									@Localizer["UkRegulator.Nation.England"]
+								</label>
+							</div>
+
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" type="radio" id="rdoScotland"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.Scotland)">
+								<label class="govuk-label govuk-radios__label"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.Scotland)">
+									@Localizer["UkRegulator.Nation.Scotland"]
+								</label>
+							</div>
+
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" type="radio" id="rdoWales"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.Wales)">
+								<label class="govuk-label govuk-radios__label"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.Wales)">
+									@Localizer["UkRegulator.Nation.Wales"]
+								</label>
+							</div>
+
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" type="radio" id="rdoNorthernIreland"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.NorthernIreland)">
+								<label class="govuk-label govuk-radios__label"
+									   gov-for="UkRegulatorNation"
+									   gov-value="@nameof(Nation.NorthernIreland)">
+									@Localizer["UkRegulator.Nation.NorthernIreland"]
+								</label>
+							</div>
+						</div>
+					</div>
+					<button class="govuk-button" data-module="govuk-button">
+						@SharedLocalizer["Continue"]
+					</button>
+				</form>
+			</div>
+		</div>
+	</main>
+</div>

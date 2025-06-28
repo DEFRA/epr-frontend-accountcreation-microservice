@@ -2,7 +2,7 @@
 @using FrontendAccountCreation.Core.Sessions;
 @model AddApprovedPersonViewModel
 
-<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : string.Empty)">
+<div class="govuk-form-group @(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : string.Empty)">
     <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
         @Localizer["AddAnApprovedPerson.Title"]
     </h1>
@@ -25,16 +25,30 @@
     </p>
 
     <div class="section">
-        <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.RolesHeading"]</h3>
-        <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@Localizer["AddAnApprovedPerson.Director"]</li>
-            <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
-        </ul>
+        <h2 class="govuk-heading-m">@Localizer["AddAnApprovedPerson.RolesHeading"]</h2>
+        @if (Model.IsNonUk)
+        {
+            <p class="govuk-body">@Localizer["AddAnApprovedPerson.NonUk.RolesInstruction"]:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@SharedLocalizer["CEO"]</li>
+                <li>@SharedLocalizer["Owner"]</li>
+                <li>@SharedLocalizer["Partner"]</li>
+                <li>@SharedLocalizer["CompanyDirectorOrSecretary"]</li>
+                <li>@SharedLocalizer["UnincorporatedRoles"]</li>
+            </ul>
+        }
+        else // UK
+        {
+            <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Localizer["AddAnApprovedPerson.Director"]</li>
+                <li>@Localizer["AddAnApprovedPerson.CompanySecretary"]</li>
+            </ul>
+        }
     </div>
 
     <div class="section">
-        <h3 class="govuk-heading-s">@Localizer["AddAnApprovedPerson.UserHeading"]</h3>
+        <h2 class="govuk-heading-m">@Localizer["AddAnApprovedPerson.UserHeading"]</h2>
         <p class="govuk-body">@Localizer["AddAnApprovedPerson.SelectOptionText"]</p>
     </div>
 
@@ -48,16 +62,19 @@
             <div class="govuk-radios__item">
                 <input class="govuk-radios__input" type="radio" id="rdoIAgreeToBeAnApprovedPerson"
                        gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
+                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)"
+                       gov-first-option="true">
                 <label class="govuk-label govuk-radios__label"
                        gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
+                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)"
+                       gov-first-option="true">
                     @Localizer["AddAnApprovedPerson.IAgreeToBeAnApprovedPerson"]
                 </label>
             </div>
 
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" type="radio" id="rdoIWillInviteAnotherApprovedPerson"
+                <input class="govuk-radios__input"
+                       type="radio"
                        gov-for="InviteUserOption"
                        gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
                 <label class="govuk-label govuk-radios__label"
@@ -68,7 +85,8 @@
             </div>
 
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" type="radio" id="rdoIWillInviteApprovedPersonLater"
+                <input class="govuk-radios__input"
+                       type="radio"
                        gov-for="InviteUserOption"
                        gov-value="@nameof(InviteUserOptions.InviteLater)">
                 <label class="govuk-label govuk-radios__label"

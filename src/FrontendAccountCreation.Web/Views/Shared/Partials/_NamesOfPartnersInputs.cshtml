@@ -1,0 +1,58 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@model PartnershipPartnersViewModel
+@inject IViewLocalizer Localizer
+
+@Html.HiddenFor(m => m.ExpectsCompanyPartners)
+@Html.HiddenFor(m => m.ExpectsIndividualPartners)
+@Html.HiddenFor(m => m.DeleteAction)
+
+@for (int i = 0; i < Model.Partners.Count; ++i)
+{
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-visually-hidden">@Localizer["_NamesOfPartnersInputs.Legend"]</legend>
+        <p></p>
+        <div class="govuk-form-group">
+            @Html.HiddenFor(m => m.Partners[i].Id)
+
+            @if (Model.ExpectsCompanyPartners)
+            {
+                <!-- Company partner name -->
+                @Html.LabelFor(m => m.Partners[i].CompanyName, @Localizer["_NamesOfPartnersInputs.CompanyName"].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
+                @Html.EditorFor(m => m.Partners[i].CompanyName, new { htmlAttributes = new { @class = "govuk-input" } })
+            }
+
+            @if (Model.ExpectsCompanyPartners && Model.ExpectsIndividualPartners)
+            {
+                <br /><br />
+                <p class="govuk-body"><strong>@Localizer["_NamesOfPartnersInputs.Or"]</strong></p>
+            }
+
+            @if (Model.ExpectsIndividualPartners)
+            {
+                string personNameLabel = Model.ExpectsCompanyPartners ? "_NamesOfPartnersInputs.IndividualPartnersFullName" : "_NamesOfPartnersInputs.FullName";
+                <!-- Individual partner’s full name -->
+                @Html.LabelFor(m => m.Partners[i].PersonName, @Localizer[personNameLabel].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
+                @Html.EditorFor(m => m.Partners[i].PersonName, new { htmlAttributes = new { @class = "govuk-input" } })
+            }
+
+            <br /><br />
+
+            @if (Model.Partners.Count > 1)
+            {
+                <!-- remove partner -->
+                <div class="govuk-!-text-align-right">
+                    @Html.ActionLink(@SharedLocalizer["Remove"].Value, Model.DeleteAction, "LimitedPartnership",
+                             new
+                             {
+                                 @id = @Model.Partners[i].Id
+                             },
+                             new
+                             {
+                                 @class = "govuk-button govuk-button--secondary"
+                             })
+                </div>
+            }
+            <hr>
+        </div>
+    </fieldset>
+}

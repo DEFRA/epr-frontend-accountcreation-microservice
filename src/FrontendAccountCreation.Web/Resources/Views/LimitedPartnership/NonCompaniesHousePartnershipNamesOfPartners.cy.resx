@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.Title_Individual" xml:space="preserve">
+    <value>[Welsh]Name Individual Partners</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.Title_Company" xml:space="preserve">
+    <value>[Welsh]Name Company Partners</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.Title_Both" xml:space="preserve">
+    <value>[Welsh]Name-All-Partners</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.H1_Individual" xml:space="preserve">
+    <value>[Welsh]What are the names of all individual partners in your partnership?</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.H1_Company" xml:space="preserve">
+    <value>[Welsh]What are the names of corporate partners in your partnership?</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.H1_Both" xml:space="preserve">
+    <value>[Welsh]What are the names of all partners in your partnership?</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.Hint_Individual" xml:space="preserve">
+    <value>[Welsh]This means individual partners, who are listed as partners within your partnership.</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.Hint_Company" xml:space="preserve">
+    <value>[Welsh]This means any corporate partners which are listed as partners within your partnership.</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.Hint_Both" xml:space="preserve">
+    <value>[Welsh]This means any corporate partners and individual partners, which are listed as partners within your partnership.</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.AddAnotherPartner" xml:space="preserve">
+    <value>[Welsh]Add another partner</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.ValidationError_Individual" xml:space="preserve">
+    <value>[Welsh]Enter the full name of an individual partner</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.ValidationError_Company" xml:space="preserve">
+    <value>[Welsh]Enter a corporate partner name</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipNamesOfPartners.ValidationError_Both" xml:space="preserve">
+    <value>[Welsh]Enter a corporate partner name or the full name of an individual partner</value>
+  </data>
+</root>

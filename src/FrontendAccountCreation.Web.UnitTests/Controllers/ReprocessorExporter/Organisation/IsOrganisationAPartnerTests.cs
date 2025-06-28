@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
-using FluentAssertions;
+
 using FrontendAccountCreation;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -22,7 +23,7 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
     [TestInitialize]
     public void Setup()
     {
-        SetupBase();        
+        SetupBase();
     }
 
     [TestMethod]
@@ -59,7 +60,7 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
     [DataRow(false, YesNoAnswer.No, nameof(OrganisationController.RoleInOrganisation))]
     public async Task Post_IsOrganisationAPartner_ReturnsAsExpected(bool? isAPartnership, YesNoAnswer? yesNoAnswer, string expectedRedirect)
     {
-        // Arrange 
+        // Arrange
         IsOrganisationAPartnerViewModel viewModel = new()
         {
             IsOrganisationAPartner = yesNoAnswer
@@ -81,7 +82,7 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
 
         // Commented the line out below because the unit test is failing and there
         // is a todo in the method under test
-        //((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);        
+        //((RedirectToActionResult)result).ActionName.Should().Be(expectedRedirect);
 
         _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(),
@@ -105,8 +106,161 @@ public class IsOrganisationAPartnerTests : OrganisationTestBase
 
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().BeOfType<IsOrganisationAPartnerViewModel>();
-        
+
         var viewModel = viewResult.Model as IsOrganisationAPartnerViewModel;
         viewModel!.IsOrganisationAPartner.Should().BeNull();
+    }
+
+    [TestMethod]
+    [DataRow(null, YesNoAnswer.Yes, true)]
+    [DataRow(null, YesNoAnswer.No, false)]
+    [DataRow(null, null, false)]
+    [DataRow(false, null, false)]
+    public async Task Post_IsOrganisationAPartner_WhenWasNotPartnerPreviously_DoesNotClearSession(bool? wasAPartnership, YesNoAnswer? yesNoAnswer, bool isAPartnership)
+    {
+        // Arrange
+        IsOrganisationAPartnerViewModel viewModel = new()
+        {
+            IsOrganisationAPartner = yesNoAnswer
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = wasAPartnership,
+            InviteUserOption = InviteUserOptions.None,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new(),
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
+        _orgSessionMock.IsOrganisationAPartnership.Should().Be(isAPartnership);
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.None);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
+    }
+
+    [TestMethod]
+    public async Task Post_IsOrganisationAPartner_WhenDecisionStaysAsYes_DoesNotClearSession()
+    {
+        // Arrange
+        IsOrganisationAPartnerViewModel viewModel = new()
+        {
+            IsOrganisationAPartner = YesNoAnswer.Yes
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            InviteUserOption = InviteUserOptions.None,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new(),
+                ProducerType = ProducerType.LimitedPartnership,
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.ProducerType.Should().NotBeNull().And.Be(ProducerType.LimitedPartnership);
+        _orgSessionMock.IsOrganisationAPartnership.Should().BeTrue();
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.None);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
+    }
+
+    public async Task Post_IsOrganisationAPartner_WhenDecisionStaysAsNo_DoesNotClearSession()
+    {
+        // Arrange
+        IsOrganisationAPartnerViewModel viewModel = new()
+        {
+            IsOrganisationAPartner = YesNoAnswer.No
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = false,
+            InviteUserOption = InviteUserOptions.None,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new(),
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().NotBeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().NotBeNull();
+        _orgSessionMock.IsOrganisationAPartnership.Should().BeFalse();
+        _orgSessionMock.InviteUserOption.Should().NotBeNull().And.Be(InviteUserOptions.None);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().NotBeNull().And.Be(RoleInOrganisation.CompanySecretary);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(true);
+    }
+
+    [TestMethod]
+    [DataRow(true, YesNoAnswer.No, false)]
+    [DataRow(false, YesNoAnswer.Yes, true)]
+    [DataRow(true, null, false)]
+    public async Task Post_IsOrganisationAPartner_WhenDecisionChanges_ClearsSession(bool? wasAPartnership, YesNoAnswer? yesNoAnswer, bool isAPartnership)
+    {
+        // Arrange
+        IsOrganisationAPartnerViewModel viewModel = new()
+        {
+            IsOrganisationAPartner = yesNoAnswer
+        };
+
+        _orgSessionMock = new OrganisationSession
+        {
+            IsOrganisationAPartnership = wasAPartnership,
+            InviteUserOption = InviteUserOptions.None,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                TeamMembers = [],
+                Partnership = new(),
+                ProducerType = ProducerType.LimitedLiabilityPartnership,
+                RoleInOrganisation = RoleInOrganisation.CompanySecretary,
+                IsInEligibleToBeApprovedPerson = true,
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_orgSessionMock).Verifiable();
+
+        // Act
+        await _systemUnderTest.IsOrganisationAPartner(viewModel);
+
+        // Assert
+        _orgSessionMock.ReExCompaniesHouseSession.TeamMembers.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.ProducerType.Should().BeNull();
+        _orgSessionMock.InviteUserOption.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().BeNull();
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().Be(false);
     }
 }

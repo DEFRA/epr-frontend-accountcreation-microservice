@@ -29,6 +29,13 @@ public class RegisteredAsCharityTests : OrganisationTestBase
     }
 
     [TestMethod]
+    public void InjectError_ThrowsNotImplementedException()
+    {
+        // Act & Assert
+        Assert.ThrowsException<NotImplementedException>(() => _systemUnderTest.InjectError());
+    }
+
+    [TestMethod]
     public async Task Get_RegisteredAsCharity_WithRegulatorDeployment_IsForbidden()
     {
         // Arrange

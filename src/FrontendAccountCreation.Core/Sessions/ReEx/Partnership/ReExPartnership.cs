@@ -7,7 +7,7 @@ public class ReExPartnership
 {
     public bool IsLimitedPartnership { get; set; }
 
-    public ReExLimitedPartnership? LimitedPartnership { get; set; }
+    public ReExTypesOfPartner? LimitedPartnership { get; set; }
 
     public bool IsLimitedLiabilityPartnership { get; set; }
 

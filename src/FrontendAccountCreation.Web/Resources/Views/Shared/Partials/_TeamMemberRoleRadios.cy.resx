@@ -117,19 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApprovedPersonPartnershipRole.CompanySecretary" xml:space="preserve">
-    <value>[Welsh]Company Secretary within an organisation partner</value>
+  <data name="_TeamMemberRoleRadios.IndividualPartner" xml:space="preserve">
+    <value>[Welsh]Individual partner within the partnership</value>
   </data>
-  <data name="ApprovedPersonPartnershipRole.Director" xml:space="preserve">
-    <value>[Welsh]Director within an organisation partner</value>
+  <data name="_TeamMemberRoleRadios.CompanyDirector" xml:space="preserve">
+    <value>[Welsh]Company director of a corporate partner within the partnership</value>
   </data>
-  <data name="ApprovedPersonPartnershipRole.NoneOfTheAbove" xml:space="preserve">
-    <value>[Welsh]None Of The Above</value>
+  <data name="_TeamMemberRoleRadios.CompanySecretary" xml:space="preserve">
+    <value>[Welsh]Company secretary of a corporate partner within the partnership</value>
   </data>
-  <data name="ApprovedPersonPartnershipRole.IndividualPartner" xml:space="preserve">
-    <value>[Welsh]Individual Partner</value>
+    <data name="_TeamMemberRoleRadios.None" xml:space="preserve">
+    <value>[Welsh]None of the above</value>
   </data>
-  <data name="ApprovedPersonPartnershipRole.Or" xml:space="preserve">
-    <value>[Welsh]Or</value>
+  <data name="_TeamMemberRoleRadios.Or" xml:space="preserve">
+    <value>[Welsh]or</value>
   </data>
 </root>

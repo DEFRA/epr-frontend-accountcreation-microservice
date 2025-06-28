@@ -197,4 +197,23 @@ public class TradingNameTests : OrganisationTestBase
 
         AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
     }
+
+    [TestMethod]
+    public async Task POST_GivenTradingName_WithNonUKOrganisationProducerType_Flow_Redirects_To_AddressOverseas()
+    {
+        // Arrange
+        var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.NonUkOrganisation
+        };
+
+        // Act
+        var result = await _systemUnderTest.TradingName(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddressOverseas));
+    }
 }
