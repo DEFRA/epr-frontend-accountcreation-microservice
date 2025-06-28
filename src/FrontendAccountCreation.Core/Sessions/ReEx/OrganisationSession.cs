@@ -39,6 +39,11 @@ public class OrganisationSession : ILocalSession
 
     public bool? IsIndividualInCharge { get; set; }
 
+    /// <summary>
+    /// Are they individual in-charge of the business
+    /// </summary>
+    public bool? AreTheyIndividualInCharge { get; set; }
+
     public bool IsUserChangingDetails { get; set; }
 
     public YesNoNotSure? UserManagesOrControls { get; set; }

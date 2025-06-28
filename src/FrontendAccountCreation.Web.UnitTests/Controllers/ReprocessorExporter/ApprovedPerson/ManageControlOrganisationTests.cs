@@ -55,7 +55,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Assert
             var viewResult = result.Should().BeOfType<ViewResult>().Subject;
             var model = viewResult.Model.Should().BeOfType<ManageControlOrganisationViewModel>().Subject;
-            model.TheyManageOrControlOrganisation.Should().Be(yesNoNotSure);
+            model.TheyManageOrControlOrganisationOrInCharge.Should().Be(yesNoNotSure);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             // Assert
             var viewResult = result.Should().BeOfType<ViewResult>().Subject;
             var model = viewResult.Model.Should().BeOfType<ManageControlOrganisationViewModel>().Subject;
-            model.TheyManageOrControlOrganisation.Should().Be(null);
+            model.TheyManageOrControlOrganisationOrInCharge.Should().Be(null);
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 
             var model = new ManageControlOrganisationViewModel
             {
-                TheyManageOrControlOrganisation = yesNoNotSure
+                TheyManageOrControlOrganisationOrInCharge = yesNoNotSure
             };
 
             // Act
