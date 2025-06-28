@@ -896,7 +896,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             var companiesHouseSession = session.ReExCompaniesHouseSession ?? new();
-            var members = companiesHouseSession.TeamMembers ?? new();
+            var members = companiesHouseSession.TeamMembers ?? [];
             var index = members.FindIndex(0, x => x.Id.Equals(model?.Id));
             bool isExistingMember = index >= 0;
             var id = model?.Id ?? Guid.NewGuid();
