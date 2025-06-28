@@ -1,5 +1,6 @@
 ﻿using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Sessions.Interfaces;
+using FrontendAccountCreation.Web.ViewModels;
 
 namespace FrontendAccountCreation.Core.Sessions.ReEx;
 
@@ -55,4 +56,6 @@ public class OrganisationSession : ILocalSession
     public HashSet<string> WhiteList { get; set; } = [];
 
     public InviteUserOptions? InviteUserOption { get; set; }
+
+    public ReExUnincorporatedFlowSession? ReExUnincorporatedFlowSession { get; set; }
 }
