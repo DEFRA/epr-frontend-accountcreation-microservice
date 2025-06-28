@@ -24,9 +24,19 @@
                 </h1>
 
                 <div class="govuk-summary-card">
-                    <div class="govuk-summary-card__title-wrapper">
-                        <p class="govuk-body">@Localizer["TeamMembersCheckInvitationDetails.Help"]</p>
-                    </div>
+                    @if(Model.Count > 0)
+                    {
+                        <div class="govuk-summary-card__title-wrapper">
+                            <p class="govuk-body">@Localizer["TeamMembersCheckInvitationDetails.Help"]</p> 
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="govuk-summary-card__title-wrapper">
+                            <p class="govuk-body">@Localizer["TeamMembersCheckInvitationDetails.NoInviterRemovedMsg"]</p> 
+                            <p class="govuk-body">@Localizer["TeamMembersCheckInvitationDetails.NoInviterContinueMsg"]</p> 
+                        </div>
+                    }
 
                     @for (int i = 0; i < Model?.Count; i++)
                     {
