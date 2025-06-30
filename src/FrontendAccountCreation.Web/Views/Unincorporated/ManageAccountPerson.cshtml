@@ -1,6 +1,6 @@
 ﻿@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Constants
 @using FrontendAccountCreation.Web.Extensions
-@using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 
@@ -8,6 +8,8 @@
 
 @{
     ViewData["Title"] = Localizer["ReExManageAccountPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
@@ -49,11 +51,11 @@
 
                 <p class="govuk-body">@Localizer["ReExManageAccountPerson.RolesExampleIntro"]</p>
                 <ul class="govuk-list govuk-list--bullet">
-                    <li>@Localizer["ReExManageAccountPerson.Role.Chairperson"]</li>
-                    <li>@Localizer["ReExManageAccountPerson.Role.Treasurer"]</li>
-                    <li>@Localizer["ReExManageAccountPerson.Role.Secretary"]</li>
-                    <li>@Localizer["ReExManageAccountPerson.Role.Manager"]</li>
+                    <li>@Localizer["ReExManageAccountPerson.Role.ChiefExecutive"]</li>
                     <li>@Localizer["ReExManageAccountPerson.Role.Owner"]</li>
+                    <li>@Localizer["ReExManageAccountPerson.Role.Partner"]</li>
+                    <li>@Localizer["ReExManageAccountPerson.Role.CompanyDirectorOrSecretary"]</li>
+                    <li>@Localizer["ReExManageAccountPerson.Role.ChairTreasurerOrSecretary"]</li>
                 </ul>
 
                 @* <form method="post"> *@

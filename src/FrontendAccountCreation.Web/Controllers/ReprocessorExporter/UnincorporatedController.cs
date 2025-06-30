@@ -269,7 +269,38 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
     [ExcludeFromCodeCoverage]
     public async Task<IActionResult> ApprovedPersonCannotBeInvited()
     {
-        throw new NotImplementedException();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedApprovedPersonCannotBeInvited);
+        return View();
+    }
+    
+    [HttpPost]
+    [Route(PagePath.UnincorporatedApprovedPersonCannotBeInvited)]
+    [ExcludeFromCodeCoverage]
+    public async Task<IActionResult> ApprovedPersonCannotBeInvited(bool inviteEligiblePerson)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedApprovedPersonCannotBeInvited);
+            return View();
+        }
+
+        if (inviteEligiblePerson)
+        {
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(ManageControlOrganisation),
+                PagePath.UnincorporatedApprovedPersonCannotBeInvited,
+                PagePath.UnincorporatedManageControlOrganisation);
+        }
+
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(CheckYourDetails),
+            PagePath.UnincorporatedApprovedPersonCannotBeInvited,
+            PagePath.UnincorporatedCheckYourDetails);
     }
 
     [HttpGet]

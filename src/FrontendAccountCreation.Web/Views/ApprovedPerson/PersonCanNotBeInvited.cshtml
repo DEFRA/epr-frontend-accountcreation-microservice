@@ -31,6 +31,15 @@
 							   @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
 							</a>
 						}
+						else if (Model.AreTheyIndividualInCharge.HasValue && Model.AreTheyIndividualInCharge == false)
+						{
+							<a class="govuk-link"
+							   asp-action="AreTheyIndividualInCharge"
+							   asp-controller="ApprovedPerson"
+							   asp-route-resetOptions="true">
+								@Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
+							</a>
+						}
 						else
 						{
 							<a class="govuk-link"

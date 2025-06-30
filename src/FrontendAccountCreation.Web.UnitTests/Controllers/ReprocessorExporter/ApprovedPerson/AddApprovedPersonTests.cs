@@ -614,7 +614,8 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         {
             IsOrganisationAPartnership = true,
             ReExCompaniesHouseSession = null,
-            OrganisationType = OrganisationType.NonCompaniesHouseCompany
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            IsUkMainAddress = false
         };
 
         var model = new AddApprovedPersonViewModel
@@ -630,6 +631,32 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
 
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(_systemUnderTest.ManageControlOrganisation));
+    }
+
+    [TestMethod]
+    public async Task Post_AddApprovedPerson_WhenNonCompanyHouseFlow_RedirectsTo_AreTheyIndividualInCharge()
+    {
+        var session = new OrganisationSession
+        {
+            IsOrganisationAPartnership = true,
+            ReExCompaniesHouseSession = null,
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            IsUkMainAddress = true
+        };
+
+        var model = new AddApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        var result = await _systemUnderTest.AddApprovedPerson(model);
+
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.AreTheyIndividualInCharge));
     }
 
     [TestMethod]

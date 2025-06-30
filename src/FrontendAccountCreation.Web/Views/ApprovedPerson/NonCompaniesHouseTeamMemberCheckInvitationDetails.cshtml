@@ -24,16 +24,27 @@
                 </h1>
 
                 <div class="govuk-summary-card">
-                    <div class="govuk-summary-card__title-wrapper">
-                        <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Help"]</p>
-                    </div>
+                    @if (Model.TeamMembers != null && Model.TeamMembers.Count > 0)
+                    {
+                        <div class="govuk-summary-card__title-wrapper">
+                            <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Help"]</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="govuk-summary-card__title-wrapper">
+                            <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.NoInviterRemovedMsg"]</p>
+                            <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.NoInviterContinueMsg"]</p>
+                        </div>
+                    }
+
                     @for (int i = 0; i < Model.TeamMembers?.Count; i++)
                     {
                         <div class="govuk-summary-card__content">
                             <dl class="govuk-summary-list">
 
                                 <!-- Role of team member -->
-                                <div class="govuk-summary-list__row">
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
                                     <dt class="govuk-summary-list__key">
                                         @Localizer["TeamMemberCheckInvitationDetails.Role"]
                                     </dt>
@@ -49,22 +60,13 @@
                                             @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
                                         </dd>
                                     }
+                                   
                                 </div>
 
                                 <!-- Name, Email, Telephone -->
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        @Localizer["TeamMemberCheckInvitationDetails.FirstName"]<br />
-                                        @Localizer["TeamMemberCheckInvitationDetails.LastName"]<br />
-                                        @Localizer["TeamMemberCheckInvitationDetails.Email"]<br />
-                                        @Localizer["TeamMemberCheckInvitationDetails.Telephone"]
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        @Model.TeamMembers[i].FirstName<br />
-                                        @Model.TeamMembers[i].LastName<br />
-                                        @Model.TeamMembers[i].Email<br />
-                                        @Model.TeamMembers[i].TelephoneNumber
-                                    </dd>
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
+                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.FirstName"]</dt>
+                                    <dd class="govuk-summary-list__value">@Model.TeamMembers[i].FirstName</dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
                                             @SharedLocalizer["Change"]
@@ -72,7 +74,18 @@
                                         </a>
                                     </dd>
                                 </div>
-
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
+                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.LastName"]</dt>
+                                    <dd class="govuk-summary-list__value">@Model.TeamMembers[i].LastName</dd>
+                                </div>
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
+                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.Email"]</dt>
+                                    <dd class="govuk-summary-list__value">@Model.TeamMembers[i].Email</dd>
+                                </div>
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.Telephone"]</dt>
+                                    <dd class="govuk-summary-list__value">@Model.TeamMembers[i].TelephoneNumber</dd>
+                                </div>
                             </dl>
                         </div>
                         <form asp-controller="ApprovedPerson"
