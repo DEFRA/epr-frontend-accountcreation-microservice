@@ -77,7 +77,7 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         // Arrange
         var model = new AddApprovedPersonViewModel();
         _systemUnderTest.ModelState.AddModelError("Test", "Required");
-        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession { ProducerType = ProducerType.Partnership };
 
         // Act
         var result = await _systemUnderTest.NonCompaniesHousePartnershipAddApprovedPerson(model);
