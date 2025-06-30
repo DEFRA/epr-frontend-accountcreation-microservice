@@ -187,4 +187,82 @@ public class CheckNamesOfPartnersTests : LimitedPartnershipTestBase
         model.Should().NotBeNull();
         model.Should().BeEmpty(); // Model is empty as LimitedPartnership is null
     }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartners_Get_WhenOrganisationSessionIsNull_Redirects()
+    {
+        // Arrange
+        _orgSessionMock = null;
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(Guid.NewGuid());
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+    }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartners_Get_WhenCompaniesHouseSessionIsNull_Redirects()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession = null;
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(Guid.NewGuid());
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartners_Get_WhenTypesOfPartnerSessionIsNull_Redirects()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(Guid.NewGuid());
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartners_Get_WhenLimitedPartnershipSessionIsNull_Redirects()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership = null;
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(Guid.NewGuid());
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task CheckNamesOfPartners_Get_WhenPartnersSessionIsNull_Redirects()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = null;
+
+        // Act
+        var result = await _systemUnderTest.CheckNamesOfPartnersDelete(Guid.NewGuid());
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.CheckNamesOfPartners));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
+    }
 }
