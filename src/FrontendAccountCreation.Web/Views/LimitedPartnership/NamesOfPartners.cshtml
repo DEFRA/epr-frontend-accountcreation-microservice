@@ -15,28 +15,28 @@
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
-<div class="govuk-width-container" name="div1">
+<div class="govuk-width-container" name="divContainer">
 
     <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
 
-        <div class="govuk-grid-row" name="div12">
-            <div class="govuk-grid-column-two-thirds" name="div123">
+        <div class="govuk-grid-row" name="divRow">
+            <div class="govuk-grid-column-two-thirds" name="divColumn">
                 <h1 class="govuk-heading-l">
                     @Localizer[GetLocalizer(Model.ExpectsIndividualPartners, Model.ExpectsCompanyPartners, "H1_Individual", "H1_Company", "H1_Both")]
                 </h1>
 
-                <div class="govuk-hint" name="div1231">
+                <div class="govuk-hint" name="divHeader">
                     @Localizer[GetLocalizer(Model.ExpectsIndividualPartners, Model.ExpectsCompanyPartners, "Hint_Individual", "Hint_Company", "Hint_Both")]
                 </div>
                 <hr>
                 <br>
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
-                <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")" name="div1232">
+                <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")" name="divFormGroup">
                     <form method="post">
                         
                         @await Html.PartialAsync("Partials/_NamesOfPartnersInputs", Model)
 
-                        <div class="govuk-button-group" name="div1234">
+                        <div class="govuk-button-group" name="divForm">
 
                             <!-- Add another partner-->
                             <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="add" type="submit">

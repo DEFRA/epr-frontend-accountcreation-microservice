@@ -32,24 +32,6 @@
     <value>Check corporate partner names in your limited partnership</value>
   </data>
   <data name="CheckNamesOfPartners.H1_Both" xml:space="preserve">
-    <value>Check individual and corporate partner names in your limited partnership</value>
-  </data>
-  <data name="CheckNamesOfPartners.H2_Individual" xml:space="preserve">
-    <value>Individual partners</value>
-  </data>
-  <data name="CheckNamesOfPartners.H2_Company" xml:space="preserve">
-    <value>Corporate partners</value>
-  </data>
-  <data name="CheckNamesOfPartners.Company" xml:space="preserve">
-    <value>Company</value>
-  </data>
-  <data name="CheckNamesOfPartners.FullName" xml:space="preserve">
-    <value>Full name</value>
-  </data>
-  <data name="CheckNamesOfPartners.PartnersName" xml:space="preserve">
-    <value>partners name</value>
-  </data>
-  <data name="CheckNamesOfPartners.Partner" xml:space="preserve">
-    <value>partner</value>
+    <value>Check corporate and individual partner names in your limited partnership</value>
   </data>
 </root>
