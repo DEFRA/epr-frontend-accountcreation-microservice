@@ -27,6 +27,6 @@ public enum ReExTeamMemberRole
     [Description("Member")]
     Member = 7,
 
-    [Description("Company Director")]
+    [Description("Company director")]
     CompanyDirector = 8,
 }

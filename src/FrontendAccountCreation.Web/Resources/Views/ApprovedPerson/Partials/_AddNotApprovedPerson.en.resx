@@ -189,4 +189,7 @@
   <data name="AddNotApprovedPerson.NonUk.Roles.Instruction" xml:space="preserve">
     <value>A person who has control or management of a business which does not have a registered office, head office or principal place of business in the UK.</value>
   </data>
+  <data name="AddNotApprovedPerson.CompanyDirector" xml:space="preserve">
+    <value>company director</value>
+  </data>
 </root>

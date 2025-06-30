@@ -25,6 +25,6 @@ public enum RoleInOrganisation
     [Description("Company secretary of a corporate partner")]
     PartnerCompanySecretary = 6,
 
-    [Description("Comnpany Director")]
+    [Description("Comnpany director")]
     CompanyDirector = 7,
 }
