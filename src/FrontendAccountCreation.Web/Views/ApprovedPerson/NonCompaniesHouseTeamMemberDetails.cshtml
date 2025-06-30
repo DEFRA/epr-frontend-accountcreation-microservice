@@ -1,10 +1,14 @@
-﻿@using FrontendAccountCreation.Web.Extensions
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+
 
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.NonCompaniesHouseTeamMemberViewModel
 
 @{
     ViewData["Title"] = Localizer["TeamMemberDetails.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer,
         nameof(Model.FirstName), nameof(Model.LastName), nameof(Model.Email), nameof(Model.Telephone));
 }
@@ -21,7 +25,7 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-                                @Localizer["TeamMemberDetails.Header"]
+                                @Localizer["TeamMemberDetails.NonUk.Question"]
                             </h1>
                         </legend>
                         
