@@ -262,6 +262,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
         else
         {
+            session.TradingName = null;
             if (session.IsUkMainAddress == false)
             {
                 nextAction = nameof(AddressOverseas);
@@ -422,7 +423,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         var viewModel = new TradingNameViewModel()
         {
-            TradingName = session?.ReExManualInputSession?.TradingName,
+            TradingName = session?.TradingName,
             IsCompaniesHouseFlow = session?.IsCompaniesHouseFlow ?? false
         };
         return View(viewModel);
@@ -442,8 +443,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        session.ReExManualInputSession ??= new ReExManualInputSession();
-        session.ReExManualInputSession.TradingName = model.TradingName!;
+        session.TradingName = model.TradingName;
 
         if (session.IsCompaniesHouseFlow)
         {

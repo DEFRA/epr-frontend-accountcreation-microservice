@@ -950,14 +950,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsManualInputFlow = !session.IsCompaniesHouseFlow,
                 Nation = session.UkNation,
                 IsNonUk = !(session.IsUkMainAddress ?? true),
-                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                TradingName = session.TradingName
             };
 
             if (viewModel.IsCompaniesHouseFlow)
             {
                 var companyHouseSession = session.ReExCompaniesHouseSession;
                 var company = companyHouseSession?.Company;
-
                 viewModel.BusinessAddress = company?.BusinessAddress;
                 viewModel.CompanyName = company?.Name;
                 viewModel.CompaniesHouseNumber = company?.CompaniesHouseNumber;
@@ -973,7 +973,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 var manualInput = session.ReExManualInputSession;
                 viewModel.ProducerType = manualInput?.ProducerType;
                 viewModel.BusinessAddress = manualInput?.BusinessAddress;
-                viewModel.TradingName = manualInput?.TradingName;
 
                 viewModel.reExCompanyTeamMembers = new List<ReExCompanyTeamMember>();
                 var teamMember = manualInput?.TeamMembers?.FirstOrDefault();
