@@ -8,6 +8,10 @@
     ViewData["Title"] = Localizer[GetLocalizer(hasIndividualPartners, hasCompanyPartners, "Title_Individual", "Title_Company", "Title_Both")];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    // pass data to Views\Shared\Partials\_CheckNamesOfPartnersLinks.cshtml
+    ViewBag.ChangeAction = nameof(LimitedPartnershipController.NamesOfPartners);
+    ViewBag.DeleteAction = nameof(LimitedPartnershipController.CheckNamesOfPartnersDelete);
 }
 
 @model List<ReExPersonOrCompanyPartner>
@@ -19,60 +23,7 @@
             <br>
 
             <h1 class="govuk-heading-l">@Localizer[GetLocalizer(hasIndividualPartners, hasCompanyPartners, "H1_Individual", "H1_Company", "H1_Both")]</h1>
-            <div class="govuk-summary-card">
-                <div class="govuk-summary-card__title-wrapper">
-                    <p class="govuk-body"></p>
-                </div>
-
-                @{
-                    int counter = 0;
-                }
-                @foreach (var group in Model.GroupBy(p => p.IsPerson))
-                {
-                    bool.TryParse(group.Key.ToString(), out bool isPerson);
-                    string partnerNameLabel = isPerson ? "CheckNamesOfPartners.FullName" : "CheckNamesOfPartners.Company";
-
-                    if (hasIndividualPartners && hasCompanyPartners)
-                    {
-                        string subHeaderText = isPerson ? "CheckNamesOfPartners.H2_Individual" : "CheckNamesOfPartners.H2_Company";
-                        <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4">@Localizer[subHeaderText].Value</h2>
-                    }
-
-                    <hr />
-                    var partnersPerType = group.ToList();
-                    <div class="govuk-summary-card__content">
-                        <dl class="govuk-summary-list">
-
-                            @for (int i = 0; i < partnersPerType.Count; i++, counter++)
-                            {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__value">
-                                        @Localizer[partnerNameLabel].Value
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        @Html.DisplayFor(x => partnersPerType[i].Name)
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action(nameof(LimitedPartnershipController.NamesOfPartners), "LimitedPartnership", null)">
-                                            @SharedLocalizer["Change"]
-                                            <span class="govuk-visually-hidden">@Localizer["CheckNamesOfPartners.PartnersName"]</span>
-                                        </a>
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        @if (Model.Count > 1)
-                                        {
-                                            <a class="govuk-link" href="@Url.Action(nameof(LimitedPartnershipController.CheckNamesOfPartnersDelete), "LimitedPartnership", new { id = partnersPerType[i].Id })">
-                                            @SharedLocalizer["Remove"]
-                                            <span class="govuk-visually-hidden">@Localizer["CheckNamesOfPartners.Partner"]</span>
-                                        </a>
-                                        }
-                                    </dd>
-                                </div>
-                            }
-                        </dl>
-                    </div>
-                }
-            </div>
+            @await Html.PartialAsync("Partials/_CheckNamesOfPartnersLinks", Model)
 
             <form method="post">
                 <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.CheckNamesOfPartners)" type="submit">

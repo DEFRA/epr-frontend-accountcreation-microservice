@@ -29,56 +29,7 @@
                             </legend>
 
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
-
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoIndividualPartner"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.Partner)"
-                                           gov-first-option="true">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.Partner)"
-                                           gov-first-option="true">
-                                        @Localizer["LimitedPartnershipRole.IndividualPartner"]
-                                    </label>
-                                </div>
-
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoCompanyDirector"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.PartnerDirector)">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.PartnerDirector)">
-                                        @Localizer["LimitedPartnershipRole.CompanyDirector"]
-                                    </label>
-                                </div>
-
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.PartnerCompanySecretary)">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.PartnerCompanySecretary)">
-                                        @Localizer["LimitedPartnershipRole.CompanySecretary"]
-                                    </label>
-                                </div>
-
-                                <div class="govuk-radios__divider">@SharedLocalizer["Or"]</div>
-
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoNone"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.NoneOfTheAbove)">
-                                    <label class="govuk-label govuk-radios__label"
-                                           gov-for="LimitedPartnershipRole"
-                                           gov-value="@nameof(RoleInOrganisation.NoneOfTheAbove)">
-                                        @Localizer["LimitedPartnershipRole.None"]
-                                    </label>
-                                </div>
-                            </div>
+                            @await Html.PartialAsync("Partials/_PartnershipRole", new PartnershipRoleModel() { RoleInOrganisation = Model.RoleInOrganisation })
                         </fieldset>
                     </div>
 

@@ -22,29 +22,26 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
         var exceptionHandler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
         if (exceptionHandler != null)
         {
-            // exceptionHandler is null for 404's
+            // this is an unhandled exception, not a 404
 
             // alternatively, we could look for /re-ex/ in exceptionHandler.Path
             string? controllerName = (string?)exceptionHandler.RouteValues?["Controller"];
-
             if (controllerName != null && reExControllerNames.IsAllowed(controllerName))
             {
                 generalErrorPage = ViewNames.ErrorReEx;
             }
+            Response.StatusCode = (int)HttpStatusCode.InternalServerError; // Always 500 for exceptions
+            return View(generalErrorPage, new ErrorViewModel());
         }
-        else
+        
+        // This is a status code error (like 404)
+        var statusCodeReExecuteFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+        if (statusCodeReExecuteFeature?.OriginalPath.Contains("re-ex", StringComparison.OrdinalIgnoreCase) == true)
         {
-            var statusCodeReExecuteFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            if (statusCodeReExecuteFeature?.OriginalPath.Contains("re-ex", StringComparison.OrdinalIgnoreCase) == true)
-            {
-                pageNotFoundPage = ViewNames.PageNotFoundReEx;
-            }
+            pageNotFoundPage = ViewNames.PageNotFoundReEx;
         }
-
-        var errorView = statusCode == (int?)HttpStatusCode.NotFound ? pageNotFoundPage : generalErrorPage;
-
         Response.StatusCode = statusCode ?? (int)HttpStatusCode.InternalServerError;
-
+        var errorView = statusCode == (int?)HttpStatusCode.NotFound ? pageNotFoundPage : generalErrorPage;
         return View(errorView, new ErrorViewModel());
     }
 
@@ -58,6 +55,13 @@ public class ErrorController(AllowList<string> reExControllerNames) : Controller
         Response.StatusCode = statusCode ?? (int)HttpStatusCode.InternalServerError;
 
         return View(new ErrorViewModel());
+    }
+
+    [Route(PagePath.PageNotFound)]
+    public ViewResult PageNotFound()
+    {
+        Response.StatusCode = (int)HttpStatusCode.NotFound;
+        return View(ViewNames.PageNotFound, new ErrorViewModel());
     }
 
     /// <summary>

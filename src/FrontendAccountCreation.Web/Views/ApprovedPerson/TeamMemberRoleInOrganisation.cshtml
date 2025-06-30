@@ -1,6 +1,6 @@
 ﻿@using FrontendAccountCreation.Core.Sessions;
 @using FrontendAccountCreation.Web.Constants
-@using FrontendAccountCreation.Web.Controllers.AccountCreation
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
@@ -38,17 +38,17 @@
 
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
                             <div class="govuk-radios" data-module="govuk-radios">
-                                <!-- director -->
+                                <!-- company director -->
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" type="radio" id="rdoDirector"
+                                    <input class="govuk-radios__input" type="radio" id="rdoCompanyDirector"
                                            gov-for="RoleInOrganisation"
-                                           gov-value="@nameof(RoleInOrganisation.Director)"
+                                           gov-value="@nameof(RoleInOrganisation.CompanyDirector)"
                                            gov-first-option="true">
                                     <label class="govuk-label govuk-radios__label"
                                            gov-for="RoleInOrganisation"
-                                           gov-value="@nameof(RoleInOrganisation.Director)"
+                                           gov-value="@nameof(RoleInOrganisation.CompanyDirector)"
                                            gov-first-option="true">
-                                        @SharedLocalizer["Director"]
+                                        @SharedLocalizer["CompanyDirector"]
                                     </label>
                                 </div>
                                 <!-- company secretary -->
@@ -75,7 +75,7 @@
                         </button>
 
                         <!-- goes to check your details -->
-                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueWithoutInvitation"].Value, nameof(AccountCreationController.CheckYourDetails), "AccountCreation", null,
+                        @Html.ActionLink(@Localizer["TeamMemberRoleInOrganisation.ContinueWithoutInvitation"].Value, nameof(ApprovedPersonController.TeamMemberRoleInOrganisationContinueWithoutInvitation), nameof(ApprovedPersonController).WithoutControllerSuffix(), null,
                                  new
                                  {
                                      @class = "govuk-button govuk-button--secondary"

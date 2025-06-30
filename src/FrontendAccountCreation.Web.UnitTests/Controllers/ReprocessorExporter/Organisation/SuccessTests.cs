@@ -182,7 +182,7 @@ public class SuccessTests : OrganisationTestBase
             ReExManualInputSession = new ReExManualInputSession
 			{
 				ProducerType = ProducerType.SoleTrader,
-				TradingName = "Sole Trader Ltd",
+				OrganisationName = "Sole Trader Ltd",
 				TeamMembers = new List<ReExCompanyTeamMember>
 				   {
 					   new ReExCompanyTeamMember
@@ -222,7 +222,7 @@ public class SuccessTests : OrganisationTestBase
             ReExManualInputSession = new ReExManualInputSession
 			{
 				ProducerType = ProducerType.SoleTrader,
-				TradingName = "Solo Ltd",
+				OrganisationName = "Solo Ltd",
 				TeamMembers = null
 			}
 		};
@@ -309,10 +309,10 @@ public class SuccessTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task Success_WhenSoleTrader_PopulatesCompanyNameWithTradingName()
+    public async Task Success_WhenSoleTrader_PopulatesCompanyNameWithOrganisationName()
     {
         // Arrange
-        var expectedTradingName = "Sole Trader Ltd";
+        var expectedOrganisationName = "Sole Trader Ltd";
         var teamMembers = new List<ReExCompanyTeamMember>
     {
         new ReExCompanyTeamMember { FirstName = "Bob" }
@@ -324,7 +324,7 @@ public class SuccessTests : OrganisationTestBase
             ReExManualInputSession = new ReExManualInputSession
             {
                 ProducerType = ProducerType.SoleTrader,
-                TradingName = expectedTradingName,
+                OrganisationName = expectedOrganisationName,
                 TeamMembers = teamMembers
             }
         };
@@ -342,7 +342,7 @@ public class SuccessTests : OrganisationTestBase
 
         viewModel.IsCompaniesHouseFlow.Should().BeFalse();
         viewModel.IsSoleTrader.Should().BeTrue();
-        viewModel.CompanyName.Should().Be(expectedTradingName);
+        viewModel.CompanyName.Should().Be(expectedOrganisationName);
         viewModel.ReExCompanyTeamMembers.Should().BeEquivalentTo(teamMembers);
     }
 

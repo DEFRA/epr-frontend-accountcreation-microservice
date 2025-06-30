@@ -31,6 +31,13 @@ public class ReExAccountFullNameTests : UserTestBase
     }
 
     [TestMethod]
+    public void InjectError_ThrowsNotImplementedException()
+    {
+        // Act & Assert
+        Assert.ThrowsException<NotImplementedException>(() => _systemUnderTest.InjectError());
+    }
+
+    [TestMethod]
     public async Task Get_ReExAccountFullName_IsAllowed()
     {
         // Act

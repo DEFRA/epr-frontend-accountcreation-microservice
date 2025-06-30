@@ -187,6 +187,9 @@
     <value>[Welsh]Only the individual in charge of the business in your organisation is eligible for this role.</value>
   </data>
   <data name="AddNotApprovedPerson.NonUk.Roles.Instruction" xml:space="preserve">
-    <value>[Welsh]A person who has control or management of a business which does not have a registered office, head office or principal place of business in the UK.</value>
+    <value>[Welsh]A person who has control or management of a business that does not have a registered office, head office or principal place of business in the UK.</value>
+  </data>
+  <data name="AddNotApprovedPerson.CompanyDirector" xml:space="preserve">
+    <value>company director</value>
   </data>
 </root>

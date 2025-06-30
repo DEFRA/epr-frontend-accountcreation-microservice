@@ -1,6 +1,5 @@
 ﻿@using FrontendAccountCreation.Web.Configs
 @using FrontendAccountCreation.Web.Constants;
-@using FrontendAccountCreation.Web.Extensions;
 @using Microsoft.Extensions.Options
 
 @inject IOptions<ExternalUrlsOptions> ExternalUrlsOptions;
@@ -12,11 +11,6 @@
 
     string applicationTitle = ViewData["ApplicationTitleOverride"] as string ?? "ApplicationTitle";
     string headerPartial = ViewData["HeaderOverride"] as string ?? "_Header";
-    string headerOverride = ViewData["HeaderOverride"]?.ToString();
-    string returnUrl = (string)ViewBag.CurrentPage
-        ?? (headerOverride == LayoutOverrides.ReExOrganisationHeaderOverride ? Url.CurrentPathReExOrganisation()
-        : headerOverride == LayoutOverrides.ReExUserHeaderOverride ? Url.CurrentPathReExUser()
-        : Url.CurrentPath());
 }
 
 <!DOCTYPE html>
@@ -72,7 +66,7 @@
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
-    @await Component.InvokeAsync("CookieBanner", new { returnUrl })
+    @await Component.InvokeAsync("CookieBanner")
 
     <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">@SharedLocalizer["SkipToMainContent"].Value</a>
     

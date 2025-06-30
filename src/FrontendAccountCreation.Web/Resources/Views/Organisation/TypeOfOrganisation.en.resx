@@ -127,10 +127,10 @@
     <value>Non-UK organisation</value>
   </data>
   <data name="ReExTypeOfOrganisation.Partnership" xml:space="preserve">
-    <value>A partnership under the Partnership Act 1890(often called a general partnership)</value>
+    <value>A partnership under the Partnership Act 1890 (often called a general partnership)</value>
   </data>
   <data name="ReExTypeOfOrganisation.SoleTrader" xml:space="preserve">
-    <value>An individual(for example, a sole trader)</value>
+    <value>An individual (for example, a sole trader)</value>
   </data>
   <data name="ReExTypeOfOrganisation.UnincorporatedBody" xml:space="preserve">
     <value>Unincorporated association</value>

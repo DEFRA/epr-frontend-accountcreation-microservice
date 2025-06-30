@@ -163,7 +163,7 @@
     <value>EPR for packaging: reprocessors and exporters</value>
   </data>
   <data name="CompanySecretary" xml:space="preserve">
-    <value>Company Secretary</value>
+    <value>Company secretary</value>
   </data>
   <data name="Director" xml:space="preserve">
     <value>Director</value>
@@ -206,5 +206,8 @@
   </data>
   <data name="ForExample" xml:space="preserve">
     <value>For example:</value>
+  </data>
+  <data name="CompanyDirector" xml:space="preserve">
+    <value>Company director</value>
   </data>
 </root>

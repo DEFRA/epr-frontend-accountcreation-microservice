@@ -54,6 +54,13 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     [HttpGet]
+    [Route("inject-error")]
+    public IActionResult InjectError()
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet]
     [Route("")]
     [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.RegisteredAsCharity)]
@@ -260,10 +267,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 nextAction = nameof(AddressOverseas);
                 nextPagePath = PagePath.AddressOverseas;
             }
-            else
+            else if (session.IsCompaniesHouseFlow)
             {
                 nextAction = nameof(IsOrganisationAPartner);
                 nextPagePath = PagePath.IsPartnership;
+            }
+            else
+            {
+                nextAction = nameof(TypeOfOrganisation);
+                nextPagePath = PagePath.TypeOfOrganisation;
             }
         }
 
@@ -1024,10 +1036,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         {
             var manualInput = session.ReExManualInputSession;
             viewModel.IsSoleTrader = manualInput?.ProducerType == ProducerType.SoleTrader;
-            viewModel.CompanyName = viewModel.IsSoleTrader
-                ? manualInput?.TradingName
-                : manualInput?.OrganisationName;
-
+            viewModel.CompanyName = manualInput?.OrganisationName;
             viewModel.ReExCompanyTeamMembers = manualInput?.TeamMembers;
         }
 

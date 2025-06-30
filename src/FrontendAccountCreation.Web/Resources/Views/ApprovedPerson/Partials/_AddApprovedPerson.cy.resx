@@ -123,6 +123,9 @@
   <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
     <value>Cyflwyno a dilysu ffurflenni data</value>
   </data>
+  <data name="AddAnApprovedPerson.CompanyDirector" xml:space="preserve">
+    <value>company director</value>
+  </data>
   <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
     <value>ysgrifennydd cwmni</value>
   </data>

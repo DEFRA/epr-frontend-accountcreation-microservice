@@ -888,4 +888,29 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         var viewResult = (ViewResult)result;
         viewResult.Model.Should().Be(model);
     }
+
+    [TestMethod]
+    public async Task TeamMemberRoleInOrganisation_Get_ContinueWithOutInvitation_redirectsToCheckYourDetails()
+    {
+        _orgSessionMock = new OrganisationSession
+        {
+            Journey = new List<string>
+            {
+                "PreviousPage",
+                PagePath.TeamMemberRoleInOrganisation
+            },
+            ReExManualInputSession = new()
+        };
+        var result = await _systemUnderTest.TeamMemberRoleInOrganisationContinueWithoutInvitation();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.CheckYourDetails));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+        It.IsAny<ISession>(),
+        It.Is<OrganisationSession>(s =>
+            s.Journey.Contains(PagePath.TeamMemberRoleInOrganisation)
+            && s.Journey.Contains(PagePath.CheckYourDetails)
+        )), Times.Once);
+    }
 }

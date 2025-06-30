@@ -16,11 +16,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NamesOfPartners.Title_Individual" xml:space="preserve">
-    <value>[Welsh]Check Individual Partners Names</value>
+  <data name="CheckNamesOfPartners.Title_Individual" xml:space="preserve">
+    <value>[Welsh]Check Individual Partners</value>
   </data>
   <data name="CheckNamesOfPartners.Title_Company" xml:space="preserve">
-    <value>[Welsh]Check Corporate Partners Names</value>
+    <value>[Welsh]Check Corporate Partners</value>
   </data>
   <data name="CheckNamesOfPartners.Title_Both" xml:space="preserve">
     <value>[Welsh]Check Partners Names</value>
@@ -32,24 +32,6 @@
     <value>[Welsh]Check corporate partner names in your limited partnership</value>
   </data>
   <data name="CheckNamesOfPartners.H1_Both" xml:space="preserve">
-    <value>[Welsh]Check individual and corporate partner names in your limited partnership</value>
-  </data>
-  <data name="CheckNamesOfPartners.H2_Individual" xml:space="preserve">
-    <value>[Welsh]Individual partners</value>
-  </data>
-  <data name="CheckNamesOfPartners.H2_Company" xml:space="preserve">
-    <value>[Welsh]Corporate partners</value>
-  </data>
-  <data name="CheckNamesOfPartners.Company" xml:space="preserve">
-    <value>[Welsh]Company</value>
-  </data>
-  <data name="CheckNamesOfPartners.FullName" xml:space="preserve">
-    <value>[Welsh]Full name</value>
-  </data>
-  <data name="CheckNamesOfPartners.PartnersName" xml:space="preserve">
-    <value>[Welsh]partners name</value>
-  </data>
-  <data name="CheckNamesOfPartners.Partner" xml:space="preserve">
-    <value>[Welsh]partner</value>
+    <value>[Welsh]Check corporate and individual partner names in your limited partnership</value>
   </data>
 </root>

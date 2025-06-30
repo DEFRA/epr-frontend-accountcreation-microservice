@@ -5,7 +5,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 /// <summary>
 /// Can hold person name or company names, depending on IsPerson is true or false
 /// </summary>
-public class LimitedPartnershipPersonOrCompanyViewModel
+public class PartnershipPersonOrCompanyViewModel
 {
     [Required]
     public Guid Id { get; set; }
@@ -21,9 +21,9 @@ public class LimitedPartnershipPersonOrCompanyViewModel
     [RegularExpression("True|true")]
     public bool IsPersonOrCompanyButNotBoth => ((IsPerson && !IsCompany) || (IsCompany && !IsPerson));
 
-    public static implicit operator LimitedPartnershipPersonOrCompanyViewModel(ReExPersonOrCompanyPartner partner)
+    public static implicit operator PartnershipPersonOrCompanyViewModel(ReExPersonOrCompanyPartner partner)
     {
-        return new LimitedPartnershipPersonOrCompanyViewModel
+        return new PartnershipPersonOrCompanyViewModel
         {
             Id = partner.Id,
             PersonName = partner.IsPerson? partner.Name : null,

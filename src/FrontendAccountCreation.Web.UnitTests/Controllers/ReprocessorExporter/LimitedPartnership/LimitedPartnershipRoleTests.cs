@@ -89,7 +89,7 @@ public class LimitedPartnershipRoleTests : LimitedPartnershipTestBase
         var viewResult = (ViewResult)result;
         var model = viewResult.Model as LimitedPartnershipRoleViewModel;
         model.Should().NotBeNull();
-        model!.LimitedPartnershipRole.Should().Be(RoleInOrganisation.Director);
+        model!.RoleInOrganisation.Should().Be(RoleInOrganisation.Director);
     }
 
     [TestMethod]
@@ -115,7 +115,7 @@ public class LimitedPartnershipRoleTests : LimitedPartnershipTestBase
         // Arrange
         var model = new LimitedPartnershipRoleViewModel
         {
-            LimitedPartnershipRole = RoleInOrganisation.Director
+            RoleInOrganisation = RoleInOrganisation.Director
         };
 
         // Act
@@ -140,7 +140,7 @@ public class LimitedPartnershipRoleTests : LimitedPartnershipTestBase
         // Arrange
         var model = new LimitedPartnershipRoleViewModel
         {
-            LimitedPartnershipRole = RoleInOrganisation.Director
+            RoleInOrganisation = RoleInOrganisation.Director
         };
 
         // Act
