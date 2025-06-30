@@ -10,7 +10,6 @@
     @{
         bool hasIndividualPartners = Model.Exists(x => x.IsPerson);
         bool hasCompanyPartners = Model.Exists(x => !x.IsPerson);
-        int counter = 0;
     }
     @foreach (var group in Model.GroupBy(p => p.IsPerson))
     {
@@ -28,7 +27,7 @@
         <div class="govuk-summary-card__content">
             <dl class="govuk-summary-list">
 
-                @for (int i = 0; i < partnersPerType.Count; i++, counter++)
+                @for (int i = 0; i < partnersPerType.Count; i++)
                 {
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__value">
