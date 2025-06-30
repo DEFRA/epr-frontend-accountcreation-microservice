@@ -113,6 +113,8 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
 
         if (!ModelState.IsValid)
         {
+            //ModelState
+            Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
         }
 

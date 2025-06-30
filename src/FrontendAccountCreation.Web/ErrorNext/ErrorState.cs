@@ -1,7 +1,57 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FrontendAccountCreation.Web.ErrorNext;
+
+public class ErrorStateFromModelState : IErrorState
+{
+    public static IErrorState Create(ModelStateDictionary modelState)
+    {
+        if (modelState.Any())
+        {
+            return new ErrorStateFromModelState(modelState);
+        }
+
+        return Empty;
+    }
+
+    public ErrorStateFromModelState(ModelStateDictionary? modelState)
+    {
+        //todo: errorids if we keep it
+        //ErrorIds = triggeredErrorIds;
+        Errors = modelState?.Select(e => new ModelStateError(e))
+            ?? [];
+    }
+
+    public static IErrorState Empty { get; }
+    //this would work, but better to return same type
+    //= new ErrorState(ImmutableDictionary<int, PossibleError>.Empty, []);
+        = new ErrorStateFromModelState(null);
+
+    public bool HasTriggeredError(params int[] errorIds)
+    {
+        //todo: what do we use for errorIds for modelstate errors?
+        return false;
+    }
+
+    public int? GetErrorIdIfTriggered(params int[] mutuallyExclusiveErrorIds)
+    {
+        //todo: what do we use for errorIds for modelstate errors?
+        return null;
+    }
+
+    public IError? GetErrorIfTriggered(params int[] mutuallyExclusiveErrorIds)
+    {
+        //todo: 
+        return null;
+    }
+
+    public Func<int, string>? ErrorIdToHtmlElementId { get; set; }
+    public bool HasErrors => ErrorIds.Any();
+    private IEnumerable<int> ErrorIds { get; }
+    public IEnumerable<IError> Errors { get; }
+}
 
 public class ErrorState : IErrorState
 {
@@ -12,7 +62,7 @@ public class ErrorState : IErrorState
     }
 
     public static IErrorState Empty { get; }
-        = new ErrorState(ImmutableDictionary<int, PossibleError>.Empty, Enumerable.Empty<int>());
+        = new ErrorState(ImmutableDictionary<int, PossibleError>.Empty, []);
 
     public static IErrorState Create<T>(ImmutableDictionary<int, PossibleError> possibleErrors, params T[] triggeredErrorIds)
         where T : struct, Enum, IConvertible
@@ -31,7 +81,7 @@ public class ErrorState : IErrorState
 
     //todo: remove this?
     private IEnumerable<int> ErrorIds { get; }
-    public IEnumerable<Error> Errors { get; }
+    public IEnumerable<IError> Errors { get; }
 
     public bool HasTriggeredError(params int[] errorIds)
     {
@@ -60,7 +110,7 @@ public class ErrorState : IErrorState
         return null;
     }
 
-    public Error? GetErrorIfTriggered(params int[] mutuallyExclusiveErrorIds)
+    public IError? GetErrorIfTriggered(params int[] mutuallyExclusiveErrorIds)
     {
         int? currentErrorId = GetErrorIdIfTriggered(mutuallyExclusiveErrorIds);
         return currentErrorId != null ? Errors.First(e => e.Id == currentErrorId) : null;
