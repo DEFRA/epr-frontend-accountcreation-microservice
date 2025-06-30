@@ -16,11 +16,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NamesOfPartners.Title_Individual" xml:space="preserve">
-    <value>[Welsh]Check Individual Partners Names</value>
+  <data name="CheckNamesOfPartners.Title_Individual" xml:space="preserve">
+    <value>[Welsh]Check Individual Partners</value>
   </data>
   <data name="CheckNamesOfPartners.Title_Company" xml:space="preserve">
-    <value>[Welsh]Check Corporate Partners Names</value>
+    <value>[Welsh]Check Corporate Partners</value>
   </data>
   <data name="CheckNamesOfPartners.Title_Both" xml:space="preserve">
     <value>[Welsh]Check Partners Names</value>
