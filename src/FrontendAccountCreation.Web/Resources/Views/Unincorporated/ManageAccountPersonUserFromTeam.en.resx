@@ -124,7 +124,7 @@
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Roles.Description" xml:space="preserve">
 		<value>
-	A person who controls or manages an unincorporated association or organisation without a registered address, head office or principal place of business in the United Kingdom. For example:
+	A person who manages or controls an unincorporated association a registered address, head office or principal place of business in the United Kingdom. For example:
 		</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.CEO" xml:space="preserve">
