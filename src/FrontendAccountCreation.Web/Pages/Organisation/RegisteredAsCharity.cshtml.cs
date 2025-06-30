@@ -12,18 +12,63 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using System.Collections.Immutable;
 using System.Net;
+using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
-//public class OrganisationPageModel(ISessionManager<OrganisationSession> sessionManager) : PageModel
-//{
-//    protected ISessionManager<OrganisationSession> SessionManager = sessionManager;
-//}
-
-//todo: feature flag
-//[Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
-public class RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessionManager) : PageModel, IRadiosPageModel
+public class OrganisationPageModel(ISessionManager<OrganisationSession> sessionManager) : PageModel
 {
+    protected ISessionManager<OrganisationSession> SessionManager = sessionManager;
+
+    protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
+        OrganisationSession session,
+        string actionName,
+        string currentPagePath,
+        string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName);
+    }
+
+    private async Task SaveSession(
+        OrganisationSession session,
+        string currentPagePath,
+        string? nextPagePath)
+    {
+        var index = session.Journey.FindIndex(x => x != null && x.Contains(currentPagePath.Split("?")[0]));
+
+        // this also cover if current page not found (index = -1) then it clears all pages
+        session.Journey = session.Journey.Take(index + 1).ToList();
+
+        session.Journey.AddIfNotExists(nextPagePath);
+
+        AddPageToWhiteList(session, currentPagePath);
+        AddPageToWhiteList(session, nextPagePath);
+
+        await sessionManager.SaveSessionAsync(HttpContext.Session, session);
+    }
+
+    private void AddPageToWhiteList(
+        OrganisationSession session,
+        string currentPagePath)
+    {
+        if (!string.IsNullOrEmpty(currentPagePath))
+        {
+            session.WhiteList.Add(currentPagePath);
+        }
+    }
+}
+
+public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
+{
+    public RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessionManager)
+        : base(sessionManager)
+    {
+    }
+
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
 
     [BindProperty]
@@ -31,19 +76,11 @@ public class RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessi
 
     public IErrorState Errors { get; set; } = ErrorState.Empty;
 
-    //@Localizer["RegisteredAsCharity.Question"]
     public string? Legend => "RegisteredAsCharity.Question";
 
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)
     {
-        // Do not pre-select radio options as this makes it more likely that users will:
-        // * not realise they've missed a question
-        // * submit the wrong answer
-
-        // only preselect a radio button after the user has previously selected it
-        //SelectedValue = Country.Wales.ToString();
-
         if (deploymentRoleOptions.Value.IsRegulator())
         {
             return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
@@ -52,14 +89,7 @@ public class RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessi
             });
         }
 
-        var session = await sessionManager.GetSessionAsync(HttpContext.Session);
-
-        //YesNoAnswer? isTheOrganisationCharity = null;
-
-        //if (session?.IsTheOrganisationCharity.HasValue == true)
-        //{
-        //    isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
-        //}
+        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
 
         if (session?.IsTheOrganisationCharity != null)
         {
@@ -69,10 +99,10 @@ public class RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessi
         return Page();
     }
 
-    public void OnPost()
+    public async Task<IActionResult> OnPost()
     {
         //todo: add new IError to work with model error state
-        
+
         //if (SelectedValue == null)
         //{
         //    Errors = ErrorState.Create(PossibleErrors, ErrorId.NoCountrySelected);
@@ -80,6 +110,36 @@ public class RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessi
         //}
 
         //SelectedCountry = (Country)Enum.Parse(typeof(Country), SelectedValue);
+
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+
+        var session = await SessionManager.GetSessionAsync(HttpContext.Session)
+            ?? new OrganisationSession()
+            {
+                Journey = [PagePath.RegisteredAsCharity]
+            };
+
+        //session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
+
+        //if (session.IsTheOrganisationCharity.Value)
+        //{
+        //    return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+        //}
+        //else
+        //{
+        //    return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
+        //}
+
+        session.IsTheOrganisationCharity = bool.Parse(SelectedValue!);
+
+        if (session.IsTheOrganisationCharity == true)
+        {
+            return await SaveSessionAndRedirect(session, nameof(OrganisationController.NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+        }
+        return await SaveSessionAndRedirect(session, nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
     }
 
     public enum ErrorId

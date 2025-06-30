@@ -73,7 +73,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         return RedirectToAction(actionName, routeValues);
     }
 
-    //todo: should be protected
+    //todo: should be private
     [NonAction]
     public async Task SaveSession(T session, string currentPagePath, string? nextPagePath)
     {
