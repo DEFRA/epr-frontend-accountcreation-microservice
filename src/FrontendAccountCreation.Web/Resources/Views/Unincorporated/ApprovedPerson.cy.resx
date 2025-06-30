@@ -127,7 +127,7 @@
     <value>W You are now an approved person</value>
   </data>
   <data name="ReExApprovedPerson.InviteLink" xml:space="preserve">
-    <value>W Invite another approved person</value>
+    <value>W Invite another person</value>
   </data>
   <data name="ReExApprovedPerson.Continue" xml:space="preserve">
     <value>W continue to add your organisation</value>
