@@ -40,6 +40,11 @@ public class OrganisationSession : ILocalSession
 
     public bool? IsIndividualInCharge { get; set; }
 
+    /// <summary>
+    /// Are they individual in-charge of the business
+    /// </summary>
+    public bool? AreTheyIndividualInCharge { get; set; }
+
     public bool IsUserChangingDetails { get; set; }
 
     public YesNoNotSure? UserManagesOrControls { get; set; }
@@ -49,7 +54,7 @@ public class OrganisationSession : ILocalSession
     public List<string> Journey { get; set; } = [];
 
     public HashSet<string> WhiteList { get; set; } = [];
-    
+
     public InviteUserOptions? InviteUserOption { get; set; }
 
     public ReExUnincorporatedFlowSession? ReExUnincorporatedFlowSession { get; set; }

@@ -156,4 +156,10 @@
   <data name="TeamMemberCheckInvitationDetails.NonUkRole" xml:space="preserve">
     <value>Manage or control business</value>
   </data>
+  <data name="TeamMemberCheckInvitationDetails.NoInviterContinueMsg" xml:space="preserve">
+    <value>You can continue to add your organisation without inviting another eligible person at this stage.</value>
+  </data>
+  <data name="TeamMemberCheckInvitationDetails.NoInviterRemovedMsg" xml:space="preserve">
+    <value>You have removed any invitations created for one or more approved persons.</value>
+  </data>
 </root>
