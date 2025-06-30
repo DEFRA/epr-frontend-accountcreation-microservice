@@ -149,20 +149,20 @@
 	<data name="ReExManageAccountPerson.RolesExampleIntro" xml:space="preserve">
 		<value>W For example:</value>
 	</data>
-	<data name="ReExManageAccountPerson.Role.Chairperson" xml:space="preserve">
-		<value>W chairperson</value>
-	</data>
-	<data name="ReExManageAccountPerson.Role.Treasurer" xml:space="preserve">
-		<value>W treasurer</value>
-	</data>
-	<data name="ReExManageAccountPerson.Role.Secretary" xml:space="preserve">
-		<value>W secretary</value>
-	</data>
-	<data name="ReExManageAccountPerson.Role.Manager" xml:space="preserve">
-		<value>W manager</value>
+	<data name="ReExManageAccountPerson.Role.ChiefExecutive" xml:space="preserve">
+		<value>W Chief Executive Officer</value>
 	</data>
 	<data name="ReExManageAccountPerson.Role.Owner" xml:space="preserve">
-		<value>W owner</value>
+		<value>W Owner</value>
+	</data>
+	<data name="ReExManageAccountPerson.Role.Partner" xml:space="preserve">
+		<value>W Partner</value>
+	</data>
+	<data name="ReExManageAccountPerson.Role.CompanyDirectorOrSecretary" xml:space="preserve">
+		<value>W Company Director or Secretary</value>
+	</data>
+	<data name="ReExManageAccountPerson.Role.ChairTreasurerOrSecretary" xml:space="preserve">
+		<value>W Chair, Treasurer, or Secretary of an unincorporated association</value>
 	</data>
 	<data name="ReExManageAccountPerson.InviteHeading" xml:space="preserve">
 		<value>W Invite users in your team</value>
