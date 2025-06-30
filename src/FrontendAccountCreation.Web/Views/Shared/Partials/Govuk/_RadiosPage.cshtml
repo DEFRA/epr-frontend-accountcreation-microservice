@@ -1,0 +1,68 @@
+﻿@model FrontendAccountCreation.Web.FullPages.Radios.IRadiosPageModel
+@{
+    Model.Errors.ErrorIdToHtmlElementId = errorId => $"radio-{Model.Radios.First().Value}";
+}
+
+<partial name="_ErrorSummaryNext" for="@Model.Errors" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (Model.DescriptionPartial != null)
+        {
+            <partial name="@Model.DescriptionPartial" />
+        }
+
+        @* we don't care which error we get if there are multiple errors *@
+        @{
+            var error = Model.Errors.GetErrorIfTriggered();
+        }
+
+        <form method="post" novalidate>
+            <div class="govuk-form-group @error?.FormGroupClass">
+                <fieldset class="govuk-fieldset" aria-describedby="@error?.InputErrorMessageParaId">
+                    @if (Model.Legend != null)
+                    {
+                        if (Model.DescriptionPartial == null)
+                        {
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-fieldset__heading">
+                                    @Model.Legend
+                                </h1>
+                            </legend>
+                        }
+                        else
+                        {
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h2 class="govuk-fieldset__heading">
+                                    @Model.Legend
+                                </h2>
+                            </legend>
+                        }
+                    }
+                    @if (Model.Hint != null)
+                    {
+                        <div class="govuk-hint">
+                            @Model.Hint
+                        </div>
+                    }
+                    <partial name="_ErrorMessageNext" model="error" />
+                    <div class="govuk-radios @(Model.AreRadiosInline ? "govuk-radios--inline" : "")" data-module="govuk-radios">
+                        @foreach (var radio in Model.Radios)
+                        {
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="radio-@radio.Value" name="@nameof(Model.SelectedValue)" type="radio" value="@radio.Value" @(radio.Value == Model.SelectedValue ? "checked" : "")>
+                                <label class="govuk-label govuk-radios__label" for="radio-@radio.Value">
+                                    @radio.Label
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                @Model.ButtonText
+            </button>
+        </form>
+    </div>
+</div>

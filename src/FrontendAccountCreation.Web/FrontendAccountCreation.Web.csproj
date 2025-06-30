@@ -137,6 +137,11 @@
 	    <Value>**/BusinessAddress.cshtml</Value>
 	  </SonarQubeSetting>
 	</ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="FullPages\Radios\" />
+      <Folder Include="ErrorNext\" />
+    </ItemGroup>
   
      <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">
        <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
