@@ -114,7 +114,7 @@
 		<value>W submit and verify data returns</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Inset" xml:space="preserve">
-		<value>W An approved person may delegate their function to another person (a delegate) at a later stage – subject to regulator approval.</value>
+		<value>W An approved person may delegate their functions to another person (a delegate) at a later stage – subject to regulator approval.</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Note.MultiplePersons" xml:space="preserve">
 		<value>W More than one person can be nominated – you will need to confirm their role, enter their name and contact details.</value>
@@ -124,26 +124,30 @@
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Roles.Description" xml:space="preserve">
 		<value>
+<<<<<<< HEAD
+	W A person who manages or controls an unincorporated association or organisation with a registered address, head office or principal place of business in the UK.
+=======
 	W A person who manages or controls an unincorporated association a registered address, head office or principal place of business in the United Kingdom. For example:
+>>>>>>> team-oxygen-ReExAccounts-unincorporated
 		</value>
 	</data>
-	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.CEO" xml:space="preserve">
-		<value>W Chief Executive Officer</value>
+	<data name="ReExManageAccountPersonUserFromTeam.ForExample" xml:space="preserve">
+		<value>W For example:</value>
 	</data>
-	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Director" xml:space="preserve">
-		<value>W Director</value>
+	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Chairperson" xml:space="preserve">
+		<value>W chairperson</value>
+	</data>
+	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Treasurer" xml:space="preserve">
+		<value>W treasurer</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Owner" xml:space="preserve">
-		<value>W Owner</value>
+		<value>W owner</value>
 	</data>
-	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Partner" xml:space="preserve">
-		<value>W Partner</value>
+	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Secretary" xml:space="preserve">
+		<value>W secretary</value>
 	</data>
-	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.CompanyDirector" xml:space="preserve">
-		<value>W Company Director or Secretary</value>
-	</data>
-	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Charity" xml:space="preserve">
-		<value>W Chair, Treasurer, or Secretary of an unincorporated association</value>
+	<data name="ReExManageAccountPersonUserFromTeam.Roles.Example.Manager" xml:space="preserve">
+		<value>W manager</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Invite.Heading" xml:space="preserve">
 		<value>W Invite users in your team</value>
@@ -152,7 +156,7 @@
 		<value>W Select an option to proceed.</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Option.TeamMember" xml:space="preserve">
-		<value>W I will invite an eligible person to be an approved person</value>
+		<value>W I will invite an eligible person to be an approved person instead</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Option.Later" xml:space="preserve">
 		<value>W I will invite an approved person later</value>
