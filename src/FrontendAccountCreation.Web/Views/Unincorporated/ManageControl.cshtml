@@ -1,6 +1,6 @@
 @using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Constants
 @using FrontendAccountCreation.Web.Extensions
-@using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 
@@ -8,6 +8,8 @@
 
 @{
     ViewData["Title"] = Localizer["ReExManageControl.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 }
 
