@@ -44,7 +44,7 @@
                             <dl class="govuk-summary-list">
 
                                 <!-- Role of team member -->
-                                <div class="govuk-summary-list__row">
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
                                     <dt class="govuk-summary-list__key">
                                         @Localizer["TeamMemberCheckInvitationDetails.Role"]
                                     </dt>
@@ -60,18 +60,19 @@
                                             @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
                                         </dd>
                                     }
+                                   
+                                </div>
+
+                                <!-- Name, Email, Telephone -->
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
+                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.FirstName"]</dt>
+                                    <dd class="govuk-summary-list__value">@Model.TeamMembers[i].FirstName</dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
                                             @SharedLocalizer["Change"]
                                             <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
                                         </a>
                                     </dd>
-                                </div>
-
-                                <!-- Name, Email, Telephone -->
-                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.FirstName"]</dt>
-                                    <dd class="govuk-summary-list__value">@Model.TeamMembers[i].FirstName</dd>
                                 </div>
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
                                     <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.LastName"]</dt>
