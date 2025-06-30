@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,49 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TeamMemberCheckInvitationDetails.Title" xml:space="preserve">
-    <value>Check invitation details</value>
+  <data name="AreTheyIndividualInCharge.Title" xml:space="preserve">
+    <value>Individual in charge</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.CheckInvitationDetails" xml:space="preserve">
-    <value>Check invitation details</value>
+  <data name="AreTheyIndividualInCharge.Question" xml:space="preserve">
+    <value>Are they the individual in charge of your business?</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.Help" xml:space="preserve">
-    <value>An invite created for the individual in charge of the business will be sent once the organisation is added.</value>
+  <data name="AreTheyIndividualInCharge.Hint" xml:space="preserve">
+    <value>This means they make all the business decisions and they have the responsibility for the allocation of profits after tax.</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.Role" xml:space="preserve">
-    <value>Role</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.FirstName" xml:space="preserve">
-    <value>First name</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.Email" xml:space="preserve">
-    <value>Email</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.Telephone" xml:space="preserve">
-    <value>Telephone</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.Remove" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.ContactDetails" xml:space="preserve">
-    <value>contact details</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.LastName" xml:space="preserve">
-    <value>Last name</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.SoleTrader" xml:space="preserve">
-    <value>Sole trader</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>Invite another person</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.NonUkRole" xml:space="preserve">
-    <value>Manage or control business</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.NoInviterContinueMsg" xml:space="preserve">
-    <value>You can continue to add your organisation without inviting another eligible person at this stage.</value>
-  </data>
-  <data name="TeamMemberCheckInvitationDetails.NoInviterRemovedMsg" xml:space="preserve">
-    <value>You have removed any invitations created for one or more approved persons.</value>
+  <data name="AreTheyIndividualInCharge.ErrorMessage" xml:space="preserve">
+    <value>Select yes if they are the individual in charge of your business</value>
   </data>
 </root>

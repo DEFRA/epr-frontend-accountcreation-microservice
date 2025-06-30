@@ -49,9 +49,11 @@ public static class PagePath
     public const string UkRegulator = "uk-regulator";
     public const string ManageControl = "manage-control";
     public const string ManageControlOrganisation = "manage-control-organisation";
+    public const string IndividualIncharge = "individual-in-charge";
     public const string NonCompaniesHousePartnershipType = "non-companies-house-partner-type";
     public const string NonCompaniesHousePartnershipNamesOfPartners = "non-companies-house-partner-names";
     public const string NonCompaniesHousePartnershipNamesOfPartnersDelete = "non-companies-house-partner-names/delete";
+    public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
     public const string NonCompaniesHousePartnershipCheckNamesOfPartners = "non-companies-house-check-partner-names";
     public const string NonCompaniesHousePartnershipCheckNamesOfPartnersDelete = "non-companies-house-check-partner-names/delete";
 
@@ -98,7 +100,6 @@ public static class PagePath
 
     //Non Companies House Partnership paths
     public const string NonCompaniesHousePartnershipRole = "non-companies-house-your-partnership-role";
-    public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
