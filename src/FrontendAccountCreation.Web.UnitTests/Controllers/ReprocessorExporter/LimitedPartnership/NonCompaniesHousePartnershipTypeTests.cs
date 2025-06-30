@@ -97,7 +97,7 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
     [DataRow(false, true)]
     [DataRow(true, false)]
     [DataRow(true, true)]
-    public async Task NonCompaniesHousePartnershipType_Post_WithNullSession_And_ValidTypesOfPartner_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
+    public async Task NonCompaniesHousePartnershipType_Post_WithNullTypesOfPartnerSession_And_ValidModel_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
     {
         // Arrange
         var model = new WhatSortOfPartnerRequestViewModel
@@ -131,7 +131,7 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
     [DataRow(false, true)]
     [DataRow(true, false)]
     [DataRow(true, true)]
-    public async Task NonCompaniesHousePartnershipType_Post_WithNotNullSession_And_ValidTypesOfPartner_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
+    public async Task NonCompaniesHousePartnershipType_Post_WithNotNullTypesOfPartnerSession_And_ValidModel_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
     {
         // Arrange
         var jill = new ReExPersonOrCompanyPartner
