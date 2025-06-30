@@ -168,4 +168,7 @@
   <data name="TeamMemberDetails.EmailInvalidErrorMessage" xml:space="preserve">
     <value>[Welsh] Enter an email address with a name, @ symbol and a domain name, like yourname@example.com</value>
   </data>
+  <data name="TeamMemberDetails.NonUk.Question" xml:space="preserve">
+    <value>[Welsh]What are your team member's details?</value>
+  </data>
 </root>
