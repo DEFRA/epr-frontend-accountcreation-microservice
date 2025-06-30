@@ -12,6 +12,8 @@ namespace FrontendAccountCreation.Web.Controllers;
 public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Controller
     where T : ILocalSession, new()
 {
+    //todo: should be protected
+    [NonAction]
     public void SetBackLink(T session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
@@ -24,6 +26,8 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         }
     }
 
+    //todo: should be protected
+    [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
@@ -35,6 +39,8 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         return RedirectToAction(actionName);
     }
 
+    //todo: should be protected
+    [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string controllerName,
         string actionName,
@@ -48,6 +54,8 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
     }
 
     // Would like to get parameters in same order as above
+    //todo: should be protected
+    [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
@@ -62,12 +70,11 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         {
             return RedirectToAction(actionName, controllerName.WithoutControllerSuffix(), routeValues);
         }
-        else
-        {
-            return RedirectToAction(actionName, routeValues);
-        }
+        return RedirectToAction(actionName, routeValues);
     }
 
+    //todo: should be protected
+    [NonAction]
     public async Task SaveSession(T session, string currentPagePath, string? nextPagePath)
     {
         var index = session.Journey.FindIndex(x => x != null && x.Contains(currentPagePath.Split("?")[0]));
@@ -83,6 +90,8 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         await sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
 
+    //todo: should be protected, but the unit tests use it, which is a bad idea
+    [NonAction]
     public Guid? GetFocusId()
     {
         string? focusId = TempData["FocusId"] != null ? TempData["FocusId"].ToString() : null;
@@ -93,9 +102,11 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         return null;
     }
 
+    //todo: should be protected
+    [NonAction]
     public void SetFocusId(Guid id) => TempData["FocusId"] = id;
 
-    public void DeleteFocusId() => TempData?.Remove("FocusId");
+    protected void DeleteFocusId() => TempData?.Remove("FocusId");
 
     private void AddPageToWhiteList(T session, string currentPagePath)
     {

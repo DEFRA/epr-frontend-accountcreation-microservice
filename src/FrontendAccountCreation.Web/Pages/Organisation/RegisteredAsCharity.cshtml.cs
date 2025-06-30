@@ -1,5 +1,7 @@
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
+using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.ErrorNext;
 using FrontendAccountCreation.Web.FullPages.Radios;
@@ -18,6 +20,8 @@ namespace FrontendAccountCreation.Web.Pages.Organisation;
 //    protected ISessionManager<OrganisationSession> SessionManager = sessionManager;
 //}
 
+//todo: feature flag
+//[Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 public class RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessionManager) : PageModel, IRadiosPageModel
 {
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo;

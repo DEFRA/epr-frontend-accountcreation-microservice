@@ -24,7 +24,6 @@ using Microsoft.Identity.Web;
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
-[Route("re-ex/organisation")]
 public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
@@ -60,61 +59,61 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         throw new NotImplementedException();
     }
 
-    [HttpGet]
-    [Route("")]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route(PagePath.RegisteredAsCharity)]
-    public async Task<IActionResult> RegisteredAsCharity()
-    {
-        if (_deploymentRoleOptions.IsRegulator())
-        {
-            return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
-            {
-                statusCode = (int)HttpStatusCode.Forbidden
-            });
-        }
+    //[HttpGet]
+    //[Route("")]
+    //[AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+    //[Route(PagePath.RegisteredAsCharity)]
+    //public async Task<IActionResult> RegisteredAsCharity()
+    //{
+    //    if (_deploymentRoleOptions.IsRegulator())
+    //    {
+    //        return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
+    //        {
+    //            statusCode = (int)HttpStatusCode.Forbidden
+    //        });
+    //    }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        YesNoAnswer? isTheOrganisationCharity = null;
+    //    YesNoAnswer? isTheOrganisationCharity = null;
 
-        if (session?.IsTheOrganisationCharity.HasValue == true)
-        {
-            isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
-        }
+    //    if (session?.IsTheOrganisationCharity.HasValue == true)
+    //    {
+    //        isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
+    //    }
 
-        return View(new RegisteredAsCharityRequestViewModel
-        {
-            isTheOrganisationCharity = isTheOrganisationCharity
-        });
-    }
+    //    return View(new RegisteredAsCharityRequestViewModel
+    //    {
+    //        isTheOrganisationCharity = isTheOrganisationCharity
+    //    });
+    //}
 
-    [HttpPost]
-    [Route(PagePath.RegisteredAsCharity)]
-    public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
+    //[HttpPost]
+    //[Route(PagePath.RegisteredAsCharity)]
+    //public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return View(model);
+    //    }
 
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session)
-            ?? new OrganisationSession()
-            {
-                Journey = [PagePath.RegisteredAsCharity]
-            };
+    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session)
+    //        ?? new OrganisationSession()
+    //        {
+    //            Journey = [PagePath.RegisteredAsCharity]
+    //        };
 
-        session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
+    //    session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
 
-        if (session.IsTheOrganisationCharity.Value)
-        {
-            return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
-        }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
-        }
-    }
+    //    if (session.IsTheOrganisationCharity.Value)
+    //    {
+    //        return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+    //    }
+    //    else
+    //    {
+    //        return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
+    //    }
+    //}
 
     [HttpGet]
     [Route(PagePath.RegisteredWithCompaniesHouse)]
@@ -1054,7 +1053,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
     public IActionResult RedirectToStart()
     {
-        return RedirectToAction(nameof(RegisteredAsCharity));
+        //return RedirectToAction(nameof(RegisteredAsCharity));
+        return Redirect($"{Request.PathBase}/re-ex/organisation/registered-as-charity");
     }
 
     #region Private Methods
