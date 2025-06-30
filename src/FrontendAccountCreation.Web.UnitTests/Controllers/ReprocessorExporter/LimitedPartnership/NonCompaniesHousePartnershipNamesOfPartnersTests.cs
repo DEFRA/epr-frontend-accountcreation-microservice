@@ -450,7 +450,6 @@ public class NonCompaniesHousePartnershipNamesOfPartnersTests : LimitedPartnersh
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
     }
 
-
     [TestMethod]
     public async Task NonCompaniesHousePartnershipNamesOfPartnersDelete_Get_WhenPartnersSessionIsNull_Redirects()
     {

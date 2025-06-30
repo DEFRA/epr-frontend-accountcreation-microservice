@@ -669,24 +669,19 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     // Move into private method to keep SonarQube happy
     private static void DeleteCompaniesHousePartnerFromSession(OrganisationSession? session, Guid id)
     {
-        if (session != null
-            && session.ReExCompaniesHouseSession != null
-            && session.ReExCompaniesHouseSession.Partnership != null
-            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null
-            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners != null)
+        var partners = session?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
+        if (partners != null)
         {
-            session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners.RemoveAll(x => x.Id == id);
+            partners.RemoveAll(x => x.Id == id);
         }
     }
 
     private static void DeleteNonCompaniesHousePartnerFromSession(OrganisationSession? session, Guid id)
     {
-        if (session != null
-            && session.ReExManualInputSession != null
-            && session.ReExManualInputSession.TypesOfPartner != null
-            && session.ReExManualInputSession.TypesOfPartner.Partners != null)
+        var partners = session?.ReExManualInputSession?.TypesOfPartner?.Partners;
+        if (partners != null)
         {
-            session.ReExManualInputSession.TypesOfPartner.Partners.RemoveAll(x => x.Id == id);
+            partners.RemoveAll(x => x.Id == id);
         }
     }
 }
