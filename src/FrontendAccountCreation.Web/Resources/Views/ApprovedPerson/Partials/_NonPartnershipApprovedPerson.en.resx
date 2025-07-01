@@ -127,7 +127,7 @@
     <value>You are now an approved person</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another approved person</value>
+    <value>Invite another person</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.Continue" xml:space="preserve">
     <value>continue to add your organisation</value>
