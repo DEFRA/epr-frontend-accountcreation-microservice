@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddNotApprovedPerson.BulletAccreditation" xml:space="preserve">
-    <value>[Welsh]Apply for accreditation</value>
+    <value>Gwneud cais am achrediad</value>
   </data>
   <data name="AddNotApprovedPerson.BulletSubmit" xml:space="preserve">
     <value>[Welsh]Submit and verify data returns</value>
@@ -169,22 +169,22 @@
     <value>[Welsh]Invite users in your team</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.ErrorMessage" xml:space="preserve">
-    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
+    <value>[Welsh]Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.IntroText1" xml:space="preserve">
-    <value>You should invite the individual in charge of the organisation sole trader to be the 'approved person'. This role needs to take on tasks on behalf of the organisation.</value>
+    <value>[Welsh]You should invite the individual in charge of the organisation sole trader to be the 'approved person'. This role needs to take on tasks on behalf of the organisation.</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.IntroText2" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can:</value>
+    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can:</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.InviteAnotherApprovedPerson" xml:space="preserve">
-    <value>I will invite the individual in charge of the organisation to be an approved person</value>
+    <value>[Welsh]I will invite the individual in charge of the organisation to be an approved person</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.InviteApprovedPersonLater" xml:space="preserve">
-    <value>I will invite the individual in charge of the organisation to be an approved person later</value>
+    <value>[Welsh]I will invite the individual in charge of the organisation to be an approved person later</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.RolesInstruction" xml:space="preserve">
-    <value>Only the individual in charge of the business in your organisation is eligible for this role.</value>
+    <value>[Welsh]Only the individual in charge of the business in your organisation is eligible for this role.</value>
   </data>
   <data name="AddNotApprovedPerson.NonUk.Roles.Instruction" xml:space="preserve">
     <value>[Welsh]A person who has control or management of a business that does not have a registered office, head office or principal place of business in the UK.</value>
