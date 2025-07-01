@@ -48,7 +48,7 @@ public class ErrorStateFromModelState : IErrorState
     }
 
     public Func<int, string>? ErrorIdToHtmlElementId { get; set; }
-    public bool HasErrors => ErrorIds.Any();
+    public bool HasErrors => Errors.Any();
     private IEnumerable<int> ErrorIds { get; }
     public IEnumerable<IError> Errors { get; }
 }

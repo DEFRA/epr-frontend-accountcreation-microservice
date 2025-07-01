@@ -1,8 +1,10 @@
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ErrorNext;
 using FrontendAccountCreation.Web.FullPages.Radios;
 using FrontendAccountCreation.Web.FullPages.Radios.Common;
@@ -11,9 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
-using FrontendAccountCreation.Core.Extensions;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
@@ -72,6 +73,7 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
 
     [BindProperty]
+    [Required(ErrorMessage = "RegisteredAsCharity.ErrorMessage")]
     public string? SelectedValue { get; set; }
 
     public IErrorState Errors { get; set; } = ErrorState.Empty;
@@ -80,8 +82,7 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
 
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)
-    {
-        if (deploymentRoleOptions.Value.IsRegulator())
+    {if (deploymentRoleOptions.Value.IsRegulator())
         {
             return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
             {

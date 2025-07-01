@@ -55,14 +55,16 @@
                     }
                     <partial name="_ErrorMessageNext" model="error" />
                     <div class="govuk-radios @(Model.AreRadiosInline ? "govuk-radios--inline" : "")" data-module="govuk-radios">
-                        @foreach (var radio in Model.Radios)
+                        @foreach (var (radio, index) in Model.Radios.Select((e, i) => (e, i)))
                         {
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="radio-@radio.Value" name="@nameof(Model.SelectedValue)" type="radio" value="@radio.Value" @(radio.Value == Model.SelectedValue ? "checked" : "")>
-                                <label class="govuk-label govuk-radios__label" for="radio-@radio.Value">
-                                    @radio.Label
-                                </label>
-                            </div>
+                        string id = index == 0 ? nameof(Model.SelectedValue) : $"{nameof(Model.SelectedValue)}-{radio.Value}";
+                        <div class="govuk-radios__item">
+                            @* <input class="govuk-radios__input" id="radio-@radio.Value" name="@nameof(Model.SelectedValue)" type="radio" value="@radio.Value" @(radio.Value == Model.SelectedValue ? "checked" : "")> *@
+                            <input class="govuk-radios__input" id="@id" name="@nameof(Model.SelectedValue)" type="radio" value="@radio.Value" @(radio.Value == Model.SelectedValue ? "checked" : "")>
+                            <label class="govuk-label govuk-radios__label" for="radio-@radio.Value">
+                                @radio.Label
+                            </label>
+                        </div>
                         }
                     </div>
                 </fieldset>
