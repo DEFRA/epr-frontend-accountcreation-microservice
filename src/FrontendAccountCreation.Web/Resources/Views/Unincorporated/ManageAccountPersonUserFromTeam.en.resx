@@ -124,11 +124,7 @@
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.Roles.Description" xml:space="preserve">
 		<value>
-<<<<<<< HEAD
 	A person who manages or controls an unincorporated association or organisation with a registered address, head office or principal place of business in the UK.
-=======
-	A person who manages or controls an unincorporated association a registered address, head office or principal place of business in the United Kingdom. For example:
->>>>>>> team-oxygen-ReExAccounts-unincorporated
 		</value>
 	</data>
 	<data name="ReExManageAccountPersonUserFromTeam.ForExample" xml:space="preserve">
