@@ -43,6 +43,7 @@ public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)
     {
+        
         if (deploymentRoleOptions.Value.IsRegulator())
         {
             return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
