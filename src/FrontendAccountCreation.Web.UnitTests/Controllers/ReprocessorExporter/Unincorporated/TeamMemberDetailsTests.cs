@@ -37,8 +37,6 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         // Arrange
         Guid? expectedGuidInFocus = null;
 
-        
-
         var teamMemberDetails = new ReExCompanyTeamMember
         {
             Id = Guid.NewGuid(),
