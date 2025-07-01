@@ -96,41 +96,31 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         var result = await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
 
         // Assert
+        result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
-
-        var pageResult = (PageResult)result;
-        pageResult.Model.Should().BeNull();
-        //pageResult.Model.Should().BeOfType<RegisteredAsCharity>();
-
-        //var registeredAsCharityRequestViewModel = (RegisteredAsCharity)pageResult.Model;
-        //registeredAsCharityRequestViewModel.SelectedValue.Should().Be(null);
     }
 
-    //[TestMethod]
-    //[DataRow(true, YesNoAnswer.Yes)]
-    //[DataRow(false, YesNoAnswer.No)]
-    //public async Task Get_RegisteredAsCharity_ReturnsViewModel_WithSessionData_IsTheOrganisationCharity_As(bool isCharityOrganisation, YesNoAnswer expectedAnswer)
-    //{
-    //    //Arrange
-    //    var organisationSessionMock = new OrganisationSession
-    //    {
-    //        IsTheOrganisationCharity = isCharityOrganisation
-    //    };
+    [TestMethod]
+    [DataRow(true, "True")]
+    [DataRow(false, "False")]
+    [DataRow(null, null)]
+    public async Task Get_RegisteredAsCharity_ReturnsViewModel_WithSessionData_IsTheOrganisationCharity_As(
+        bool? isCharityOrganisation, string? expectedAnswer)
+    {
+        //Arrange
+        var organisationSessionMock = new OrganisationSession
+        {
+            IsTheOrganisationCharity = isCharityOrganisation
+        };
 
-    //    _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(organisationSessionMock);
+        SessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(organisationSessionMock);
 
-    //    //Act
-    //    var result = await _systemUnderTest.RegisteredAsCharity();
+        //Act
+        await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
 
-    //    //Assert
-    //    result.Should().NotBeNull();
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    viewResult.Model.Should().BeOfType<RegisteredAsCharityRequestViewModel>();
-
-    //    var registeredAsCharityRequestViewModel = (RegisteredAsCharityRequestViewModel)viewResult.Model!;
-    //    registeredAsCharityRequestViewModel.isTheOrganisationCharity.Should().Be(expectedAnswer);
-    //}
+        //Assert
+        _registeredAsCharity.SelectedValue.Should().Be(expectedAnswer);
+    }
 
     //[TestMethod]
     //public async Task RegisteredAsCharity_IsNotCharity_RedirectsToRegisteredWithCompaniesHousePage_AndUpdateSession()
