@@ -481,7 +481,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.NonCompaniesHousePartnershipNamesOfPartners);
 
-        ReExTypesOfPartner typesOfPartnersSession = session?.ReExManualInputSession?.TypesOfPartner;
+        ReExTypesOfPartner? typesOfPartnersSession = session?.ReExManualInputSession?.TypesOfPartner;
         bool hasIndividualPartners = typesOfPartnersSession?.HasIndividualPartners ?? true;
         bool hasCompanyPartners = typesOfPartnersSession?.HasCompanyPartners ?? true;
 

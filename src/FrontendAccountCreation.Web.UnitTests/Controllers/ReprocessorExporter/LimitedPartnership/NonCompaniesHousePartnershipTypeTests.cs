@@ -51,8 +51,29 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task NonCompaniesHousePartnershipType_Get_ReturnsViewWithEmptyModel()
+    public async Task NonCompaniesHousePartnershipType_Get_WhenNonCompaniesHouseSessionIsNull_ReturnsViewWithEmptyModel()
     {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession = null;
+        
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as WhatSortOfPartnerRequestViewModel;
+        model.Should().NotBeNull();
+        model.HasIndividualPartners.Should().BeFalse();
+        model.HasCompanyPartners.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipType_Get_WhenTypesOfPartnerSessionIsNull_ReturnsViewWithEmptyModel()
+    {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession.TypesOfPartner = null;
+
         // Act
         var result = await _systemUnderTest.NonCompaniesHousePartnershipType();
 

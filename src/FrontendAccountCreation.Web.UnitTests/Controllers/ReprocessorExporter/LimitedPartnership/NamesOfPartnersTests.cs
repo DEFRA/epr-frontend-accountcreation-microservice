@@ -44,7 +44,7 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task NamesOfPartners_Get_WhenCompaniesHouseSessionIsEmpty_ReturnsViewWithNewEmptyPartner()
+    public async Task NamesOfPartners_Get_WhenCompaniesHouseSessionIsNull_ReturnsViewWithNewEmptyPartner()
     {
         // Arrange
         _orgSessionMock.ReExCompaniesHouseSession = null;

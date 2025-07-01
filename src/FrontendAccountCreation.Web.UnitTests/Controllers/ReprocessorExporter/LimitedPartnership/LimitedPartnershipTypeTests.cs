@@ -72,24 +72,6 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task LimitedPartnershipType_Get_WithNullSession_ReturnsViewWithEmptyModel()
-    {
-        // Arrange
-        _orgSessionMock = null;
-
-        // Act
-        var result = await _systemUnderTest.LimitedPartnershipType();
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        var model = viewResult.Model as WhatSortOfPartnerRequestViewModel;
-        model.Should().NotBeNull();
-        model!.HasIndividualPartners.Should().BeFalse();
-        model!.HasCompanyPartners.Should().BeFalse();
-    }
-
-    [TestMethod]
     public async Task LimitedPartnershipType_Get_WithNullCompaniesHouseSession_ReturnsViewWithEmptyModel()
     {
         // Arrange

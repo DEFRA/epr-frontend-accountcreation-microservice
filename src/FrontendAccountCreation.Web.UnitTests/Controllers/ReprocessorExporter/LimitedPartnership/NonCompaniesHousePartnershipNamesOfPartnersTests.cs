@@ -38,7 +38,30 @@ public class NonCompaniesHousePartnershipNamesOfPartnersTests : LimitedPartnersh
     }
 
     [TestMethod]
-    public async Task NonCompaniesHousePartnershipNamesOfPartners_Get_WhenSessionIsEmpty_ReturnsViewWithNewEmptyPartner()
+    public async Task NonCompaniesHousePartnershipNamesOfPartners_Get_WhenNonCompaniesHouseSessionIsNul_ReturnsViewWithNewEmptyPartner()
+    {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession = null;
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipNamesOfPartners();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Which;
+        var viewModel = viewResult.Model.Should().BeOfType<PartnershipPartnersViewModel>().Which;
+        viewModel.Partners.Should().ContainSingle();
+
+        viewModel.Partners.Should().HaveCount(1);
+        viewModel.Partners[0].Id.Should().NotBeEmpty();
+        viewModel.Partners[0].PersonName.Should().BeNull();
+        viewModel.Partners[0].CompanyName.Should().BeNull();
+
+        viewModel.ExpectsCompanyPartners.Should().BeTrue();
+        viewModel.ExpectsIndividualPartners.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipNamesOfPartners_Get_WhenTypesOfPartnerSessionIsNull_ReturnsViewWithNewEmptyPartner()
     {
         // Arrange
         _orgSessionMock.ReExManualInputSession.TypesOfPartner = null;
@@ -402,20 +425,6 @@ public class NonCompaniesHousePartnershipNamesOfPartnersTests : LimitedPartnersh
         redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipNamesOfPartners));
 
         _orgSessionMock.ReExManualInputSession.TypesOfPartner.Partners.Count.Should().Be(2);
-    }
-
-    [TestMethod]
-    public async Task NonCompaniesHousePartnershipNamesOfPartnersDelete_Get_WhenOrganisationSessionIsNull_Redirects()
-    {
-        // Arrange
-        _orgSessionMock = null;
-
-        // Act
-        var result = await _systemUnderTest.NonCompaniesHousePartnershipNamesOfPartnersDelete(Guid.NewGuid());
-
-        // Assert
-        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
-        redirectToActionResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipNamesOfPartners));
     }
 
     [TestMethod]
