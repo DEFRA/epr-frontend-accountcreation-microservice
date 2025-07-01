@@ -342,9 +342,9 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         }
 
         session.ReExUnincorporatedFlowSession.TeamMembersDictionary ??= new Dictionary<Guid, ReExCompanyTeamMember>();
-        var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMembersDictionary;
 
-        if (viewModel.Id != null && teamMemberDetailsDictionary.TryGetValue(viewModel.Id.Value, out var teamMemberDetails))
+        if (viewModel.Id != null
+            && session.ReExUnincorporatedFlowSession.TeamMembersDictionary.TryGetValue(viewModel.Id.Value, out var teamMemberDetails))
         {
             teamMemberDetails.FirstName = viewModel.FirstName;
             teamMemberDetails.LastName = viewModel.LastName;
@@ -355,14 +355,15 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
         {
             viewModel.Id = Guid.NewGuid();
 
-            teamMemberDetailsDictionary.Add(viewModel.Id.Value, new ReExCompanyTeamMember
-            {
-                Id = viewModel.Id.Value,
-                FirstName = viewModel.FirstName,
-                LastName = viewModel.LastName,
-                Email = viewModel.Email,
-                TelephoneNumber = viewModel.Telephone
-            });
+            session.ReExUnincorporatedFlowSession
+                .TeamMembersDictionary.Add(viewModel.Id.Value, new ReExCompanyTeamMember
+                {
+                    Id = viewModel.Id.Value,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    Email = viewModel.Email,
+                    TelephoneNumber = viewModel.Telephone
+                });
         }
 
         SetFocusId(viewModel.Id.Value);
