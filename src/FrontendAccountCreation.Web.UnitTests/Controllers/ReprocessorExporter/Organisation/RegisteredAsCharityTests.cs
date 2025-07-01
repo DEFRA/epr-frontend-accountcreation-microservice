@@ -61,6 +61,8 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         return mock;
     }
 
+    //todo: remove RegisteredAsCharity from names, use GET_ and POST_ prefixes
+
     [TestMethod]
     public async Task Get_RegisteredAsCharity_WithRegulatorDeployment_IsForbidden()
     {
@@ -138,21 +140,22 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
-    //[TestMethod]
-    //public async Task RegisteredAsCharity_IsCharity_ThenRedirectsToNotAffectedPage_AndUpdateSession()
-    //{
-    //    // Arrange
-    //    var request = new RegisteredAsCharityRequestViewModel { isTheOrganisationCharity = YesNoAnswer.Yes };
+    //todo: split into 2
+    [TestMethod]
+    public async Task RegisteredAsCharity_IsCharity_ThenRedirectsToNotAffectedPage_AndUpdateSession()
+    {
+        // Arrange
+        _registeredAsCharity.SelectedValue = "True";
 
-    //    // Act
-    //    var result = await _systemUnderTest.RegisteredAsCharity(request);
+        // Act
+        var result = await _registeredAsCharity.OnPost();
 
-    //    // Assert       
-    //    result.Should().BeOfType<RedirectToActionResult>();
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotAffected));
+        // Assert       
+        result.Should().BeOfType<RedirectToActionResult>();
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.NotAffected));
 
-    //    _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    //}
+        SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
 
     //[TestMethod]
     //public async Task RegisteredAsCharity_NoAnswerGiven_ThenReturnViewWithError()
