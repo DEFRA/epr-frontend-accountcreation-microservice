@@ -61,7 +61,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         return mock;
     }
 
-    //todo: remove RegisteredAsCharity from names, use GET_ and POST_ prefixes
+    //todo: remove RegisteredAsCharity from names, use OnGet_ and OnPost_ prefixes
 
     [TestMethod]
     public async Task Get_RegisteredAsCharity_WithRegulatorDeployment_IsForbidden()
@@ -157,24 +157,24 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
-    //[TestMethod]
-    //public async Task RegisteredAsCharity_NoAnswerGiven_ThenReturnViewWithError()
-    //{
-    //    // Arrange
-    //    _systemUnderTest.ModelState.AddModelError(nameof(RegisteredAsCharityRequestViewModel.isTheOrganisationCharity), "Field is required");
+    [TestMethod]
+    public async Task RegisteredAsCharity_NoAnswerGiven_ThenReturnViewWithError()
+    {
+        // Arrange
+        _registeredAsCharity.ModelState.AddModelError(nameof(RegisteredAsCharityRequestViewModel.isTheOrganisationCharity), "Field is required");
 
-    //    // Act
-    //    var result = await _systemUnderTest.RegisteredAsCharity(new RegisteredAsCharityRequestViewModel());
+        // Act
+        var result = await _registeredAsCharity.OnPost();
 
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<PageResult>();
 
-    //    var viewResult = (ViewResult)result;
+        _registeredAsCharity.ModelState.Should().ContainKey(nameof(RegisteredAsCharityRequestViewModel.isTheOrganisationCharity));
+        _registeredAsCharity.ModelState[nameof(RegisteredAsCharityRequestViewModel.isTheOrganisationCharity)].Errors.Should().ContainSingle();
 
-    //    viewResult.Model.Should().BeOfType<RegisteredAsCharityRequestViewModel>();
-
-    //    _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
-    //}
+        SessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
+    }
 
     //[TestMethod]
     //public void RedirectToStart_ReturnsView()
