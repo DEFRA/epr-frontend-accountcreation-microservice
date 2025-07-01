@@ -16,24 +16,24 @@
 
 @model List<ReExPersonOrCompanyPartner>
 
-<div class="govuk-width-container ">
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <br>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <br>
+                <h1 class="govuk-heading-l">@Localizer[GetLocalizer(hasIndividualPartners, hasCompanyPartners, "H1_Individual", "H1_Company", "H1_Both")]</h1>
+                @await Html.PartialAsync("Partials/_CheckNamesOfPartnersLinks", Model)
 
-            <h1 class="govuk-heading-l">@Localizer[GetLocalizer(hasIndividualPartners, hasCompanyPartners, "H1_Individual", "H1_Company", "H1_Both")]</h1>
-            @await Html.PartialAsync("Partials/_CheckNamesOfPartnersLinks", Model)
+                <form method="post">
+                    <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.CheckNamesOfPartners)" type="submit">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
 
-            <form method="post">
-                <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.CheckNamesOfPartners)" type="submit">
-                    @SharedLocalizer["Continue"]
-                </button>
-            </form>
         </div>
-
-    </div>
-
+    </main>
 </div>
 
 @{
