@@ -112,7 +112,8 @@
                             </button>
                             @if (Model.IsNonUk)
                             {
-                             <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-action="NonCompaniesHouseTeamMemberDetails" formmethod="get">
+                                <input type="hidden" name="invitePerson" value="true" />
+                                <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-action="ManageControlOrganisation" formmethod="get" type="submit">
                                 @Localizer["TeamMemberCheckInvitationDetails.InviteAnotherPerson"]
                              </button>
                             }
