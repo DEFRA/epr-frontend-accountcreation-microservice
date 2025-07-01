@@ -71,7 +71,7 @@ public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
         }
 
         var session = await SessionManager.GetSessionAsync(HttpContext.Session)
-            ?? new OrganisationSession()
+            ?? new OrganisationSession
             {
                 Journey = [PagePath.RegisteredAsCharity]
             };
