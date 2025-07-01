@@ -1,13 +1,22 @@
 ﻿
+using Microsoft.Extensions.Localization;
+
 namespace FrontendAccountCreation.Web.FullPages.Radios.Common;
 
 public static class CommonRadios
 {
-    public static Radio[] YesNo =>
+    //todo: optimise this, so don't create new objects each time
+    public static IRadio[] YesNo(IStringLocalizer<SharedResources> sharedLocalizer) =>
     [
-        new("Yes", true.ToString()),
-        new("No", false.ToString())
+        new Radio(sharedLocalizer["Yes"], true.ToString()),
+        new Radio(sharedLocalizer["No"], false.ToString())
     ];
+    
+    //public static Radio[] YesNo =>
+    //[
+    //    new("Yes", true.ToString()),
+    //    new("No", false.ToString())
+    //];
 
     //public static Radio[] HomeNations => new[]
     //{

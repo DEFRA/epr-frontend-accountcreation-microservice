@@ -28,7 +28,7 @@ public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
         _localizer = localizer;
     }
 
-    public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
+    public IEnumerable<IRadio> Radios => CommonRadios.YesNo(SharedLocalizer);
 
     [BindProperty]
     [Required(ErrorMessage = "RegisteredAsCharity.ErrorMessage")]
