@@ -13,5 +13,5 @@ public class ReExUnincorporatedFlowSession
 
     public ManageControlAnswer ManageControlOrganisationAnswer { get; set; }
 
-    public IDictionary<Guid, ReExCompanyTeamMember>? TeamMemberDetailsDictionary { get; set; }
+    public IDictionary<Guid, ReExCompanyTeamMember>? TeamMembersDictionary { get; set; }
 }

@@ -311,7 +311,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
         var viewModel = new ReExTeamMemberDetailsViewModel();
         var teamMemberDetailsId = GetFocusId();
-        var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary;
+        var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMembersDictionary;
 
         if (teamMemberDetailsId != null
             && teamMemberDetailsDictionary != null
@@ -341,8 +341,8 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary ??= new Dictionary<Guid, ReExCompanyTeamMember>();
-        var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary;
+        session.ReExUnincorporatedFlowSession.TeamMembersDictionary ??= new Dictionary<Guid, ReExCompanyTeamMember>();
+        var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMembersDictionary;
 
         if (viewModel.Id != null && teamMemberDetailsDictionary.TryGetValue(viewModel.Id.Value, out var teamMemberDetails))
         {

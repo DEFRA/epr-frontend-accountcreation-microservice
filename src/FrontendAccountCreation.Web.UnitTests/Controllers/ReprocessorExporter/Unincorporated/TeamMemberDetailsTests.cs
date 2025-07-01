@@ -57,7 +57,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         _tempDataDictionaryMock.SetupSet(t => t["FocusId"] = It.IsAny<object>())
            .Callback((string key, object value) => expectedGuidInFocus = (Guid)value);
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = teamMemberDetailsDictionary;
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary = teamMemberDetailsDictionary;
         
         // Act
         var result = await _systemUnderTest.TeamMemberDetails();
@@ -95,7 +95,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
             { teamMemberDetails.Id, teamMemberDetails },
         };
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = teamMemberDetailsDictionary;
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary = teamMemberDetailsDictionary;
 
         // Act
         var result = await _systemUnderTest.TeamMemberDetails();
@@ -152,7 +152,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         };
 
         _tempDataDictionaryMock.Setup(t => t["FocusId"]).Returns(Guid.Empty.ToString());
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = teamMemberDetailsDictionary;
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary = teamMemberDetailsDictionary;
 
         // Act
         var result = await _systemUnderTest.TeamMemberDetails();
@@ -210,9 +210,9 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.CheckInvitation));
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary.Count.Should().Be(1);
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary.Count.Should().Be(1);
         var teamMemberDetails = _organisationSession.ReExUnincorporatedFlowSession
-            .TeamMemberDetailsDictionary
+            .TeamMembersDictionary
             .Values
             .First();
 
@@ -239,7 +239,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
             Telephone = "00000000000"
         };
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>();
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary = new Dictionary<Guid, ReExCompanyTeamMember>();
 
         _tempDataDictionaryMock.SetupSet(t => t["FocusId"] = It.IsAny<object>())
            .Callback((string key, object value) => expectedGuidInFocus = (Guid)value);
@@ -251,9 +251,9 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.CheckInvitation));
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary.Count.Should().Be(1);
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary.Count.Should().Be(1);
         var teamMemberDetails = _organisationSession.ReExUnincorporatedFlowSession
-            .TeamMemberDetailsDictionary
+            .TeamMembersDictionary
             .Values
             .First();
 
@@ -282,7 +282,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
             Telephone = "00000000000"
         };
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary = new Dictionary<Guid, ReExCompanyTeamMember>
         {
             { Guid.NewGuid(), new ReExCompanyTeamMember() }
         };
@@ -297,9 +297,9 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.CheckInvitation));
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary.Count.Should().Be(2);
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary.Count.Should().Be(2);
         var teamMemberDetails = _organisationSession.ReExUnincorporatedFlowSession
-            .TeamMemberDetailsDictionary
+            .TeamMembersDictionary
             .Values
             .Last();
 
@@ -332,7 +332,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
             { inSessionTeamMemberDetails.Id, inSessionTeamMemberDetails },
         };
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = teamMemberDetailsDictionary;
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary = teamMemberDetailsDictionary;
 
         _tempDataDictionaryMock.SetupSet(t => t["FocusId"] = It.IsAny<object>())
            .Callback((string key, object value) => expectedGuidInFocus = (Guid)value);
@@ -353,7 +353,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(nameof(UnincorporatedController.CheckInvitation));
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary.Count.Should().Be(1);
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMembersDictionary.Count.Should().Be(1);
 
         inSessionTeamMemberDetails.FirstName.Should().Be(viewModel.FirstName);
         inSessionTeamMemberDetails.LastName.Should().Be(viewModel.LastName);
