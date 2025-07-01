@@ -43,8 +43,9 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
             ProducerType = session.ReExManualInputSession?.ProducerType,
-            Nation = session.UkNation ?? Nation.NotSet,
-            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet
+            Nation = session.ReExManualInputSession?.UkRegulatorNation ?? Nation.NotSet,
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
+            OrganisationName = session.ReExManualInputSession?.OrganisationName
         };
     }
 
