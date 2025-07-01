@@ -241,7 +241,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         bool hasIndividualPartners = false;
         bool hasCompanyPartners = false;
-        if (session.ReExCompaniesHouseSession.Partnership != null && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null)
+        if (session != null
+            && session.ReExCompaniesHouseSession != null
+            && session.ReExCompaniesHouseSession.Partnership != null
+            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null)
         {
             hasIndividualPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners;
             hasCompanyPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners;
