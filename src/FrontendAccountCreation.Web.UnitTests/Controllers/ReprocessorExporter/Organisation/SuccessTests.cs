@@ -446,13 +446,13 @@ public class SuccessTests : OrganisationTestBase
         var manualInput = new ReExManualInputSession
         {
             ProducerType = ProducerType.SoleTrader,
-            TradingName = null, 
             OrganisationName = null
         };
 
         var session = new OrganisationSession
         {
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            TradingName = null,
             ReExManualInputSession = manualInput
         };
 

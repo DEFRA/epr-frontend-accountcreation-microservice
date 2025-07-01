@@ -22,7 +22,7 @@ public class ReExCheckYourDetailsViewModel
 
     public bool? IsTradingNameDifferent { get; set; }
 
-    public string TradingName { get; set; }
+    public string? TradingName { get; set; }
 
     public Address? BusinessAddress { get; set; }
 

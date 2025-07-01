@@ -43,7 +43,7 @@ public class YouAreApprovedPersonSoleTraderTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
-            ReExManualInputSession = new ReExManualInputSession { ProducerType = Core.Sessions.ProducerType.SoleTrader, TradingName = "Test Sole trader", BusinessAddress = new Core.Addresses.Address() }
+            ReExManualInputSession = new ReExManualInputSession { ProducerType = Core.Sessions.ProducerType.SoleTrader, BusinessAddress = new Core.Addresses.Address() }
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
