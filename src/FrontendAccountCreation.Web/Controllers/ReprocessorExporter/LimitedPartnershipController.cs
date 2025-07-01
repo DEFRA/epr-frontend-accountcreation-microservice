@@ -478,10 +478,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipNamesOfPartners)]
     public async Task<IActionResult> NonCompaniesHousePartnershipNamesOfPartners()
     {
-        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.NonCompaniesHousePartnershipNamesOfPartners);
 
-        ReExTypesOfPartner typesOfPartnersSession = session?.ReExManualInputSession?.TypesOfPartner;
+        ReExTypesOfPartner typesOfPartnersSession = session!.ReExManualInputSession?.TypesOfPartner;
         bool hasIndividualPartners = typesOfPartnersSession?.HasIndividualPartners ?? true;
         bool hasCompanyPartners = typesOfPartnersSession?.HasCompanyPartners ?? true;
 
