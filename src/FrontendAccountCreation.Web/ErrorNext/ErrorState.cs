@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -73,6 +74,21 @@ public class ErrorStateFromModelState : IErrorState
     public IEnumerable<IError> Errors { get; }
 }
 
+public class ErrorStateEmpty : IErrorState
+{
+    public static ErrorStateEmpty Instance => new();
+    //public static IErrorState Empty { get; }
+    //    = new ErrorStateEmpty();
+    //= new ErrorState(ImmutableDictionary<int, PossibleError>.Empty, []);
+
+    public bool HasErrors => false;
+    public IEnumerable<IError> Errors => [];
+    public Func<int, string>? ErrorIdToHtmlElementId { get; set; }
+    public bool HasTriggeredError(params int[] errorIds) => false;
+    public IError? GetErrorIfTriggered(params int[] mutuallyExclusiveErrorIds) => null;
+    public IError? GetErrorIfTriggeredByElementId(params string[] mutuallyExclusiveErrorHtmlElementId) => null;
+}
+
 public class ErrorState : IErrorState
 {
     public ErrorState(ImmutableDictionary<int, PossibleError> possibleErrors, IEnumerable<int> triggeredErrorIds)
@@ -81,8 +97,10 @@ public class ErrorState : IErrorState
         Errors = triggeredErrorIds.Select(e => new Error(possibleErrors[e], this));
     }
 
-    public static IErrorState Empty { get; }
-        = new ErrorState(ImmutableDictionary<int, PossibleError>.Empty, []);
+    //todo: implement ErrorStateEmpty : IErrorState?
+    //public static IErrorState Empty { get; }
+    //    = new ErrorStateEmpty();
+        //= new ErrorState(ImmutableDictionary<int, PossibleError>.Empty, []);
 
     public static IErrorState Create<T>(ImmutableDictionary<int, PossibleError> possibleErrors, params T[] triggeredErrorIds)
         where T : struct, Enum, IConvertible
@@ -92,7 +110,8 @@ public class ErrorState : IErrorState
             return new ErrorState(possibleErrors, triggeredErrorIds.Select(e => (int)(IConvertible)e));
         }
 
-        return Empty;
+        //return Empty;
+        return ErrorStateEmpty.Instance;
     }
 
     public Func<int, string>? ErrorIdToHtmlElementId { get; set; }
@@ -138,6 +157,23 @@ public class ErrorState : IErrorState
 
     public IError? GetErrorIfTriggeredByElementId(params string[] mutuallyExclusiveErrorHtmlElementId)
     {
-        throw new NotImplementedException();
+        //todo: untested for non dataannotation errors (but should work)
+        
+        if (mutuallyExclusiveErrorHtmlElementId.Length == 0)
+        {
+            // if no element IDs supplied, return the first error (if there is one)
+            return Errors.FirstOrDefault();
+        }
+
+        foreach (var htmlElementId in mutuallyExclusiveErrorHtmlElementId)
+        {
+            var error = Errors.FirstOrDefault(e => e.HtmlElementId == htmlElementId);
+            if (error != null)
+            {
+                return error;
+            }
+        }
+
+        return null;
     }
 }

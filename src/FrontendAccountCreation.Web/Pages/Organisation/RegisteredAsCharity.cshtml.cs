@@ -76,7 +76,7 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
     [Required(ErrorMessage = "RegisteredAsCharity.ErrorMessage")]
     public string? SelectedValue { get; set; }
 
-    public IErrorState Errors { get; set; } = ErrorState.Empty;
+    public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance; //ErrorState.Empty;
 
     public string? Legend => "RegisteredAsCharity.Question";
 
