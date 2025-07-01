@@ -41,8 +41,6 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
                     HttpContext = _httpContextMock.Object
                 }
             };
-
-        //_registeredAsCharity.HttpContext = _httpContextMock.Object;
     }
 
     //todo: this belongs in its own test class
@@ -122,22 +120,23 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         _registeredAsCharity.SelectedValue.Should().Be(expectedAnswer);
     }
 
-    //[TestMethod]
-    //public async Task RegisteredAsCharity_IsNotCharity_RedirectsToRegisteredWithCompaniesHousePage_AndUpdateSession()
-    //{
-    //    // Arrange
-    //    var request = new RegisteredAsCharityRequestViewModel { isTheOrganisationCharity = YesNoAnswer.No };
+    //todo: split into 2
+    [TestMethod]
+    public async Task RegisteredAsCharity_IsNotCharity_RedirectsToRegisteredWithCompaniesHousePage_AndUpdateSession()
+    {
+        // Arrange
+        _registeredAsCharity.SelectedValue = "False";
 
-    //    // Act
-    //    var result = await _systemUnderTest.RegisteredAsCharity(request);
+        // Act
+        var result = await _registeredAsCharity.OnPost();
 
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
 
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.RegisteredWithCompaniesHouse));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.RegisteredWithCompaniesHouse));
 
-    //    _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    //}
+        SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
 
     //[TestMethod]
     //public async Task RegisteredAsCharity_IsCharity_ThenRedirectsToNotAffectedPage_AndUpdateSession()
