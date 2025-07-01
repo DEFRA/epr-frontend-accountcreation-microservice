@@ -410,8 +410,44 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         session.ReExManualInputSession.RoleInOrganisation = model.RoleInOrganisation;
         session.ReExManualInputSession.IsEligibleToBeApprovedPerson = model.RoleInOrganisation != RoleInOrganisation.NoneOfTheAbove;
 
+        if (model.RoleInOrganisation == RoleInOrganisation.NoneOfTheAbove)
+        {
+            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipInviteApprovedPerson), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+        }
+
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
                     PagePath.NonCompaniesHousePartnershipRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+
+        return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
+        {
+            InviteUserOption = session.InviteUserOption?.ToString()
+        }); 
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipRoleModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+            return View(model);
+        }
+
+        return View(model);
+        
     }
 
     [HttpGet]
