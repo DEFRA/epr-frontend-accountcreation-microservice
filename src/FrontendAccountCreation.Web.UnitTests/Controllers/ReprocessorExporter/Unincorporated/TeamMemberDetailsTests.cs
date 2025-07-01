@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Core.Sessions.ReEx.Unincorporated;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated;
@@ -40,16 +39,16 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
 
         
 
-        var teamMemberDetails = new ReExTeamMemberDetails
+        var teamMemberDetails = new ReExCompanyTeamMember
         {
             Id = Guid.NewGuid(),
             FirstName = "Test",
             LastName = "Test 2",
             Email = "test@test.test",
-            Telephone = "00000000000"
+            TelephoneNumber = "00000000000"
         };
 
-        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExTeamMemberDetails>
+        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>
         {
             { teamMemberDetails.Id, teamMemberDetails },
         };
@@ -72,7 +71,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         viewModel.FirstName.Should().Be(teamMemberDetails.FirstName);
         viewModel.LastName.Should().Be(teamMemberDetails.LastName);
         viewModel.Email.Should().Be(teamMemberDetails.Email);
-        viewModel.Telephone.Should().Be(teamMemberDetails.Telephone);
+        viewModel.Telephone.Should().Be(teamMemberDetails.TelephoneNumber);
 
         expectedGuidInFocus.Should().NotBeNull();
         expectedGuidInFocus.Should().Be(teamMemberDetails.Id);
@@ -82,16 +81,16 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
     public async Task Get_ReturnsViewWithEmptyViewModel_WhenFocusIdNotSpecified()
     {
         // Arrange
-        var teamMemberDetails = new ReExTeamMemberDetails
+        var teamMemberDetails = new ReExCompanyTeamMember
         {
             Id = Guid.NewGuid(),
             FirstName = "Test",
             LastName = "Test 2",
             Email = "test@test.test",
-            Telephone = "00000000000"
+            TelephoneNumber = "00000000000"
         };
 
-        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExTeamMemberDetails>
+        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>
         {
             { teamMemberDetails.Id, teamMemberDetails },
         };
@@ -138,16 +137,16 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
     public async Task Get_ReturnsViewWithEmptyViewModel_WhenFocusIdIsNotInDictionary()
     {
         // Arrange
-        var teamMemberDetails = new ReExTeamMemberDetails
+        var teamMemberDetails = new ReExCompanyTeamMember
         {
             Id = Guid.NewGuid(),
             FirstName = "Test",
             LastName = "Test 2",
             Email = "test@test.test",
-            Telephone = "00000000000"
+            TelephoneNumber = "00000000000"
         };
 
-        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExTeamMemberDetails>
+        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>
         {
             { teamMemberDetails.Id, teamMemberDetails },
         };
@@ -220,7 +219,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         teamMemberDetails.FirstName.Should().Be(viewModel.FirstName);
         teamMemberDetails.LastName.Should().Be(viewModel.LastName);
         teamMemberDetails.Email.Should().Be(viewModel.Email);
-        teamMemberDetails.Telephone.Should().Be(viewModel.Telephone);
+        teamMemberDetails.TelephoneNumber.Should().Be(viewModel.Telephone);
 
         expectedGuidInFocus.Should().NotBeNull();
         expectedGuidInFocus.Should().Be(teamMemberDetails.Id);
@@ -240,7 +239,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
             Telephone = "00000000000"
         };
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = new Dictionary<Guid, ReExTeamMemberDetails>();
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>();
 
         _tempDataDictionaryMock.SetupSet(t => t["FocusId"] = It.IsAny<object>())
            .Callback((string key, object value) => expectedGuidInFocus = (Guid)value);
@@ -261,7 +260,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         teamMemberDetails.FirstName.Should().Be(viewModel.FirstName);
         teamMemberDetails.LastName.Should().Be(viewModel.LastName);
         teamMemberDetails.Email.Should().Be(viewModel.Email);
-        teamMemberDetails.Telephone.Should().Be(viewModel.Telephone);
+        teamMemberDetails.TelephoneNumber.Should().Be(viewModel.Telephone);
 
         expectedGuidInFocus.Should().NotBeNull();
         expectedGuidInFocus.Should().Be(teamMemberDetails.Id);
@@ -283,9 +282,9 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
             Telephone = "00000000000"
         };
 
-        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = new Dictionary<Guid, ReExTeamMemberDetails>
+        _organisationSession.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>
         {
-            { Guid.NewGuid(), new ReExTeamMemberDetails() }
+            { Guid.NewGuid(), new ReExCompanyTeamMember() }
         };
 
         _tempDataDictionaryMock.SetupSet(t => t["FocusId"] = It.IsAny<object>())
@@ -308,7 +307,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         teamMemberDetails.FirstName.Should().Be(viewModel.FirstName);
         teamMemberDetails.LastName.Should().Be(viewModel.LastName);
         teamMemberDetails.Email.Should().Be(viewModel.Email);
-        teamMemberDetails.Telephone.Should().Be(viewModel.Telephone);
+        teamMemberDetails.TelephoneNumber.Should().Be(viewModel.Telephone);
 
         expectedGuidInFocus.Should().NotBeNull();
         expectedGuidInFocus.Should().Be(teamMemberDetails.Id);
@@ -319,16 +318,16 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
     {
         // Arrange
         Guid? expectedGuidInFocus = null;
-        var inSessionTeamMemberDetails = new ReExTeamMemberDetails
+        var inSessionTeamMemberDetails = new ReExCompanyTeamMember
         {
             Id = Guid.NewGuid(),
             FirstName = "Test",
             LastName = "Test 2",
             Email = "test@test.test",
-            Telephone = "00000000000"
+            TelephoneNumber = "00000000000"
         };
 
-        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExTeamMemberDetails>
+        var teamMemberDetailsDictionary = new Dictionary<Guid, ReExCompanyTeamMember>
         {
             { inSessionTeamMemberDetails.Id, inSessionTeamMemberDetails },
         };
@@ -359,7 +358,7 @@ public class TeamMemberDetailsTests : UnincorporatedTestBase
         inSessionTeamMemberDetails.FirstName.Should().Be(viewModel.FirstName);
         inSessionTeamMemberDetails.LastName.Should().Be(viewModel.LastName);
         inSessionTeamMemberDetails.Email.Should().Be(viewModel.Email);
-        inSessionTeamMemberDetails.Telephone.Should().Be(viewModel.Telephone);
+        inSessionTeamMemberDetails.TelephoneNumber.Should().Be(viewModel.Telephone);
 
         expectedGuidInFocus.Should().NotBeNull();
         expectedGuidInFocus.Should().Be(inSessionTeamMemberDetails.Id);

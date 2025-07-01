@@ -1,5 +1,4 @@
 ﻿using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Core.Sessions.ReEx.Unincorporated;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
@@ -322,7 +321,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             viewModel.FirstName = teamMemberDetails.FirstName;
             viewModel.LastName = teamMemberDetails.LastName;
             viewModel.Email = teamMemberDetails.Email;
-            viewModel.Telephone = teamMemberDetails.Telephone;
+            viewModel.Telephone = teamMemberDetails.TelephoneNumber;
 
             SetFocusId(teamMemberDetails.Id);
         }
@@ -342,7 +341,7 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             return View(viewModel);
         }
 
-        session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary ??= new Dictionary<Guid, ReExTeamMemberDetails>();
+        session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary ??= new Dictionary<Guid, ReExCompanyTeamMember>();
         var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary;
 
         if (viewModel.Id != null && teamMemberDetailsDictionary.TryGetValue(viewModel.Id.Value, out var teamMemberDetails))
@@ -350,19 +349,19 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
             teamMemberDetails.FirstName = viewModel.FirstName;
             teamMemberDetails.LastName = viewModel.LastName;
             teamMemberDetails.Email = viewModel.Email;
-            teamMemberDetails.Telephone = viewModel.Telephone;
+            teamMemberDetails.TelephoneNumber = viewModel.Telephone;
         }
         else
         {
             viewModel.Id = Guid.NewGuid();
 
-            teamMemberDetailsDictionary.Add(viewModel.Id.Value, new ReExTeamMemberDetails
+            teamMemberDetailsDictionary.Add(viewModel.Id.Value, new ReExCompanyTeamMember
             {
                 Id = viewModel.Id.Value,
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 Email = viewModel.Email,
-                Telephone = viewModel.Telephone
+                TelephoneNumber = viewModel.Telephone
             });
         }
 
