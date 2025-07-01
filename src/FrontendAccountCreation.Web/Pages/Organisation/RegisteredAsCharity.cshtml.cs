@@ -34,10 +34,12 @@ public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
     [Required(ErrorMessage = "RegisteredAsCharity.ErrorMessage")]
     public string? SelectedValue { get; set; }
 
-    public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance; //ErrorState.Empty;
+    public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
     public string? Legend => _localizer["RegisteredAsCharity.Question"];
 
+    public string? Hint => _localizer["RegisteredAsCharity.Description"];
+    
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)
     {
