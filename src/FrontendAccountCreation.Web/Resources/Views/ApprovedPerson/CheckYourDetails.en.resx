@@ -214,7 +214,7 @@
     <value>No</value>
   </data>
   <data name="CheckYourDetails.AddedOrganisation" xml:space="preserve">
-    <value>Added Organisation</value>
+    <value>Added organisation</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Email" xml:space="preserve">
     <value>Email</value>
@@ -232,7 +232,7 @@
     <value>Different trading name</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.ApprovedPersonsAdded" xml:space="preserve">
-    <value>Approved persons invite</value>
+    <value>Approved person email invitations created</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Invite" xml:space="preserve">
     <value>Invite</value>
