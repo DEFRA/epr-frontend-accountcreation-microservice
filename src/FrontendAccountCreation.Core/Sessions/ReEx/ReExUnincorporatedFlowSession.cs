@@ -1,4 +1,4 @@
-﻿using FrontendAccountCreation.Core.Models;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx.Unincorporated;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Core.Sessions.ReEx;
@@ -13,4 +13,6 @@ public class ReExUnincorporatedFlowSession
     public ManageAccountPersonAnswer ManageAccountPersonAnswer { get; set; }
 
     public ManageControlAnswer ManageControlOrganisationAnswer { get; set; }
+
+    public IDictionary<Guid, ReExTeamMemberDetails>? TeamMemberDetailsDictionary { get; set; }
 }

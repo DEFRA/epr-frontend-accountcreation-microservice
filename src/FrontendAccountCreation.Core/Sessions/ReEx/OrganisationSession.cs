@@ -6,6 +6,8 @@ namespace FrontendAccountCreation.Core.Sessions.ReEx;
 
 public class OrganisationSession : ILocalSession
 {
+    public string? TradingName { get; set; }
+
     public bool? IsTheOrganisationCharity { get; set; }
 
     public OrganisationType? OrganisationType { get; set; }

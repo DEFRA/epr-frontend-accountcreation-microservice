@@ -1,4 +1,5 @@
 ﻿using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Core.Sessions.ReEx.Unincorporated;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
@@ -304,10 +305,74 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
     [HttpGet]
     [Route(PagePath.UnincorporatedTeamMemberDetails)]
-    [ExcludeFromCodeCoverage]
     public async Task<IActionResult> TeamMemberDetails()
     {
-        throw new NotImplementedException();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedTeamMemberDetails);
+
+        var viewModel = new ReExTeamMemberDetailsViewModel();
+        var teamMemberDetailsId = GetFocusId();
+        var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary;
+
+        if (teamMemberDetailsId != null
+            && teamMemberDetailsDictionary != null
+            && teamMemberDetailsDictionary.TryGetValue(teamMemberDetailsId.Value, out var teamMemberDetails))
+        {
+            viewModel.Id = teamMemberDetails.Id;
+            viewModel.FirstName = teamMemberDetails.FirstName;
+            viewModel.LastName = teamMemberDetails.LastName;
+            viewModel.Email = teamMemberDetails.Email;
+            viewModel.Telephone = teamMemberDetails.Telephone;
+
+            SetFocusId(teamMemberDetails.Id);
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedTeamMemberDetails)]
+    public async Task<IActionResult> TeamMemberDetails(ReExTeamMemberDetailsViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedTeamMemberDetails);
+            return View(viewModel);
+        }
+
+        session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary ??= new Dictionary<Guid, ReExTeamMemberDetails>();
+        var teamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMemberDetailsDictionary;
+
+        if (viewModel.Id != null && teamMemberDetailsDictionary.TryGetValue(viewModel.Id.Value, out var teamMemberDetails))
+        {
+            teamMemberDetails.FirstName = viewModel.FirstName;
+            teamMemberDetails.LastName = viewModel.LastName;
+            teamMemberDetails.Email = viewModel.Email;
+            teamMemberDetails.Telephone = viewModel.Telephone;
+        }
+        else
+        {
+            viewModel.Id = Guid.NewGuid();
+
+            teamMemberDetailsDictionary.Add(viewModel.Id.Value, new ReExTeamMemberDetails
+            {
+                Id = viewModel.Id.Value,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+                Email = viewModel.Email,
+                Telephone = viewModel.Telephone
+            });
+        }
+
+        SetFocusId(viewModel.Id.Value);
+
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(CheckInvitation),
+            PagePath.UnincorporatedTeamMemberDetails,
+            PagePath.UnincorporatedCheckInvitation);
     }
 
     [HttpGet]
