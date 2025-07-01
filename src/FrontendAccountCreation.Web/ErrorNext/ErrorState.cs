@@ -47,6 +47,26 @@ public class ErrorStateFromModelState : IErrorState
         return null;
     }
 
+    public IError? GetErrorIfTriggeredByElementId(params string[] mutuallyExclusiveErrorHtmlElementId)
+    {
+        if (mutuallyExclusiveErrorHtmlElementId.Length == 0)
+        {
+            // if no element IDs supplied, return the first error (if there is one)
+            return Errors.FirstOrDefault();
+        }
+
+        foreach (var htmlElementId in mutuallyExclusiveErrorHtmlElementId)
+        {
+            var error = Errors.FirstOrDefault(e => e.HtmlElementId == htmlElementId);
+            if (error != null)
+            {
+                return error;
+            }
+        }
+
+        return null;
+    }
+
     public Func<int, string>? ErrorIdToHtmlElementId { get; set; }
     public bool HasErrors => Errors.Any();
     private IEnumerable<int> ErrorIds { get; }
@@ -114,5 +134,10 @@ public class ErrorState : IErrorState
     {
         int? currentErrorId = GetErrorIdIfTriggered(mutuallyExclusiveErrorIds);
         return currentErrorId != null ? Errors.First(e => e.Id == currentErrorId) : null;
+    }
+
+    public IError? GetErrorIfTriggeredByElementId(params string[] mutuallyExclusiveErrorHtmlElementId)
+    {
+        throw new NotImplementedException();
     }
 }

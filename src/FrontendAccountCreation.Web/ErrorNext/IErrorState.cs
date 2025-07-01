@@ -9,7 +9,10 @@ public interface IErrorState
 
     Func<int, string>? ErrorIdToHtmlElementId { get; set; }
 
+    //todo: generic version that uses GetErrorIfTriggered
     bool HasTriggeredError(params int[] errorIds);
 
     IError? GetErrorIfTriggered(params int[] mutuallyExclusiveErrorIds);
+
+    IError? GetErrorIfTriggeredByElementId(params string[] mutuallyExclusiveErrorHtmlElementId);
 }
