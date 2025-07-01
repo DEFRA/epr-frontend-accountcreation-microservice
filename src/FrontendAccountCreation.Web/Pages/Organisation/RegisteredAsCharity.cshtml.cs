@@ -2,7 +2,6 @@ using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ErrorNext;
@@ -10,17 +9,23 @@ using FrontendAccountCreation.Web.FullPages.Radios;
 using FrontendAccountCreation.Web.FullPages.Radios.Common;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Microsoft.AspNetCore.Html;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
-public class OrganisationPageModel(ISessionManager<OrganisationSession> sessionManager) : PageModel
+public class OrganisationPageModel(
+    ISessionManager<OrganisationSession> sessionManager,
+    IStringLocalizer<SharedResources> sharedLocalizer)
+    : PageModel
 {
-    protected ISessionManager<OrganisationSession> SessionManager = sessionManager;
+    protected ISessionManager<OrganisationSession> SessionManager { get; } = sessionManager;
+    protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
 
     protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
         OrganisationSession session,
@@ -49,7 +54,7 @@ public class OrganisationPageModel(ISessionManager<OrganisationSession> sessionM
         AddPageToWhiteList(session, currentPagePath);
         AddPageToWhiteList(session, nextPagePath);
 
-        await sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        await SessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
 
     private void AddPageToWhiteList(
@@ -63,11 +68,17 @@ public class OrganisationPageModel(ISessionManager<OrganisationSession> sessionM
     }
 }
 
-public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
+public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
 {
-    public RegisteredAsCharityModel(ISessionManager<OrganisationSession> sessionManager)
-        : base(sessionManager)
+    private readonly IStringLocalizer<RegisteredAsCharity> _localizer;
+
+    public RegisteredAsCharity(
+        ISessionManager<OrganisationSession> sessionManager,
+        IStringLocalizer<SharedResources> sharedLocalizer,
+        IStringLocalizer<RegisteredAsCharity> localizer)
+        : base(sessionManager, sharedLocalizer)
     {
+        _localizer = localizer;
     }
 
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
@@ -78,11 +89,12 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance; //ErrorState.Empty;
 
-    public string? Legend => "RegisteredAsCharity.Question";
+    public string? Legend => _localizer["RegisteredAsCharity.Question"];
 
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)
-    {if (deploymentRoleOptions.Value.IsRegulator())
+    {
+        if (deploymentRoleOptions.Value.IsRegulator())
         {
             return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
             {
@@ -102,19 +114,8 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
 
     public async Task<IActionResult> OnPost()
     {
-        //todo: add new IError to work with model error state
-
-        //if (SelectedValue == null)
-        //{
-        //    Errors = ErrorState.Create(PossibleErrors, ErrorId.NoCountrySelected);
-        //    return;
-        //}
-
-        //SelectedCountry = (Country)Enum.Parse(typeof(Country), SelectedValue);
-
         if (!ModelState.IsValid)
         {
-            //ModelState
             Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
         }
@@ -125,17 +126,6 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
                 Journey = [PagePath.RegisteredAsCharity]
             };
 
-        //session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
-
-        //if (session.IsTheOrganisationCharity.Value)
-        //{
-        //    return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
-        //}
-        //else
-        //{
-        //    return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
-        //}
-
         session.IsTheOrganisationCharity = bool.Parse(SelectedValue!);
 
         if (session.IsTheOrganisationCharity == true)
@@ -144,13 +134,4 @@ public class RegisteredAsCharityModel : OrganisationPageModel, IRadiosPageModel
         }
         return await SaveSessionAndRedirect(session, nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
     }
-
-    public enum ErrorId
-    {
-        NoCountrySelected
-    }
-
-    public static readonly ImmutableDictionary<int, PossibleError> PossibleErrors =
-        ImmutableDictionary.Create<int, PossibleError>()
-            .Add(ErrorId.NoCountrySelected, "Select the country where you live");
 }

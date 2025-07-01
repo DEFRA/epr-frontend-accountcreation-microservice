@@ -1,7 +1,19 @@
 ﻿@page "/re-ex/organisation"
 
-@model FrontendAccountCreation.Web.Pages.Organisation.RegisteredAsCharityModel
+@model FrontendAccountCreation.Web.Pages.Organisation.RegisteredAsCharity
 @{
+    //todo: need to get a string for the title
+    // need a helper
+    // can ViewData["Title"] be set in the code behind (and be overrideable by the view)?
+    // if so, should be able to simplify views
+    // todo: other pages will need backlink support
+    // @{
+    //     using System.IO;
+    //     var writer = new StringWriter();
+    //     Model.Legend?.WriteTo(writer, HtmlEncoder.Default);
+    //     ViewData["Title"] = writer.ToString();
+    // }
+
     ViewData["Title"] = Model.Legend;
 }
 
