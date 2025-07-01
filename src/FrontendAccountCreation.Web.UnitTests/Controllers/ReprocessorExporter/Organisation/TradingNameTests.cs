@@ -52,9 +52,9 @@ public class TradingNameTests : OrganisationTestBase
     {
         //Arrange
         const string tradingName = "Trading name";
+        _organisationSession.TradingName = tradingName;
         _organisationSession.ReExManualInputSession = new ReExManualInputSession
         {
-            TradingName = tradingName,
             BusinessAddress = new Core.Addresses.Address()
         };
 
@@ -98,11 +98,15 @@ public class TradingNameTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_ThenRedirectToTypeOfOrganisation()
+    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
     {
         // Arrange
         var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
         _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
 
         // Act
         var result = await _systemUnderTest.TradingName(request);
@@ -118,6 +122,11 @@ public class TradingNameTests : OrganisationTestBase
     {
         // Arrange
         var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
+        _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
 
         // Act
         await _systemUnderTest.TradingName(request);

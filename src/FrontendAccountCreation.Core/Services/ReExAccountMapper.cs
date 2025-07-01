@@ -32,7 +32,8 @@ public class ReExAccountMapper : IReExAccountMapper
             Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
             ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
             InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession),
-            Partners = GetPartnersModel(session)
+            Partners = GetPartnersModel(session),
+            TradingName = session.TradingName
         };
     }
 
@@ -42,7 +43,6 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
             ProducerType = session.ReExManualInputSession?.ProducerType,
-            TradingName = session.ReExManualInputSession?.TradingName,
             Nation = session.UkNation ?? Nation.NotSet,
             OrganisationType = session.OrganisationType ?? OrganisationType.NotSet
         };

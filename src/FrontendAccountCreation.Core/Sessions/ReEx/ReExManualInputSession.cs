@@ -7,8 +7,6 @@ namespace FrontendAccountCreation.Core.Sessions.ReEx;
 [ExcludeFromCodeCoverage]
 public class ReExManualInputSession
 {
-    public string TradingName { get; set; }
-
     public string OrganisationName { get; set; }
 
     public string NonUkRoleInOrganisation { get; set; }

@@ -72,11 +72,6 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
             TeamMembers = new List<ReExCompanyTeamMember> { _teamMember },
             Partnership = _partnership
         };
-
-        _manualInputSession = new ReExManualInputSession
-        {
-            TradingName = _tradingName
-        };
     }
 
     [TestMethod]
@@ -85,6 +80,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             IsTheOrganisationCharity = true,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             IsTradingNameDifferent = true,
@@ -126,6 +122,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
 
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             IsTheOrganisationCharity = true,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             IsTradingNameDifferent = true,
@@ -239,6 +236,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             ReExCompaniesHouseSession = _companiesHouseSession
         };
@@ -259,6 +257,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             ReExCompaniesHouseSession = _companiesHouseSession
         };
@@ -279,6 +278,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             ReExCompaniesHouseSession = _companiesHouseSession
         };
@@ -299,6 +299,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             ReExCompaniesHouseSession = _companiesHouseSession
         };
@@ -324,6 +325,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
 
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
             ReExManualInputSession = manualInputSession
         };
@@ -346,6 +348,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             ReExCompaniesHouseSession = _companiesHouseSession
         };
@@ -370,6 +373,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession()
         };
 
@@ -414,6 +418,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
@@ -444,6 +449,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
@@ -478,11 +484,11 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = _tradingName,
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
             ReExManualInputSession = new ReExManualInputSession
             {
                 ProducerType = ProducerType.SoleTrader,
-                TradingName = "Sole Trader Ltd",
                 TeamMembers = new List<ReExCompanyTeamMember>
             {
                 new ReExCompanyTeamMember { FirstName = "Bob", LastName = "Johnson" }
@@ -498,7 +504,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
 
         // Assert
-        model.TradingName.Should().Be("Sole Trader Ltd");
+        model.TradingName.Should().Be(_tradingName);
         model.reExCompanyTeamMembers.Should().ContainSingle(x => x.FirstName == "Bob");
     }
 
@@ -548,14 +554,14 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         {
             ProducerType = ProducerType.Other,
             BusinessAddress = new Address { Street = "456 International Road" },
-            TradingName = "Global Traders",
             TeamMembers = new List<ReExCompanyTeamMember> { teamMember }
         };
 
         var session = new OrganisationSession
         {
             IsUkMainAddress = false, // Triggers Non-UK flow
-            ReExManualInputSession = manualInputSession
+            ReExManualInputSession = manualInputSession,
+            TradingName = "Global Traders",
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
@@ -726,13 +732,13 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
                 Postcode = "AB1 2BC",
                 IsManualAddress = true,
             },
-            TradingName = "Sole Trader Trading",
             TeamMembers = new List<ReExCompanyTeamMember> { teamMember }
         };
 
         var session = new OrganisationSession
         {
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            TradingName = "Sole Trader Trading",
             ReExManualInputSession = manualInputSession
         };
 
@@ -753,7 +759,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         model.IsSoleTrader.Should().BeTrue();
         model.ProducerType.Should().Be(ProducerType.SoleTrader);
         model.BusinessAddress.Should().BeSameAs(manualInputSession.BusinessAddress);
-        model.TradingName.Should().Be(manualInputSession.TradingName);
+        model.TradingName.Should().Be("Sole Trader Trading");
 
         model.reExCompanyTeamMembers.Should().HaveCount(1);
         model.reExCompanyTeamMembers[0].FirstName.Should().Be("Sole");
@@ -842,11 +848,11 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         {
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
             IsUkMainAddress = true,
+            TradingName = "Solo Biz Ltd",
             ReExManualInputSession = new ReExManualInputSession
             {
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = expectedAddress,
-                TradingName = "Solo Biz Ltd",
                 TeamMembers = new List<ReExCompanyTeamMember> { teamMember }
             }
         };
@@ -1022,12 +1028,12 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
                 County = "London",
                 Postcode = "AB1 2BC"
             },
-            TradingName = "Sole Trader Trading",
             TeamMembers = null
         };
 
         var session = new OrganisationSession
         {
+            TradingName = "Sole Trader Trading",
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
             ReExManualInputSession = manualInputSession
         };
@@ -1068,14 +1074,14 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
                 County = "London",
                 Postcode = "AB1 2BC"
             },
-            TradingName = "Trading",
             TeamMembers = new List<ReExCompanyTeamMember> { teamMember }
         };
 
         var session = new OrganisationSession
         {
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
-            ReExManualInputSession = manualInputSession
+            ReExManualInputSession = manualInputSession,
+            TradingName = "Trading",
         };
 
         _sessionManagerMock
