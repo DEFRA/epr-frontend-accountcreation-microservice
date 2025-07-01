@@ -1,19 +1,20 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Web;
-using FrontendAccountCreation.Web.UnitTests;
-using FrontendAccountCreation.Web.UnitTests.Controllers;
-using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
-using FluentAssertions;
+﻿using FluentAssertions;
+using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Organisation;
+using FrontendAccountCreation.Web.UnitTests;
+using FrontendAccountCreation.Web.UnitTests.Controllers;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using Moq;
 using System.Net;
@@ -24,12 +25,24 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 public class RegisteredAsCharityTests : OrganisationPageModelTestBase<RegisteredAsCharity>
 {
     private RegisteredAsCharity _registeredAsCharity;
+    private Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionsMock;
 
     [TestInitialize]
     public void Setup()
     {
         SetupBase();
-        _registeredAsCharity = new RegisteredAsCharity(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object);
+
+        _deploymentRoleOptionsMock = GetMockDeploymentRoleOptions();
+
+        _registeredAsCharity = new(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
+            {
+                PageContext = new PageContext
+                {
+                    HttpContext = _httpContextMock.Object
+                }
+            };
+
+        //_registeredAsCharity.HttpContext = _httpContextMock.Object;
     }
 
     //todo: this belongs in its own test class
@@ -40,7 +53,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     //    Assert.ThrowsException<NotImplementedException>(() => _systemUnderTest.InjectError());
     //}
 
-    private Mock<IOptions<DeploymentRoleOptions>> GetMockDeploymentRoleOptions(string? deploymentRole)
+    private Mock<IOptions<DeploymentRoleOptions>> GetMockDeploymentRoleOptions(string? deploymentRole = null)
     {
         var mock = new Mock<IOptions<DeploymentRoleOptions>>();
         mock.Setup(x => x.Value).Returns(new DeploymentRoleOptions
@@ -54,10 +67,10 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     public async Task Get_RegisteredAsCharity_WithRegulatorDeployment_IsForbidden()
     {
         // Arrange
-        var deploymentRoleOptionsMock = GetMockDeploymentRoleOptions(DeploymentRoleOptions.RegulatorRoleValue);
+        _deploymentRoleOptionsMock = GetMockDeploymentRoleOptions(DeploymentRoleOptions.RegulatorRoleValue);
 
         // Act
-        var result = await _registeredAsCharity.OnGet(deploymentRoleOptionsMock.Object);
+        var result = await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -69,28 +82,29 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         redirectResult.RouteValues["statusCode"].Should().Be((int)HttpStatusCode.Forbidden);
     }
 
-    //[TestMethod]
-    //[DataRow(true)]
-    //[DataRow(false)]
-    //public async Task Get_RegisteredAsCharity_WithOutRegulatorDeployment_IsAllowed(bool useNullMockSession)
-    //{
-    //    // Arrange
-    //    var org = useNullMockSession ? null : new OrganisationSession();
-    //    _sessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
-    //        .Returns(Task.FromResult<OrganisationSession?>(org));
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public async Task Get_RegisteredAsCharity_WithOutRegulatorDeployment_IsAllowed(bool useNullMockSession)
+    {
+        // Arrange
+        var org = useNullMockSession ? null : new OrganisationSession();
+        SessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
+            .Returns(Task.FromResult(org));
 
-    //    // Act
-    //    var result = await _systemUnderTest.RegisteredAsCharity();
+        // Act
+        var result = await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
 
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
+        // Assert
+        result.Should().BeOfType<PageResult>();
 
-    //    var viewResult = (ViewResult)result;
-    //    viewResult.Model.Should().BeOfType<RegisteredAsCharityRequestViewModel>();
+        var pageResult = (PageResult)result;
+        pageResult.Model.Should().BeNull();
+        //pageResult.Model.Should().BeOfType<RegisteredAsCharity>();
 
-    //    var registeredAsCharityRequestViewModel = (RegisteredAsCharityRequestViewModel)viewResult.Model!;
-    //    registeredAsCharityRequestViewModel.isTheOrganisationCharity.Should().Be(null);
-    //}
+        //var registeredAsCharityRequestViewModel = (RegisteredAsCharity)pageResult.Model;
+        //registeredAsCharityRequestViewModel.SelectedValue.Should().Be(null);
+    }
 
     //[TestMethod]
     //[DataRow(true, YesNoAnswer.Yes)]

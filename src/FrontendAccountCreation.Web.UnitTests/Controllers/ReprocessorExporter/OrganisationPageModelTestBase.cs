@@ -25,7 +25,7 @@ using Web.Sessions;
 public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPageModel
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
-    //protected Mock<HttpContext> _httpContextMock = null!;
+    protected Mock<HttpContext> _httpContextMock = null!;
     protected Mock<ISessionManager<OrganisationSession>> SessionManagerMock = null!;
     protected Mock<IStringLocalizer<SharedResources>> SharedLocalizerMock = null!;
     protected Mock<IStringLocalizer<T>> LocalizerMock = null!;
@@ -41,7 +41,7 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
 
     protected void SetupBase() //string? deploymentRole = null)
     {
-        //_httpContextMock = new Mock<HttpContext>();
+        _httpContextMock = new Mock<HttpContext>();
         SessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         SharedLocalizerMock = new Mock<IStringLocalizer<SharedResources>>();
         LocalizerMock = new Mock<IStringLocalizer<T>>();
@@ -74,10 +74,10 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
         //        ReportDataNewApprovedUser = "/re-ex/approved-person-created?notification=created_new_approved_person"
         //    });
 
-        //_httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>
-        //{
-        //    new("Oid", Guid.NewGuid().ToString())
-        //});
+        _httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>
+        {
+            new("Oid", Guid.NewGuid().ToString())
+        });
 
         //_deploymentRoleOptionMock.Setup(x => x.Value)
         //    .Returns(new DeploymentRoleOptions
