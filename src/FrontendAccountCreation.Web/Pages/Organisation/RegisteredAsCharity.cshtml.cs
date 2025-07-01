@@ -77,8 +77,10 @@ public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
 
         if (session.IsTheOrganisationCharity == true)
         {
-            return await SaveSessionAndRedirect(session, nameof(OrganisationController.NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+            return await SaveSessionAndRedirect(session, nameof(OrganisationController),
+                nameof(OrganisationController.NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
         }
-        return await SaveSessionAndRedirect(session, nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
+        return await SaveSessionAndRedirect(session, nameof(OrganisationController),
+            nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,6 +26,19 @@ public class OrganisationPageModel(
         await SaveSession(session, currentPagePath, nextPagePath);
 
         return RedirectToAction(actionName);
+    }
+
+    protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
+        OrganisationSession session,
+        string controllerName,
+        string actionName,
+        string currentPagePath,
+        string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        await SaveSession(session, currentPagePath, nextPagePath);
+
+        return RedirectToAction(actionName, controllerName.WithoutControllerSuffix());
     }
 
     private async Task SaveSession(

@@ -24,6 +24,7 @@ using Microsoft.Identity.Web;
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+[Route("re-ex/organisation")]
 public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
@@ -1051,11 +1052,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return View();
     }
 
-    public IActionResult RedirectToStart()
-    {
-        //return RedirectToAction(nameof(RegisteredAsCharity));
-        return Redirect($"{Request.PathBase}/re-ex/organisation/registered-as-charity");
-    }
+    //public IActionResult RedirectToStart()
+    //{
+    //    //return RedirectToAction(nameof(RegisteredAsCharity));
+    //    return Redirect($"{Request.PathBase}/re-ex/organisation/registered-as-charity");
+    //}
 
     #region Private Methods
 
