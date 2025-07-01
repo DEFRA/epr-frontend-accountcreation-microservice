@@ -27,14 +27,7 @@
                                     @Localizer["CheckYourDetails.RegisteredCharity"]
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    @if (Model.IsCompaniesHouseFlow)
-                                    {
-                                        @Localizer["CheckYourDetails.No"]
-                                    }
-                                    @if (Model.IsNonUk)
-                                    {
-                                        @Localizer["CheckYourDetails.No"]
-                                    }
+                                    @Localizer["CheckYourDetails.No"]
                                 </dd>
                             </div>
 
@@ -47,7 +40,7 @@
                                     {
                                         @SharedLocalizer["Yes"]
                                     }
-                                    @if (Model.IsNonUk)
+                                    else
                                     {
                                         @Localizer["CheckYourDetails.No"]
                                     }

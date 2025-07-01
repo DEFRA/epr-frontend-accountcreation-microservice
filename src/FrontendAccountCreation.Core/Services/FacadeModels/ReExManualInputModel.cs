@@ -9,6 +9,8 @@ namespace FrontendAccountCreation.Core.Services.FacadeModels;
 [ExcludeFromCodeCoverage]
 public class ReExManualInputModel
 {
+    public string? OrganisationName { get; set; }
+
     public ProducerType? ProducerType { get; set; }
 
     public AddressModel? BusinessAddress { get; set; }

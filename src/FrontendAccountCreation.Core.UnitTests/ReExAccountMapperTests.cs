@@ -218,9 +218,9 @@ public class ReExAccountMapperTests
             OrganisationType = organisationType,
             ReExCompaniesHouseSession = null,
             IsApprovedUser = false,
-            UkNation = nation,
             ReExManualInputSession = new ReExManualInputSession
             {
+                UkRegulatorNation = nation,
                 BusinessAddress = new Address
                 {
                     BuildingName = "ReEx House",
@@ -628,9 +628,9 @@ public class ReExAccountMapperTests
         {
             OrganisationType = OrganisationType.CompaniesHouseCompany,
             TradingName = "Test Trading",
-            UkNation = Nation.England,
             ReExManualInputSession = new ReExManualInputSession
             {
+                UkRegulatorNation = Nation.England,
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = new Address
                 {
@@ -664,9 +664,9 @@ public class ReExAccountMapperTests
         {
             TradingName = "TradeName",
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
-            UkNation = Nation.Scotland,
             ReExManualInputSession = new ReExManualInputSession
             {
+                UkRegulatorNation = Nation.Scotland,
                 ProducerType = ProducerType.NonUkOrganisation,
                 BusinessAddress = null
             }
@@ -698,9 +698,9 @@ public class ReExAccountMapperTests
         {
             OrganisationType = OrganisationType.NotSet,
             TradingName = "TradeName",
-            UkNation = Nation.Wales,
             ReExManualInputSession = new ReExManualInputSession
             {
+                UkRegulatorNation = Nation.Wales,
                 ProducerType = producerType,
                 BusinessAddress = new Address()
             }
@@ -728,9 +728,9 @@ public class ReExAccountMapperTests
         {
             OrganisationType = OrganisationType.NotSet,
             TradingName = "TradeName",
-            UkNation = nation,
             ReExManualInputSession = new ReExManualInputSession
             {
+                UkRegulatorNation = nation,
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = new Address()
             }
@@ -757,9 +757,9 @@ public class ReExAccountMapperTests
         {
             OrganisationType = orgType,
             TradingName = "TradeName",
-            UkNation = Nation.England,
             ReExManualInputSession = new ReExManualInputSession
             {
+                UkRegulatorNation = Nation.England,
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = new Address()
             }

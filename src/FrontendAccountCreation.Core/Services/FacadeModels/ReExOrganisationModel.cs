@@ -6,6 +6,7 @@ namespace FrontendAccountCreation.Core.Services.FacadeModels;
 public class ReExOrganisationModel
 {
     public string? TradingName { get; set; }
+
     /// <summary>
     /// User Role/Job title can be Director, CompanySecretary, Partner or Member
     /// </summary>
