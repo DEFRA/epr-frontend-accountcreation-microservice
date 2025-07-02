@@ -3,6 +3,8 @@ using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Pages.Organisation;
+using Microsoft.AspNetCore.Http;
+using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -44,6 +46,16 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
 
         // Assert
         _manageControlOrganisation.SelectedValue.Should().Be(yesNoNotSure.ToString());
+    }
+
+    [TestMethod]
+    public async Task OnGet_TheyManageOrControlOrganisationIsNull_SetsSelectedValueCorrectly()
+    {
+        // Act
+        await _manageControlOrganisation.OnGet();
+
+        // Assert
+        _manageControlOrganisation.SelectedValue.Should().BeNull();
     }
 
     //[TestMethod]
