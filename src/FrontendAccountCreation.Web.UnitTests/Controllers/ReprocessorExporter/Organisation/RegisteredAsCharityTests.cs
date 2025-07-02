@@ -43,10 +43,8 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         return mock;
     }
 
-    //todo: remove RegisteredAsCharity from names, use OnGet_ and OnPost_ prefixes
-
     [TestMethod]
-    public async Task Get_RegisteredAsCharity_WithRegulatorDeployment_IsForbidden()
+    public async Task OnGet_RegisteredAsCharity_WithRegulatorDeployment_IsForbidden()
     {
         // Arrange
         _deploymentRoleOptionsMock = GetMockDeploymentRoleOptions(DeploymentRoleOptions.RegulatorRoleValue);
@@ -67,7 +65,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     [TestMethod]
     [DataRow(true)]
     [DataRow(false)]
-    public async Task Get_RegisteredAsCharity_WithOutRegulatorDeployment_IsAllowed(bool useNullMockSession)
+    public async Task OnGet_RegisteredAsCharity_WithOutRegulatorDeployment_IsAllowed(bool useNullMockSession)
     {
         // Arrange
         var org = useNullMockSession ? null : new OrganisationSession();
@@ -86,7 +84,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     [DataRow(true, "True")]
     [DataRow(false, "False")]
     [DataRow(null, null)]
-    public async Task Get_RegisteredAsCharity_ReturnsViewModel_WithSessionData_IsTheOrganisationCharity_As(
+    public async Task OnGet_RegisteredAsCharity_ReturnsViewModel_WithSessionData_IsTheOrganisationCharity_As(
         bool? isCharityOrganisation, string? expectedAnswer)
     {
         //Arrange
@@ -107,7 +105,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     //todo: create a working test: note that no back link is currently set. add it and create a bug if necessary
     [Ignore("this test doesn't actually test what it says it does (leave for now as probably going to replace these tests with the yes/no standard test)")]
     [TestMethod]
-    public async Task UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
+    public async Task OnGet_UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
     {
         //Arrange
         var organisationSessionMock = new OrganisationSession
@@ -131,7 +129,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     }
 
     [TestMethod]
-    public async Task RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIsNull()
+    public async Task OnGet_RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIsNull()
     {
         //Arrange
         var accountCreationSessionMock = new OrganisationSession
@@ -150,7 +148,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
 
     //todo: split into 2
     [TestMethod]
-    public async Task RegisteredAsCharity_IsNotCharity_RedirectsToRegisteredWithCompaniesHousePage_AndUpdateSession()
+    public async Task OnPost_RegisteredAsCharity_IsNotCharity_RedirectsToRegisteredWithCompaniesHousePage_AndUpdateSession()
     {
         // Arrange
         _registeredAsCharity.SelectedValue = "False";
@@ -168,7 +166,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
 
     //todo: split into 2
     [TestMethod]
-    public async Task RegisteredAsCharity_IsCharity_ThenRedirectsToNotAffectedPage_AndUpdateSession()
+    public async Task OnPost_RegisteredAsCharity_IsCharity_ThenRedirectsToNotAffectedPage_AndUpdateSession()
     {
         // Arrange
         _registeredAsCharity.SelectedValue = "True";
@@ -184,7 +182,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     }
 
     [TestMethod]
-    public async Task RegisteredAsCharity_NoAnswerGiven_ThenReturnViewWithError()
+    public async Task OnPost_RegisteredAsCharity_NoAnswerGiven_ThenReturnViewWithError()
     {
         // Arrange
         _registeredAsCharity.ModelState.AddModelError(nameof(RegisteredAsCharityRequestViewModel.isTheOrganisationCharity), "Field is required");
