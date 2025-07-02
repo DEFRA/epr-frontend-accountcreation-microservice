@@ -75,24 +75,21 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
         _manageControlOrganisation.SelectedValue.Should().BeNull();
     }
 
-    //[TestMethod]
-    //public async Task Post_ManageControlOrganisation_With_InvalidModel_ReturnsViewWithModel()
-    //{
-    //    // Arrange
-    //    var session = new OrganisationSession();
-    //    _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-    //        .ReturnsAsync(session);
+    [TestMethod]
+    public async Task OnPost_InvalidModelState_ReturnsPageWithCorrectErrors()
+    {
+        // Arrange
+        _manageControlOrganisation.ModelState.AddModelError("TheyManageOrControlOrganisation", "Required");
 
-    //    var model = new ManageControlOrganisationViewModel();
-    //    _systemUnderTest.ModelState.AddModelError("TheyManageOrControlOrganisation", "Required");
+        // Act
+        await _manageControlOrganisation.OnPost();
 
-    //    // Act
-    //    var result = await _systemUnderTest.ManageControlOrganisation(model);
-
-    //    // Assert
-    //    var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-    //    viewResult.Model.Should().Be(model);
-    //}
+        // Assert
+        _manageControlOrganisation.Errors.HasErrors.Should().BeTrue();
+        _manageControlOrganisation.Errors.Should().NotBeNull();
+        _manageControlOrganisation.Errors.Errors.Should().ContainSingle(e => e.HtmlElementId == "TheyManageOrControlOrganisation");
+        _manageControlOrganisation.Errors.Errors.Should().ContainSingle(e => e.Message == "Required");
+    }
 
     //[TestMethod]
     //[DataRow(YesNoNotSure.Yes)]
