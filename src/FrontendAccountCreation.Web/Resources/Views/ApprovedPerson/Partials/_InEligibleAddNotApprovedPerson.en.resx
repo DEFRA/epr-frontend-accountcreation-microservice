@@ -136,7 +136,7 @@
     <value>Individual partner</value>
   </data>
   <data name="InEligibleAddNotApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to:</value>
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
   <data name="InEligibleAddNotApprovedPerson.Introtext1" xml:space="preserve">
     <value>You should invite an 'approved person' who needs to be invited to take on tasks on behalf of the organisation.</value>

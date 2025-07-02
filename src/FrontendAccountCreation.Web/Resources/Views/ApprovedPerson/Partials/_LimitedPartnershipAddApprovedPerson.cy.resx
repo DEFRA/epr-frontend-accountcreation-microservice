@@ -136,7 +136,7 @@
     <value>[Welsh]individual partner</value>
   </data>
   <data name="LimitedPartnershipAddApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to:</value>
+    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
   <data name="LimitedPartnershipAddApprovedPerson.Introtext1" xml:space="preserve">
     <value>[Welsh]You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
