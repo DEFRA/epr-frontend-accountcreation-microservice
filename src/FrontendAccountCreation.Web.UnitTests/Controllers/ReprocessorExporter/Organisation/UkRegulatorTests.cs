@@ -96,36 +96,21 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
-    //[TestMethod]
-    //public async Task OnGet_ReturnsView_Without_AnyDataForViewModel()
-    //{
-    //    // Act
-    //    await _ukRegulator.OnGet();
+    [TestMethod]
+    public async Task OnPost_InvalidModelState_ReturnsPageWithCorrectErrors()
+    {
+        // Arrange
+        _ukRegulator.ModelState.AddModelError("UkRegulatorNation", "Required");
 
-    //    // Assert
-    //    var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-    //    var model = viewResult.Model.Should().BeOfType<UkRegulatorForNonUKViewModel>().Subject;
-    //    model.UkRegulatorNation.Should().BeNull();
+        // Act
+        await _ukRegulator.OnPost();
 
-    //    SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
-    //}
-
-    //[TestMethod]
-    //public async Task UkRegulator_Post_With_InvalidModelState_ReturnsViewWithModel()
-    //{
-    //    // Arrange
-    //    var model = new UkRegulatorForNonUKViewModel();
-    //    _systemUnderTest.ModelState.AddModelError("UkRegulatorNation", "Required");
-
-    //    // Act
-    //    var result = await _systemUnderTest.UkRegulator(model);
-
-    //    // Assert
-    //    var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-    //    viewResult.Model.Should().Be(model);
-
-    //    _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
-    //}
+        // Assert
+        _ukRegulator.Errors.HasErrors.Should().BeTrue();
+        _ukRegulator.Errors.Should().NotBeNull();
+        _ukRegulator.Errors.Errors.Should().ContainSingle(e => e.HtmlElementId == "UkRegulatorNation");
+        _ukRegulator.Errors.Errors.Should().ContainSingle(e => e.Message == "Required");
+    }
 
     //[TestMethod]
     //public async Task UkRegulator_Post_ValidModel_SavesSessionAndRedirects()
