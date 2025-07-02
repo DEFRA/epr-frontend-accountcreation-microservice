@@ -58,29 +58,22 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
         _manageControlOrganisation.SelectedValue.Should().BeNull();
     }
 
-    //[TestMethod]
-    //[DataRow(YesNoNotSure.Yes)]
-    //[DataRow(null)]
-    //public async Task Get_ManageControlOrganisation_ReturnsView_WithViewModel_ParameterValue_AsTrue(YesNoNotSure? yesNoNotSure)
-    //{
-    //    // Arrange
-    //    var session = new OrganisationSession
-    //    {
-    //        TheyManageOrControlOrganisation = yesNoNotSure
-    //    };
-    //    _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-    //        .ReturnsAsync(session);
+    [TestMethod]
+    [DataRow(YesNoNotSure.Yes)]
+    [DataRow(null)]
+    public async Task OnGet_InvitePerson_SetsSelectedValueCorrectly(YesNoNotSure? yesNoNotSure)
+    {
+        // Arrange
+        OrganisationSession.TheyManageOrControlOrganisation = yesNoNotSure;
 
-    //    var invitePerson = yesNoNotSure == YesNoNotSure.Yes;
+        var invitePerson = yesNoNotSure == YesNoNotSure.Yes;
 
-    //    // Act
-    //    var result = await _systemUnderTest.ManageControlOrganisation(invitePerson);
+        // Act
+        await _manageControlOrganisation.OnGet(invitePerson);
 
-    //    // Assert
-    //    var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-    //    var model = viewResult.Model.Should().BeOfType<ManageControlOrganisationViewModel>().Subject;
-    //    model.TheyManageOrControlOrganisation.Should().Be(null);
-    //}
+        // Assert
+        _manageControlOrganisation.SelectedValue.Should().BeNull();
+    }
 
     //[TestMethod]
     //public async Task Post_ManageControlOrganisation_With_InvalidModel_ReturnsViewWithModel()
