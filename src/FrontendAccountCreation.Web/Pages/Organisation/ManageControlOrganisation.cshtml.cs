@@ -17,8 +17,8 @@ namespace FrontendAccountCreation.Web.Pages.Organisation;
 public class ManageControlOrganisation(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
-    IStringLocalizer<RegisteredAsCharity> localizer)
-    : OrganisationPageModel<RegisteredAsCharity>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
+    IStringLocalizer<ManageControlOrganisation> localizer)
+    : OrganisationPageModel<ManageControlOrganisation>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
 {
     public IEnumerable<IRadio> Radios => CommonRadios.YesNoNotSure(SharedLocalizer);
 
