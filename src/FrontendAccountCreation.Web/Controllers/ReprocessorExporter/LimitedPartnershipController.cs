@@ -3,6 +3,7 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -432,25 +433,37 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
         {
-            InviteUserOption = session.InviteUserOption?.ToString()
+            InviteUserOption = session.InviteUserOption?.ToString(),
+            IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
         }); 
     }
 
     [HttpPost]
     [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipRoleModel model)
+    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipInviteApprovedPersonViewModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+            model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
+
             return View(model);
         }
 
-        return View(model);
-        
+        session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+
+       if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
+        {
+            return await SaveSessionAndRedirect(session, "todo", PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: 
+        }
+        else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
+        {
+            return await SaveSessionAndRedirect(session, "todo", PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
+        }
+
     }
 
     [HttpGet]

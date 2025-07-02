@@ -22,15 +22,12 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="ApprovedPerson" method="post">
-                    @{
-                        @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_InEligibleAddNotApprovedPerson.cshtml", new AddApprovedPersonViewModel { ErrorsViewModel = errorsViewModel, IsLimitedLiablePartnership = true })
-                    }
+                <form method="post">
+                    @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_InEligibleAddNotApprovedPerson.cshtml", new AddApprovedPersonViewModel { ErrorsViewModel = errorsViewModel, IsNonCompaniesHousePartnership = Model.IsNonCompaniesHousePartnership })
 
                     <button class="govuk-button" data-module="govuk-button">
                         @SharedLocalizer["Confirm"]
                     </button>
-
                 </form>
             </div>
         </div>

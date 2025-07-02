@@ -10,5 +10,6 @@ public class NonCompaniesHousePartnershipInviteApprovedPersonViewModel
     [Required]
     public string InviteUserOption { get; set; }
     public ErrorsViewModel? ErrorsViewModel { get; set; }
+    public bool IsNonCompaniesHousePartnership { get; set; }
 }
 
