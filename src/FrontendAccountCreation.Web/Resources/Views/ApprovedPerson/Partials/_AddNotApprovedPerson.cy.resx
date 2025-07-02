@@ -136,7 +136,7 @@
     <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
   <data name="AddNotApprovedPerson.IntroText1" xml:space="preserve">
-    <value>[Welsh]You should invite an 'approved person' who can complete tasks on behalf of the organisation.</value>
+    <value>[Welsh]You should invite an 'approved person' who needs to be invited to take on tasks on behalf of the organisation.</value>
   </data>
   <data name="AddNotApprovedPerson.IntroText2" xml:space="preserve">
     <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can:</value>
