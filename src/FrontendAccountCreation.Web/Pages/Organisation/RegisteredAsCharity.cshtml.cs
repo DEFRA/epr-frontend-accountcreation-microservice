@@ -15,17 +15,14 @@ using System.Net;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
-public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
+public class RegisteredAsCharity : OrganisationPageModel<RegisteredAsCharity>, IRadiosPageModel
 {
-    private readonly IStringLocalizer<RegisteredAsCharity> _localizer;
-
     public RegisteredAsCharity(
         ISessionManager<OrganisationSession> sessionManager,
         IStringLocalizer<SharedResources> sharedLocalizer,
         IStringLocalizer<RegisteredAsCharity> localizer)
-        : base(sessionManager, sharedLocalizer)
+        : base(sessionManager, sharedLocalizer, localizer)
     {
-        _localizer = localizer;
     }
 
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo(SharedLocalizer);
@@ -36,9 +33,9 @@ public class RegisteredAsCharity : OrganisationPageModel, IRadiosPageModel
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Legend => _localizer["RegisteredAsCharity.Question"];
+    public string? Legend => Localizer["RegisteredAsCharity.Question"];
 
-    public string? Hint => _localizer["RegisteredAsCharity.Description"];
+    public string? Hint => Localizer["RegisteredAsCharity.Description"];
     
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)

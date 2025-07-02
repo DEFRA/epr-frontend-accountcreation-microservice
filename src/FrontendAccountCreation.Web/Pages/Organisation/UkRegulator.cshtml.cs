@@ -12,18 +12,14 @@ using FrontendAccountCreation.Core.Sessions;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
-//todo: generic OrganisationPageModel and store _localizer in base class
-public class UkRegulator : OrganisationPageModel, IRadiosPageModel
+public class UkRegulator : OrganisationPageModel<UkRegulator>, IRadiosPageModel
 {
-    private readonly IStringLocalizer<UkRegulator> _localizer;
-
     public UkRegulator(
         ISessionManager<OrganisationSession> sessionManager,
         IStringLocalizer<SharedResources> sharedLocalizer,
         IStringLocalizer<UkRegulator> localizer)
-        : base(sessionManager, sharedLocalizer)
+        : base(sessionManager, sharedLocalizer, localizer)
     {
-        _localizer = localizer;
     }
 
     public IEnumerable<IRadio> Radios => CommonRadios.HomeNations(SharedLocalizer);
@@ -34,9 +30,9 @@ public class UkRegulator : OrganisationPageModel, IRadiosPageModel
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Legend => _localizer["UkRegulator.NonUkOrganisation.Question"];
+    public string? Legend => Localizer["UkRegulator.NonUkOrganisation.Question"];
 
-    public string? Hint => _localizer["UkRegulator.NonUkHint"];
+    public string? Hint => Localizer["UkRegulator.NonUkHint"];
 
     public async Task<IActionResult> OnGet()
     {

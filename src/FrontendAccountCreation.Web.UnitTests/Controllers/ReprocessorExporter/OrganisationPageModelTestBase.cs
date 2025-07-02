@@ -16,7 +16,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 /// <summary>
 /// Used for Reprocessor and Exporter.
 /// </summary>
-public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPageModel
+public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPageModel<T>
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
     protected Mock<HttpContext> _httpContextMock = null!;

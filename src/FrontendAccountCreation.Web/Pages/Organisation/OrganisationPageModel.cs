@@ -9,13 +9,16 @@ using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
-public class OrganisationPageModel(
+public class OrganisationPageModel<T>(
     ISessionManager<OrganisationSession> sessionManager,
-    IStringLocalizer<SharedResources> sharedLocalizer)
+    IStringLocalizer<SharedResources> sharedLocalizer,
+    IStringLocalizer<T> localizer)
     : PageModel
+    where T : OrganisationPageModel<T>
 {
     protected ISessionManager<OrganisationSession> SessionManager { get; } = sessionManager;
     protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
+    protected IStringLocalizer<T> Localizer { get; } = localizer;
 
     public void SetBackLink(OrganisationSession session, string currentPagePath)
     {
