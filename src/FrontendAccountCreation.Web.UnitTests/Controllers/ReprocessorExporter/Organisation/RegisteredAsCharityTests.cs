@@ -169,17 +169,6 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     }
 
     //[TestMethod]
-    //public void RedirectToStart_ReturnsView()
-    //{
-    //    //Act
-    //    var result = _systemUnderTest.RedirectToStart();
-
-    //    //Arrange
-    //    result.Should().BeOfType<RedirectToActionResult>();
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.RegisteredAsCharity));
-    //}
-
-    //[TestMethod]
     //public async Task UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
     //{
     //    //Arrange
