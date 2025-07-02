@@ -31,13 +31,10 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
 
         //todo: if this works, move into base class
         var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
-        //_registeredAsCharity.ViewData = viewData;
-        //_registeredAsCharity.PageContext.ViewData = viewData;
 
         //todo: add helper in base for this generic?
         _registeredAsCharity = new(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
             {
-                //ViewData = viewData,
                 PageContext = new PageContext
                 {
                     HttpContext = _httpContextMock.Object,
@@ -137,11 +134,10 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         SessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(organisationSessionMock);
 
         //Act
-        var result = await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
+        await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().BeOfType<PageResult>();
+        _registeredAsCharity.ViewData["BackLinkToDisplay"].Should().Be("todo");
     }
 
     [TestMethod]
