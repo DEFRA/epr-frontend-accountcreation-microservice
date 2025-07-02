@@ -6,7 +6,6 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Organisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
@@ -28,17 +27,6 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
 
         OrganisationSession.ReExManualInputSession = new ReExManualInputSession();
 
-        //OrganisationSession = new OrganisationSession
-        //{
-        //    Journey =
-        //    [
-        //        PagePath.UkRegulator, PagePath.NonUkRoleInOrganisation
-        //    ],
-        //    ReExManualInputSession = new ReExManualInputSession()
-        //};
-
-        //_sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
-
         //todo: can create in base. might need virtual method to allow overriding
         _ukRegulator = new UkRegulator(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
         {
@@ -47,7 +35,6 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
     }
 
     [TestMethod]
-    //todo: test for null nation
     [DataRow(Nation.England)]
     [DataRow(Nation.NorthernIreland)]
     [DataRow(Nation.Scotland)]
@@ -129,25 +116,4 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
 
         SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
-
-    //[TestMethod]
-    //public async Task UkRegulator_Post_ValidModel_SavesSessionAndRedirects_With_NullSession()
-    //{
-    //    // Arrange
-    //    var model = new UkRegulatorForNonUKViewModel { UkRegulatorNation = Nation.England };
-    //    _organisationSession.ReExManualInputSession = null;
-
-    //    // Act
-    //    var result = await _systemUnderTest.UkRegulator(model);
-
-    //    // Assert
-    //    _organisationSession.ReExManualInputSession.UkRegulatorNation.Should().Be(Nation.England);
-
-    //    var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
-    //    redirectResult.ActionName.Should().Be(nameof(OrganisationController.NonUkRoleInOrganisation));
-    //    redirectResult.RouteValues?["currentPagePath"].Should().Be(PagePath.UkRegulator);
-    //    redirectResult.RouteValues?["nextPagePath"].Should().Be(PagePath.NonUkRoleInOrganisation);
-
-    //    _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    //}
 }
