@@ -55,62 +55,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         throw new NotImplementedException();
     }
 
-    //[HttpGet]
-    //[Route("")]
-    //[AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    //[Route(PagePath.RegisteredAsCharity)]
-    //public async Task<IActionResult> RegisteredAsCharity()
-    //{
-    //    if (_deploymentRoleOptions.IsRegulator())
-    //    {
-    //        return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
-    //        {
-    //            statusCode = (int)HttpStatusCode.Forbidden
-    //        });
-    //    }
-
-    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-    //    YesNoAnswer? isTheOrganisationCharity = null;
-
-    //    if (session?.IsTheOrganisationCharity.HasValue == true)
-    //    {
-    //        isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
-    //    }
-
-    //    return View(new RegisteredAsCharityRequestViewModel
-    //    {
-    //        isTheOrganisationCharity = isTheOrganisationCharity
-    //    });
-    //}
-
-    //[HttpPost]
-    //[Route(PagePath.RegisteredAsCharity)]
-    //public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)
-    //{
-    //    if (!ModelState.IsValid)
-    //    {
-    //        return View(model);
-    //    }
-
-    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session)
-    //        ?? new OrganisationSession()
-    //        {
-    //            Journey = [PagePath.RegisteredAsCharity]
-    //        };
-
-    //    session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
-
-    //    if (session.IsTheOrganisationCharity.Value)
-    //    {
-    //        return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
-    //    }
-    //    else
-    //    {
-    //        return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
-    //    }
-    //}
-
     [HttpGet]
     [Route(PagePath.RegisteredWithCompaniesHouse)]
     [OrganisationJourneyAccess(PagePath.RegisteredWithCompaniesHouse)]
@@ -362,49 +306,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         return await SaveSessionAndRedirectToPage(session, nameof(UkRegulator),
             PagePath.AddressOverseas, PagePath.UkRegulator);
     }
-
-    ///// <summary>
-    ///// Non-Uk organisation flow to select regulator's UK nation.
-    ///// </summary>
-    ///// <returns></returns>
-    //[HttpGet]
-    //[Route(PagePath.UkRegulator)]
-    //[OrganisationJourneyAccess(PagePath.UkRegulator)]
-    //public async Task<IActionResult> UkRegulator()
-    //{
-    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-    //    SetBackLink(session, PagePath.UkRegulator);
-
-    //    var viewModel = new UkRegulatorForNonUKViewModel();
-    //    if (session?.ReExManualInputSession?.UkRegulatorNation != null)
-    //    {
-    //        viewModel.UkRegulatorNation = session.ReExManualInputSession.UkRegulatorNation;
-    //    }
-
-    //    return View(viewModel);
-    //}
-
-    //[HttpPost]
-    //[Route(PagePath.UkRegulator)]
-    //[OrganisationJourneyAccess(PagePath.UkRegulator)]
-    //public async Task<IActionResult> UkRegulator(UkRegulatorForNonUKViewModel model)
-    //{
-    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-    //    if (!ModelState.IsValid)
-    //    {
-    //        SetBackLink(session, PagePath.UkRegulator);
-    //        return View(model);
-    //    }
-
-    //    session.ReExManualInputSession ??= new ReExManualInputSession();
-    //    session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
-
-    //    return await SaveSessionAndRedirect(session,
-    //        actionName: nameof(NonUkRoleInOrganisation),
-    //        currentPagePath: PagePath.UkRegulator,
-    //        nextPagePath: PagePath.NonUkRoleInOrganisation);
-    //}
 
     [HttpGet]
     [Route(PagePath.TradingName)]
@@ -1046,12 +947,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     {
         return View();
     }
-
-    //public IActionResult RedirectToStart()
-    //{
-    //    //return RedirectToAction(nameof(RegisteredAsCharity));
-    //    return Redirect($"{Request.PathBase}/re-ex/organisation/registered-as-charity");
-    //}
 
     #region Private Methods
 
