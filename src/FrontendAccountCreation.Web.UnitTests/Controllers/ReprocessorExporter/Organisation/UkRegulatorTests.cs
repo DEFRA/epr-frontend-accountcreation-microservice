@@ -48,7 +48,6 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
 
     [TestMethod]
     //todo: test for null nation
-    //todo: drive from radio data : have adaptor that accepts a list of radios
     [DataRow(Nation.England)]
     [DataRow(Nation.NorthernIreland)]
     [DataRow(Nation.Scotland)]
@@ -64,12 +63,25 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         // Assert
         _ukRegulator.SelectedValue.Should().Be(nationInSession.ToString());
 
-        //todo: have separate test for varifying this
+        //todo: have separate test for varifying this?
         SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task OnGet_ReturnsViewWithViewModelData_When_ReExManualInputSession_IsNull()
+    public async Task OnGet_NationIsNull_SetsSelectedValueCorrectly()
+    {
+        // Act
+        await _ukRegulator.OnGet();
+
+        // Assert
+        _ukRegulator.SelectedValue.Should().BeNull();
+
+        //todo: have separate test for varifying this?
+        SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task OnGet_ReExManualInputSessionIsNull_SetsSelectedValueCorrectly()
     {
         // Arrange
         OrganisationSession.ReExManualInputSession = null;
@@ -80,6 +92,7 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         // Assert
         _ukRegulator.SelectedValue.Should().BeNull();
 
+        //todo: have separate test for varifying this?
         SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
