@@ -265,17 +265,15 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
     [HttpGet]
     [Route(PagePath.UnincorporatedApprovedPersonCannotBeInvited)]
-    [ExcludeFromCodeCoverage]
     public async Task<IActionResult> ApprovedPersonCannotBeInvited()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.UnincorporatedApprovedPersonCannotBeInvited);
         return View();
     }
-    
+
     [HttpPost]
     [Route(PagePath.UnincorporatedApprovedPersonCannotBeInvited)]
-    [ExcludeFromCodeCoverage]
     public async Task<IActionResult> ApprovedPersonCannotBeInvited(bool inviteEligiblePerson)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -385,9 +383,43 @@ public class UnincorporatedController : ControllerBase<OrganisationSession>
 
     [HttpGet]
     [Route(PagePath.UnincorporatedCheckYourDetails)]
-    [ExcludeFromCodeCoverage]
     public async Task<IActionResult> CheckYourDetails()
     {
-        throw new NotImplementedException();
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedCheckYourDetails);
+
+        var viewModel = new ReExUnincorporatedCheckYourDetailsViewModel
+        {
+            TradingName = session.ReExManualInputSession?.OrganisationName,
+            BusinessAddress = session.ReExManualInputSession?.BusinessAddress,
+            JobTitle = session.ReExManualInputSession?.RoleInOrganisation.ToString(),
+            TeamMemberDetailsDictionary = session.ReExUnincorporatedFlowSession.TeamMembersDictionary ?? new Dictionary<Guid, ReExCompanyTeamMember>(),
+            Nation = session.UkNation
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedCheckYourDetails)]
+    public async Task<IActionResult> CheckYourDetails(Guid? inviteeId)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        
+        if (inviteeId is not null)
+        {
+            SetFocusId(inviteeId.Value);
+            return await SaveSessionAndRedirect(
+                session,
+                nameof(TeamMemberDetails),
+                PagePath.UnincorporatedCheckYourDetails,
+                PagePath.UnincorporatedTeamMemberDetails);
+        }
+
+        return await SaveSessionAndRedirect(
+            session,
+            nameof(OrganisationController.Declaration),
+            PagePath.UnincorporatedCheckYourDetails,
+            PagePath.Declaration);
     }
 }
