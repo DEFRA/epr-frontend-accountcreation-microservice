@@ -121,7 +121,7 @@
     <value>Select 'Yes' if they manage or control the organisation, 'No' if you do not or 'Not sure' if you are not sure</value>
   </data>
   <data name="ManageControlOrganisation.Hint" xml:space="preserve">
-    <value>This means control or management of an unincorporated associattion which has a registered office, head office or principal place of business in the United Kingdom.</value>
+    <value>This means control or management of an unincorporated association which has a registered office, head office or principal place of business in the United Kingdom.</value>
   </data>
   <data name="ManageControlOrganisation.Question" xml:space="preserve">
     <value>Do they manage or control the organisation?</value>
