@@ -24,6 +24,7 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
     protected Mock<ISessionManager<OrganisationSession>> SessionManagerMock = null!;
     protected Mock<IStringLocalizer<SharedResources>> SharedLocalizerMock = null!;
     protected Mock<IStringLocalizer<T>> LocalizerMock = null!;
+    protected OrganisationSession OrganisationSession = new();
 
     //protected Mock<IFacadeService> _facadeServiceMock = null!;
     //protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
@@ -52,7 +53,7 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
         //_facadeServiceMock.Setup(f => f.GetOrganisationNameByInviteTokenAsync(It.IsAny<string>()))
         //    .ReturnsAsync(new ApprovedPersonOrganisationModel());
         SessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
-            .Returns(Task.FromResult<OrganisationSession?>(new OrganisationSession()));
+            .Returns(Task.FromResult<OrganisationSession?>(OrganisationSession));
 
         SharedLocalizerMock.Setup(l => l[It.IsAny<string>()])
             .Returns((string key) => new LocalizedString(key, ""));
