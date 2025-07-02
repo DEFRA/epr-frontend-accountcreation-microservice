@@ -112,25 +112,23 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         _ukRegulator.Errors.Errors.Should().ContainSingle(e => e.Message == "Required");
     }
 
-    //[TestMethod]
-    //public async Task UkRegulator_Post_ValidModel_SavesSessionAndRedirects()
-    //{
-    //    // Arrange
-    //    var model = new UkRegulatorForNonUKViewModel { UkRegulatorNation = Nation.Scotland };
+    [TestMethod]
+    public async Task OnPost_ValidModel_SavesSessionAndRedirects()
+    {
+        // Arrange
+        OrganisationSession.ReExManualInputSession.UkRegulatorNation = Nation.Wales;
 
-    //    // Act
-    //    var result = await _systemUnderTest.UkRegulator(model);
+        // Act
+        var result = await _ukRegulator.OnPost();
 
-    //    // Assert
-    //    _organisationSession.ReExManualInputSession.UkRegulatorNation.Should().Be(Nation.Scotland);
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(nameof(OrganisationController.NonUkRoleInOrganisation));
+        redirectResult.RouteValues?["currentPagePath"].Should().Be(PagePath.UkRegulator);
+        redirectResult.RouteValues?["nextPagePath"].Should().Be(PagePath.NonUkRoleInOrganisation);
 
-    //    var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
-    //    redirectResult.ActionName.Should().Be(nameof(OrganisationController.NonUkRoleInOrganisation));
-    //    redirectResult.RouteValues?["currentPagePath"].Should().Be(PagePath.UkRegulator);
-    //    redirectResult.RouteValues?["nextPagePath"].Should().Be(PagePath.NonUkRoleInOrganisation);
-
-    //    _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    //}
+        SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
 
     //[TestMethod]
     //public async Task UkRegulator_Post_ValidModel_SavesSessionAndRedirects_With_NullSession()
