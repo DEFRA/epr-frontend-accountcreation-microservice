@@ -1,5 +1,7 @@
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ErrorNext;
 using FrontendAccountCreation.Web.FullPages.Radios;
@@ -8,20 +10,17 @@ using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
-using FrontendAccountCreation.Core.Sessions;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
-public class UkRegulator : OrganisationPageModel<UkRegulator>, IRadiosPageModel
+[Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+[OrganisationJourneyAccess(PagePath.UkRegulator)]
+public class UkRegulator(
+    ISessionManager<OrganisationSession> sessionManager,
+    IStringLocalizer<SharedResources> sharedLocalizer,
+    IStringLocalizer<UkRegulator> localizer)
+    : OrganisationPageModel<UkRegulator>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
 {
-    public UkRegulator(
-        ISessionManager<OrganisationSession> sessionManager,
-        IStringLocalizer<SharedResources> sharedLocalizer,
-        IStringLocalizer<UkRegulator> localizer)
-        : base(sessionManager, sharedLocalizer, localizer)
-    {
-    }
-
     public IEnumerable<IRadio> Radios => CommonRadios.HomeNations(SharedLocalizer);
 
     [BindProperty]
@@ -40,10 +39,7 @@ public class UkRegulator : OrganisationPageModel<UkRegulator>, IRadiosPageModel
 
         SetBackLink(session, PagePath.UkRegulator);
 
-        if (session?.ReExManualInputSession?.UkRegulatorNation != null)
-        {
-            SelectedValue = session.ReExManualInputSession.UkRegulatorNation.ToString();
-        }
+        SelectedValue = session!.ReExManualInputSession?.UkRegulatorNation?.ToString();
 
         return Page();
     }

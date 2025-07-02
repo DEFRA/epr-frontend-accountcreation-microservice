@@ -1,0 +1,10 @@
+﻿@page "/re-ex/organisation/manage-control-organisation"
+
+@model FrontendAccountCreation.Web.Pages.Organisation.ManageControlOrganisation
+@{
+    ViewData["Title"] = Localizer["ManageControlOrganisation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<partial name="_RadiosPage" model="Model" />

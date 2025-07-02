@@ -1,6 +1,7 @@
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ErrorNext;
@@ -10,21 +11,20 @@ using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace FrontendAccountCreation.Web.Pages.Organisation;
 
-public class RegisteredAsCharity : OrganisationPageModel<RegisteredAsCharity>, IRadiosPageModel
+[Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
+[AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
+public class RegisteredAsCharity(
+    ISessionManager<OrganisationSession> sessionManager,
+    IStringLocalizer<SharedResources> sharedLocalizer,
+    IStringLocalizer<RegisteredAsCharity> localizer)
+    : OrganisationPageModel<RegisteredAsCharity>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
 {
-    public RegisteredAsCharity(
-        ISessionManager<OrganisationSession> sessionManager,
-        IStringLocalizer<SharedResources> sharedLocalizer,
-        IStringLocalizer<RegisteredAsCharity> localizer)
-        : base(sessionManager, sharedLocalizer, localizer)
-    {
-    }
-
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo(SharedLocalizer);
 
     [BindProperty]
@@ -50,10 +50,7 @@ public class RegisteredAsCharity : OrganisationPageModel<RegisteredAsCharity>, I
 
         var session = await SessionManager.GetSessionAsync(HttpContext.Session);
 
-        if (session?.IsTheOrganisationCharity != null)
-        {
-            SelectedValue = session.IsTheOrganisationCharity.ToString();
-        }
+        SelectedValue = session?.IsTheOrganisationCharity?.ToString();
 
         return Page();
     }

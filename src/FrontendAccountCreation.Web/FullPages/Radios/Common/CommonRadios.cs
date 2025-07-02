@@ -12,6 +12,13 @@ public static class CommonRadios
         new Radio(sharedLocalizer["No"], false.ToString())
     ];
 
+    public static IRadio[] YesNoNotSure(IStringLocalizer<SharedResources> sharedLocalizer) =>
+    [
+        new Radio(sharedLocalizer["Yes"], Core.Models.YesNoNotSure.Yes.ToString()),
+        new Radio(sharedLocalizer["No"], Core.Models.YesNoNotSure.No.ToString()),
+        new Radio(sharedLocalizer["NotSure"], Core.Models.YesNoNotSure.NotSure.ToString())
+    ];
+
     public static IRadio[] HomeNations(IStringLocalizer<SharedResources> sharedLocalizer) =>
     [
         new Radio(sharedLocalizer["England"], Nation.England.ToString()),

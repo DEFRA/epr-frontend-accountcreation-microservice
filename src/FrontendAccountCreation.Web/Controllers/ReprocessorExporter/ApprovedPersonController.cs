@@ -9,10 +9,6 @@ using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-using System.Diagnostics.CodeAnalysis;
-using FrontendAccountCreation.Core.Models;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
