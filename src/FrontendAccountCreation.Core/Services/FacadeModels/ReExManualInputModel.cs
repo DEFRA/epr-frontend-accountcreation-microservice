@@ -18,4 +18,6 @@ public class ReExManualInputModel
     public Nation? Nation { get; set; }
 
     public OrganisationType? OrganisationType { get; set; }
+
+    public string? NonUkRoleInOrganisation { get; set; }
 }
