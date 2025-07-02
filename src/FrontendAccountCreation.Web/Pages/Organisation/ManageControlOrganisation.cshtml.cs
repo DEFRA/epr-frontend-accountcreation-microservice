@@ -71,7 +71,8 @@ public class ManageControlOrganisation(
                 PagePath.NonCompaniesHouseTeamMemberDetails);
         }
 
-        return await SaveSessionAndRedirect(session,
+        return await SaveSessionAndRedirect(
+            session,
             nameof(ApprovedPersonController),
             nameof(ApprovedPersonController.PersonCanNotBeInvited),
             PagePath.ManageControlOrganisation,

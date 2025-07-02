@@ -2,9 +2,9 @@
 using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
+using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Organisation;
-using Microsoft.AspNetCore.Http;
-using Moq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -91,30 +91,26 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
         _manageControlOrganisation.Errors.Errors.Should().ContainSingle(e => e.Message == "Required");
     }
 
-    //[TestMethod]
-    //[DataRow(YesNoNotSure.Yes)]
-    //[DataRow(YesNoNotSure.No)]
-    //[DataRow(YesNoNotSure.NotSure)]
-    //public async Task Post_ManageControlOrganisation_ValidModel_UpdatesSessionAndRedirects(YesNoNotSure yesNoNotSure)
-    //{
-    //    // Arrange
-    //    var session = new OrganisationSession();
-    //    _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
-    //        .ReturnsAsync(session);
+    //todo: split this into 2?
+    [TestMethod]
+    [DataRow(YesNoNotSure.Yes, nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails), PagePath.NonCompaniesHouseTeamMemberDetails)]
+    [DataRow(YesNoNotSure.No, nameof(ApprovedPersonController.PersonCanNotBeInvited), PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
+    [DataRow(YesNoNotSure.NotSure, nameof(ApprovedPersonController.PersonCanNotBeInvited), PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
+    public async Task OnPost_ValidModel_Redirects(
+        YesNoNotSure yesNoNotSure, string expectedActionName, string expectedNextPagePath)
+    {
+        // Arrange
+        _manageControlOrganisation.SelectedValue = yesNoNotSure.ToString();
 
-    //    var model = new ManageControlOrganisationViewModel
-    //    {
-    //        TheyManageOrControlOrganisation = yesNoNotSure
-    //    };
+        // Act
+        var result = await _manageControlOrganisation.OnPost();
 
-    //    // Act
-    //    var result = await _systemUnderTest.ManageControlOrganisation(model);
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirectResult.ActionName.Should().Be(expectedActionName);
+        redirectResult.RouteValues?["currentPagePath"].Should().Be(PagePath.ManageControlOrganisation);
+        redirectResult.RouteValues?["nextPagePath"].Should().Be(expectedNextPagePath);
+    }
 
-    //    // Assert
-    //    var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
-
-    //    var actionMethod = yesNoNotSure == YesNoNotSure.Yes ? nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails) : nameof(ApprovedPersonController.PersonCanNotBeInvited);
-    //    redirectResult.ActionName.Should().Be(actionMethod);
-    //    session.TheyManageOrControlOrganisation.Should().Be(yesNoNotSure);
-    //}
+    //todo: more tests for checking session saved etc.
 }
