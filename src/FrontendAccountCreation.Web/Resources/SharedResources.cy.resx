@@ -207,4 +207,16 @@
   <data name="ForExample" xml:space="preserve">
     <value>For example:</value>
   </data>
+  <data name="England" xml:space="preserve">
+    <value>Lloegr</value>
+  </data>
+  <data name="Scotland" xml:space="preserve">
+    <value>Yr Alban</value>
+  </data>
+  <data name="Wales" xml:space="preserve">
+    <value>Cymru</value>
+  </data>
+  <data name="NorthernIreland" xml:space="preserve">
+    <value>Gogledd Iwerddon</value>
+  </data>
 </root>

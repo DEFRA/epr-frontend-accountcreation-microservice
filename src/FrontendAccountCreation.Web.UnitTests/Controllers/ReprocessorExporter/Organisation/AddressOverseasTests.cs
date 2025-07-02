@@ -113,8 +113,8 @@ public class AddressOverseasTests : OrganisationTestBase
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = (RedirectToActionResult)result;
-        redirectResult.ActionName.Should().Be(nameof(OrganisationController.UkRegulator));
+        var redirectResult = (RedirectToPageResult)result;
+        redirectResult.PageName.Should().Be("/Organisation/UkRegulator");
     }
 
     [TestMethod]

@@ -1,0 +1,10 @@
+﻿@page "/re-ex/organisation/uk-regulator"
+
+@model FrontendAccountCreation.Web.Pages.Organisation.UkRegulator
+@{
+    ViewData["Title"] = Localizer["UkRegulator.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<partial name="_RadiosPage" model="Model" />

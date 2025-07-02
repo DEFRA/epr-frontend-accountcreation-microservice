@@ -1,5 +1,6 @@
 ﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,18 @@ public class OrganisationPageModel(
 {
     protected ISessionManager<OrganisationSession> SessionManager { get; } = sessionManager;
     protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
+
+    public void SetBackLink(OrganisationSession session, string currentPagePath)
+    {
+        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+        {
+            ViewData["BackLinkToDisplay"] = PagePath.CheckYourDetails;
+        }
+        else
+        {
+            ViewData["BackLinkToDisplay"] = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+        }
+    }
 
     protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
         OrganisationSession session,

@@ -26,6 +26,19 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         }
     }
 
+    //todo: better version?
+    protected async Task<RedirectToPageResult> SaveSessionAndRedirectToPage(
+        T session,
+        string pageName,
+        string currentPagePath,
+        string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        await SaveSession(session, currentPagePath, nextPagePath);
+        
+        return RedirectToPage($"/Organisation/{pageName}");
+    }
+
     //todo: should be protected
     [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,

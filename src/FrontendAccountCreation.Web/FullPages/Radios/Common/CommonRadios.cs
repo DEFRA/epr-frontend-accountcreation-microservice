@@ -1,4 +1,4 @@
-﻿
+﻿using FrontendAccountCreation.Core.Sessions;
 using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.FullPages.Radios.Common;
@@ -11,18 +11,12 @@ public static class CommonRadios
         new Radio(sharedLocalizer["Yes"], true.ToString()),
         new Radio(sharedLocalizer["No"], false.ToString())
     ];
-    
-    //public static Radio[] YesNo =>
-    //[
-    //    new("Yes", true.ToString()),
-    //    new("No", false.ToString())
-    //];
 
-    //public static Radio[] HomeNations => new[]
-    //{
-    //    new Radio("England", Country.England.ToString()),
-    //    new Radio("Scotland", Country.Scotland.ToString()),
-    //    new Radio("Wales", Country.Wales.ToString()),
-    //    new Radio("Northern Ireland", Country.NorthernIreland.ToString())
-    //};
+    public static IRadio[] HomeNations(IStringLocalizer<SharedResources> sharedLocalizer) =>
+    [
+        new Radio(sharedLocalizer["England"], Nation.England.ToString()),
+        new Radio(sharedLocalizer["Scotland"], Nation.Scotland.ToString()),
+        new Radio(sharedLocalizer["Wales"], Nation.Wales.ToString()),
+        new Radio(sharedLocalizer["NorthernIreland"], Nation.NorthernIreland.ToString())
+    ];
 }

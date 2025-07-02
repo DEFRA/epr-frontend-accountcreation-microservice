@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation.Core.Addresses;
+﻿using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -10,16 +7,17 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-using FrontendAccountCreation.Web.Controllers.Errors;
+using FrontendAccountCreation.Web.Pages.Organisation;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -33,7 +31,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
-    private readonly DeploymentRoleOptions _deploymentRoleOptions;
     private readonly ServiceKeysOptions _serviceKeyOptions;
 
     public OrganisationController(
@@ -41,13 +38,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
          IFacadeService facadeService,
          IReExAccountMapper reExAccountMapper,
          IMultipleOptions multipleOptions,
-         IOptions<DeploymentRoleOptions> deploymentRoleOptions,
          ILogger<OrganisationController> logger) : base(sessionManager)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
-        _deploymentRoleOptions = deploymentRoleOptions.Value;
         _urlOptions = multipleOptions.UrlOptions;
         _serviceKeyOptions = multipleOptions.ServiceKeysOptions;
         _logger = logger;
@@ -364,52 +359,55 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Postcode = model.Postcode;
         address.IsManualAddress = true;
 
-        return await SaveSessionAndRedirect(session, nameof(UkRegulator),
+        //todo: test
+        //return await SaveSessionAndRedirect(session, nameof(UkRegulator),
+        //    PagePath.AddressOverseas, PagePath.UkRegulator)
+        return await SaveSessionAndRedirectToPage(session, nameof(UkRegulator),
             PagePath.AddressOverseas, PagePath.UkRegulator);
     }
 
-    /// <summary>
-    /// Non-Uk organisation flow to select regulator's UK nation.
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    [Route(PagePath.UkRegulator)]
-    [OrganisationJourneyAccess(PagePath.UkRegulator)]
-    public async Task<IActionResult> UkRegulator()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.UkRegulator);
+    ///// <summary>
+    ///// Non-Uk organisation flow to select regulator's UK nation.
+    ///// </summary>
+    ///// <returns></returns>
+    //[HttpGet]
+    //[Route(PagePath.UkRegulator)]
+    //[OrganisationJourneyAccess(PagePath.UkRegulator)]
+    //public async Task<IActionResult> UkRegulator()
+    //{
+    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+    //    SetBackLink(session, PagePath.UkRegulator);
 
-        var viewModel = new UkRegulatorForNonUKViewModel();
-        if (session?.ReExManualInputSession?.UkRegulatorNation != null)
-        {
-            viewModel.UkRegulatorNation = session.ReExManualInputSession.UkRegulatorNation;
-        }
+    //    var viewModel = new UkRegulatorForNonUKViewModel();
+    //    if (session?.ReExManualInputSession?.UkRegulatorNation != null)
+    //    {
+    //        viewModel.UkRegulatorNation = session.ReExManualInputSession.UkRegulatorNation;
+    //    }
 
-        return View(viewModel);
-    }
+    //    return View(viewModel);
+    //}
 
-    [HttpPost]
-    [Route(PagePath.UkRegulator)]
-    [OrganisationJourneyAccess(PagePath.UkRegulator)]
-    public async Task<IActionResult> UkRegulator(UkRegulatorForNonUKViewModel model)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+    //[HttpPost]
+    //[Route(PagePath.UkRegulator)]
+    //[OrganisationJourneyAccess(PagePath.UkRegulator)]
+    //public async Task<IActionResult> UkRegulator(UkRegulatorForNonUKViewModel model)
+    //{
+    //    var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
-        if (!ModelState.IsValid)
-        {
-            SetBackLink(session, PagePath.UkRegulator);
-            return View(model);
-        }
+    //    if (!ModelState.IsValid)
+    //    {
+    //        SetBackLink(session, PagePath.UkRegulator);
+    //        return View(model);
+    //    }
 
-        session.ReExManualInputSession ??= new ReExManualInputSession();
-        session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
+    //    session.ReExManualInputSession ??= new ReExManualInputSession();
+    //    session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
 
-        return await SaveSessionAndRedirect(session,
-            actionName: nameof(NonUkRoleInOrganisation),
-            currentPagePath: PagePath.UkRegulator,
-            nextPagePath: PagePath.NonUkRoleInOrganisation);
-    }
+    //    return await SaveSessionAndRedirect(session,
+    //        actionName: nameof(NonUkRoleInOrganisation),
+    //        currentPagePath: PagePath.UkRegulator,
+    //        nextPagePath: PagePath.NonUkRoleInOrganisation);
+    //}
 
     [HttpGet]
     [Route(PagePath.TradingName)]
