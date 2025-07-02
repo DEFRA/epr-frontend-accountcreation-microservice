@@ -1,20 +1,15 @@
 ﻿using FluentAssertions;
-using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Organisation;
-using FrontendAccountCreation.Web.UnitTests;
-using FrontendAccountCreation.Web.UnitTests.Controllers;
-using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
-using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using Moq;
 using System.Net;
@@ -34,11 +29,19 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
 
         _deploymentRoleOptionsMock = GetMockDeploymentRoleOptions();
 
+        //todo: if this works, move into base class
+        var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
+        //_registeredAsCharity.ViewData = viewData;
+        //_registeredAsCharity.PageContext.ViewData = viewData;
+
+        //todo: add helper in base for this generic?
         _registeredAsCharity = new(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
             {
+                //ViewData = viewData,
                 PageContext = new PageContext
                 {
-                    HttpContext = _httpContextMock.Object
+                    HttpContext = _httpContextMock.Object,
+                    ViewData = viewData
                 }
             };
     }
@@ -114,6 +117,51 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         _registeredAsCharity.SelectedValue.Should().Be(expectedAnswer);
     }
 
+    //todo: create a working test: note that no back link is currently set. add it and create a bug if necessary
+    [Ignore("this test doesn't actually test what it says it does (leave for now as probably going to replace these tests with the yes/no standard test)")]
+    [TestMethod]
+    public async Task UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
+    {
+        //Arrange
+        var organisationSessionMock = new OrganisationSession
+        {
+            Journey =
+            [
+                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
+                PagePath.ConfirmCompanyDetails, PagePath.RoleInOrganisation, PagePath.FullName, PagePath.TelephoneNumber,
+                PagePath.CheckYourDetails
+            ],
+            IsUserChangingDetails = true,
+        };
+
+        SessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(organisationSessionMock);
+
+        //Act
+        var result = await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<PageResult>();
+    }
+
+    [TestMethod]
+    public async Task RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIsNull()
+    {
+        //Arrange
+        var accountCreationSessionMock = new OrganisationSession
+        {
+            IsUserChangingDetails = false,
+        };
+
+        SessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(accountCreationSessionMock);
+
+        //Act
+        await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
+
+        //Assert
+        _registeredAsCharity.ViewData["BackLinkToDisplay"].Should().BeNull();
+    }
+
     //todo: split into 2
     [TestMethod]
     public async Task RegisteredAsCharity_IsNotCharity_RedirectsToRegisteredWithCompaniesHousePage_AndUpdateSession()
@@ -167,55 +215,4 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
 
         SessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
-
-    //[TestMethod]
-    //public async Task UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()
-    //{
-    //    //Arrange
-    //    var organisationSessionMock = new OrganisationSession
-    //    {
-    //        Journey =
-    //        [
-    //            PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
-    //            PagePath.ConfirmCompanyDetails, PagePath.RoleInOrganisation, PagePath.FullName, PagePath.TelephoneNumber,
-    //            PagePath.CheckYourDetails
-    //        ],
-    //        IsUserChangingDetails = true,
-    //    };
-
-    //    _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(organisationSessionMock);
-
-    //    //Act
-    //    var result = await _systemUnderTest.RegisteredAsCharity();
-
-    //    //Assert
-    //    result.Should().NotBeNull();
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    viewResult.Model.Should().BeOfType<RegisteredAsCharityRequestViewModel>();
-    //}
-
-    //[TestMethod]
-    //public async Task RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIsNull()
-    //{
-    //    //Arrange
-    //    var accountCreationSessionMock = new OrganisationSession
-    //    {
-    //        IsUserChangingDetails = false,
-    //    };
-
-    //    _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(accountCreationSessionMock);
-
-    //    //Act
-    //    var result = await _systemUnderTest.RegisteredAsCharity();
-
-    //    //Assert
-    //    result.Should().NotBeNull();
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    viewResult.Model.Should().BeOfType<RegisteredAsCharityRequestViewModel>();
-
-    //    var hasBackLinkKey = viewResult.ViewData.TryGetValue("BackLinkToDisplay", out var gotBackLinkObject);
-    //    hasBackLinkKey.Should().BeFalse();
-    //}
 }
