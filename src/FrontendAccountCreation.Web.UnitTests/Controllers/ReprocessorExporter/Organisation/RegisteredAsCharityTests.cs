@@ -43,14 +43,6 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
             };
     }
 
-    //todo: this belongs in its own test class
-    //[TestMethod]
-    //public void InjectError_ThrowsNotImplementedException()
-    //{
-    //    // Act & Assert
-    //    Assert.ThrowsException<NotImplementedException>(() => _systemUnderTest.InjectError());
-    //}
-
     private Mock<IOptions<DeploymentRoleOptions>> GetMockDeploymentRoleOptions(string? deploymentRole = null)
     {
         var mock = new Mock<IOptions<DeploymentRoleOptions>>();
