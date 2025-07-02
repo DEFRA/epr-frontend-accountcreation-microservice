@@ -1,4 +1,6 @@
-﻿namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
 using Core.Services;
 using Core.Services.FacadeModels;
@@ -9,6 +11,7 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Organisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -26,9 +29,11 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
 {
     private const string BackLinkViewDataKey = "BackLinkToDisplay";
     protected Mock<HttpContext> _httpContextMock = null!;
+    protected PageContext PageContext;
     protected Mock<ISessionManager<OrganisationSession>> SessionManagerMock = null!;
     protected Mock<IStringLocalizer<SharedResources>> SharedLocalizerMock = null!;
     protected Mock<IStringLocalizer<T>> LocalizerMock = null!;
+
     //protected Mock<IFacadeService> _facadeServiceMock = null!;
     //protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
     //protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
@@ -79,6 +84,8 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
             new("Oid", Guid.NewGuid().ToString())
         });
 
+        PageContext = CreatePageContext();
+
         //_deploymentRoleOptionMock.Setup(x => x.Value)
         //    .Returns(new DeploymentRoleOptions
         //    {
@@ -109,6 +116,17 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
 
         //_systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         //_systemUnderTest.TempData = _tempDataDictionaryMock.Object;
+    }
+
+    protected PageContext CreatePageContext()
+    {
+        var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
+
+        return new PageContext
+        {
+            HttpContext = _httpContextMock.Object,
+            ViewData = viewData
+        };
     }
 
     protected static void AssertBackLink(ViewResult viewResult, string expectedBackLink)

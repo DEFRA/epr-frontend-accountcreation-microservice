@@ -7,9 +7,7 @@ using FrontendAccountCreation.Web.Pages.Organisation;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using Moq;
 using System.Net;
@@ -29,18 +27,10 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
 
         _deploymentRoleOptionsMock = GetMockDeploymentRoleOptions();
 
-        //todo: if this works, move into base class
-        var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
-
-        //todo: add helper in base for this generic?
-        _registeredAsCharity = new(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
-            {
-                PageContext = new PageContext
-                {
-                    HttpContext = _httpContextMock.Object,
-                    ViewData = viewData
-                }
-            };
+        _registeredAsCharity = new RegisteredAsCharity(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
+        {
+            PageContext = PageContext
+        };
     }
 
     private Mock<IOptions<DeploymentRoleOptions>> GetMockDeploymentRoleOptions(string? deploymentRole = null)
