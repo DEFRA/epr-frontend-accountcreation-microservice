@@ -37,6 +37,61 @@ public class NonCompaniesHousePartnershipCheckNamesOfPartnersTests : LimitedPart
     }
 
     [TestMethod]
+    public async Task NonCompaniesHousePartnershipCheckNamesOfPartners_Get_WhenNonCompaniesHouseSessionIsNull_ReturnsView()
+    {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession = null;
+        
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipCheckNamesOfPartners();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as List<ReExPersonOrCompanyPartner>;
+        model.Should().NotBeNull();
+        model.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipCheckNamesOfPartners_Get_WhenTypesOfPartnerSessionIsNull_ReturnsView()
+    {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession.TypesOfPartner = null;
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipCheckNamesOfPartners();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as List<ReExPersonOrCompanyPartner>;
+        model.Should().NotBeNull();
+        model.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipCheckNamesOfPartners_Get_WhenPartnersSessionIsNull_ReturnsView()
+    {
+        // Arrange
+        ReExTypesOfPartner typesOfPartnerHavingNullPartners = new()
+        {
+            Partners = null
+        };
+        _orgSessionMock.ReExManualInputSession.TypesOfPartner = typesOfPartnerHavingNullPartners;
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipCheckNamesOfPartners();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as List<ReExPersonOrCompanyPartner>;
+        model.Should().NotBeNull();
+        model.Should().BeEmpty();
+    }
+
+    [TestMethod]
     public async Task NonCompaniesHousePartnershipCheckNamesOfPartners_Get_ReturnsView()
     {
         // Act

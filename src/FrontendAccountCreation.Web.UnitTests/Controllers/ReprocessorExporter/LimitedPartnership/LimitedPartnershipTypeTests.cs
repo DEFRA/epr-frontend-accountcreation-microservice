@@ -72,7 +72,43 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task LimitedPartnershipType_Get_WithNullLimitedPartnership_ReturnsViewWithEmptyModel()
+    public async Task LimitedPartnershipType_Get_WithNullCompaniesHouseSession_ReturnsViewWithEmptyModel()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession = null;
+
+        // Act
+        var result = await _systemUnderTest.LimitedPartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as WhatSortOfPartnerRequestViewModel;
+        model.Should().NotBeNull();
+        model!.HasIndividualPartners.Should().BeFalse();
+        model!.HasCompanyPartners.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task LimitedPartnershipType_Get_WithNullPartnershipSession_ReturnsViewWithEmptyModel()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
+
+        // Act
+        var result = await _systemUnderTest.LimitedPartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as WhatSortOfPartnerRequestViewModel;
+        model.Should().NotBeNull();
+        model!.HasIndividualPartners.Should().BeFalse();
+        model!.HasCompanyPartners.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task LimitedPartnershipType_Get_WithNullLimitedPartnershipSession_ReturnsViewWithEmptyModel()
     {
         // Arrange
         _orgSessionMock.ReExCompaniesHouseSession.Partnership = new ReExPartnership
@@ -116,24 +152,6 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
         var model = viewResult.Model as WhatSortOfPartnerRequestViewModel;
         model.Should().NotBeNull();
         model!.HasIndividualPartners.Should().BeTrue();
-        model!.HasCompanyPartners.Should().BeFalse();
-    }
-
-    [TestMethod]
-    public async Task LimitedPartnershipType_Get_WithNullPartnership_ReturnsViewWithEmptyModel()
-    {
-        // Arrange
-        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
-
-        // Act
-        var result = await _systemUnderTest.LimitedPartnershipType();
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        var model = viewResult.Model as WhatSortOfPartnerRequestViewModel;
-        model.Should().NotBeNull();
-        model!.HasIndividualPartners.Should().BeFalse();
         model!.HasCompanyPartners.Should().BeFalse();
     }
 
