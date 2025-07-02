@@ -1,26 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
-
-using Core.Services;
-using Core.Services.FacadeModels;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
-using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Organisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.FeatureManagement;
 using Moq;
 using System.Security.Claims;
-using Web.Configs;
-using Web.Sessions;
+using FrontendAccountCreation.Web.Sessions;
+
+namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
 /// <summary>
 /// Used for Reprocessor and Exporter.
@@ -69,7 +60,6 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
         LocalizerMock.Setup(l => l[It.IsAny<string>()])
             .Returns((string key) => new LocalizedString(key, ""));
 
-
         //_multipleOptionsMock.Setup(x => x.UrlOptions)
         //    .Returns(new ExternalUrlsOptions
         //    {
@@ -104,17 +94,6 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
         //_loggerMock = new Mock<ILogger<OrganisationController>>();
         //_tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
-        //_systemUnderTest = new OrganisationController(
-        //    _sessionManagerMock.Object,
-        //    _facadeServiceMock.Object,
-        //    _reExAccountMapperMock.Object,
-        //    _multipleOptionsMock.Object,
-        //   //_urlsOptionMock.Object, 
-        //   _deploymentRoleOptionMock.Object,
-        //   //_serviceKeyOptionsMock.Object,
-        //   _loggerMock.Object);
-
-        //_systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;
         //_systemUnderTest.TempData = _tempDataDictionaryMock.Object;
     }
 
