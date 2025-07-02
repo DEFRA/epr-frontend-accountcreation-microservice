@@ -241,7 +241,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         bool hasIndividualPartners = false;
         bool hasCompanyPartners = false;
-        if (session.ReExCompaniesHouseSession.Partnership != null && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null)
+        if (session != null
+            && session.ReExCompaniesHouseSession != null
+            && session.ReExCompaniesHouseSession.Partnership != null
+            && session.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null)
         {
             hasIndividualPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners;
             hasCompanyPartners = session.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners;
@@ -511,10 +514,10 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipNamesOfPartners)]
     public async Task<IActionResult> NonCompaniesHousePartnershipNamesOfPartners()
     {
-        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        OrganisationSession session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, PagePath.NonCompaniesHousePartnershipNamesOfPartners);
 
-        ReExTypesOfPartner typesOfPartnersSession = session?.ReExManualInputSession?.TypesOfPartner;
+        ReExTypesOfPartner typesOfPartnersSession = session!.ReExManualInputSession?.TypesOfPartner;
         bool hasIndividualPartners = typesOfPartnersSession?.HasIndividualPartners ?? true;
         bool hasCompanyPartners = typesOfPartnersSession?.HasCompanyPartners ?? true;
 
