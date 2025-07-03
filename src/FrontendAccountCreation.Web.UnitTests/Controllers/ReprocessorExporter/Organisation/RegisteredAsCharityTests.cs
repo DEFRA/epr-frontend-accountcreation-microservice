@@ -201,19 +201,18 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         SessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
     }
 
-    //[TestMethod]
-    //public void Radios_ShouldReturnYesNoRadios()
-    //{
-    //    // Act
-    //    var radios = _registeredAsCharity.Radios.ToList();
+    [TestMethod]
+    public void Radios_ShouldReturnYesNoRadios()
+    {
+        // Act
+        var radios = _registeredAsCharity.Radios.ToList();
 
-    //    // Assert
-    //    radios.Should().HaveCount(2);
-    //    radios[0].Value.Should().Be("True");
-    //    radios[1].Value.Should().Be("False");
-    //    radios[0].Label.Should().NotBeNullOrEmpty();
-    //    radios[1].Label.Should().NotBeNullOrEmpty();
-    //}
+        // Assert
+        radios.Should().HaveCount(2);
+        radios[0].Value.Should().Be("True");
+        radios[1].Value.Should().Be("False");
+        //to-do: setup shared localizer and check localized strings
+    }
 
     [TestMethod]
     public void Legend_ShouldReturnLocalizedQuestion()
