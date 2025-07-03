@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
 
-namespace FrontendAccountCreation.Web.Pages.Organisation;
+namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
+// could have classes between this and the derived classes,
+// so that the most derived classes only have to declare the enum as a type parameter
+// an expression to get the value to/from the session
+// and the actions for each enum value
 public class OrganisationPageModel<T>(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,

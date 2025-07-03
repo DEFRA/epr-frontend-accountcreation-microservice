@@ -7,7 +7,6 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ErrorNext;
 using FrontendAccountCreation.Web.FullPages.Radios;
 using FrontendAccountCreation.Web.FullPages.Radios.Common;
-using FrontendAccountCreation.Web.Pages.Organisation;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -58,12 +57,7 @@ public class UkRegulator(
         }
 
         session.ReExManualInputSession ??= new ReExManualInputSession();
-        if (SelectedValue != null)
-        {
-            //todo: throw if parse fails
-             Enum.TryParse<Nation>(SelectedValue, out var nation);
-             session.ReExManualInputSession.UkRegulatorNation = nation;
-        }
+        session.ReExManualInputSession.UkRegulatorNation = Enum.Parse<Nation>(SelectedValue!);
 
         return await SaveSessionAndRedirect(
             session,

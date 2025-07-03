@@ -103,7 +103,7 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
     public async Task OnPost_ValidModel_SavesSessionAndRedirects()
     {
         // Arrange
-        OrganisationSession.ReExManualInputSession.UkRegulatorNation = Nation.Wales;
+        _ukRegulator.SelectedValue = Nation.Wales.ToString();
 
         // Act
         var result = await _ukRegulator.OnPost();

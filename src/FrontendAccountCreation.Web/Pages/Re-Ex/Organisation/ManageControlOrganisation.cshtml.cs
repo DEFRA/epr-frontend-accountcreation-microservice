@@ -6,7 +6,6 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ErrorNext;
 using FrontendAccountCreation.Web.FullPages.Radios;
 using FrontendAccountCreation.Web.FullPages.Radios.Common;
-using FrontendAccountCreation.Web.Pages.Organisation;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -60,9 +59,8 @@ public class ManageControlOrganisation(
             return Page();
         }
 
-        //todo: could do this generically
-        Enum.TryParse<Core.Models.YesNoNotSure>(SelectedValue, out var yesNoNotSure);
-        session.TheyManageOrControlOrganisation = yesNoNotSure;
+        session!.TheyManageOrControlOrganisation =
+            Enum.Parse<Core.Models.YesNoNotSure>(SelectedValue!);
 
         if (session.TheyManageOrControlOrganisation is Core.Models.YesNoNotSure.Yes)
         {
