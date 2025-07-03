@@ -7,6 +7,7 @@ using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -634,6 +635,64 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         }
 
         return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipTheirRole)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipTheirRole)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipTheirRole(TeamMemberRoleInOrganisationViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipTheirRole);
+            return View(model);
+        }
+
+        var nonCompaniesHouseSession = session.ReExManualInputSession ?? new();
+        var members = nonCompaniesHouseSession.TeamMembers ?? new();
+        var index = members.FindIndex(0, x => x.Id.Equals(model?.Id));
+
+        if (model.RoleInOrganisation == ReExTeamMemberRole.None)
+        {
+            // deleting member
+            if (index >= 0)
+            {
+                members.RemoveAt(index);
+                nonCompaniesHouseSession.TeamMembers = members;
+                session.ReExManualInputSession = nonCompaniesHouseSession;
+            }
+
+            // goes to "You cannot invite this person to be an approved person" page which is unavailable because its not been built
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+            throw new NotImplementedException();
+        }
+
+        Guid? focusId = null;
+        if (index >= 0)
+        {
+            // updating member
+            members[index].Role = model.RoleInOrganisation;
+            focusId = members[index].Id;
+        }
+        else
+        {
+            // adding new member
+            focusId = Guid.NewGuid();
+            members.Add(new ReExCompanyTeamMember
+            {
+                Id = focusId.Value,
+                Role = model.RoleInOrganisation
+            });
+        }
+
+        SetFocusId(focusId.Value);
+        nonCompaniesHouseSession.TeamMembers = members;
+        session.ReExManualInputSession = nonCompaniesHouseSession;
+        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+        // goes to "What are their details?" page which is unavailable because its not been built
+        throw new NotImplementedException();
     }
 
     private static async Task<List<ReExPersonOrCompanyPartner>> GetSessionPartners(List<PartnershipPersonOrCompanyViewModel> partners)
