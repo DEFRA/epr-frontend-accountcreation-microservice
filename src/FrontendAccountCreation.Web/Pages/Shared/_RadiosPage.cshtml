@@ -19,6 +19,9 @@
                 @{
                     var error = Model.Errors.GetErrorIfTriggeredByElementId();
                 }
+                
+                @* todo: ariadescribedby hint *@
+                @* todo: check accessibility *@
 
                 <form method="post" novalidate>
                     <div class="govuk-form-group @error?.FormGroupClass">
