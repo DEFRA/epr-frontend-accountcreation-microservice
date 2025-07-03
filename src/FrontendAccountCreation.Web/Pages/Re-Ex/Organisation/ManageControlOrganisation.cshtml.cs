@@ -20,6 +20,8 @@ public class ManageControlOrganisation(
     IStringLocalizer<ManageControlOrganisation> localizer)
     : OrganisationPageModel<ManageControlOrganisation>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
 {
+    //todo: the single welsh translations for the question are incorrect
+    // they should be Ydyn and Nac ydyn
     public IEnumerable<IRadio> Radios => CommonRadios.YesNoNotSure(SharedLocalizer);
 
     [BindProperty]
