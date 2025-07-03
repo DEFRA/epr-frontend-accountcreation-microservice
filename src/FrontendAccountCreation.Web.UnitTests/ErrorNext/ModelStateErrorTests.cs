@@ -19,7 +19,11 @@ public class ModelStateErrorTests
 
         // Act
         var error = new ModelStateError(kvp);
+        // Sonar is chuntering about not using IError directly for performance reasons,
+        // but this is a test for the IError implementation
+#pragma warning disable CA1859
         var iError = (IError)error;
+#pragma warning restore
 
         // Assert
         error.Message.Should().Be(errorMessage);
