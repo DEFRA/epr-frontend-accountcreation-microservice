@@ -75,7 +75,7 @@ public class OrganisationPageModel<T>(
         await SessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
 
-    private void AddPageToWhiteList(
+    private static void AddPageToWhiteList(
         OrganisationSession session,
         string currentPagePath)
     {
