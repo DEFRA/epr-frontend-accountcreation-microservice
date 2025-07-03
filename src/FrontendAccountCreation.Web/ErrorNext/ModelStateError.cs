@@ -7,9 +7,13 @@ public class ModelStateError
 {
     public ModelStateError(KeyValuePair<string, ModelStateEntry?> modelStateEntry)
     {
-        //todo: what to throw?
         //todo: localize here, rather than in the view for better testability
-        Message = modelStateEntry.Value.Errors.FirstOrDefault()?.ErrorMessage ?? throw new ArgumentNullException(nameof(modelStateEntry));
+        var firstError = modelStateEntry.Value.Errors.FirstOrDefault();
+        if (firstError == null)
+        {
+            throw new InvalidOperationException("No errors found in the model state entry.");
+        }
+        Message = firstError.ErrorMessage;
         HtmlElementId = modelStateEntry.Key;
         InputErrorMessageParaId = $"error-message-{HtmlElementId}";
     }
