@@ -102,7 +102,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         _registeredAsCharity.SelectedValue.Should().Be(expectedAnswer);
     }
 
-    //todo: create a working test: note that no back link is currently set. add it and create a bug if necessary
+    //to-do: create a working test: note that no back link is currently set. add it and create a bug if necessary
     [Ignore("this test doesn't actually test what it says it does (leave for now as probably going to replace these tests with the yes/no standard test)")]
     [TestMethod]
     public async Task OnGet_UserNavigatesToRegisterAsACharityPage_FromCheckYourDetailsPage_BackLinkShouldBeCheckYourDetails()

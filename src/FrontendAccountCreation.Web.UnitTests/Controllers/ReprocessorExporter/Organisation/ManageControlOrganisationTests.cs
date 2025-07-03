@@ -20,8 +20,8 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
 
         OrganisationSession.Journey =
         [
-            PagePath.ManageControlOrganisation,
-            PagePath.TeamMemberDetails
+            PagePath.AddAnApprovedPerson,
+            PagePath.ManageControlOrganisation
         ];
         OrganisationSession.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
         OrganisationSession.IsUserChangingDetails = false;
@@ -76,6 +76,17 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
     }
 
     [TestMethod]
+    public async Task OnGet_BackLinkIsSetCorrectly()
+    {
+        // Act
+        await _manageControlOrganisation.OnGet();
+
+        // Assert
+        AssertBackLink(_manageControlOrganisation, PagePath.AddAnApprovedPerson);
+    }
+
+
+    [TestMethod]
     public async Task OnPost_InvalidModelState_ReturnsPageWithCorrectErrors()
     {
         // Arrange
@@ -91,7 +102,7 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
         _manageControlOrganisation.Errors.Errors.Should().ContainSingle(e => e.Message == "Required");
     }
 
-    //todo: split this into 2?
+    //to-do: split this into 2?
     [TestMethod]
     [DataRow(YesNoNotSure.Yes, nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails), PagePath.NonCompaniesHouseTeamMemberDetails)]
     [DataRow(YesNoNotSure.No, nameof(ApprovedPersonController.PersonCanNotBeInvited), PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
@@ -112,5 +123,5 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
         redirectResult.RouteValues?["nextPagePath"].Should().Be(expectedNextPagePath);
     }
 
-    //todo: more tests for checking session saved etc.
+    //to-do: more tests for checking session saved etc.
 }

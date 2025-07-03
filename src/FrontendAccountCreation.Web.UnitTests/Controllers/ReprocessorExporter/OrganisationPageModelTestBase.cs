@@ -2,7 +2,6 @@
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Localization;
@@ -61,12 +60,9 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
         };
     }
 
-    //todo: use this
-    protected static void AssertBackLink(ViewResult viewResult, string expectedBackLink)
+    protected static void AssertBackLink(T page, string expectedBackLink)
     {
-        var hasBackLinkKey = viewResult.ViewData.TryGetValue(BackLinkViewDataKey, out var gotBackLinkObject);
-        hasBackLinkKey.Should().BeTrue();
-        (gotBackLinkObject as string)?.Should().Be(expectedBackLink);
+        page.ViewData[BackLinkViewDataKey].Should().Be(expectedBackLink);
     }
 }
 
