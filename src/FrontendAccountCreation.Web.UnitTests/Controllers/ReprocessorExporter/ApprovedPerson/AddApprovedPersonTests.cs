@@ -929,15 +929,16 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [DataTestMethod]
-    [DataRow(true, false, false, "AddNotApprovedPerson.SoleTrader.ErrorMessage", DisplayName = "SoleTrader error")]
-    [DataRow(false, true, true, "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage", DisplayName = "NonUk and ineligible error")]
-    [DataRow(false, true, false, "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage", DisplayName = "NonUk and eligible error")]
-    [DataRow(false, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "Default error")]
+    [DataRow(false, true, false, false, "AddNotApprovedPerson.SoleTrader.ErrorMessage", DisplayName = "SoleTrader error")]
+    [DataRow(false, false, true, true, "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage", DisplayName = "NonUk and ineligible error")]
+    [DataRow(false, false, true, false, "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage", DisplayName = "NonUk and eligible error")]
+    [DataRow(false, false, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "Default error")]
+    [DataRow(true, false, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "Default error as selected defualt message")]
     public async Task AddApprovedPerson_ModelStateInvalid_SetsCorrectErrorMessage(
-        bool isSoleTrader, bool isNonUk, bool isIneligible, string expectedError)
+        bool selectDefaultErrorMessage, bool isSoleTrader, bool isNonUk, bool isIneligible, string expectedError)
     {
         // Arrange
-        var model = new AddApprovedPersonViewModel();
+        var model = new AddApprovedPersonViewModel() { SelectDefaultErrorMessage = selectDefaultErrorMessage };
         var session = new OrganisationSession
         {
             IsOrganisationAPartnership = false,

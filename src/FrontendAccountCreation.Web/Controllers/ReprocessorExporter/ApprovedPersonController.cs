@@ -63,14 +63,21 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         private static string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
         {
-            return model switch
+            if (model.SelectDefaultErrorMessage)
             {
-                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
-                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
-                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
-                { IsNonCompaniesHousePartnership: true } => "NonCompaniesHousePartnershipAddApprovedPerson.OptionError",
-                _ => "AddAnApprovedPerson.OptionError"
-            };
+                return "AddAnApprovedPerson.OptionError";
+            }
+            else
+            {
+                return model switch
+                {
+                    { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
+                    { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
+                    { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
+                    { IsNonCompaniesHousePartnership: true } => "NonCompaniesHousePartnershipAddApprovedPerson.OptionError",
+                    _ => "AddAnApprovedPerson.OptionError"
+                };
+            }
         }
 
         private static bool IsEligibleToBeApprovedPerson(OrganisationSession session)

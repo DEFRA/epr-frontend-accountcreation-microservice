@@ -121,7 +121,7 @@
     <value>Dewiswch a ydych chi am fod yn berson a gymeradwywyd, gwahodd rhywun arall i fod yn un neu wneud hyn yn nes ymlaen</value>
   </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>[Welsh]Select an option</value>
+    <value>Dewiswch opsiwn</value>
   </data>
   <data name="AddAnApprovedPerson.Title" xml:space="preserve">
     <value>[Welsh]Add an approved person </value>

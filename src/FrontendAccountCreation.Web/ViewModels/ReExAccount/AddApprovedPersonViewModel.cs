@@ -27,5 +27,11 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
         public bool IsNonUk { get; set; }
 
         public bool IsNonCompaniesHousePartnership { get; set; }
+
+        /// <summary>
+        /// Note: This is being added to select default message option for all the flows (as per the story)
+        /// if anything changes then you would need to go through else option i.e false
+        /// </summary>
+        public bool SelectDefaultErrorMessage { get; set; } = true;
     }
 }
