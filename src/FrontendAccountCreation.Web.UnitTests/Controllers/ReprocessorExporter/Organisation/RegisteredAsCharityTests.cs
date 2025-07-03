@@ -33,7 +33,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         };
     }
 
-    private Mock<IOptions<DeploymentRoleOptions>> GetMockDeploymentRoleOptions(string? deploymentRole = null)
+    private static Mock<IOptions<DeploymentRoleOptions>> GetMockDeploymentRoleOptions(string? deploymentRole = null)
     {
         var mock = new Mock<IOptions<DeploymentRoleOptions>>();
         mock.Setup(x => x.Value).Returns(new DeploymentRoleOptions
