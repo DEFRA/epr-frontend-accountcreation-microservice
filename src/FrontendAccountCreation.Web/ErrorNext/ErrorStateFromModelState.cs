@@ -6,21 +6,14 @@ public class ErrorStateFromModelState : IErrorState
 {
     public static IErrorState Create(ModelStateDictionary modelState)
     {
-        return modelState.Count == 0 ? Empty : new ErrorStateFromModelState(modelState);
+        return modelState.Count == 0 ? new ErrorStateEmpty() : new ErrorStateFromModelState(modelState);
     }
 
     public ErrorStateFromModelState(ModelStateDictionary? modelState)
     {
-        //todo: errorids if we keep it
-        //ErrorIds = triggeredErrorIds;
         Errors = modelState?.Select(e => new ModelStateError(e))
             ?? [];
     }
-
-    public static IErrorState Empty { get; }
-    //this would work, but better to return same type
-    //= new ErrorState(ImmutableDictionary<int, PossibleError>.Empty, []);
-        = new ErrorStateFromModelState(null);
 
     public bool HasTriggeredError(params int[] errorIds)
     {
@@ -62,6 +55,5 @@ public class ErrorStateFromModelState : IErrorState
 
     public Func<int, string>? ErrorIdToHtmlElementId { get; set; }
     public bool HasErrors => Errors.Any();
-    private IEnumerable<int> ErrorIds { get; }
     public IEnumerable<IError> Errors { get; }
 }
