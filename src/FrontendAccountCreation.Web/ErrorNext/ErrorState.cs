@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -9,12 +8,7 @@ public class ErrorStateFromModelState : IErrorState
 {
     public static IErrorState Create(ModelStateDictionary modelState)
     {
-        if (modelState.Any())
-        {
-            return new ErrorStateFromModelState(modelState);
-        }
-
-        return Empty;
+        return modelState.Count == 0 ? Empty : new ErrorStateFromModelState(modelState);
     }
 
     public ErrorStateFromModelState(ModelStateDictionary? modelState)
