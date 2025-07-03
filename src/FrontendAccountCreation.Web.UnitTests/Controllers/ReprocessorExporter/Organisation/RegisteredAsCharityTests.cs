@@ -147,7 +147,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         _registeredAsCharity.ViewData["BackLinkToDisplay"].Should().BeNull();
     }
 
-    //todo: split into 2
+    //to-do: split into 2
     [TestMethod]
     public async Task OnPost_RegisteredAsCharity_IsNotCharity_RedirectsToRegisteredWithCompaniesHousePage_AndUpdateSession()
     {
@@ -165,7 +165,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
-    //todo: split into 2
+    //to-do: split into 2
     [TestMethod]
     public async Task OnPost_RegisteredAsCharity_IsCharity_ThenRedirectsToNotAffectedPage_AndUpdateSession()
     {
