@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System.Net;
 using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
+using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -198,5 +199,47 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         _registeredAsCharity.ModelState[nameof(RegisteredAsCharityRequestViewModel.isTheOrganisationCharity)].Errors.Should().ContainSingle();
 
         SessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()), Times.Never);
+    }
+
+    //[TestMethod]
+    //public void Radios_ShouldReturnYesNoRadios()
+    //{
+    //    // Act
+    //    var radios = _registeredAsCharity.Radios.ToList();
+
+    //    // Assert
+    //    radios.Should().HaveCount(2);
+    //    radios[0].Value.Should().Be("True");
+    //    radios[1].Value.Should().Be("False");
+    //    radios[0].Label.Should().NotBeNullOrEmpty();
+    //    radios[1].Label.Should().NotBeNullOrEmpty();
+    //}
+
+    [TestMethod]
+    public void Legend_ShouldReturnLocalizedQuestion()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["RegisteredAsCharity.Question"])
+            .Returns(new LocalizedString("RegisteredAsCharity.Question", "Test question string"));
+
+        // Act
+        var legend = _registeredAsCharity.Legend;
+
+        // Assert
+        legend.Should().Be("Test question string");
+    }
+
+    [TestMethod]
+    public void Hint_ShouldReturnLocalizedDescription()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["RegisteredAsCharity.Description"])
+            .Returns(new LocalizedString("RegisteredAsCharity.Description", "Test hint string"));
+
+        // Act
+        var hint = _registeredAsCharity.Hint;
+
+        // Assert
+        hint.Should().Be("Test hint string");
     }
 }
