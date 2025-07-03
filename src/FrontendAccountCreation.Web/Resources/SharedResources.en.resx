@@ -207,6 +207,9 @@
   <data name="ForExample" xml:space="preserve">
     <value>For example:</value>
   </data>
+  <data name="CompanyDirector" xml:space="preserve">
+    <value>Company director</value>
+  </data>
   <data name="England" xml:space="preserve">
     <value>England</value>
   </data>
@@ -219,7 +222,16 @@
   <data name="NorthernIreland" xml:space="preserve">
     <value>Northern Ireland</value>
   </data>
-  <data name="CompanyDirector" xml:space="preserve">
-    <value>Company director</value>
+  <data name="Yes_AreThey" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No_AreThey" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Yes_IsHeSheIt" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No_IsHeSheIt" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>

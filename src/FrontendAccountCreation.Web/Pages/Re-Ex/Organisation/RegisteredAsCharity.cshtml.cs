@@ -25,7 +25,7 @@ public class RegisteredAsCharity(
     IStringLocalizer<RegisteredAsCharity> localizer)
     : OrganisationPageModel<RegisteredAsCharity>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
 {
-    public IEnumerable<IRadio> Radios => CommonRadios.YesNo(SharedLocalizer);
+    public IEnumerable<IRadio> Radios => CommonRadios.YesNo_IsHeSheIt(SharedLocalizer);
 
     [BindProperty]
     [Required(ErrorMessage = "RegisteredAsCharity.ErrorMessage")]

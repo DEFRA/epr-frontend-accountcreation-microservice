@@ -222,4 +222,16 @@
   <data name="NorthernIreland" xml:space="preserve">
     <value>Gogledd Iwerddon</value>
   </data>
+  <data name="Yes_AreThey" xml:space="preserve">
+    <value>Ydyn</value>
+  </data>
+  <data name="No_AreThey" xml:space="preserve">
+    <value>Nac ydyn</value>
+  </data>
+  <data name="Yes_IsHeSheIt" xml:space="preserve">
+    <value>Ydy</value>
+  </data>
+  <data name="No_IsHeSheIt" xml:space="preserve">
+    <value>Nac ydy</value>
+  </data>
 </root>
