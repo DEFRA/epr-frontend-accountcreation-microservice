@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
@@ -6,12 +7,12 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ErrorNext;
 using FrontendAccountCreation.Web.FullPages.Radios;
 using FrontendAccountCreation.Web.FullPages.Radios.Common;
+using FrontendAccountCreation.Web.Pages.Organisation;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using System.ComponentModel.DataAnnotations;
 
-namespace FrontendAccountCreation.Web.Pages.Organisation;
+namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [OrganisationJourneyAccess(PagePath.UkRegulator)]
