@@ -5,7 +5,6 @@ using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers;
@@ -13,7 +12,7 @@ namespace FrontendAccountCreation.Web.Controllers;
 public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Controller
     where T : ILocalSession, new()
 {
-    //todo: should be protected
+    // should be protected, rather than public with [NonAction] attribute
     [NonAction]
     public void SetBackLink(T session, string currentPagePath)
     {
@@ -27,7 +26,6 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         }
     }
 
-    //todo: better version?
     protected async Task<RedirectToPageResult> SaveSessionAndRedirectToPage(
         T session,
         string pageName,
@@ -40,7 +38,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         return RedirectToPage($"{PagePath.RazorPagesBase}/{pageName}");
     }
 
-    //todo: should be protected
+    // should be protected, rather than public with [NonAction] attribute
     [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
@@ -53,7 +51,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         return RedirectToAction(actionName);
     }
 
-    //todo: should be protected
+    // should be protected, rather than public with [NonAction] attribute
     [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string controllerName,
@@ -68,7 +66,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
     }
 
     // Would like to get parameters in same order as above
-    //todo: should be protected
+    // should be protected, rather than public with [NonAction] attribute
     [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
@@ -87,7 +85,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         return RedirectToAction(actionName, routeValues);
     }
 
-    //todo: should be private
+    // should be private, rather than public with [NonAction] attribute
     [NonAction]
     public async Task SaveSession(T session, string currentPagePath, string? nextPagePath)
     {
@@ -104,7 +102,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         await sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
 
-    //todo: should be protected, but the unit tests use it, which is a bad idea
+    // should be protected, rather than public with [NonAction] attribute
     [NonAction]
     public Guid? GetFocusId()
     {
@@ -116,7 +114,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         return null;
     }
 
-    //todo: should be protected
+    // should be protected, rather than public with [NonAction] attribute
     [NonAction]
     public void SetFocusId(Guid id) => TempData["FocusId"] = id;
 
