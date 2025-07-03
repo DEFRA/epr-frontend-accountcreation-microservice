@@ -51,8 +51,29 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task NonCompaniesHousePartnershipType_Get_ReturnsViewWithEmptyModel()
+    public async Task NonCompaniesHousePartnershipType_Get_WhenNonCompaniesHouseSessionIsNull_ReturnsViewWithEmptyModel()
     {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession = null;
+        
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipType();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model as WhatSortOfPartnerRequestViewModel;
+        model.Should().NotBeNull();
+        model.HasIndividualPartners.Should().BeFalse();
+        model.HasCompanyPartners.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipType_Get_WhenTypesOfPartnerSessionIsNull_ReturnsViewWithEmptyModel()
+    {
+        // Arrange
+        _orgSessionMock.ReExManualInputSession.TypesOfPartner = null;
+
         // Act
         var result = await _systemUnderTest.NonCompaniesHousePartnershipType();
 
@@ -97,7 +118,7 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
     [DataRow(false, true)]
     [DataRow(true, false)]
     [DataRow(true, true)]
-    public async Task NonCompaniesHousePartnershipType_Post_WithNullSession_And_ValidTypesOfPartner_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
+    public async Task NonCompaniesHousePartnershipType_Post_WithNullTypesOfPartnerSession_And_ValidModel_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
     {
         // Arrange
         var model = new WhatSortOfPartnerRequestViewModel
@@ -131,7 +152,7 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
     [DataRow(false, true)]
     [DataRow(true, false)]
     [DataRow(true, true)]
-    public async Task NonCompaniesHousePartnershipType_Post_WithNotNullSession_And_ValidTypesOfPartner_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
+    public async Task NonCompaniesHousePartnershipType_Post_WithNotNullTypesOfPartnerSession_And_ValidModel_UpdatesSessionAndRedirect(bool hasPersons, bool hasCompanys)
     {
         // Arrange
         var jill = new ReExPersonOrCompanyPartner

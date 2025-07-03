@@ -27,13 +27,30 @@ public class ReExAccountMapper : IReExAccountMapper
     {
         return new ReExOrganisationModel
         {
-            UserRoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation?.GetDescriptionOrNull() ?? null,
+            UserRoleInOrganisation = GetUserRole(session),
             IsApprovedUser = session.IsApprovedUser,
             Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
             ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
             InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession),
-            Partners = GetPartnersModel(session)
+            Partners = GetPartnersModel(session),
+            TradingName = session.TradingName
         };
+    }
+
+    private static string? GetUserRole(OrganisationSession session)
+    {
+        if (session.IsCompaniesHouseFlow || session.ReExCompaniesHouseSession != null)
+        {
+            return session.ReExCompaniesHouseSession?.RoleInOrganisation?.GetDescriptionOrNull();
+        }
+        else
+        {
+            if (session.ReExManualInputSession?.ProducerType == ProducerType.NonUkOrganisation)
+            {
+                return session.ReExManualInputSession.NonUkRoleInOrganisation;
+            }
+        }
+        return null;
     }
 
     private static ReExManualInputModel GetManualInputModel(OrganisationSession session)
@@ -42,9 +59,10 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
             ProducerType = session.ReExManualInputSession?.ProducerType,
-            TradingName = session.ReExManualInputSession?.TradingName,
-            Nation = session.UkNation ?? Nation.NotSet,
-            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet
+            Nation = session.ReExManualInputSession?.UkRegulatorNation ?? Nation.NotSet,
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
+            OrganisationName = session.ReExManualInputSession?.OrganisationName,
+            NonUkRoleInOrganisation = session.ReExManualInputSession?.NonUkRoleInOrganisation
         };
     }
 

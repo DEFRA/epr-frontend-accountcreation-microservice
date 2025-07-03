@@ -121,7 +121,7 @@
     <value>Individual in charge</value>
   </data>
   <data name="AreTheyIndividualInCharge.Question" xml:space="preserve">
-    <value>Are they the individual in charge of your business?</value>
+    <value>Are they the individual in charge of the business?</value>
   </data>
   <data name="AreTheyIndividualInCharge.Hint" xml:space="preserve">
     <value>This means they make all the business decisions and they have the responsibility for the allocation of profits after tax.</value>

@@ -4,7 +4,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class OrganisationNameViewModel
 {
-    [MaxLength(170, ErrorMessage = "NonUkOrganisationName.LengthErrorMessage")]
-    [Required(ErrorMessage = "NonUkOrganisationName.ErrorMessage")]
+    [MaxLength(170, ErrorMessage = "OrganisationName.LengthErrorMessage")]
+    [Required(ErrorMessage = "OrganisationName.ErrorMessage")]
     public string? OrganisationName { get; set; } 
 }

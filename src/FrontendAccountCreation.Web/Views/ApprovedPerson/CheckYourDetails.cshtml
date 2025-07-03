@@ -27,20 +27,7 @@
                                     @Localizer["CheckYourDetails.RegisteredCharity"]
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    @if (Model.IsCompaniesHouseFlow)
-                                    {
-                                        @Localizer["CheckYourDetails.No"]
-                                    }
-                                    @if (Model.IsNonUk)
-                                    {
-                                        @Localizer["CheckYourDetails.No"]
-                                    }
-                                </dd>
-                                <dd class="govuk-summary-list__actions">
-                                    <a href="@PagePath.RazorPagesBase/@PagePath.RegisteredAsCharity" class="govuk-link govuk-link--no-visited-state">
-                                        @SharedLocalizer["Change"]
-                                        <span class="govuk-visually-hidden"></span>
-                                    </a>
+                                    @Localizer["CheckYourDetails.No"]
                                 </dd>
                             </div>
 
@@ -53,16 +40,10 @@
                                     {
                                         @SharedLocalizer["Yes"]
                                     }
-                                    @if (Model.IsNonUk)
+                                    else
                                     {
                                         @Localizer["CheckYourDetails.No"]
                                     }
-                                </dd>
-                                <dd class="govuk-summary-list__actions">
-                                    <a href="~/re-ex/organisation/@PagePath.RegisteredWithCompaniesHouse" class="govuk-link govuk-link--no-visited-state">
-                                        @SharedLocalizer["Change"]
-                                        <span class="govuk-visually-hidden"></span>
-                                    </a>
                                 </dd>
                             </div>
 
@@ -110,12 +91,6 @@
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         @Localizer[Model.CompaniesHouseNumber].Value
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a href="~/re-ex/organisation/@PagePath.CompaniesHouseNumber" class="govuk-link govuk-link--no-visited-state">
-                                            @SharedLocalizer["Change"]
-                                            <span class="govuk-visually-hidden"></span>
-                                        </a>
                                     </dd>
                                 </div>
                             }

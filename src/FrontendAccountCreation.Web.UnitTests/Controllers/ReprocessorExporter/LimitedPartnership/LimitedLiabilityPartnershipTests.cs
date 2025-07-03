@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
@@ -44,6 +45,51 @@ public class LimitedLiabilityPartnershipTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
+    public async Task LimitedLiabilityPartnership_Get_WhenCompaniesHouseSessionIsNull_Returns_View()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession = null;
+
+        // Act
+        var result = await _systemUnderTest.LimitedLiabilityPartnership();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Which;
+        var model = viewResult.Model.Should().BeOfType<LimitedLiabilityPartnershipViewModel>().Which;
+        model.IsMemberOfLimitedLiabilityPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task LimitedLiabilityPartnership_Get_WhenPartnershipSessionIsNull_Returns_View()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
+
+        // Act
+        var result = await _systemUnderTest.LimitedLiabilityPartnership();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Which;
+        var model = viewResult.Model.Should().BeOfType<LimitedLiabilityPartnershipViewModel>().Which;
+        model.IsMemberOfLimitedLiabilityPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task LimitedLiabilityPartnership_Get_WhenLimiedLiabilityPartnershipSessionIsNull_Returns_View()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership = null;
+
+        // Act
+        var result = await _systemUnderTest.LimitedLiabilityPartnership();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Which;
+        var model = viewResult.Model.Should().BeOfType<LimitedLiabilityPartnershipViewModel>().Which;
+        model.IsMemberOfLimitedLiabilityPartnership.Should().BeNull();
+    }
+
+    [TestMethod]
     public async Task LimitedLiabilityPartnership_Get_Returns_View_With_ModelValue_From_Session()
     {
         // Arrange
@@ -80,12 +126,14 @@ public class LimitedLiabilityPartnershipTests : LimitedPartnershipTestBase
     }
 
     [TestMethod]
-    public async Task LimitedLiabilityPartnership_Post_WithValidModel_SavesAndRedirects()
+    [DataRow(false, null)]
+    [DataRow(true, RoleInOrganisation.Member)]
+    public async Task LimitedLiabilityPartnership_Post_WithValidModel_SavesAndRedirects(bool isMember, RoleInOrganisation? expectedRole)
     {
         // Arrange
         var model = new LimitedLiabilityPartnershipViewModel
         {
-            IsMemberOfLimitedLiabilityPartnership = false
+            IsMemberOfLimitedLiabilityPartnership = isMember
         };
 
         // Act
@@ -94,7 +142,52 @@ public class LimitedLiabilityPartnershipTests : LimitedPartnershipTestBase
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Which;
         redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
-        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.IsMemberOfLimitedLiabilityPartnership.Should().BeFalse();
-        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().BeTrue();
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.IsMemberOfLimitedLiabilityPartnership.Should().Be(isMember);
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().NotBe(isMember);
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().Be(expectedRole);
+    }
+
+    [TestMethod]
+    public async Task LimitedLiabilityPartnership_Post_WithPartnershipSessionNull_AndValidModel_SavesAndRedirects()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership = null;
+
+        var model = new LimitedLiabilityPartnershipViewModel
+        {
+            IsMemberOfLimitedLiabilityPartnership = true
+        };
+
+        // Act
+        var result = await _systemUnderTest.LimitedLiabilityPartnership(model);
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.IsMemberOfLimitedLiabilityPartnership.Should().BeTrue();
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().BeFalse();
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().Be(RoleInOrganisation.Member);
+    }
+
+    [TestMethod]
+    public async Task LimitedLiabilityPartnership_Post_WithLimitedLiabilityPartnershipSessionNull_AndValidModel_SavesAndRedirects()
+    {
+        // Arrange
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership = null;
+
+        var model = new LimitedLiabilityPartnershipViewModel
+        {
+            IsMemberOfLimitedLiabilityPartnership = true
+        };
+
+        // Act
+        var result = await _systemUnderTest.LimitedLiabilityPartnership(model);
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.AddApprovedPerson));
+        _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedLiabilityPartnership.IsMemberOfLimitedLiabilityPartnership.Should().BeTrue();
+        _orgSessionMock.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson.Should().BeFalse();
+        _orgSessionMock.ReExCompaniesHouseSession.RoleInOrganisation.Should().Be(RoleInOrganisation.Member);
     }
 }

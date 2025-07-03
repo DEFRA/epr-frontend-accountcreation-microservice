@@ -123,6 +123,9 @@
   <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
     <value>submit and verify data returns</value>
   </data>
+  <data name="AddAnApprovedPerson.CompanyDirector" xml:space="preserve">
+    <value>company director</value>
+  </data>
   <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
     <value>company secretary</value>
   </data>
@@ -133,7 +136,7 @@
     <value>I agree to be an approved person</value>
   </data>
   <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can</value>
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
   <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
     <value>You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>

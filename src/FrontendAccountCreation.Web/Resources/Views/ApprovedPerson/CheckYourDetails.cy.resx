@@ -220,10 +220,10 @@
     <value>(W)Different trading name</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.ApprovedPersonsAdded" xml:space="preserve">
-    <value>(W)Approved persons invite</value>
+    <value>(W)Approved person email invitations created</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Email" xml:space="preserve">
-    <value>(W) Email</value>
+    <value>Ebost</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Invite" xml:space="preserve">
     <value>(W)Invite</value>
