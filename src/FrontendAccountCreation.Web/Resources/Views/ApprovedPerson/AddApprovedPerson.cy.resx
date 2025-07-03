@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddApprovedPerson.NonUk.EligibleAP.ErrorMessage" xml:space="preserve">
-    <value>Select whether to be an approved person, invite someone else to be one or do this later</value>
+    <value>Dewiswch a ydych chi am fod yn berson a gymeradwywyd, gwahodd rhywun arall i fod yn un neu wneud hyn yn nes ymlaen</value>
   </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
     <value>[Welsh]Select an option</value>
@@ -127,9 +127,9 @@
     <value>[Welsh]Add an approved person </value>
   </data>
   <data name="AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage" xml:space="preserve">
-    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
+    <value>Dewiswch a ydych chi am wahodd yr unigolyn sy'n gyfrifol am y busnes i fod yn berson a gymeradwywyd neu wneud hyn yn nes ymlaen</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.ErrorMessage" xml:space="preserve">
-    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
+    <value>Dewiswch a ydych chi am wahodd yr unigolyn sy'n gyfrifol am y busnes i fod yn berson a gymeradwywyd neu wneud hyn yn nes ymlaen</value>
   </data>
 </root>

@@ -27,7 +27,7 @@ public class ReExAccountMapper : IReExAccountMapper
     {
         return new ReExOrganisationModel
         {
-            UserRoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation?.GetDescriptionOrNull() ?? null,
+            UserRoleInOrganisation = GetUserRole(session),
             IsApprovedUser = session.IsApprovedUser,
             Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
             ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
@@ -37,14 +37,32 @@ public class ReExAccountMapper : IReExAccountMapper
         };
     }
 
+    private static string? GetUserRole(OrganisationSession session)
+    {
+        if (session.IsCompaniesHouseFlow || session.ReExCompaniesHouseSession != null)
+        {
+            return session.ReExCompaniesHouseSession?.RoleInOrganisation?.GetDescriptionOrNull();
+        }
+        else
+        {
+            if (session.ReExManualInputSession?.ProducerType == ProducerType.NonUkOrganisation)
+            {
+                return session.ReExManualInputSession.NonUkRoleInOrganisation;
+            }
+        }
+        return null;
+    }
+
     private static ReExManualInputModel GetManualInputModel(OrganisationSession session)
     {
         return new ReExManualInputModel()
         {
             BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
             ProducerType = session.ReExManualInputSession?.ProducerType,
-            Nation = session.UkNation ?? Nation.NotSet,
-            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet
+            Nation = session.ReExManualInputSession?.UkRegulatorNation ?? Nation.NotSet,
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
+            OrganisationName = session.ReExManualInputSession?.OrganisationName,
+            NonUkRoleInOrganisation = session.ReExManualInputSession?.NonUkRoleInOrganisation
         };
     }
 

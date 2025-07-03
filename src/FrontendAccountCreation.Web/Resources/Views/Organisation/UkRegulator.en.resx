@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UkRegulator.Nation.Title" xml:space="preserve">
-    <value>UK Regulator</value>
+    <value>UK regulator</value>
   </data>
   <data name="UkRegulator.Nation.England" xml:space="preserve">
     <value>England</value>

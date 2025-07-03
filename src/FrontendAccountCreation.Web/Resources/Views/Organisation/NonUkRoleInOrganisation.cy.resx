@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NonUkRoleInOrganisation.ErrorMessage" xml:space="preserve">
-    <value>(W)Enter your role in the organisation</value>
+    <value>Rhowch eich rôl yn y sefydliad</value>
   </data>
   <data name="NonUkRoleInOrganisation.Hint" xml:space="preserve">
-    <value>(W)For example, owner or director</value>
+    <value>Er enghraifft, perchennog neu gyfarwyddwr</value>
   </data>
   <data name="NonUkRoleInOrganisation.Question" xml:space="preserve">
-    <value>(W)What is your role in the organisation?</value>
+    <value>Beth yw eich rôl yn y sefydliad?</value>
   </data>
   <data name="NonUkRoleInOrganisation.Title" xml:space="preserve">
-    <value>(W)Non Uk Role in organisation</value>
+    <value>Rôl yn y sefydliad y tu allan i'r Deyrnas Unedig</value>
   </data>
 </root>

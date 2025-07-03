@@ -136,7 +136,7 @@
     <value>Continue</value>
   </data>
   <data name="PartnerDetails.Title" xml:space="preserve">
-    <value>Team Member Details</value>
+    <value>Team member details</value>
   </data>
   <data name="PartnerDetails.Header" xml:space="preserve">
     <value>What are their details?</value>
