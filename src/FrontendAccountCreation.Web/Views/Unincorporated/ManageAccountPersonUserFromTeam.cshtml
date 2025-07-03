@@ -1,0 +1,107 @@
+﻿@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+
+@model ReExManageAccountPersonUserFromTeamViewModel
+
+@{
+    ViewData["Title"] = Localizer["ReExManageAccountPersonUserFromTeam.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <h1 class="govuk-heading-l">@Localizer["ReExManageAccountPersonUserFromTeam.PageTitle"]</h1>
+
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Intro.Paragraph1"]</p>
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Intro.Paragraph2"]</p>
+
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Bullet.Apply"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Bullet.DataReturns"]</li>
+                </ul>
+
+                <div class="govuk-inset-text">
+                    @Localizer["ReExManageAccountPersonUserFromTeam.Inset"]
+                </div>
+
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Note.MultiplePersons"]</p>
+
+                <h2 class="govuk-heading-m">@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Heading"]</h2>
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Description"]</p>
+                <p class="govuk-body">@Localizer["ReExManageAccountPersonUserFromTeam.ForExample"]</p>                
+
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Chairperson"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Treasurer"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Secretary"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Manager"]</li>
+                    <li>@Localizer["ReExManageAccountPersonUserFromTeam.Roles.Example.Owner"]</li>
+                </ul>
+
+                <form method="post">
+
+                    <div class="govuk-form-group @(ViewData.ModelState["ManageAccountPersonAnswer"]?.Errors.Any() == true ? "govuk-form-group--error" : "")">
+                        <fieldset class="govuk-fieldset" aria-describedby="ManageAccountPersonAnswer-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h3 class="govuk-fieldset__heading">
+                                    @Localizer["ReExManageAccountPersonUserFromTeam.Invite.Heading"]
+                                </h3>
+                            </legend>
+
+                            <p id="ManageAccountPersonAnswer-hint" class="govuk-hint govuk-!-margin-bottom-6">
+                                @Localizer["ReExManageAccountPersonUserFromTeam.Invite.Instruction"]
+                            </p>
+
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="Answer1"
+                                           type="radio"
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)"
+                                           gov-first-option="true">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteATeamMemberToBeApprovedPersonInstead)"
+                                           gov-first-option="true">
+                                        @Localizer["ReExManageAccountPersonUserFromTeam.Option.TeamMember"]
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="Answer2"
+                                           type="radio"
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
+                                    <label class="govuk-label govuk-radios__label"
+                                           gov-for="ManageAccountPersonAnswer"
+                                           gov-value="@nameof(ManageAccountPersonAnswer.IWillInviteAnApprovedPersonLater)">
+                                        @Localizer["ReExManageAccountPersonUserFromTeam.Option.Later"]
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @Localizer["ReExManageAccountPersonUserFromTeam.Button.Confirm"]
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+
+
