@@ -6,6 +6,7 @@ using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
@@ -115,5 +116,48 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         redirectResult.RouteValues?["nextPagePath"].Should().Be(PagePath.NonUkRoleInOrganisation);
 
         SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void Radios_ShouldReturnCorrectRadios()
+    {
+        // Act
+        var radios = _ukRegulator.Radios.ToList();
+
+        // Assert
+        radios.Should().HaveCount(4);
+        radios[0].Value.Should().Be("England");
+        radios[1].Value.Should().Be("Scotland");
+        radios[2].Value.Should().Be("Wales");
+        radios[3].Value.Should().Be("NorthernIreland");
+        //to-do: setup shared localizer and check localized strings
+    }
+
+    [TestMethod]
+    public void Legend_ShouldReturnLocalizedQuestion()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["UkRegulator.NonUkOrganisation.Question"])
+            .Returns(new LocalizedString("UkRegulator.NonUkOrganisation.Question", "Test question string"));
+
+        // Act
+        var legend = _ukRegulator.Legend;
+
+        // Assert
+        legend.Should().Be("Test question string");
+    }
+
+    [TestMethod]
+    public void Hint_ShouldReturnLocalizedDescription()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["UkRegulator.NonUkHint"])
+            .Returns(new LocalizedString("UkRegulator.NonUkHint", "Test hint string"));
+
+        // Act
+        var hint = _ukRegulator.Hint;
+
+        // Assert
+        hint.Should().Be("Test hint string");
     }
 }
