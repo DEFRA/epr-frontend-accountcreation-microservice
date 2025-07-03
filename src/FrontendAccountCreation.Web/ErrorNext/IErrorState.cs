@@ -7,8 +7,6 @@ public interface IErrorState
     //internal, rather than in interface?
     IEnumerable<IError> Errors { get; }
 
-    Func<int, string>? ErrorIdToHtmlElementId { get; set; }
-
     //todo: generic version that uses GetErrorIfTriggered
     bool HasTriggeredError(params int[] errorIds);
 
