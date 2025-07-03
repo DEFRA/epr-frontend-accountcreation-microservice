@@ -1,0 +1,49 @@
+﻿@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.TeamMemberRoleInOrganisationViewModel
+
+@{
+    ViewData["Title"] = Localizer["NonCompaniesHousePartnershipTheirRole.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
+
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                                    @Localizer["NonCompaniesHousePartnershipTheirRole.WhatIsTheirRole"]
+                                </h1>
+                            </legend>
+
+                            @Html.HiddenFor(x => x.Id)
+                            @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                            @await Html.PartialAsync("Partials/_TeamMemberRoleRadios", Model)
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" asp-action="NonCompaniesHousePartnershipTheirRole" type="submit">
+                            @SharedLocalizer["Continue"]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

@@ -5,6 +5,6 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 public class NonCompaniesHousePartnershipRoleModel
 {
-    [Required(ErrorMessage = "NonCompaniesHousePartnershipRole.ErrorMessage")]
+    [Required(ErrorMessage = "NonCompaniesHousePartnershipYourRole.ErrorMessage")]
     public RoleInOrganisation? RoleInOrganisation { get; set; }
 }

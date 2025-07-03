@@ -1117,7 +1117,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
             {
-                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: user should be directed to 'What role do they have within the partnership' screen
+                return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.NonCompaniesHousePartnershipTheirRole),
+                    PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
             }
             else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
             {
