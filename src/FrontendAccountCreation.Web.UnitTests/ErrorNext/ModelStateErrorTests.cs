@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FrontendAccountCreation.Web.ErrorNext;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FrontendAccountCreation.Web.UnitTests.ErrorNext;
@@ -46,7 +47,11 @@ public class ModelStateErrorTests
         var kvp = new KeyValuePair<string, ModelStateEntry?>(key, modelState[key]);
 
         // Act
+        // now Sonar is complaining about the constructed ModelStateError not being used,
+        // but we want to test that it throws an exception
+#pragma warning disable CA1806
         Action act = () => new ModelStateError(kvp);
+#pragma warning restore
 
         // Assert
         act.Should().Throw<InvalidOperationException>()
