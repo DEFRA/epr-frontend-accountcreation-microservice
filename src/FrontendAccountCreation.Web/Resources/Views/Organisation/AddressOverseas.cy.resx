@@ -118,64 +118,64 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddressOverseas.Title" xml:space="preserve">
-    <value>Business address overseas</value>
+    <value>Cyfeiriad y busnes dros y môr</value>
   </data>
   <data name="AddressOverseas.Question" xml:space="preserve">
-    <value>What is the organisation's address?</value>
+    <value>Beth yw cyfeiriad y sefydliad?Beth yw cyfeiriad y sefydliad?</value>
   </data>
   <data name="AddressOverseas.CountryLabel" xml:space="preserve">
-    <value>Country</value>
+    <value>Gwlad</value>
   </data>
   <data name="AddressOverseas.AddressLine1Label" xml:space="preserve">
-    <value>Address line 1</value>
+    <value>Llinell 1 y cyfeiriad</value>
   </data>
   <data name="AddressOverseas.AddressLine2Label" xml:space="preserve">
-    <value>Address line 2 (optional)</value>
+    <value>Llinell 2 y cyfeiriad (dewisol)</value>
   </data>
   <data name="AddressOverseas.TownOrCityLabel" xml:space="preserve">
     <value>Tref neu ddinas</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLabel" xml:space="preserve">
-    <value>State, province or region (optional)</value>
+    <value>Talaith neu ranbarth (dewisol)</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionHint" xml:space="preserve">
-    <value>Leave blank if the address does not have a state, province or region</value>
+    <value>Gadewch hyn yn wag os nad oes gan y cyfeiriad dalaith neu ranbarth</value>
   </data>
   <data name="AddressOverseas.PostcodeLabel" xml:space="preserve">
-    <value>Postcode or similar</value>
+    <value>Cod post neu'r tebyg</value>
   </data>
   <data name="AddressOverseas.PostcodeHint" xml:space="preserve">
-    <value>Some countries use only numbers, others use a mix of letters and numbers. Leave blank if the country does not have postcodes.</value>
+    <value>Mae rhai gwledydd yn defnyddio rhifau yn unig, mae eraill yn defnyddio cymysgedd o lythrennau a rhifau. Gadewch hyn yn wag os nad oes gan y wlad godau post.</value>
   </data>
   <data name="AddressOverseas.AddressLine1Error" xml:space="preserve">
-    <value>Enter the registered office, head office or principal place of business address of your organisation</value>
+    <value>Rhowch gyfeiriad swyddfa gofrestredig, prif swyddfa neu brif le busnes eich sefydliad</value>
   </data>
   <data name="AddressOverseas.AddressLine1LengthError" xml:space="preserve">
-    <value>Address line 1 must be 100 characters or less</value>
+    <value>Rhaid i linell 1 y cyfeiriad fod yn 100 neu lai o gymeriadau</value>
   </data>
   <data name="AddressOverseas.AddressLine2LengthError" xml:space="preserve">
-    <value>Address line 2 must be 100 characters or less</value>
+    <value>Rhaid i linell 2 y cyfeiriad fod yn 100 neu lai o gymeriadau</value>
   </data>
   <data name="AddressOverseas.CountryLengthError" xml:space="preserve">
-    <value>Country must be 54 characters or less</value>
+    <value>Rhaid i'r wlad fod yn 54 neu lai o gymeriadau</value>
   </data>
   <data name="AddressOverseas.CountryNameError" xml:space="preserve">
-    <value>Enter the country of your organisation's registered office, head office or principal place of business</value>
+    <value>Rhowch y wlad lle mae swyddfa gofrestredig, prif swyddfa neu brif le busnes eich sefydliad</value>
   </data>
   <data name="AddressOverseas.StateProvinceRegionLengthError" xml:space="preserve">
-    <value>State, province or region must be 50 characters or less</value>
+    <value>Rhaid i'r dalaith neu'r rhanbarth fod yn 50 neu lai o gymeriadau</value>
   </data>
   <data name="AddressOverseas.TownOrCityError" xml:space="preserve">
-    <value>Enter the town or city of the registered office, head office or principal place of business of your organisation</value>
+    <value>Rhowch y dref neu'r ddinas lle mae swyddfa gofrestredig, prif swyddfa neu brif le busnes eich sefydliad</value>
   </data>
   <data name="AddressOverseas.TownOrCityLengthError" xml:space="preserve">
     <value>Rhaid i’r dref neu’r ddinas fod yn 70 neu lai o gymeriadau</value>
   </data>
   <data name="AddressOverseas.PostcodeLengthError" xml:space="preserve">
-    <value>Postcode must be 15 characters or less</value>
+    <value>Rhaid i'r cod post fod yn 15 neu lai o gymeriadau</value>
   </data>
   <data name="AddressOverseas.CountryInvalidError" xml:space="preserve">
-    <value>Countries must only include letters, spaces, hyphens, apostrophes and accented characters</value>
+    <value>Rhaid i wledydd gynnwys llythrennau, bylchau, cysylltnodau, collnodau a chymeriadau acennog yn unig</value>
   </data>
   <data name="AddressOverseas.Hint" xml:space="preserve">
     <value>This is a registered office or head office or principal place of business address.</value>

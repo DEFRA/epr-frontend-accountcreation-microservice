@@ -133,7 +133,7 @@
     <value>What is your Companies House number?</value>
   </data>
   <data name="CompaniesHouseNumber.Title" xml:space="preserve">
-    <value>Companies House number</value>
+    <value>Companies house number</value>
   </data>
   <data name="CompaniesHouseNumber.MaxLengthErrorMessage" xml:space="preserve">
     <value>Invalid Companies House number more than 8 character entered</value>

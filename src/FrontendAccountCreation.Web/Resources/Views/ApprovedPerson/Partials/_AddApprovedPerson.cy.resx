@@ -118,40 +118,40 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddAnApprovedPerson.BulletAccreditation" xml:space="preserve">
-    <value>[Welsh]Apply for accreditation</value>
+    <value>gwneud cais am achrediad</value>
   </data>
   <data name="AddAnApprovedPerson.BulletSubmit" xml:space="preserve">
-    <value>[Welsh]Submit and verify data returns</value>
+    <value>cyflwyno a dilysu ffurflenni data</value>
   </data>
   <data name="AddAnApprovedPerson.CompanyDirector" xml:space="preserve">
     <value>company director</value>
   </data>
   <data name="AddAnApprovedPerson.CompanySecretary" xml:space="preserve">
-    <value>[Welsh]company secretary</value>
+    <value>ysgrifennydd cwmni</value>
   </data>
   <data name="AddAnApprovedPerson.Director" xml:space="preserve">
-    <value>[Welsh]director</value>
+    <value>cyfarwyddwr</value>
   </data>
   <data name="AddAnApprovedPerson.IAgreeToBeAnApprovedPerson" xml:space="preserve">
     <value>[Welsh]I agree to be an approved person</value>
   </data>
   <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
-    <value>[Welsh]You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
+    <value>Gallwch barhau i ychwanegu'r sefydliad heb wahodd rhywun i fod yn berson a gymeradwywyd. Rhaid penodi un cyn y gallwch:</value>
   </data>
   <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
     <value>[Welsh]You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
   </data>
   <data name="AddAnApprovedPerson.IntroText2" xml:space="preserve">
-    <value>[Welsh]An approved person may delegate their function to another person (a delegate) at a later stage - subject to regulator approval.</value>
+    <value>Mae person a gymeradwywyd yn cael dirprwyo ei swyddogaeth i berson arall (dirprwy) yn nes ymlaen - yn amodol ar gymeradwyaeth y rheoleiddiwr.</value>
   </data>
   <data name="AddAnApprovedPerson.IntroText3" xml:space="preserve">
-    <value>[Welsh]More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
+    <value>Caniateir gwahodd mwy nag un person - bydd angen ichi gadarnhau eu rôl, rhoi eu henw a'u manylion cysylltu.</value>
   </data>
   <data name="AddAnApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
-    <value>[Welsh]I will invite another eligible person to be an approved person</value>
+    <value>Byddaf yn gwahodd person cymwys i fod yn berson a gymeradwywyd</value>
   </data>
   <data name="AddAnApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
-    <value>[Welsh]I will invite an approved person later</value>
+    <value>Byddaf yn gwahodd person a gymeradwywyd yn nes ymlaen</value>
   </data>
   <data name="AddAnApprovedPerson.NonUk.RolesInstruction" xml:space="preserve">
     <value>A person who has control or management of a business that does not have a registered office, head office or principal place of business in the UK. For example</value>
@@ -160,18 +160,18 @@
     <value>[Welsh]Select an option</value>
   </data>
   <data name="AddAnApprovedPerson.RolesHeading" xml:space="preserve">
-    <value>[Welsh]Roles eligible to be an approved person</value>
+    <value>Rolau sy'n gymwys i fod yn berson a gymeradwywyd</value>
   </data>
   <data name="AddAnApprovedPerson.RolesInstruction" xml:space="preserve">
-    <value>[Welsh]Either of these roles can be an approved person</value>
+    <value>Caiff y naill neu'r llall o'r rolau hyn fod yn berson a gymeradwywyd</value>
   </data>
   <data name="AddAnApprovedPerson.SelectOptionText" xml:space="preserve">
-    <value>[Welsh]Select an option to proceed.</value>
+    <value>Dewiswch opsiwn er mwyn bwrw ymlaen.</value>
   </data>
   <data name="AddAnApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh]Add an approved person </value>
+    <value>Ychwanegu person a gymeradwywyd</value>
   </data>
   <data name="AddAnApprovedPerson.UserHeading" xml:space="preserve">
-    <value>[Welsh]Invite users in your team</value>
+    <value>Gwahodd defnyddwyr yn eich tîm</value>
   </data>
 </root>
