@@ -35,7 +35,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         session.IsUserChangingDetails = false;
         await SaveSession(session, currentPagePath, nextPagePath);
         
-        return RedirectToPage($"{PagePath.RazorPagesBase}/{pageName}");
+        return RedirectToPage($"{PageName.Base}/{pageName}");
     }
 
     // should be protected, rather than public with [NonAction] attribute

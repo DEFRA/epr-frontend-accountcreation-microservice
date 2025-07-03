@@ -48,7 +48,7 @@ builder.Services.Configure<DeploymentRoleOptions>(options =>
 
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AddPageRoute($"{PagePath.RazorPagesBase}/RegisteredAsCharity", "/re-ex/organisation");
+    options.Conventions.AddPageRoute($"{PageName.Base}/RegisteredAsCharity", "/re-ex/organisation");
 });
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>

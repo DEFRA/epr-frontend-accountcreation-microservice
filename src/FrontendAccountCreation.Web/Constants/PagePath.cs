@@ -5,8 +5,6 @@ namespace FrontendAccountCreation.Web.Constants;
 [ExcludeFromCodeCoverage]
 public static class PagePath
 {
-    public const string RazorPagesBase = "/Re-Ex/Organisation";
-    
     // Journey paths
     public const string RegisteredAsCharity = "registered-as-charity";
 

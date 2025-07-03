@@ -114,7 +114,7 @@ public class AddressOverseasTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToPageResult>();
         var redirectResult = (RedirectToPageResult)result;
-        redirectResult.PageName.Should().Be($"{PagePath.RazorPagesBase}/UkRegulator");
+        redirectResult.PageName.Should().Be($"{PageName.Base}/UkRegulator");
     }
 
     [TestMethod]
