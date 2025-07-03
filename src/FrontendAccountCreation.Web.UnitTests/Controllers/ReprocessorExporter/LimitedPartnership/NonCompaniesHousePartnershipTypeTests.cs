@@ -1,4 +1,5 @@
 using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
@@ -256,4 +257,38 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
         _systemUnderTest.ModelState.ErrorCount.Should().BeGreaterThan(0);
         _systemUnderTest.ModelState.ContainsKey("HasIndividualPartners").Should().BeTrue();
     }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipInviteApprovedPerson_Get_ReturnsViewWithCorrectModel()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.Partnership
+            }
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipInviteApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+
+        viewResult.Model.Should().BeOfType<NonCompaniesHousePartnershipInviteApprovedPersonViewModel>();
+        var model = (NonCompaniesHousePartnershipInviteApprovedPersonViewModel)viewResult.Model;
+
+        model.InviteUserOption.Should().Be(session.InviteUserOption.ToString());
+        model.IsNonCompaniesHousePartnership.Should().BeTrue();
+
+        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+    }
+
 }

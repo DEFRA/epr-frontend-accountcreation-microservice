@@ -434,7 +434,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
         {
             InviteUserOption = session.InviteUserOption?.ToString(),
-            IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
+            IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
         }); 
     }
 
