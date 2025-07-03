@@ -5,6 +5,7 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -136,4 +137,46 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
     }
 
     //to-do: more tests for checking session saved etc.
+
+    [TestMethod]
+    public void Radios_ShouldReturnYesNoNotSureRadios()
+    {
+        // Act
+        var radios = _manageControlOrganisation.Radios.ToList();
+
+        // Assert
+        radios.Should().HaveCount(3);
+        radios[0].Value.Should().Be("Yes");
+        radios[1].Value.Should().Be("No");
+        radios[2].Value.Should().Be("NotSure");
+        //to-do: setup shared localizer and check localized strings
+    }
+
+    [TestMethod]
+    public void Legend_ShouldReturnLocalizedQuestion()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["ManageControlOrganisation.Question"])
+            .Returns(new LocalizedString("ManageControlOrganisation.Question", "Test question string"));
+
+        // Act
+        var legend = _manageControlOrganisation.Legend;
+
+        // Assert
+        legend.Should().Be("Test question string");
+    }
+
+    [TestMethod]
+    public void Hint_ShouldReturnLocalizedDescription()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["ManageControlOrganisation.Hint"])
+            .Returns(new LocalizedString("ManageControlOrganisation.Hint", "Test hint string"));
+
+        // Act
+        var hint = _manageControlOrganisation.Hint;
+
+        // Assert
+        hint.Should().Be("Test hint string");
+    }
 }
