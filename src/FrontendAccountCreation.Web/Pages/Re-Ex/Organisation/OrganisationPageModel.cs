@@ -24,6 +24,8 @@ public class OrganisationPageModel<T>(
     protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
     protected IStringLocalizer<T> Localizer { get; } = localizer;
 
+    public string? ButtonText => SharedLocalizer["Continue"];
+
     public void SetBackLink(OrganisationSession session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)

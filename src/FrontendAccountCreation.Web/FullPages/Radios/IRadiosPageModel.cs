@@ -27,6 +27,5 @@ public interface IRadiosPageModel
     string? Legend { get; }
 
     string? Hint => null;
-    //todo: needs to be localized
     string? ButtonText => "Continue";
 }
