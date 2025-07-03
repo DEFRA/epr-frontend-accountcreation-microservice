@@ -51,7 +51,7 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         // Assert
         _ukRegulator.SelectedValue.Should().Be(nationInSession.ToString());
 
-        //todo: have separate test for varifying this?
+        //to-do: have separate test for varifying this?
         SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
@@ -64,7 +64,7 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         // Assert
         _ukRegulator.SelectedValue.Should().BeNull();
 
-        //todo: have separate test for varifying this?
+        //to-do: have separate test for varifying this?
         SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
@@ -80,7 +80,7 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
         // Assert
         _ukRegulator.SelectedValue.Should().BeNull();
 
-        //todo: have separate test for varifying this?
+        //to-do: have separate test for varifying this?
         SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
