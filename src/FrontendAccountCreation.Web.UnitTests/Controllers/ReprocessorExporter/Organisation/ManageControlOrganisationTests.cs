@@ -85,7 +85,6 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
         AssertBackLink(_manageControlOrganisation, PagePath.AddAnApprovedPerson);
     }
 
-
     [TestMethod]
     public async Task OnPost_InvalidModelState_ReturnsPageWithCorrectErrors()
     {
@@ -121,6 +120,19 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
         redirectResult.ActionName.Should().Be(expectedActionName);
         redirectResult.RouteValues?["currentPagePath"].Should().Be(PagePath.ManageControlOrganisation);
         redirectResult.RouteValues?["nextPagePath"].Should().Be(expectedNextPagePath);
+    }
+
+    [TestMethod]
+    public async Task OnPost_InvalidModelState_BackLinkIsSetCorrectly()
+    {
+        // Arrange
+        _manageControlOrganisation.ModelState.AddModelError("TheyManageOrControlOrganisation", "Required");
+
+        // Act
+        await _manageControlOrganisation.OnPost();
+
+        // Assert
+        AssertBackLink(_manageControlOrganisation, PagePath.AddAnApprovedPerson);
     }
 
     //to-do: more tests for checking session saved etc.
