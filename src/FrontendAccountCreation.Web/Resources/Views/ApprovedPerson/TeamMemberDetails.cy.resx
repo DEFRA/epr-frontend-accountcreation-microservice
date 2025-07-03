@@ -121,7 +121,7 @@
     <value>[Welsh] Full name</value>
   </data>
   <data name="TeamMemberDetails.Email" xml:space="preserve">
-    <value>[Welsh] Email</value>
+    <value>Ebost</value>
   </data>
   <data name="TeamMemberDetails.HintEmail" xml:space="preserve">
     <value>[Welsh] We ask for this so we can invite them to join your team.</value>
