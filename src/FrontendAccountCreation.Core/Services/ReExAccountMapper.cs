@@ -49,6 +49,10 @@ public class ReExAccountMapper : IReExAccountMapper
             {
                 return session.ReExManualInputSession.NonUkRoleInOrganisation;
             }
+            if (session.ReExManualInputSession?.ProducerType == ProducerType.Partnership)
+            {
+                return session.ReExManualInputSession?.RoleInOrganisation?.GetDescriptionOrNull();
+            }
         }
         return null;
     }
@@ -139,17 +143,29 @@ public class ReExAccountMapper : IReExAccountMapper
 
     private static List<ReExPartnerModel>? GetPartnersModel(OrganisationSession reExOrganisationSession)
     {
-        List<ReExPartnerModel>? reExPartnerModels = null;
-        var partners = reExOrganisationSession?.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners?.ToList();
-        if (partners is { Count: > 0 })
+        List<Web.ViewModels.ReExAccount.ReExPersonOrCompanyPartner>? partners = null;
+
+        if (reExOrganisationSession.IsCompaniesHouseFlow)
         {
-            reExPartnerModels = [.. partners.Select(x => new ReExPartnerModel()
-            {
-                Name = x.Name,
-                PartnerRole = x.IsPerson ? PartnerType.IndividualPartner.GetDescription() : PartnerType.CorporatePartner.GetDescription(),
-            })];
+            partners = reExOrganisationSession.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
         }
-        return reExPartnerModels;
+        else
+        {
+            partners = reExOrganisationSession.ReExManualInputSession?.TypesOfPartner?.Partners;
+        }
+
+        if (partners == null || partners.Count == 0)
+        {
+            return null;
+        }
+
+        return [.. partners.Select(x => new ReExPartnerModel
+        {
+            Name = x.Name,
+            PartnerRole = x.IsPerson
+                ? PartnerType.IndividualPartner.GetDescription()
+                : PartnerType.CorporatePartner.GetDescription()
+        })];
     }
 
     private static string? GetProducerType(OrganisationSession reExOrganisationSession)

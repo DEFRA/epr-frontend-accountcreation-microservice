@@ -6,6 +6,7 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 namespace FrontendAccountCreation.Core.UnitTests;
 
@@ -945,7 +946,30 @@ public class ReExAccountMapperTests
     }
 
     [TestMethod]
-    public void CreateReExOrganisationModel_Map_Partners()
+    [DataRow(RoleInOrganisation.Director)]
+    [DataRow(RoleInOrganisation.CompanyDirector)]
+    [DataRow(RoleInOrganisation.PartnerCompanySecretary)]
+    [DataRow(RoleInOrganisation.CompanySecretary)]
+    public void CreateReExOrganisationModel_ManualInputSession_MapsUserRoleFromRoleInOrganisation_if_PartnershipType(RoleInOrganisation role)
+    {
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.Partnership,
+                RoleInOrganisation = role,
+            }
+        };
+
+        var result = _mapper.CreateReExOrganisationModel(session);
+
+        result.Should().NotBeNull();
+        result.UserRoleInOrganisation.Should().Be(role.GetDescriptionOrNull());
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_Partners_fromCompanyHouseSession_ifCompanyHousePartnership()
     {
         var orgSession = new OrganisationSession
         {
@@ -995,5 +1019,74 @@ public class ReExAccountMapperTests
             Name = "Company1",
             PartnerRole = PartnerType.CorporatePartner.GetDescription()
         });
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_PartnersFrom_ManualInputSession_IfNonCompanyHousePartnership()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TypesOfPartner = new Sessions.ReEx.Partnership.ReExTypesOfPartner
+                {
+                    Partners =
+                    [
+                        new ReExPersonOrCompanyPartner
+                        {
+                            Name = "Person1",
+                            IsPerson = true
+                        },
+                        new ReExPersonOrCompanyPartner
+                        {
+                            Name = "Company1",
+                            IsPerson = false
+                        },
+                         new ReExPersonOrCompanyPartner
+                        {
+                            Name = "Company2",
+                            IsPerson = false
+                        }
+                    ]
+                }
+            }
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Partners.Should().NotBeNull().And.HaveCount(3);
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Person1",
+            PartnerRole = PartnerType.IndividualPartner.GetDescription()
+        });
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Company1",
+            PartnerRole = PartnerType.CorporatePartner.GetDescription()
+        });
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Company2",
+            PartnerRole = PartnerType.CorporatePartner.GetDescription()
+        });
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_Partners_null_IfNoPartners()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TypesOfPartner = null
+            }
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Partners.Should().BeNull();
     }
 }
