@@ -2,7 +2,6 @@
 
 public interface IError
 {
-    int Id { get; }
     string Message { get; }
     string HtmlElementId { get; }
 
