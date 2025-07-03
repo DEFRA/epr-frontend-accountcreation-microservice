@@ -7,7 +7,6 @@ public class ModelStateError
 {
     public ModelStateError(KeyValuePair<string, ModelStateEntry?> modelStateEntry)
     {
-        //todo: localize here, rather than in the view for better testability
         var firstError = modelStateEntry.Value.Errors.FirstOrDefault();
         if (firstError == null)
         {
