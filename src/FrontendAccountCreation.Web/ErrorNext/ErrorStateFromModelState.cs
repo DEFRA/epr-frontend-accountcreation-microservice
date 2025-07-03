@@ -9,28 +9,12 @@ public class ErrorStateFromModelState : IErrorState
         return modelState.Count == 0 ? new ErrorStateEmpty() : new ErrorStateFromModelState(modelState);
     }
 
+    public IEnumerable<IError> Errors { get; }
+
     public ErrorStateFromModelState(ModelStateDictionary? modelState)
     {
         Errors = modelState?.Select(e => new ModelStateError(e))
             ?? [];
-    }
-
-    public bool HasTriggeredError(params int[] errorIds)
-    {
-        //todo: what do we use for errorIds for modelstate errors?
-        return false;
-    }
-
-    public int? GetErrorIdIfTriggered(params int[] mutuallyExclusiveErrorIds)
-    {
-        //todo: what do we use for errorIds for modelstate errors?
-        return null;
-    }
-
-    public IError? GetErrorIfTriggered(params int[] mutuallyExclusiveErrorIds)
-    {
-        //todo: 
-        return null;
     }
 
     public IError? GetErrorIfTriggeredByElementId(params string[] mutuallyExclusiveErrorHtmlElementId)
@@ -52,7 +36,4 @@ public class ErrorStateFromModelState : IErrorState
 
         return null;
     }
-
-    public bool HasErrors => Errors.Any();
-    public IEnumerable<IError> Errors { get; }
 }
