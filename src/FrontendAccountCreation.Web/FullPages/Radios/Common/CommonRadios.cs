@@ -1,4 +1,5 @@
-﻿using FrontendAccountCreation.Core.Sessions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FrontendAccountCreation.Core.Sessions;
 using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.FullPages.Radios.Common;
@@ -34,6 +35,7 @@ namespace FrontendAccountCreation.Web.FullPages.Radios.Common;
 ///
 /// This helps ensure the correct grammatical form is used for Welsh translations.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 public static class CommonRadios
 {
     //to-do: optimise these, so don't create new objects each time
