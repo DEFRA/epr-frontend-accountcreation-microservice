@@ -24,10 +24,4 @@ public class Error(PossibleError possibleError, ErrorState errorState)
     //todo: tag helpers to add extra classes/aria-describedby to input element?
 
     public string InputErrorMessageParaId => $"{HtmlElementId}-error-message";
-
-    //public string FormGroupClass => "govuk-form-group--error";
-
-    //public string InputClass => "govuk-input--error";
-    //public string TextAreaClass => "govuk-textarea--error";
-    //public string SelectClass => "govuk-select--error";
 }

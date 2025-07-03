@@ -15,23 +15,9 @@ public class ModelStateError
         //HtmlElementId = modelStateEntry.Key;
         //todo: store key in error, so can check by htmlelementid instead/as well as id?
         //todo: for radios don't add value to first (if need way to link to first input)
-        HtmlElementId = modelStateEntry.Key; //.Replace(".", "_");
+        HtmlElementId = modelStateEntry.Key;
         InputErrorMessageParaId = $"error-message-{HtmlElementId}";
     }
-
-    //public string HtmlElementId
-    //{
-    //    get
-    //    {
-
-    //        //if (errorState.ErrorIdToHtmlElementId == null)
-    //        //{
-    //        //    throw new InvalidOperationException($"ErrorIdToHtmlElementId is null. Set it on {nameof(ErrorState)}.");
-    //        //}
-
-    //        //return errorState.ErrorIdToHtmlElementId(Id);
-    //    }
-    //}
 
     public int Id { get; }
     public string Message { get; }
