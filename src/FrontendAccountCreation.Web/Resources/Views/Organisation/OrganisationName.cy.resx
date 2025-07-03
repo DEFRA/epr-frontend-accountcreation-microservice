@@ -118,18 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="OrganisationName.ErrorMessage" xml:space="preserve">
-    <value>(W)Enter your organisation's name</value>
+    <value>Rhowch enw'ch sefydliad</value>
   </data>
   <data name="OrganisationName.Hint" xml:space="preserve">
-    <value>(W)You may trade under your own name, or a name you have given to your business.</value>
+    <value>Efallai eich bod yn masnachu o dan eich enw chi'ch hun, neu enw rydych chi wedi'i roi i'ch busnes</value>
   </data>
   <data name="OrganisationName.LengthErrorMessage" xml:space="preserve">
-    <value>(W)Organisation name must be 170 characters or less</value>
+    <value>Rhaid i enw'r sefydliad fod yn 170 neu lai o gymeriadau</value>
   </data>
   <data name="OrganisationName.Question" xml:space="preserve">
-    <value>(W)What is the name of your organisation?</value>
+    <value>Beth yw enw'ch sefydliad?</value>
   </data>
   <data name="OrganisationName.Title" xml:space="preserve">
-    <value>(W)Organisation Name</value>
+    <value>Enw sefydliad y tu allan i'r Deyrnas Unedig</value>
   </data>
 </root>

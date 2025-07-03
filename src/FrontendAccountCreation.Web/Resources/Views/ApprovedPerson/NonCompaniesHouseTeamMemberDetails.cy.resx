@@ -118,31 +118,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TeamMemberDetails.Email" xml:space="preserve">
-    <value>[Welsh] Email</value>
+    <value>Ebost</value>
   </data>
   <data name="TeamMemberDetails.FirstName" xml:space="preserve">
     <value>Enw cyntaf</value>
   </data>
   <data name="TeamMemberDetails.FirstNameErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter their first name</value>
+    <value>Rhowch eu henw cyntaf nhw</value>
   </data>
   <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
     <value>Rhaid i’r enw cyntaf fod yn 50 neu lai o gymeriadau</value>
   </data>
   <data name="TeamMemberDetails.Header" xml:space="preserve">
-    <value>[Welsh] What are their details?</value>
+    <value>Beth yw eu manylion nhw?</value>
   </data>
   <data name="TeamMemberDetails.HintEmail" xml:space="preserve">
-    <value>[Welsh] We ask for this so we can invite them to join your team.</value>
+    <value>Rydyn ni'n gofyn am hyn fel y gallwn eu gwahodd nhw i ymuno â'ch tîm.</value>
   </data>
   <data name="TeamMemberDetails.HintTelephone" xml:space="preserve">
-    <value>[Welsh] We ask for this in case your regulator needs to call them directly with any queries.</value>
+    <value>Rydyn ni'n gofyn am hyn rhag ofn bod angen i'ch rheoleiddiwr eu ffonio'n uniongyrchol gydag unrhyw ymholiadau.</value>
   </data>
   <data name="TeamMemberDetails.LastName" xml:space="preserve">
     <value>Enw Olaf</value>
   </data>
   <data name="TeamMemberDetails.LastNameErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter their last name</value>
+    <value>Rhowch eu henw olaf nhw</value>
   </data>
   <data name="TeamMemberDetails.LastNameLengthErrorMessage" xml:space="preserve">
     <value>Rhaid i’r enw olaf fod yn 50 neu lai o gymeriadau</value>
@@ -151,22 +151,22 @@
     <value>Ffôn</value>
   </data>
   <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>[Welsh] Team Member Details</value>
+    <value>Manylion yr Aelod o'r Tîm</value>
   </data>
   <data name="TeamMemberDetails.TelephoneNumberEmptyErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter a telephone number</value>
+    <value>Rhowch rif ffôn</value>
   </data>
   <data name="TeamMemberDetails.TelephoneNumberInvalidErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter a valid telephone number, like 01642 123 456, 07777 777 777 or +33 1 23 45 67 88</value>
+    <value>Rhowch rif ffôn dilys, fel 01642 123 456, 07777 777 777 neu +33 1 23 45 67 88</value>
   </data>
   <data name="TeamMemberDetails.EmailEmptyErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter their email address</value>
+    <value>Rhowch eu cyfeiriad ebost nhw</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter a valid telephone number</value>
+    <value>Rhowch rif ffôn dilys</value>
   </data>
   <data name="TeamMemberDetails.EmailInvalidErrorMessage" xml:space="preserve">
-    <value>[Welsh] Enter an email address with a name, @ symbol and a domain name, like yourname@example.com</value>
+    <value>Rhowch gyfeiriad ebost gydag enw, y symbol @ ac enw parth, fel eichenwchi@enghraifft.com</value>
   </data>
   <data name="TeamMemberDetails.NonUk.Question" xml:space="preserve">
     <value>[Welsh]What are your team member's details?</value>

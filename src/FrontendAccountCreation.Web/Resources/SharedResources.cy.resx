@@ -190,7 +190,7 @@
     <value>Ddim yn siŵr</value>
   </data>
   <data name="CEO" xml:space="preserve">
-    <value>Chief Executive Officer</value>
+    <value>Prif Swyddog Gweithredol</value>
   </data>
   <data name="Owner" xml:space="preserve">
     <value>Owner</value>
@@ -199,13 +199,13 @@
     <value>Partner</value>
   </data>
   <data name="CompanyDirectorOrSecretary" xml:space="preserve">
-    <value>Company Director or Secretary</value>
+    <value>Cyfarwyddwr neu Ysgrifennydd y Cwmni</value>
   </data>
   <data name="UnincorporatedRoles" xml:space="preserve">
     <value>Chair, Treasurer or Secretary of an unincorporated organisation</value>
   </data>
   <data name="ForExample" xml:space="preserve">
-    <value>For example:</value>
+    <value>Er enghraifft:</value>
   </data>
   <data name="CompanyDirector" xml:space="preserve">
     <value>Company director</value>
