@@ -19,13 +19,10 @@
                 @{
                     var error = Model.Errors.GetErrorIfTriggeredByElementId();
                 }
-                
-                @* todo: ariadescribedby hint *@
-                @* todo: check accessibility *@
 
                 <form method="post" novalidate>
                     <div class="govuk-form-group @error?.FormGroupClass">
-                        <fieldset class="govuk-fieldset" aria-describedby="@error?.InputErrorMessageParaId">
+                        <fieldset class="govuk-fieldset" aria-describedby="@(Model.Hint != null ? "hint" : "") @error?.InputErrorMessageParaId">
                             @if (Model.Legend != null)
                             {
                                 if (Model.DescriptionPartial == null)
@@ -47,7 +44,7 @@
                             }
                             @if (Model.Hint != null)
                             {
-                                <div class="govuk-hint govuk-!-margin-bottom-6">
+                                <div class="govuk-hint govuk-!-margin-bottom-6" id="hint">
                                     @Model.Hint
                                 </div>
                             }
@@ -55,10 +52,10 @@
                             <div class="govuk-radios @(Model.AreRadiosInline ? "govuk-radios--inline" : "")" data-module="govuk-radios">
                                 @foreach (var (radio, index) in Model.Radios.Select((e, i) => (e, i)))
                                 {
-                                    string id = index == 0 ? nameof(Model.SelectedValue) : $"{nameof(Model.SelectedValue)}-{radio.Value}";
+                                    string inputId = index == 0 ? nameof(Model.SelectedValue) : $"{nameof(Model.SelectedValue)}-{radio.Value}";
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@id" name="@nameof(Model.SelectedValue)" type="radio" value="@radio.Value" @(radio.Value == Model.SelectedValue ? "checked" : "")>
-                                        <label class="govuk-label govuk-radios__label" for="radio-@radio.Value">
+                                        <input class="govuk-radios__input" id="@inputId" name="@nameof(Model.SelectedValue)" type="radio" value="@radio.Value" @(radio.Value == Model.SelectedValue ? "checked" : "")>
+                                        <label class="govuk-label govuk-radios__label" for="@inputId">
                                             @radio.Label
                                         </label>
                                     </div>
