@@ -5,6 +5,7 @@ using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers;
@@ -36,7 +37,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
         session.IsUserChangingDetails = false;
         await SaveSession(session, currentPagePath, nextPagePath);
         
-        return RedirectToPage($"/Organisation/{pageName}");
+        return RedirectToPage($"{PagePath.RazorPagesBase}/{pageName}");
     }
 
     //todo: should be protected

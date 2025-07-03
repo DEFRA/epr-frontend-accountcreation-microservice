@@ -630,8 +630,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         var result = await _systemUnderTest.AddApprovedPerson(model);
 
         var redirect = result.Should().BeOfType<RedirectToPageResult>().Subject;
-        //todo: do others in a similar way
-        redirect.PageName.Should().Be($"/Organisation/{PagePath.ManageControlOrganisation}");
+        redirect.PageName.Should().Be($"{PagePath.RazorPagesBase}/ManageControlOrganisation");
     }
 
     [TestMethod]

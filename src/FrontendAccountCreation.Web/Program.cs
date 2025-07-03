@@ -1,6 +1,7 @@
 ﻿using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.Configs;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.HealthChecks;
 using FrontendAccountCreation.Web.Middleware;
@@ -47,7 +48,7 @@ builder.Services.Configure<DeploymentRoleOptions>(options =>
 
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AddPageRoute("/Re-Ex/Organisation/RegisteredAsCharity", "/re-ex/organisation");
+    options.Conventions.AddPageRoute($"{PagePath.RazorPagesBase}/RegisteredAsCharity", "/re-ex/organisation");
 });
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
