@@ -12,7 +12,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
-public partial class LimitedPartnershipController : ControllerBase<OrganisationSession>
+public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
 

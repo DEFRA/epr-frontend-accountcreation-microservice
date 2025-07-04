@@ -4,14 +4,12 @@ using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Extensions;
+using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-using FrontendAccountCreation.Core.Models;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 {
@@ -126,14 +124,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     {
                         if (session.IsUkMainAddress is false)
                         {
-                            actionName = nameof(ManageControlOrganisation);
-                            nextPagePath = PagePath.ManageControlOrganisation;
+                            return await SaveSessionAndRedirectToPage(
+                                session,
+                                nameof(ManageControlOrganisation),
+                                PagePath.AddAnApprovedPerson,
+                                PagePath.ManageControlOrganisation);
                         }
-                        else
-                        {
-                            actionName = nameof(AreTheyIndividualInCharge);
-                            nextPagePath = PagePath.IndividualIncharge;
-                        }
+                        actionName = nameof(AreTheyIndividualInCharge);
+                        nextPagePath = PagePath.IndividualIncharge;
                     }
 
                     return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
@@ -205,51 +203,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return await SaveSessionAndRedirect(session,
                     nameof(PersonCanNotBeInvited),
                     PagePath.IndividualIncharge,
-                    PagePath.ApprovedPersonPartnershipCanNotBeInvited);
-            }
-        }
-
-        [HttpGet]
-        [Route(PagePath.ManageControlOrganisation)]
-        [OrganisationJourneyAccess(PagePath.ManageControlOrganisation)]
-        public async Task<IActionResult> ManageControlOrganisation(bool invitePerson = false)
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.ManageControlOrganisation);
-
-            return View(new ManageControlOrganisationViewModel
-            {
-                TheyManageOrControlOrganisation = invitePerson ? null : session.TheyManageOrControlOrganisation
-            });
-        }
-
-        [HttpPost]
-        [Route(PagePath.ManageControlOrganisation)]
-        [OrganisationJourneyAccess(PagePath.ManageControlOrganisation)]
-        public async Task<IActionResult> ManageControlOrganisation(ManageControlOrganisationViewModel model)
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-            if (!ModelState.IsValid)
-            {
-                SetBackLink(session, PagePath.ManageControlOrganisation);
-                return View(model);
-            }
-
-            session.TheyManageOrControlOrganisation = model.TheyManageOrControlOrganisation;
-
-            if (model.TheyManageOrControlOrganisation.HasValue && model.TheyManageOrControlOrganisation.Value == Core.Models.YesNoNotSure.Yes)
-            {
-                return await SaveSessionAndRedirect(session,
-                    nameof(NonCompaniesHouseTeamMemberDetails),
-                    PagePath.ManageControlOrganisation,
-                    PagePath.NonCompaniesHouseTeamMemberDetails);
-            }
-            else
-            {
-                return await SaveSessionAndRedirect(session,
-                    nameof(PersonCanNotBeInvited),
-                    PagePath.ManageControlOrganisation,
                     PagePath.ApprovedPersonPartnershipCanNotBeInvited);
             }
         }
