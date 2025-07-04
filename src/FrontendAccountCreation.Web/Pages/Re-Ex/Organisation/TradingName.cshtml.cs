@@ -13,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
 //todo: going back from address overseas goes to is trading name different
-//todo: content is different - is that intentional?
+//todo: check original stories for what the content should be
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [OrganisationJourneyAccess(PagePath.TradingName)]
