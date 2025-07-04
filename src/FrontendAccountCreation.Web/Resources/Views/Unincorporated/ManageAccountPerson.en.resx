@@ -174,7 +174,7 @@
 		<value>I agree to be an approved person</value>
 	</data>
 	<data name="ReExManageAccountPerson.Option.TeamMember" xml:space="preserve">
-		<value>I will invite a team member to be an approved person instead</value>
+		<value>I will invite an eligible person to be an approved person</value>
 	</data>
 	<data name="ReExManageAccountPerson.Option.Later" xml:space="preserve">
 		<value>I will invite an approved person later</value>
