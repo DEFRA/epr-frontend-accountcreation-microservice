@@ -141,7 +141,7 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
             .Returns(new LocalizedString("UkRegulator.NonUkOrganisation.Question", "Test question string"));
 
         // Act
-        var legend = _ukRegulator.Legend;
+        var legend = _ukRegulator.Question;
 
         // Assert
         legend.Should().Be("Test question string");

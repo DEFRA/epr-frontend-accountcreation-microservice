@@ -28,7 +28,7 @@ public class ManageControlOrganisation(
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Legend => Localizer["ManageControlOrganisation.Question"];
+    public string? Question => Localizer["ManageControlOrganisation.Question"];
 
     public string? Hint => Localizer["ManageControlOrganisation.Hint"];
 

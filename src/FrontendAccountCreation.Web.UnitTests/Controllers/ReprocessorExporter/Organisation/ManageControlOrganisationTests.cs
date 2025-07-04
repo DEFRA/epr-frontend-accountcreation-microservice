@@ -160,7 +160,7 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
             .Returns(new LocalizedString("ManageControlOrganisation.Question", "Test question string"));
 
         // Act
-        var legend = _manageControlOrganisation.Legend;
+        var legend = _manageControlOrganisation.Question;
 
         // Assert
         legend.Should().Be("Test question string");

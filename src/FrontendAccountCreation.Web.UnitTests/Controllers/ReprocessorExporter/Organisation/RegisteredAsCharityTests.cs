@@ -222,7 +222,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
             .Returns(new LocalizedString("RegisteredAsCharity.Question", "Test question string"));
 
         // Act
-        var legend = _registeredAsCharity.Legend;
+        var legend = _registeredAsCharity.Question;
 
         // Assert
         legend.Should().Be("Test question string");

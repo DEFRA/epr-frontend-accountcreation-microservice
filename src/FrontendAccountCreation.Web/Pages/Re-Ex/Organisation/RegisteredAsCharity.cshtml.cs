@@ -33,7 +33,7 @@ public class RegisteredAsCharity(
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Legend => Localizer["RegisteredAsCharity.Question"];
+    public string? Question => Localizer["RegisteredAsCharity.Question"];
 
     public string? Hint => Localizer["RegisteredAsCharity.Description"];
     

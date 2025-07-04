@@ -24,8 +24,7 @@ public interface IRadiosPageModel
 
     string? DescriptionPartial => null;
 
-    string? Legend { get; }
-
+    string? Question { get; }
     string? Hint => null;
     string? ButtonText => "Continue";
 }

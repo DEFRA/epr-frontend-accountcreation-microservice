@@ -29,7 +29,7 @@ public class UkRegulator(
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Legend => Localizer["UkRegulator.NonUkOrganisation.Question"];
+    public string? Question => Localizer["UkRegulator.NonUkOrganisation.Question"];
 
     public string? Hint => Localizer["UkRegulator.NonUkHint"];
 

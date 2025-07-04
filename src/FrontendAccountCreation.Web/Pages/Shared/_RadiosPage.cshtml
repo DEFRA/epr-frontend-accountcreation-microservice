@@ -23,13 +23,13 @@
                 <form method="post" novalidate>
                     <div class="govuk-form-group @error?.FormGroupClass">
                         <fieldset class="govuk-fieldset" aria-describedby="@(Model.Hint != null ? "hint" : "") @error?.InputErrorMessageParaId">
-                            @if (Model.Legend != null)
+                            @if (Model.Question != null)
                             {
                                 if (Model.DescriptionPartial == null)
                                 {
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-6">
                                         <h1 class="govuk-fieldset__heading">
-                                            @Model.Legend
+                                            @Model.Question
                                         </h1>
                                     </legend>
                                 }
@@ -37,7 +37,7 @@
                                 {
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-6">
                                         <h2 class="govuk-fieldset__heading">
-                                            @Model.Legend
+                                            @Model.Question
                                         </h2>
                                     </legend>
                                 }
