@@ -26,5 +26,5 @@ public interface IRadiosPageModel
 
     string? Question { get; }
     string? Hint => null;
-    string? ButtonText => "Continue";
+    string ButtonText => "Continue";
 }

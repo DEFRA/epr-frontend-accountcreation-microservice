@@ -123,10 +123,10 @@
   <data name="UkRegulator.ErrorMessage" xml:space="preserve">
     <value>Select a UK regulator to register with</value>
   </data>
-  <data name="UkRegulator.NonUkHint" xml:space="preserve">
+  <data name="UkRegulator.Hint" xml:space="preserve">
     <value>Gan nad yw'ch sefydliad chi yn y Deyrnas Unedig, cewch ddewis pa reoleiddiwr i anfon eich holl geisiadau ato. Unwaith y byddwch chi wedi dewis, chewch chi ddim newid hyn.</value>
   </data>
-  <data name="UkRegulator.NonUkOrganisation.Question" xml:space="preserve">
+  <data name="UkRegulator.Question" xml:space="preserve">
     <value>Gyda pha reoleiddiwr yn y Deyrnas Unedig hoffech chi gofrestru?</value>
   </data>
 </root>

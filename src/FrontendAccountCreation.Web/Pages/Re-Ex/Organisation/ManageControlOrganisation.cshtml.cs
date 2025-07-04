@@ -28,9 +28,7 @@ public class ManageControlOrganisation(
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Question => Localizer["ManageControlOrganisation.Question"];
-
-    public string? Hint => Localizer["ManageControlOrganisation.Hint"];
+    public string Hint => Localizer["ManageControlOrganisation.Hint"];
 
     public async Task<IActionResult> OnGet(bool invitePerson = false)
     {

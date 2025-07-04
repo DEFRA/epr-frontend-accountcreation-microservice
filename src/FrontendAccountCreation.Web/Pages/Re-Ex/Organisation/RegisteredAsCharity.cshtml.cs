@@ -33,9 +33,7 @@ public class RegisteredAsCharity(
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Question => Localizer["RegisteredAsCharity.Question"];
-
-    public string? Hint => Localizer["RegisteredAsCharity.Description"];
+    public string? Hint => Localizer["RegisteredAsCharity.Hint"];
     
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)
