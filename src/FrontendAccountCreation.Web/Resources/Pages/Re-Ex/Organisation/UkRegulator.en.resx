@@ -117,28 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="UkRegulator.Nation.Title" xml:space="preserve">
-    <value>Uk regulator</value>
-  </data>
-  <data name="UkRegulator.Nation.England" xml:space="preserve">
-    <value>Lloegr</value>
-  </data>
-  <data name="UkRegulator.Nation.Scotland" xml:space="preserve">
-    <value>Yr Alban</value>
-  </data>
-  <data name="UkRegulator.Nation.Wales" xml:space="preserve">
-    <value>Cymru</value>
-  </data>
-  <data name="UkRegulator.Nation.NorthernIreland" xml:space="preserve">
-    <value>Gogledd Iwerddon</value>
+  <data name="UkRegulator.Title" xml:space="preserve">
+    <value>UK regulator</value>
   </data>
   <data name="UkRegulator.ErrorMessage" xml:space="preserve">
     <value>Select a UK regulator to register with</value>
   </data>
   <data name="UkRegulator.NonUkHint" xml:space="preserve">
-    <value>Gan nad yw'ch sefydliad chi yn y Deyrnas Unedig, cewch ddewis pa reoleiddiwr i anfon eich holl geisiadau ato. Unwaith y byddwch chi wedi dewis, chewch chi ddim newid hyn.</value>
+    <value>As your organisation is not in the UK, you can choose which regulator to send all your applications to. Once you have chosen you cannot change this.</value>
   </data>
   <data name="UkRegulator.NonUkOrganisation.Question" xml:space="preserve">
-    <value>Gyda pha reoleiddiwr yn y Deyrnas Unedig hoffech chi gofrestru?</value>
+    <value>Which UK regulator would you like to register with?</value>
   </data>
 </root>

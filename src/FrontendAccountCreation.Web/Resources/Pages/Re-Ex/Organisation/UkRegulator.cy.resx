@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>Dewiswch opsiwn</value>
+  <data name="UkRegulator.Title" xml:space="preserve">
+    <value>UK regulator</value>
   </data>
-  <data name="AddAnApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh]Add an approved person </value>
+  <data name="UkRegulator.ErrorMessage" xml:space="preserve">
+    <value>Select a UK regulator to register with</value>
+  </data>
+  <data name="UkRegulator.NonUkHint" xml:space="preserve">
+    <value>Gan nad yw'ch sefydliad chi yn y Deyrnas Unedig, cewch ddewis pa reoleiddiwr i anfon eich holl geisiadau ato. Unwaith y byddwch chi wedi dewis, chewch chi ddim newid hyn.</value>
+  </data>
+  <data name="UkRegulator.NonUkOrganisation.Question" xml:space="preserve">
+    <value>Gyda pha reoleiddiwr yn y Deyrnas Unedig hoffech chi gofrestru?</value>
   </data>
 </root>
