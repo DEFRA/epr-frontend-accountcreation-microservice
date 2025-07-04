@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-using System.Diagnostics.CodeAnalysis;
 using FrontendAccountCreation.Core.Models;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
@@ -22,6 +21,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
     {
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
+        const string ApprovedPersonErrorMessage = "AddAnApprovedPerson.OptionError";
 
         public ApprovedPersonController(
             ISessionManager<OrganisationSession> sessionManager,
@@ -61,18 +61,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(model);
         }
 
-        private static string GetAddApprovedPersonErrorMessageKey(AddApprovedPersonViewModel model)
-        {
-            return model switch
-            {
-                { IsSoleTrader: true } => "AddNotApprovedPerson.SoleTrader.ErrorMessage",
-                { IsNonUk: true, IsInEligibleToBeApprovedPerson: true } => "AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage",
-                { IsNonUk: true } => "AddApprovedPerson.NonUk.EligibleAP.ErrorMessage",
-                { IsNonCompaniesHousePartnership: true } => "NonCompaniesHousePartnershipAddApprovedPerson.OptionError",
-                _ => "AddAnApprovedPerson.OptionError"
-            };
-        }
-
         private static bool IsEligibleToBeApprovedPerson(OrganisationSession session)
         {
             bool isEligibleToBeApprovedPerson = false;
@@ -106,10 +94,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session);
                 model.IsNonUk = session.IsUkMainAddress == false;
 
-                string errorMessage = GetAddApprovedPersonErrorMessageKey(model);
-
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
+                ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
                 return View(model);
             }
 
@@ -1101,9 +1087,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
                 SetBackLink(session, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
 
-                string errorMessage = GetAddApprovedPersonErrorMessageKey(model);
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                ModelState.AddModelError(nameof(model.InviteUserOption), errorMessage);
+                ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
 
                 return View(model);
             }
