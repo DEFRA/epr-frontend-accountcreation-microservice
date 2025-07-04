@@ -6,6 +6,7 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
 namespace FrontendAccountCreation.Core.UnitTests;
 
@@ -207,9 +208,9 @@ public class ReExAccountMapperTests
     [DataRow(null, null, OrganisationType.NonCompaniesHouseCompany, Nation.Scotland)]
     [DataRow(ReExTeamMemberRole.Director, "Director", OrganisationType.NonCompaniesHouseCompany, Nation.Scotland)]
     [DataRow(ReExTeamMemberRole.CompanySecretary, "CompanySecretary", OrganisationType.NonCompaniesHouseCompany, Nation.England)]
-    [DataRow(ReExTeamMemberRole.IndividualPartner, "IndividualPartner", OrganisationType.NonCompaniesHouseCompany, Nation.Wales)]
-    [DataRow(ReExTeamMemberRole.PartnerDirector, "PartnerDirector", OrganisationType.NonCompaniesHouseCompany, Nation.NorthernIreland)]
-    [DataRow(ReExTeamMemberRole.None, "None", OrganisationType.NonCompaniesHouseCompany, Nation.NotSet)]
+    [DataRow(ReExTeamMemberRole.IndividualPartner, "Individual Partner", OrganisationType.NonCompaniesHouseCompany, Nation.Wales)]
+    [DataRow(ReExTeamMemberRole.PartnerDirector, "Company director of a corporate partner", OrganisationType.NonCompaniesHouseCompany, Nation.NorthernIreland)]
+    [DataRow(ReExTeamMemberRole.None, null, OrganisationType.NonCompaniesHouseCompany, Nation.NotSet)]
     public void CreateReExOrganisationModel_Returns_Model_FromOrganisationSession_With_ManualInputSession_Data(ReExTeamMemberRole? memberRole, string? expectedRole, OrganisationType organisationType, Nation nation)
     {
         // Arrange
@@ -244,7 +245,7 @@ public class ReExAccountMapperTests
                         Role = memberRole,
                         Email = "john.smith@tester.com",
                         TelephoneNumber = "07880809087"
-                    } 
+                    }
                 }
             }
         };
@@ -351,7 +352,7 @@ public class ReExAccountMapperTests
                 Email = "bob@example.com",
                 Role = ReExTeamMemberRole.Director,
                 TelephoneNumber = "444555666"
-                } 
+                }
             }
         };
         var session = new OrganisationSession
@@ -945,7 +946,30 @@ public class ReExAccountMapperTests
     }
 
     [TestMethod]
-    public void CreateReExOrganisationModel_Map_Partners()
+    [DataRow(RoleInOrganisation.Director)]
+    [DataRow(RoleInOrganisation.CompanyDirector)]
+    [DataRow(RoleInOrganisation.PartnerCompanySecretary)]
+    [DataRow(RoleInOrganisation.CompanySecretary)]
+    public void CreateReExOrganisationModel_ManualInputSession_MapsUserRoleFromRoleInOrganisation_if_PartnershipType(RoleInOrganisation role)
+    {
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.Partnership,
+                RoleInOrganisation = role,
+            }
+        };
+
+        var result = _mapper.CreateReExOrganisationModel(session);
+
+        result.Should().NotBeNull();
+        result.UserRoleInOrganisation.Should().Be(role.GetDescriptionOrNull());
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_Partners_fromCompanyHouseSession_ifCompanyHousePartnership()
     {
         var orgSession = new OrganisationSession
         {
@@ -995,5 +1019,190 @@ public class ReExAccountMapperTests
             Name = "Company1",
             PartnerRole = PartnerType.CorporatePartner.GetDescription()
         });
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_PartnersFrom_ManualInputSession_IfNonCompanyHousePartnership()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TypesOfPartner = new Sessions.ReEx.Partnership.ReExTypesOfPartner
+                {
+                    Partners =
+                    [
+                        new ReExPersonOrCompanyPartner
+                        {
+                            Name = "Person1",
+                            IsPerson = true
+                        },
+                        new ReExPersonOrCompanyPartner
+                        {
+                            Name = "Company1",
+                            IsPerson = false
+                        },
+                         new ReExPersonOrCompanyPartner
+                        {
+                            Name = "Company2",
+                            IsPerson = false
+                        }
+                    ]
+                }
+            }
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Partners.Should().NotBeNull().And.HaveCount(3);
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Person1",
+            PartnerRole = PartnerType.IndividualPartner.GetDescription()
+        });
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Company1",
+            PartnerRole = PartnerType.CorporatePartner.GetDescription()
+        });
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Company2",
+            PartnerRole = PartnerType.CorporatePartner.GetDescription()
+        });
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_Partners_null_IfNoPartners()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TypesOfPartner = null
+            }
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Partners.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_ApprovedPerson_For_NonCompanyHouse()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = [
+                    new ()
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "F1",
+                        LastName = "L1",
+                        Email = "L1.F1@company.com",
+                        Role = ReExTeamMemberRole.IndividualPartner,
+                        TelephoneNumber = "123456"
+                    },
+                    new ()
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "F2",
+                        LastName = "L2",
+                        Email = "L2.F2@company.com",
+                        Role = ReExTeamMemberRole.PartnerCompanySecretary,
+                        TelephoneNumber = "1244"
+                    },
+                ]
+            }
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.InvitedApprovedPersons.Should().HaveCount(2);
+        result.InvitedApprovedPersons[0].Should().BeEquivalentTo(
+            new ReExInvitedApprovedPerson()
+            {
+                FirstName = "F1",
+                LastName = "L1",
+                Email = "L1.F1@company.com",
+                TelephoneNumber = "123456",
+                Role = "Individual partner"
+            },
+            options => options.Excluding(x => x.Id)
+        );
+        result.InvitedApprovedPersons[1].Should().BeEquivalentTo(
+                    new ReExInvitedApprovedPerson()
+                    {
+                        FirstName = "F2",
+                        LastName = "L2",
+                        Email = "L2.F2@company.com",
+                        TelephoneNumber = "1244",
+                        Role = "Company secretary of a corporate partner"
+                    },
+                    options => options.Excluding(x => x.Id)
+                );
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_ApprovedPerson_For_CompanyHouse()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession()
+            {
+                TeamMembers = [
+                    new ()
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "F1",
+                        LastName = "L1",
+                        Email = "L1.F1@company.com",
+                        Role = ReExTeamMemberRole.IndividualPartner,
+                        TelephoneNumber = "123456"
+                    },
+                    new ()
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "F2",
+                        LastName = "L2",
+                        Email = "L2.F2@company.com",
+                        Role = ReExTeamMemberRole.PartnerCompanySecretary,
+                        TelephoneNumber = "1244"
+                    },
+                ]
+            }
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.InvitedApprovedPersons.Should().HaveCount(2);
+        result.InvitedApprovedPersons[0].Should().BeEquivalentTo(
+            new ReExInvitedApprovedPerson()
+            {
+                FirstName = "F1",
+                LastName = "L1",
+                Email = "L1.F1@company.com",
+                TelephoneNumber = "123456",
+                Role = "Individual partner"
+            },
+            options => options.Excluding(x => x.Id)
+        );
+        result.InvitedApprovedPersons[1].Should().BeEquivalentTo(
+                    new ReExInvitedApprovedPerson()
+                    {
+                        FirstName = "F2",
+                        LastName = "L2",
+                        Email = "L2.F2@company.com",
+                        TelephoneNumber = "1244",
+                        Role = "Company secretary of a corporate partner"
+                    },
+                    options => options.Excluding(x => x.Id)
+                );
     }
 }
