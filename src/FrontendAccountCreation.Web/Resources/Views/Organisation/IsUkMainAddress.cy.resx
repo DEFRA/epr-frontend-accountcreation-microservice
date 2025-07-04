@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IsUkMainAddress.ErrorMessage" xml:space="preserve">
-    <value>(W)Select if your organisation have a main address in the UK</value>
+    <value>Dewiswch os oes gan eich sefydliad brif gyfeiriad yn y Deyrnas Unedig</value>
   </data>
   <data name="IsUkMainAddress.Hint" xml:space="preserve">
-    <value>(W)This means a head office or principal place of business in the UK.</value>
+    <value>Mae hyn yn golygu prif swyddfa neu brif le busnes yn y Deyrnas Unedig.</value>
   </data>
   <data name="IsUkMainAddress.Question" xml:space="preserve">
-    <value>(W)Does the organisation have a main address in the UK?</value>
+    <value>Oes gan y sefydliad brif gyfeiriad yn y Deyrnas Unedig?</value>
   </data>
   <data name="IsUkMainAddress.Title" xml:space="preserve">
-    <value>(W)Main address in the UK</value>
+    <value>Prif gyfeiriad yn y Deyrnas Unedig</value>
   </data>
 </root>

@@ -16,4 +16,6 @@ public class ReExCompaniesHouseSession
     public ReExPartnership? Partnership { get; set; }
 
     public bool IsInEligibleToBeApprovedPerson { get; set; }
+
+    public ProducerType? ProducerType { get; set; }
 }

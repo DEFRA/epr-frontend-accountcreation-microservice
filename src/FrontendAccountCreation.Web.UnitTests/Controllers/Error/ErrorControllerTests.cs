@@ -1,12 +1,13 @@
-using Microsoft.AspNetCore.Http;
-using Moq;
 using FluentAssertions;
-using System.Net;
 using FrontendAccountCreation.Core.Utilities;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Errors;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
+using Moq;
+using System.Net;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.Error;
 
@@ -107,7 +108,7 @@ public class ErrorControllerTests
     [DataRow("User", null, 500)]
     [DataRow("Organisation", 500, 500)]
     [DataRow("Organisation", 500, 500, false, true)]
-    [DataRow("Account", 403, 403)]
+    [DataRow("Account", 403, 500)]
     [DataRow("User", 500, 500, true)]
     public void Error_NotPageNotFoundGivenSourceController_ReturnsSuppliedStatusCode(
         string? controllerName, int? passedStatusCode, int expectedStatusCode, bool mockFeatureReturnAsNull = false, bool hasEmptyRouteValues = false)
@@ -139,6 +140,32 @@ public class ErrorControllerTests
 
         // Assert
         _httpResponse!.VerifySet(r => r.StatusCode = expectedStatusCode);
+    }
+
+    [TestMethod]
+    public void PageNotFound_ReturnsThePageNotFoundView()
+    {
+        // Arrange
+        var errorController = CreateErrorController();
+
+        // Act
+        var result = errorController.PageNotFound();
+
+        // Assert
+        result.ViewName.Should().Be(ViewNames.PageNotFound);
+    }
+
+    [TestMethod]
+    public void PageNotFound_Returns404()
+    {
+        // Arrange
+        var errorController = CreateErrorController();
+
+        // Act
+        errorController.PageNotFound();
+
+        // Assert
+        _httpResponse!.VerifySet(r => r.StatusCode = (int)HttpStatusCode.NotFound);
     }
 
     [TestMethod]

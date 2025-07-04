@@ -168,11 +168,14 @@
   <data name="AddNotApprovedPerson.UserHeading" xml:space="preserve">
     <value>Invite users in your team</value>
   </data>
+  <data name="AddNotApprovedPerson.SoleTrader.ErrorMessage" xml:space="preserve">
+    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
+  </data>
   <data name="AddNotApprovedPerson.SoleTrader.IntroText1" xml:space="preserve">
     <value>You should invite the individual in charge of the organisation sole trader to be the 'approved person'. This role needs to take on tasks on behalf of the organisation.</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.IntroText2" xml:space="preserve">
-    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can:</value>
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to:</value>
   </data>
   <data name="AddNotApprovedPerson.SoleTrader.InviteAnotherApprovedPerson" xml:space="preserve">
     <value>I will invite the individual in charge of the organisation to be an approved person</value>
@@ -183,7 +186,10 @@
   <data name="AddNotApprovedPerson.SoleTrader.RolesInstruction" xml:space="preserve">
     <value>Only the individual in charge of the business in your organisation is eligible for this role.</value>
   </data>
-  <data name="AddNotApprovedPerson.SoleTrader.ErrorMessage" xml:space="preserve">
-    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
+  <data name="AddNotApprovedPerson.NonUk.Roles.Instruction" xml:space="preserve">
+    <value>A person who has control or management of a business that does not have a registered office, head office or principal place of business in the UK.</value>
+  </data>
+  <data name="AddNotApprovedPerson.CompanyDirector" xml:space="preserve">
+    <value>company director</value>
   </data>
 </root>

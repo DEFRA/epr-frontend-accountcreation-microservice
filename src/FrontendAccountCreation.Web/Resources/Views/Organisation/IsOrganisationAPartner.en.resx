@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IsOrganisationAPartner.ErrorMessage" xml:space="preserve">
-    <value>Select your role in the organisation</value>
+    <value>Select yes if your organisation is a partnership</value>
   </data>
   <data name="IsOrganisationAPartner.Question" xml:space="preserve">
     <value>Is your organisation a partnership?</value>
   </data>
   <data name="IsOrganisationAPartner.Title" xml:space="preserve">
-    <value>Partner organisation</value>
+    <value>Is your organisation a partnership?</value>
   </data>
 </root>

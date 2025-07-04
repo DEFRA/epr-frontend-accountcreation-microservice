@@ -37,7 +37,7 @@ public class CookieBannerTests
         _httpRequest.Setup(x => x.Cookies).Returns(_requestCookies.Object);
     }
 
-        [TestMethod]
+    [TestMethod]
     public void Invoke_SetsModel()
     {
        // Arrange
@@ -63,10 +63,12 @@ public class CookieBannerTests
            CookiePolicyDurationInMonths = 60, SessionCookieName = null,  TempDataCookie = null, TsCookieName = null
         };
         var options = Options.Create(eprCookieOptions);
-        var component = new CookieBannerViewComponent(options);
-        component.ViewComponentContext = viewComponentContext;
-        
-        var model = (CookieBannerModel)((ViewViewComponentResult)component.Invoke("/TestUrl")).ViewData!.Model!;
+        var component = new CookieBannerViewComponent(options)
+        {
+            ViewComponentContext = viewComponentContext
+        };
+
+        var model = (CookieBannerModel)((ViewViewComponentResult)component.Invoke()).ViewData!.Model!;
 
         Assert.IsNotNull(model);
         Assert.IsTrue(model.ShowBanner);

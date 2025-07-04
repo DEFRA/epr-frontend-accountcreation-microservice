@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BusinessAddress.BuildingNameError" xml:space="preserve">
-    <value>[W]Enter your organisation's building name</value>
+    <value>Rhowch enw adeilad eich sefydliad</value>
   </data>
   <data name="BusinessAddress.BuildingNameLabel" xml:space="preserve">
     <value>Enw’r adeilad</value>
   </data>
   <data name="BusinessAddress.BuildingNumberError" xml:space="preserve">
-    <value>[W]Enter your organisation's building number</value>
+    <value>Rhowch rif adeilad eich sefydliad</value>
   </data>
   <data name="BusinessAddress.BuildingNumberLabel" xml:space="preserve">
     <value>Rhif yr adeilad</value>
@@ -142,19 +142,19 @@
     <value>Cod post</value>
   </data>
   <data name="BusinessAddress.Question" xml:space="preserve">
-    <value>[W]What is your organisation's address?</value>
+    <value>Beth yw cyfeiriad eich sefydliad?</value>
   </data>
   <data name="BusinessAddress.StreetLabel" xml:space="preserve">
     <value>Stryd</value>
   </data>
   <data name="BusinessAddress.StreetNameError" xml:space="preserve">
-    <value>[W]Enter your organisation's street</value>
+    <value>Rhowch stryd eich sefydliad</value>
   </data>
   <data name="BusinessAddress.Title" xml:space="preserve">
     <value>Cyfeiriad Busnes</value>
   </data>
   <data name="BusinessAddress.TownError" xml:space="preserve">
-    <value>[W]Enter your organisation's town or city</value>
+    <value>Rhowch dref neu ddinas eich sefydliad</value>
   </data>
   <data name="BusinessAddress.TownLabel" xml:space="preserve">
     <value>Tref neu ddinas</value>
@@ -166,12 +166,12 @@
     <value>Rhowch god post, fel AA1 1AA</value>
   </data>
   <data name="BusinessAddress.BuildingNumberLengthError" xml:space="preserve">
-    <value>[W]Building number must be 50 characters or less</value>
+    <value>Rhaid i rif yr adeilad fod yn 50 neu lai o gymeriadau</value>
   </data>
   <data name="BusinessAddress.BuildingNameLengthError" xml:space="preserve">
-    <value>[W]Building name must be 100 characters or less</value>
+    <value>Rhaid i enw'r adeilad fod yn 100 neu lai o gymeriadau</value>
   </data>
   <data name="BusinessAddress.StreetNameLengthError" xml:space="preserve">
-    <value>[W]Street must be 100 characters or less</value>
+    <value>Rhaid i'r stryd fod yn 100 neu lai o gymeriadau</value>
   </data>
 </root>

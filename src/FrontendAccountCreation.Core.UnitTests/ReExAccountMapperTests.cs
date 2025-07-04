@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
@@ -217,9 +218,9 @@ public class ReExAccountMapperTests
             OrganisationType = organisationType,
             ReExCompaniesHouseSession = null,
             IsApprovedUser = false,
-            UkNation = nation,
             ReExManualInputSession = new ReExManualInputSession
             {
+                UkRegulatorNation = nation,
                 BusinessAddress = new Address
                 {
                     BuildingName = "ReEx House",
@@ -233,15 +234,18 @@ public class ReExAccountMapperTests
                     Country = "England"
                 },
                 ProducerType = ProducerType.SoleTrader,
-                TeamMember = new ReExCompanyTeamMember
+                TeamMembers = new List<ReExCompanyTeamMember>
                 {
-                    FirstName = "John",
-                    LastName = "Smith",
-                    Role = memberRole,
-                    Email = "john.smith@tester.com",
-                    TelephoneNumber = "07880809087"
-                },
-                TradingName = "test sole trader"
+                new ReExCompanyTeamMember
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "John",
+                        LastName = "Smith",
+                        Role = memberRole,
+                        Email = "john.smith@tester.com",
+                        TelephoneNumber = "07880809087"
+                    } 
+                }
             }
         };
 
@@ -255,7 +259,6 @@ public class ReExAccountMapperTests
         result.ManualInput.OrganisationType.Should().Be(organisationType);
         result.ManualInput.Nation.Should().Be(nation);
         result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
-        result.ManualInput.TradingName.Should().Be("test sole trader");
 
         result.InvitedApprovedPersons.Should().HaveCount(1);
         result.InvitedApprovedPersons[0].FirstName.Should().Be("John");
@@ -329,7 +332,6 @@ public class ReExAccountMapperTests
         };
         var manualInputSession = new ReExManualInputSession
         {
-            TradingName = "Trading",
             ProducerType = ProducerType.SoleTrader,
             BusinessAddress = new Address
             {
@@ -339,14 +341,17 @@ public class ReExAccountMapperTests
                 Country = "Manual Country",
                 Postcode = "PC2 2BB"
             },
-            TeamMember = new ReExCompanyTeamMember
-            {
+            TeamMembers = new List<ReExCompanyTeamMember>
+                {
+                new ReExCompanyTeamMember
+                {
                 Id = Guid.NewGuid(),
                 FirstName = "Bob",
                 LastName = "Brown",
                 Email = "bob@example.com",
                 Role = ReExTeamMemberRole.Director,
                 TelephoneNumber = "444555666"
+                } 
             }
         };
         var session = new OrganisationSession
@@ -355,7 +360,8 @@ public class ReExAccountMapperTests
             ReExManualInputSession = manualInputSession,
             IsApprovedUser = true,
             OrganisationType = OrganisationType.CompaniesHouseCompany,
-            UkNation = Nation.England
+            UkNation = Nation.England,
+            TradingName = "Trading"
         };
 
         // Act
@@ -372,7 +378,7 @@ public class ReExAccountMapperTests
         result.Company.CompaniesHouseNumber.Should().Be("CH123456");
         result.Company.CompanyRegisteredAddress.Should().NotBeNull();
         result.Company.CompanyRegisteredAddress.BuildingName.Should().Be("Building");
-        result.ManualInput.TradingName.Should().Be("Trading");
+        result.TradingName.Should().Be("Trading");
         result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
         result.InvitedApprovedPersons.Should().NotBeNull();
     }
@@ -494,9 +500,9 @@ public class ReExAccountMapperTests
             IsApprovedUser = false,
             OrganisationType = OrganisationType.NotSet,
             UkNation = Nation.NotSet,
+            TradingName = "TradeName",
             ReExManualInputSession = new ReExManualInputSession
             {
-                TradingName = "TradeName",
                 ProducerType = ProducerType.NonUkOrganisation,
                 BusinessAddress = new Address
                 {
@@ -507,14 +513,17 @@ public class ReExAccountMapperTests
                     Country = "Country2",
                     Postcode = "PC2"
                 },
-                TeamMember = new ReExCompanyTeamMember
+                TeamMembers = new List<ReExCompanyTeamMember>
                 {
-                    Id = Guid.NewGuid(),
-                    FirstName = "Bob",
-                    LastName = "Brown",
-                    Email = "bob@company.com",
-                    Role = ReExTeamMemberRole.Director,
-                    TelephoneNumber = "555-456"
+                new ReExCompanyTeamMember
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "Bob",
+                        LastName = "Brown",
+                        Email = "bob@company.com",
+                        Role = ReExTeamMemberRole.Director,
+                        TelephoneNumber = "555-456"
+                    }
                 }
             }
         };
@@ -526,7 +535,7 @@ public class ReExAccountMapperTests
         result.IsApprovedUser.Should().BeFalse();
         result.Company.Should().BeNull();
         result.ManualInput.Should().NotBeNull();
-        result.ManualInput.TradingName.Should().Be("TradeName");
+        result.TradingName.Should().Be("TradeName");
         result.ManualInput.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
         result.ManualInput.BusinessAddress.Should().NotBeNull();
         result.ManualInput.BusinessAddress.BuildingName.Should().Be("Bldg");
@@ -618,10 +627,10 @@ public class ReExAccountMapperTests
         var session = new OrganisationSession
         {
             OrganisationType = OrganisationType.CompaniesHouseCompany,
-            UkNation = Nation.England,
+            TradingName = "Test Trading",
             ReExManualInputSession = new ReExManualInputSession
             {
-                TradingName = "Test Trading",
+                UkRegulatorNation = Nation.England,
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = new Address
                 {
@@ -640,7 +649,6 @@ public class ReExAccountMapperTests
 
         // Assert
         result.Should().NotBeNull();
-        result.ManualInput.TradingName.Should().Be("Test Trading");
         result.ManualInput.ProducerType.Should().Be(ProducerType.SoleTrader);
         result.ManualInput.BusinessAddress.Should().NotBeNull();
         result.ManualInput.BusinessAddress.BuildingName.Should().Be("Bldg");
@@ -654,11 +662,11 @@ public class ReExAccountMapperTests
         // Arrange
         var session = new OrganisationSession
         {
+            TradingName = "TradeName",
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
-            UkNation = Nation.Scotland,
             ReExManualInputSession = new ReExManualInputSession
             {
-                TradingName = "TradeName",
+                UkRegulatorNation = Nation.Scotland,
                 ProducerType = ProducerType.NonUkOrganisation,
                 BusinessAddress = null
             }
@@ -670,7 +678,6 @@ public class ReExAccountMapperTests
         // Assert
         result.Should().NotBeNull();
         result.ManualInput.BusinessAddress.Should().BeNull();
-        result.ManualInput.TradingName.Should().Be("TradeName");
         result.ManualInput.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
         result.ManualInput.Nation.Should().Be(Nation.Scotland);
         result.ManualInput.OrganisationType.Should().Be(OrganisationType.NonCompaniesHouseCompany);
@@ -690,10 +697,10 @@ public class ReExAccountMapperTests
         var session = new OrganisationSession
         {
             OrganisationType = OrganisationType.NotSet,
-            UkNation = Nation.Wales,
+            TradingName = "TradeName",
             ReExManualInputSession = new ReExManualInputSession
             {
-                TradingName = "TradeName",
+                UkRegulatorNation = Nation.Wales,
                 ProducerType = producerType,
                 BusinessAddress = new Address()
             }
@@ -709,33 +716,6 @@ public class ReExAccountMapperTests
 
     [TestMethod]
     [DataRow(null)]
-    [DataRow("Trader Name")]
-    [DataRow("")]
-    public void GetManualInputModel_Returns_TradingName_As(string? tradingName)
-    {
-        // Arrange
-        var session = new OrganisationSession
-        {
-            OrganisationType = OrganisationType.NotSet,
-            UkNation = Nation.NorthernIreland,
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                TradingName = tradingName,
-                ProducerType = ProducerType.SoleTrader,
-                BusinessAddress = new Address()
-            }
-        };
-
-        // Act
-        var result = _mapper.CreateReExOrganisationModel(session);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.ManualInput.TradingName.Should().Be(tradingName);
-    }
-
-    [TestMethod]
-    [DataRow(null)]
     [DataRow(Nation.England)]
     [DataRow(Nation.Scotland)]
     [DataRow(Nation.Wales)]
@@ -747,10 +727,10 @@ public class ReExAccountMapperTests
         var session = new OrganisationSession
         {
             OrganisationType = OrganisationType.NotSet,
-            UkNation = nation,
+            TradingName = "TradeName",
             ReExManualInputSession = new ReExManualInputSession
             {
-                TradingName = "TradeName",
+                UkRegulatorNation = nation,
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = new Address()
             }
@@ -776,10 +756,10 @@ public class ReExAccountMapperTests
         var session = new OrganisationSession
         {
             OrganisationType = orgType,
-            UkNation = Nation.England,
+            TradingName = "TradeName",
             ReExManualInputSession = new ReExManualInputSession
             {
-                TradingName = "TradeName",
+                UkRegulatorNation = Nation.England,
                 ProducerType = ProducerType.SoleTrader,
                 BusinessAddress = new Address()
             }
@@ -936,5 +916,84 @@ public class ReExAccountMapperTests
         result.Company.CompanyRegisteredAddress.BuildingName.Should().Be("Bldg");
         result.Company.ValidatedWithCompaniesHouse.Should().BeTrue();
         result.Company.IsComplianceScheme.Should().Be(isCompliance);
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_ProducerTypes()
+    {
+        // Arrange
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Services.Dto.Company.Company
+                {
+                    AccountCreatedOn = DateTime.Now,
+                    Name = "ReEx Test Ltd",
+                    CompaniesHouseNumber = "12345678",
+                    OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
+                },
+                ProducerType = ProducerType.LimitedLiabilityPartnership,
+            },
+            UkNation = Nation.England,
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Company.ProducerType.Should().NotBeNull().And.Be(ProducerType.LimitedLiabilityPartnership.ToString());
+    }
+
+    [TestMethod]
+    public void CreateReExOrganisationModel_Map_Partners()
+    {
+        var orgSession = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.CompaniesHouseCompany,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Services.Dto.Company.Company
+                {
+                    AccountCreatedOn = DateTime.Now,
+                    Name = "ReEx Test Ltd",
+                    CompaniesHouseNumber = "12345678",
+                    OrganisationId = "06352abc-bb77-4855-9705-cf06ae88f5a8",
+                },
+                Partnership = new()
+                {
+                    LimitedPartnership = new()
+                    {
+                        Partners =
+                        [
+                            new()
+                                {
+                                    IsPerson = true,
+                                    Name = "Person1"
+                                },
+                                new()
+                                {
+                                    IsPerson = false,
+                                    Name = "Company1"
+                                }
+                        ]
+                    }
+                }
+            },
+            UkNation = Nation.England,
+        };
+
+        var result = _mapper!.CreateReExOrganisationModel(orgSession);
+
+        result.Partners.Should().NotBeNull().And.HaveCount(2);
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Person1",
+            PartnerRole = PartnerType.IndividualPartner.GetDescription()
+        });
+        result.Partners.Should().ContainEquivalentOf(new ReExPartnerModel()
+        {
+            Name = "Company1",
+            PartnerRole = PartnerType.CorporatePartner.GetDescription()
+        });
     }
 }

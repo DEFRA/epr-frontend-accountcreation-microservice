@@ -22,7 +22,7 @@ public class ReExCheckYourDetailsViewModel
 
     public bool? IsTradingNameDifferent { get; set; }
 
-    public string TradingName { get; set; }
+    public string? TradingName { get; set; }
 
     public Address? BusinessAddress { get; set; }
 
@@ -32,12 +32,14 @@ public class ReExCheckYourDetailsViewModel
     public string UkNation => GetCheckYourDetailsKey(Nation);
     public List<ReExCompanyTeamMember> reExCompanyTeamMembers { get; set; }
     public bool IsOrganisationAPartnership { get; set; }
-    public List<ReExLimitedPartnershipPersonOrCompany>? LimitedPartnershipPartners { get; set; }
+    public List<ReExPersonOrCompanyPartner>? LimitedPartnershipPartners { get; set; }
     public bool IsLimitedLiabilityPartnership { get; set; }
 
     public bool IsManualInputFlow { get; set; }
 
     public bool IsSoleTrader { get; set; }
+
+    public bool IsNonUk {  get; set; }
 
     private static string GetCheckYourDetailsKey<TEnum>(TEnum? enumValue) where TEnum : struct, Enum
     {

@@ -17,19 +17,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="LimitedPartnershipRole.Title" xml:space="preserve">
+    <value>[Welsh]Type of roles</value>
+  </data>
+  <data name="LimitedPartnershipRole.Question" xml:space="preserve">
     <value>[Welsh]What role do you have within the limited partnership, as registered on Companies House?</value>
   </data>
   <data name="LimitedPartnershipRole.IndividualPartner" xml:space="preserve">
-    <value>[Welsh]Individual partner</value>
+    <value>[Welsh]Individual partner within the partnership</value>
   </data>
   <data name="LimitedPartnershipRole.CompanyDirector" xml:space="preserve">
-    <value>[Welsh]Company director within an organisation partner</value>
+    <value>[Welsh]Company director of a corporate partner within the partnership</value>
   </data>
   <data name="LimitedPartnershipRole.CompanySecretary" xml:space="preserve">
-    <value>[Welsh]Company secretary within an organisation partner</value>
+    <value>[Welsh]Company secretary of a corporate partner within the partnership</value>
   </data>
     <data name="LimitedPartnershipRole.None" xml:space="preserve">
-    <value>[Welsh]None</value>
+    <value>[Welsh]None of the above</value>
   </data>
   <data name="LimitedPartnershipRole.ErrorMessage" xml:space="preserve">
     <value>[Welsh]Select your role in your organisation</value>

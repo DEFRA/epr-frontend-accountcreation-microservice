@@ -6,5 +6,5 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 public class LimitedPartnershipRoleViewModel
 {
     [Required(ErrorMessage = "LimitedPartnershipRole.ErrorMessage")]
-    public RoleInOrganisation? LimitedPartnershipRole { get; set; }
+    public RoleInOrganisation? RoleInOrganisation { get; set; }
 }

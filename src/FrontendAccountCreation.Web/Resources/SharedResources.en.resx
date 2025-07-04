@@ -163,7 +163,7 @@
     <value>EPR for packaging: reprocessors and exporters</value>
   </data>
   <data name="CompanySecretary" xml:space="preserve">
-    <value>Company Secretary</value>
+    <value>Company secretary</value>
   </data>
   <data name="Director" xml:space="preserve">
     <value>Director</value>
@@ -178,9 +178,60 @@
     <value>None of the above</value>
   </data>
   <data name="PartnerCompanySecretary" xml:space="preserve">
-    <value>Company Secretary</value>
+    <value>Company secretary of a corporate partner</value>
   </data>
   <data name="PartnerDirector" xml:space="preserve">
-    <value>Director</value>
+    <value>Company director of a corporate partner</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="NotSure" xml:space="preserve">
+    <value>Not sure</value>
+  </data>
+  <data name="CEO" xml:space="preserve">
+    <value>Chief Executive Officer</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="CompanyDirectorOrSecretary" xml:space="preserve">
+    <value>Company Director or Secretary</value>
+  </data>
+  <data name="UnincorporatedRoles" xml:space="preserve">
+    <value>Chair, Treasurer or Secretary of an unincorporated organisation</value>
+  </data>
+  <data name="ForExample" xml:space="preserve">
+    <value>For example:</value>
+  </data>
+  <data name="CompanyDirector" xml:space="preserve">
+    <value>Company director</value>
+  </data>
+  <data name="England" xml:space="preserve">
+    <value>England</value>
+  </data>
+  <data name="Scotland" xml:space="preserve">
+    <value>Scotland</value>
+  </data>
+  <data name="Wales" xml:space="preserve">
+    <value>Wales</value>
+  </data>
+  <data name="NorthernIreland" xml:space="preserve">
+    <value>Northern Ireland</value>
+  </data>
+  <data name="Yes_AreThey" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No_AreThey" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Yes_IsHeSheIt" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No_IsHeSheIt" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>

@@ -5,6 +5,8 @@ namespace FrontendAccountCreation.Core.Services.FacadeModels;
 [ExcludeFromCodeCoverage]
 public class ReExOrganisationModel
 {
+    public string? TradingName { get; set; }
+
     /// <summary>
     /// User Role/Job title can be Director, CompanySecretary, Partner or Member
     /// </summary>
@@ -23,4 +25,9 @@ public class ReExOrganisationModel
     /// Approved persons information related to names/emails
     /// </summary>
     public List<ReExInvitedApprovedPerson?> InvitedApprovedPersons { get; set; }
+
+    /// <summary>
+    /// Partners Details for partnership org fullName and type
+    /// </summary>
+    public List<ReExPartnerModel>? Partners { get; set; }
 }

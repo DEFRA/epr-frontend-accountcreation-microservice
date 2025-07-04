@@ -175,6 +175,6 @@
     <value>(W)Select the UK nation where your business is based</value>
   </data>
   <data name="UkNation.SoleTrader.Hint" xml:space="preserve">
-    <value>(W)You should choose the nation that matches your business’s registered address.</value>
+    <value>dylech ddewis y wlad sy'n cyfateb i gyfeiriad cofrestredig eich busnes</value>
   </data>
 </root>

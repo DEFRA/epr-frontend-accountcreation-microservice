@@ -1,0 +1,54 @@
+﻿@using FrontendAccountCreation.Core.Sessions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@model PartnershipRoleModel
+
+<div class="govuk-radios" data-module="govuk-radios">
+    <div class="govuk-radios__item">
+        <input class="govuk-radios__input" type="radio" id="rdoIndividualPartner"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.Partner)"
+               gov-first-option="true">
+        <label class="govuk-label govuk-radios__label"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.Partner)"
+               gov-first-option="true">
+            @Localizer["PartnershipRole.IndividualPartner"]
+        </label>
+    </div>
+
+    <div class="govuk-radios__item">
+        <input class="govuk-radios__input" type="radio" id="rdoCompanyDirector"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.PartnerDirector)">
+        <label class="govuk-label govuk-radios__label"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.PartnerDirector)">
+            @Localizer["PartnershipRole.CompanyDirector"]
+        </label>
+    </div>
+
+    <div class="govuk-radios__item">
+        <input class="govuk-radios__input" type="radio" id="rdoCompanySecretary"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.PartnerCompanySecretary)">
+        <label class="govuk-label govuk-radios__label"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.PartnerCompanySecretary)">
+            @Localizer["PartnershipRole.CompanySecretary"]
+        </label>
+    </div>
+
+    <div class="govuk-radios__divider">@SharedLocalizer["Or"]</div>
+
+    <div class="govuk-radios__item">
+        <input class="govuk-radios__input" type="radio" id="rdoNone"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.NoneOfTheAbove)">
+        <label class="govuk-label govuk-radios__label"
+               gov-for="RoleInOrganisation"
+               gov-value="@nameof(RoleInOrganisation.NoneOfTheAbove)">
+            @Localizer["PartnershipRole.None"]
+        </label>
+    </div>
+</div>
+

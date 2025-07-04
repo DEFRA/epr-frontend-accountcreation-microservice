@@ -9,7 +9,7 @@ namespace FrontendAccountCreation.Core.Services.FacadeModels;
 [ExcludeFromCodeCoverage]
 public class ReExManualInputModel
 {
-    public string TradingName { get; set; }
+    public string? OrganisationName { get; set; }
 
     public ProducerType? ProducerType { get; set; }
 
@@ -18,4 +18,6 @@ public class ReExManualInputModel
     public Nation? Nation { get; set; }
 
     public OrganisationType? OrganisationType { get; set; }
+
+    public string? NonUkRoleInOrganisation { get; set; }
 }
