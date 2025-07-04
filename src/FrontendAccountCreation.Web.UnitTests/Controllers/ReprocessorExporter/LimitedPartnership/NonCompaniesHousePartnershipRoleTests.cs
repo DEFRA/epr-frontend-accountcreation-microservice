@@ -78,7 +78,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
         {
             // Arrange
             var model = new NonCompaniesHousePartnershipRoleModel();
-            _systemUnderTest.ModelState.AddModelError("NonCompaniesHousePartnershipYourRole", "Required");
+            _systemUnderTest.ModelState.AddModelError("NonCompaniesHousePartnershipRole", "Required");
 
             // Act
             var result = await _systemUnderTest.NonCompaniesHousePartnershipRole(model);
