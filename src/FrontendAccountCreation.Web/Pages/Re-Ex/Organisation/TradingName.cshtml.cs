@@ -12,6 +12,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
+//todo: going back from address overseas goes to is trading name different
+//todo: content is different - is that intentional?
+
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [OrganisationJourneyAccess(PagePath.TradingName)]
 public class TradingName(
@@ -66,7 +69,7 @@ public class TradingName(
             actionName = nameof(OrganisationController.IsOrganisationAPartner);
             nextPage = PagePath.IsPartnership;
         }
-        else if (session.ReExManualInputSession.ProducerType.HasValue && session.ReExManualInputSession.ProducerType.Value == ProducerType.NonUkOrganisation)
+        else if (session.ReExManualInputSession?.ProducerType is ProducerType.NonUkOrganisation)
         {
             actionName = nameof(OrganisationController.AddressOverseas);
             nextPage = PagePath.AddressOverseas;
