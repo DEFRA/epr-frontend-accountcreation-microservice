@@ -117,16 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RegisteredAsCharity.Description" xml:space="preserve">
-    <value>Welsh - We ask this as your organisation must be reprocessing or exporting packaging waste in the course of business to proceed.</value>
-  </data>
-  <data name="RegisteredAsCharity.ErrorMessage" xml:space="preserve">
-    <value>Dewiswch a yw'ch sefydliad yn elusen gofrestredig</value>
-  </data>
-  <data name="RegisteredAsCharity.Question" xml:space="preserve">
-    <value>Ydy'ch sefydliad yn elusen gofrestredig?</value>
-  </data>
-  <data name="RegisteredAsCharity.Title" xml:space="preserve">
-    <value>Wedi’i gofrestru fel elusen</value>
+  <data name="ErrorSummary.Title" xml:space="preserve">
+    <value />
   </data>
 </root>

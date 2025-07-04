@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>Dewiswch opsiwn</value>
+  <data name="RegisteredAsCharity.Hint" xml:space="preserve">
+    <value>If the reprocessor or exporter organisation is a charity, it is not legally required to use this service.</value>
   </data>
-  <data name="AddAnApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh]Add an approved person </value>
+  <data name="RegisteredAsCharity.ErrorMessage" xml:space="preserve">
+    <value>Select if your organisation is a registered charity</value>
+  </data>
+  <data name="RegisteredAsCharity.Question" xml:space="preserve">
+    <value>Is your organisation a registered charity?</value>
+  </data>
+  <data name="RegisteredAsCharity.Title" xml:space="preserve">
+    <value>Registered as a charity</value>
   </data>
 </root>
