@@ -1,0 +1,93 @@
+﻿@model FrontendAccountCreation.Web.FullPages.SingleTextBox.ISingleTextboxPageModel
+
+@{
+    const string textBoxId = "textbox";
+}
+
+<partial name="_ErrorSummaryNext" model="Model.Errors" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" novalidate>
+
+            @if (!string.IsNullOrEmpty(Model.Heading))
+            {
+                @* not even the GDS error summary page is consistent in whether the heading goes in the form-group or not!*@
+                <h1 class="govuk-heading-l">@Model.Heading</h1>
+            }
+
+            @* todo: if every input is inside its own govuk-form-group, makes sense to get from Error *@
+            @* if can have >1 input in a govuk-form-group, makes sense to get from ErrorState *@
+            @* todo: do we need a HasErrors on ErrorState? *@
+
+            @{
+                IError? error = Model.Errors.GetErrorIfTriggeredByElementId();
+            }
+
+            <div class="govuk-form-group @(error?.FormGroupClass)">
+
+                @if (!string.IsNullOrEmpty(Model.Heading))
+                {
+                    @* todo: partial for hint? *@
+                    if (!string.IsNullOrEmpty(Model.Hint))
+                    {
+                        <div id="hint" class="govuk-hint">
+                            @Model.Hint
+                        </div>
+                    }
+                    <label class="govuk-label" for="@textBoxId">
+                        @Model.TextBoxLabel
+                    </label>
+                }
+                else
+                {
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--l" for="@textBoxId">
+                            @Model.TextBoxLabel
+                        </label>
+                    </h1>
+
+                    if (!string.IsNullOrEmpty(Model.Hint))
+                    {
+                        <div id="hint" class="govuk-hint">
+                            @Model.Hint
+                        </div>
+                    }
+                }
+
+                <partial name="_ErrorMessageNext" model="error" />
+
+                @{
+                    // we could get type, inputmode and autocomplete from the interface itself (if we swapped the text to base and introduced a text derived)
+                    // which in some ways would be neat, but it would mean that view info would be out of the view and in the interfaces
+                    // string type = Model switch
+                    // {
+                    //     ISingleTelephoneTextboxPageModel => "tel",
+                    //     ISingleEmailTextboxPageModel => "email",
+                    //     _ => "text"
+                    // };
+
+                    string type = "text";
+                }
+                @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
+                @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
+                @* we might end up setting autocomplete anyway, as it can help with accessibility tools. *@
+
+                @* we're currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
+                @* and to gather names and telephone numbers, for which it doesn't make sense to have spellcheck enabled. *@
+
+                @* todo: flags for spellcheck, autocomplete etc.?*@
+                @* todo: support govuk-input--width *@
+
+                <input class="govuk-input @(error?.InputClass)" maxlength="@(Model.MaxLength)"
+                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
+                       spellcheck="false" autocomplete="off" id="@textBoxId"
+                       aria-describedby="@(string.IsNullOrEmpty(Model.Hint) ? "" : "hint ")@error?.InputErrorMessageParaId">
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                @Model.ButtonText
+            </button>
+        </form>
+    </div>
+</div>
