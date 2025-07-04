@@ -649,55 +649,44 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
+        // Read existing approved persons, or create a fresh emtpy list if none present in session
         ReExManualInputSession nonCompaniesHouseSession = session!.ReExManualInputSession ?? new();
-        List<ReExCompanyTeamMember> approvedPersons = nonCompaniesHouseSession.TeamMembers ?? new();
+        List<ReExCompanyTeamMember> approvedPersons = nonCompaniesHouseSession.TeamMembers ?? [];
         int memberIndex = approvedPersons.FindIndex(0, x => x.Id.Equals(model?.Id));
 
+        // ReExTeamMemberRole.None is an instruction to delete the approved person, should they exist
         if (model.RoleInOrganisation == ReExTeamMemberRole.None)
         {
-            // deleting member
-            if (memberIndex >= 0)
+            if (memberIndex < 0)
             {
-                approvedPersons.RemoveAt(memberIndex);
-                nonCompaniesHouseSession.TeamMembers = approvedPersons;
-                session.ReExManualInputSession = nonCompaniesHouseSession;
-
-                // go to Check Your Details
-                return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.CheckYourDetails),
-                    PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
+                // goes to "You cannot invite this person to be an approved person" page which is unavailable because its not been built
+                throw new NotImplementedException("You cannot invite this person to be an approved person");
             }
 
-            // goes to "You cannot invite this person to be an approved person" page which is unavailable because its not been built
-            throw new NotImplementedException("You cannot invite this person to be an approved person");
+            approvedPersons.RemoveAt(memberIndex);
+            nonCompaniesHouseSession.TeamMembers = approvedPersons;
+            session.ReExManualInputSession = nonCompaniesHouseSession;
+
+            // go to Check Your Details
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.CheckYourDetails),
+                PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
         }
 
-        bool isAlreadyAnApprovedPerson = false;
-        Guid? focusId = null;
-        if (memberIndex >= 0)
+        // unable to find id, so adding a new approved person
+        if (memberIndex < 0)
         {
-            // updating member
-            focusId = approvedPersons[memberIndex].Id;
-            approvedPersons[memberIndex].Role = model.RoleInOrganisation;
-
-            // check the email, but any field other than Id will do
-            isAlreadyAnApprovedPerson = approvedPersons[memberIndex].Email?.Length > 0;
-        }
-        else
-        {
-            // adding new member
-            focusId = Guid.NewGuid();
-            approvedPersons.Add(new ReExCompanyTeamMember
-            {
-                Id = focusId.Value,
-                Role = model.RoleInOrganisation
-            });
+            approvedPersons.Add(new ReExCompanyTeamMember { Id = Guid.NewGuid() });
+            memberIndex = approvedPersons.Count - 1;
         }
 
+        approvedPersons[memberIndex].Role = model.RoleInOrganisation;
         nonCompaniesHouseSession.TeamMembers = approvedPersons;
         session.ReExManualInputSession = nonCompaniesHouseSession;
 
-        SetFocusId(focusId.Value);
-        if (isAlreadyAnApprovedPerson)
+        SetFocusId(approvedPersons[memberIndex].Id);
+
+        // check the email, but any field other than Id will do to determine if its an existing approved person
+        if (approvedPersons[memberIndex].Email?.Length > 0)
         {
             // goes to "Check invitation details" page which is unavailable because its not been built
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
