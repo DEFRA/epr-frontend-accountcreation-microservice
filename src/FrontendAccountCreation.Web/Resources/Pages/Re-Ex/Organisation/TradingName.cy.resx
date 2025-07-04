@@ -118,21 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TradingName.ErrorMessage" xml:space="preserve">
-    <value>Enter your organisation's trading name</value>
+    <value>Rhowch enw masnachu eich sefydliad</value>
   </data>
   <data name="TradingName.Hint" xml:space="preserve">
-    <value>You may trade under your own name, or a name you have given to your business.</value>
+    <value>Gallwch fod yn masnachu o dan eich enw chi’ch hun, neu enw rydych chi wedi’i roi i’ch busnes.</value>
   </data>
   <data name="TradingName.LengthErrorMessage" xml:space="preserve">
-    <value>Trading name must be 170 characters or less</value>
+    <value>Rhaid i’r enw masnachu fod yn 170 neu lai o gymeriadau</value>
   </data>
   <data name="TradingName.Question" xml:space="preserve">
-    <value>What is your organisation's trading name?</value>
+    <value>Beth yw enw masnachu eich sefydliad?</value>
   </data>
-  <data name="TradingName.QuestionUnincorporatedBody" xml:space="preserve">
-    <value>What is the trading name?</value>
+  <data name="TradingName.NonCompaniesHouse.Question" xml:space="preserve">
+    <value>Beth yw'r enw masnachu?</value>
   </data>
   <data name="TradingName.Title" xml:space="preserve">
-    <value>Trading name</value>
+    <value>Enw Masnachu</value>
   </data>
 </root>

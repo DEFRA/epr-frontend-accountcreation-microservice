@@ -8,6 +8,7 @@ using FrontendAccountCreation.Web.FullPages.SingleTextBox;
 using FrontendAccountCreation.Web.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
@@ -20,14 +21,16 @@ public class TradingName(
     : OrganisationPageModel<TradingName>(sessionManager, sharedLocalizer, localizer), ISingleTextboxPageModel
 {
     public string? Heading => null;
-    public string? Hint => null;
 
-    public string TextBoxLabel { get; private set; }
+    public string TextBoxLabel { get; private set; } = null!;
 
-    public int? MaxLength => 10;
+    //todo: better to use this than have an error message (or have both?)
+    public int? MaxLength => 170;
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
     [BindProperty]
+    [MaxLength(170, ErrorMessage = "TradingName.LengthErrorMessage")]
+    [Required(ErrorMessage = "TradingName.ErrorMessage")]
     public string? TextBoxValue { get; set; }
 
     public async Task<IActionResult> OnGet()
