@@ -1,143 +1,163 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 [TestClass]
-public class UkRegulatorTests : OrganisationTestBase
+public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
 {
-    private OrganisationSession _organisationSession = null!;
+    private UkRegulator _ukRegulator;
 
     [TestInitialize]
     public void Setup()
     {
         SetupBase();
 
-        _organisationSession = new OrganisationSession
+        OrganisationSession.Journey =
+        [
+            PagePath.UkRegulator, PagePath.NonUkRoleInOrganisation
+        ];
+
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession();
+
+        //todo: can create in base. might need virtual method to allow overriding
+        _ukRegulator = new UkRegulator(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
         {
-            Journey =
-            [
-                PagePath.UkRegulator, PagePath.NonUkRoleInOrganisation
-            ],
-            ReExManualInputSession = new ReExManualInputSession()
+            PageContext = PageContext
         };
-
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
     }
 
     [TestMethod]
-    public async Task UkRegulator_Get_ReturnsViewWithViewModelData()
+    [DataRow(Nation.England)]
+    [DataRow(Nation.NorthernIreland)]
+    [DataRow(Nation.Scotland)]
+    [DataRow(Nation.Wales)]
+    public async Task OnGet_SetsSelectedValueCorrectly(Nation nationInSession)
     {
         // Arrange
-        _organisationSession.ReExManualInputSession.UkRegulatorNation = Nation.England;
+        OrganisationSession.ReExManualInputSession.UkRegulatorNation = nationInSession;
 
         // Act
-        var result = await _systemUnderTest.UkRegulator();
+        await _ukRegulator.OnGet();
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        var model = viewResult.Model.Should().BeOfType<UkRegulatorForNonUKViewModel>().Subject;
-        model.UkRegulatorNation.Should().Be(Nation.England);
+        _ukRegulator.SelectedValue.Should().Be(nationInSession.ToString());
 
-        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        //to-do: have separate test for varifying this?
+        SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task UkRegulator_Get_ReturnsViewWithViewModelData_When_ReExManualInputSession_IsNull()
+    public async Task OnGet_NationIsNull_SetsSelectedValueCorrectly()
     {
-        // Arrange
-        _organisationSession.ReExManualInputSession = null;
-
         // Act
-        var result = await _systemUnderTest.UkRegulator();
+        await _ukRegulator.OnGet();
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        var model = viewResult.Model.Should().BeOfType<UkRegulatorForNonUKViewModel>().Subject;
-        model.UkRegulatorNation.Should().BeNull();
+        _ukRegulator.SelectedValue.Should().BeNull();
 
-        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        //to-do: have separate test for varifying this?
+        SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task UkRegulator_Get_ReturnsView_Without_AnyDataForViewModel()
+    public async Task OnGet_ReExManualInputSessionIsNull_SetsSelectedValueCorrectly()
     {
         // Arrange
+        OrganisationSession.ReExManualInputSession = null;
 
         // Act
-        var result = await _systemUnderTest.UkRegulator();
+        await _ukRegulator.OnGet();
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        var model = viewResult.Model.Should().BeOfType<UkRegulatorForNonUKViewModel>().Subject;
-        model.UkRegulatorNation.Should().BeNull();
+        _ukRegulator.SelectedValue.Should().BeNull();
 
-        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        //to-do: have separate test for varifying this?
+        SessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task UkRegulator_Post_With_InvalidModelState_ReturnsViewWithModel()
+    public async Task OnPost_InvalidModelState_ReturnsPageWithCorrectErrors()
     {
         // Arrange
-        var model = new UkRegulatorForNonUKViewModel();
-        _systemUnderTest.ModelState.AddModelError("UkRegulatorNation", "Required");
+        _ukRegulator.ModelState.AddModelError("UkRegulatorNation", "Required");
 
         // Act
-        var result = await _systemUnderTest.UkRegulator(model);
+        await _ukRegulator.OnPost();
 
         // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        viewResult.Model.Should().Be(model);
-
-        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
+        _ukRegulator.Errors.HasErrors.Should().BeTrue();
+        _ukRegulator.Errors.Should().NotBeNull();
+        _ukRegulator.Errors.Errors.Should().ContainSingle(e => e.HtmlElementId == "UkRegulatorNation");
+        _ukRegulator.Errors.Errors.Should().ContainSingle(e => e.Message == "Required");
     }
 
     [TestMethod]
-    public async Task UkRegulator_Post_ValidModel_SavesSessionAndRedirects()
+    public async Task OnPost_ValidModel_SavesSessionAndRedirects()
     {
         // Arrange
-        var model = new UkRegulatorForNonUKViewModel { UkRegulatorNation = Nation.Scotland };
+        _ukRegulator.SelectedValue = Nation.Wales.ToString();
 
         // Act
-        var result = await _systemUnderTest.UkRegulator(model);
+        var result = await _ukRegulator.OnPost();
 
         // Assert
-        _organisationSession.ReExManualInputSession.UkRegulatorNation.Should().Be(Nation.Scotland);
-
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirectResult.ActionName.Should().Be(nameof(OrganisationController.NonUkRoleInOrganisation));
         redirectResult.RouteValues?["currentPagePath"].Should().Be(PagePath.UkRegulator);
         redirectResult.RouteValues?["nextPagePath"].Should().Be(PagePath.NonUkRoleInOrganisation);
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+        SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task UkRegulator_Post_ValidModel_SavesSessionAndRedirects_With_NullSession()
+    public void Radios_ShouldReturnCorrectRadios()
     {
-        // Arrange
-        var model = new UkRegulatorForNonUKViewModel { UkRegulatorNation = Nation.England };
-        _organisationSession.ReExManualInputSession = null;
-
         // Act
-        var result = await _systemUnderTest.UkRegulator(model);
+        var radios = _ukRegulator.Radios.ToList();
 
         // Assert
-        _organisationSession.ReExManualInputSession.UkRegulatorNation.Should().Be(Nation.England);
+        radios.Should().HaveCount(4);
+        radios[0].Value.Should().Be("England");
+        radios[1].Value.Should().Be("Scotland");
+        radios[2].Value.Should().Be("Wales");
+        radios[3].Value.Should().Be("NorthernIreland");
+        //to-do: setup shared localizer and check localized strings
+    }
 
-        var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirectResult.ActionName.Should().Be(nameof(OrganisationController.NonUkRoleInOrganisation));
-        redirectResult.RouteValues?["currentPagePath"].Should().Be(PagePath.UkRegulator);
-        redirectResult.RouteValues?["nextPagePath"].Should().Be(PagePath.NonUkRoleInOrganisation);
+    [TestMethod]
+    public void Question_ShouldReturnLocalizedQuestion()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["UkRegulator.NonUkOrganisation.Question"])
+            .Returns(new LocalizedString("UkRegulator.NonUkOrganisation.Question", "Test question string"));
 
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+        // Act
+        var question = _ukRegulator.Question;
+
+        // Assert
+        question.Should().Be("Test question string");
+    }
+
+    [TestMethod]
+    public void Hint_ShouldReturnLocalizedDescription()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["UkRegulator.NonUkHint"])
+            .Returns(new LocalizedString("UkRegulator.NonUkHint", "Test hint string"));
+
+        // Act
+        var hint = _ukRegulator.Hint;
+
+        // Assert
+        hint.Should().Be("Test hint string");
     }
 }
