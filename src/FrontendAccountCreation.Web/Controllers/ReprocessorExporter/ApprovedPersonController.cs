@@ -122,7 +122,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     }
                     else
                     {
-                        if (session.IsUkMainAddress is false)
+                        if (session.IsUkMainAddress is false || session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
                         {
                             return await SaveSessionAndRedirectToPage(
                                 session,
@@ -901,6 +901,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 Nation = session.UkNation,
                 IsNonUk = !(session.IsUkMainAddress ?? true),
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsUnincorporatedFlow = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody,
                 TradingName = session.TradingName
             };
 
@@ -940,6 +941,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.CompanyName = manualInput?.OrganisationName;
                 viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
                 viewModel.Nation = manualInput?.UkRegulatorNation;
+            }
+
+            if (viewModel.IsUnincorporatedFlow)
+            {
+                var manualInput = session.ReExManualInputSession;
+                viewModel.ProducerType = manualInput?.ProducerType;
+                viewModel.BusinessAddress = manualInput?.BusinessAddress;
+                viewModel.TradingName = manualInput?.OrganisationName;
+                viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
             }
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
