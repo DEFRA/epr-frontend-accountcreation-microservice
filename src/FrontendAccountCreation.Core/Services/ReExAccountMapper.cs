@@ -31,7 +31,7 @@ public class ReExAccountMapper : IReExAccountMapper
             IsApprovedUser = session.IsApprovedUser,
             Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
             ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
-            InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession),
+            InvitedApprovedPersons = GetTeamMembersModel(session),
             Partners = GetPartnersModel(session),
             TradingName = session.TradingName
         };
@@ -86,26 +86,23 @@ public class ReExAccountMapper : IReExAccountMapper
         };
     }
 
-    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(IEnumerable<ReExCompanyTeamMember>? teamMembers = null, ReExManualInputSession? reExManualInput = null)
+    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(OrganisationSession session)
     {
-        List<ReExInvitedApprovedPerson> approvedPeople = [];
+        List<ReExCompanyTeamMember> teamMembers;
 
-        if (reExManualInput != null && reExManualInput.TeamMembers != null)
+        if (session.ReExManualInputSession != null && session.ReExManualInputSession.TeamMembers != null)
         {
-            var teamMember = reExManualInput.TeamMembers[0];
-            approvedPeople.Add(new ReExInvitedApprovedPerson
-            {
-                Email = teamMember.Email,
-                FirstName = teamMember.FirstName,
-                Id = teamMember.Id,
-                LastName = teamMember.LastName,
-                Role = teamMember.Role?.ToString() ?? null,
-                TelephoneNumber = teamMember.TelephoneNumber
-            });
-            return approvedPeople;
+            teamMembers = session.ReExManualInputSession.TeamMembers;
+        }
+        else
+        {
+            // If we are in Companies House flow, we get team members from the Companies House session
+            teamMembers = session.ReExCompaniesHouseSession?.TeamMembers ?? [];
         }
 
-        foreach (var member in teamMembers ?? [])
+        List<ReExInvitedApprovedPerson> approvedPeople = new List<ReExInvitedApprovedPerson>();
+
+        foreach (var member in teamMembers)
         {
             var memberModel = new ReExInvitedApprovedPerson()
             {
@@ -113,11 +110,12 @@ public class ReExAccountMapper : IReExAccountMapper
                 FirstName = member.FirstName,
                 LastName = member.LastName,
                 Email = member.Email,
-                Role = member.Role?.GetDescriptionOrNull() ?? null,
+                Role = member.Role?.GetDescriptionOrNull(),
                 TelephoneNumber = member.TelephoneNumber
             };
             approvedPeople.Add(memberModel);
         }
+
         return approvedPeople;
     }
 
