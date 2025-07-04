@@ -642,57 +642,75 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipTheirRole)]
     public async Task<IActionResult> NonCompaniesHousePartnershipTheirRole(TeamMemberRoleInOrganisationViewModel model)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.NonCompaniesHousePartnershipTheirRole);
             return View(model);
         }
 
-        var nonCompaniesHouseSession = session.ReExManualInputSession ?? new();
-        var members = nonCompaniesHouseSession.TeamMembers ?? new();
-        var index = members.FindIndex(0, x => x.Id.Equals(model?.Id));
+        ReExManualInputSession nonCompaniesHouseSession = session!.ReExManualInputSession ?? new();
+        List<ReExCompanyTeamMember> approvedPersons = nonCompaniesHouseSession.TeamMembers ?? new();
+        int memberIndex = approvedPersons.FindIndex(0, x => x.Id.Equals(model?.Id));
 
         if (model.RoleInOrganisation == ReExTeamMemberRole.None)
         {
             // deleting member
-            if (index >= 0)
+            if (memberIndex >= 0)
             {
-                members.RemoveAt(index);
-                nonCompaniesHouseSession.TeamMembers = members;
+                approvedPersons.RemoveAt(memberIndex);
+                nonCompaniesHouseSession.TeamMembers = approvedPersons;
                 session.ReExManualInputSession = nonCompaniesHouseSession;
+
+                // go to Check Your Details
+                return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.CheckYourDetails),
+                    PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
             }
 
             // goes to "You cannot invite this person to be an approved person" page which is unavailable because its not been built
-            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
-            throw new NotImplementedException();
+            throw new NotImplementedException("You cannot invite this person to be an approved person");
         }
 
+        bool isAlreadyAnApprovedPerson = false;
         Guid? focusId = null;
-        if (index >= 0)
+        if (memberIndex >= 0)
         {
             // updating member
-            members[index].Role = model.RoleInOrganisation;
-            focusId = members[index].Id;
+            focusId = approvedPersons[memberIndex].Id;
+            approvedPersons[memberIndex].Role = model.RoleInOrganisation;
+
+            // check the email, but any field other than Id will do
+            isAlreadyAnApprovedPerson = approvedPersons[memberIndex].Email?.Length > 0;
         }
         else
         {
             // adding new member
             focusId = Guid.NewGuid();
-            members.Add(new ReExCompanyTeamMember
+            approvedPersons.Add(new ReExCompanyTeamMember
             {
                 Id = focusId.Value,
                 Role = model.RoleInOrganisation
             });
         }
 
-        SetFocusId(focusId.Value);
-        nonCompaniesHouseSession.TeamMembers = members;
+        nonCompaniesHouseSession.TeamMembers = approvedPersons;
         session.ReExManualInputSession = nonCompaniesHouseSession;
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-        // goes to "What are their details?" page which is unavailable because its not been built
-        throw new NotImplementedException();
+        SetFocusId(focusId.Value);
+        if (isAlreadyAnApprovedPerson)
+        {
+            // goes to "Check invitation details" page which is unavailable because its not been built
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            throw new NotImplementedException("Check invitation details");
+        }
+        else
+        {
+            // goes to "What are their details?" page which is unavailable because its not been built
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            throw new NotImplementedException("What are their details");
+        }
     }
 
     private static async Task<List<ReExPersonOrCompanyPartner>> GetSessionPartners(List<PartnershipPersonOrCompanyViewModel> partners)

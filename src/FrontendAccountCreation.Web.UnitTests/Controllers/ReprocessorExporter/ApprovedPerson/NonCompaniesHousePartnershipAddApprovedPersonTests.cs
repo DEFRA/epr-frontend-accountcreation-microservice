@@ -108,7 +108,7 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
     }
 
     [TestMethod]
-    public async Task Post_BeInviteAnotherPersonOption_RedirectsToTeamMemberRoleInOrganisation()
+    public async Task Post_BeInviteAnotherPersonOption_Redirects()
     {
         // Arrange
         var model = new AddApprovedPersonViewModel
@@ -122,7 +122,7 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
-        redirect.ActionName.Should().Be("TeamMemberRoleInOrganisation"); // need to revist
+        redirect.ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipTheirRole));
     }
 
     [TestMethod]
