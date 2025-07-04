@@ -28,8 +28,6 @@ public class ManageControlOrganisation(
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string Hint => Localizer["ManageControlOrganisation.Hint"];
-
     public async Task<IActionResult> OnGet(bool invitePerson = false)
     {
         var session = await SessionManager.GetSessionAsync(HttpContext.Session);

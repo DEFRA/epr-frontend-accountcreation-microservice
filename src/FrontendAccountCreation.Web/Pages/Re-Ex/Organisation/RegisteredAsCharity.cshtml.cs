@@ -32,8 +32,6 @@ public class RegisteredAsCharity(
     public string? SelectedValue { get; set; }
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
-
-    public string? Hint => Localizer["RegisteredAsCharity.Hint"];
     
     public async Task<IActionResult> OnGet(
         [FromServices] IOptions<DeploymentRoleOptions> deploymentRoleOptions)
