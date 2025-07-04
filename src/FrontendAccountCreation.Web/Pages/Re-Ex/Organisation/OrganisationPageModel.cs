@@ -81,7 +81,7 @@ public class OrganisationPageModel<T>(
         string currentPagePath,
         string? nextPagePath)
     {
-        var index = session.Journey.FindIndex(x => x == currentPagePath);
+        var index = session.Journey.FindIndex(x => x == currentPagePath.Split("?")[0]);
 
         // this also cover if current page not found (index = -1) then it clears all pages
         session.Journey = session.Journey.Take(index + 1).ToList();

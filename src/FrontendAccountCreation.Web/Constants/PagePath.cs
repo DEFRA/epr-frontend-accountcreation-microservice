@@ -39,6 +39,7 @@ public static class PagePath
     public const string PartnerOrganisation = "partner-organisation";
     public const string ManageAccountPerson = "manage-account-person";
     public const string YouAreApprovedPerson = "approved-person";
+    //to-do: don't think this is used anymore
     public const string AddApprovedPerson = "add-approved-person";
     public const string ApprovedPersonContinue = "person-approved-continue";
     public const string DeclarationContinue = "declaration-continue";
