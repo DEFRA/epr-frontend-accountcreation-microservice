@@ -61,6 +61,8 @@ public class OrganisationPageModel<T>(
         return RedirectToAction(actionName);
     }
 
+    //to-do: change these so don't have to pass actionName and nextPagePath
+    // (we should be able to get one from the other and remove a pit of failure)
     protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
         OrganisationSession session,
         string controllerName,
@@ -79,7 +81,7 @@ public class OrganisationPageModel<T>(
         string currentPagePath,
         string? nextPagePath)
     {
-        var index = session.Journey.FindIndex(x => x != null && x.Contains(currentPagePath.Split("?")[0]));
+        var index = session.Journey.FindIndex(x => x == currentPagePath.Split("?")[0]);
 
         // this also cover if current page not found (index = -1) then it clears all pages
         session.Journey = session.Journey.Take(index + 1).ToList();

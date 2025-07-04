@@ -11,6 +11,8 @@ using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
+//to-do: have base test helper that is fed from page itself
+
 [TestClass]
 public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
 {
