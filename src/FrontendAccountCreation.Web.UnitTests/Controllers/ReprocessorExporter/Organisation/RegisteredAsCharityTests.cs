@@ -232,8 +232,8 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     public void Hint_ShouldReturnLocalizedDescription()
     {
         // Arrange
-        LocalizerMock.Setup(l => l["RegisteredAsCharity.Description"])
-            .Returns(new LocalizedString("RegisteredAsCharity.Description", "Test hint string"));
+        LocalizerMock.Setup(l => l["RegisteredAsCharity.Hint"])
+            .Returns(new LocalizedString("RegisteredAsCharity.Hint", "Test hint string"));
 
         // Act
         var hint = _registeredAsCharity.Hint;

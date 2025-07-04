@@ -137,8 +137,8 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
     public void Question_ShouldReturnLocalizedQuestion()
     {
         // Arrange
-        LocalizerMock.Setup(l => l["UkRegulator.NonUkOrganisation.Question"])
-            .Returns(new LocalizedString("UkRegulator.NonUkOrganisation.Question", "Test question string"));
+        LocalizerMock.Setup(l => l["UkRegulator.Question"])
+            .Returns(new LocalizedString("UkRegulator.Question", "Test question string"));
 
         // Act
         var question = _ukRegulator.Question;
@@ -151,8 +151,8 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
     public void Hint_ShouldReturnLocalizedDescription()
     {
         // Arrange
-        LocalizerMock.Setup(l => l["UkRegulator.NonUkHint"])
-            .Returns(new LocalizedString("UkRegulator.NonUkHint", "Test hint string"));
+        LocalizerMock.Setup(l => l["UkRegulator.Hint"])
+            .Returns(new LocalizedString("UkRegulator.Hint", "Test hint string"));
 
         // Act
         var hint = _ukRegulator.Hint;
