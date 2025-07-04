@@ -215,17 +215,17 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     }
 
     [TestMethod]
-    public void Legend_ShouldReturnLocalizedQuestion()
+    public void Question_ShouldReturnLocalizedQuestion()
     {
         // Arrange
         LocalizerMock.Setup(l => l["RegisteredAsCharity.Question"])
             .Returns(new LocalizedString("RegisteredAsCharity.Question", "Test question string"));
 
         // Act
-        var legend = _registeredAsCharity.Question;
+        var question = _registeredAsCharity.Question;
 
         // Assert
-        legend.Should().Be("Test question string");
+        question.Should().Be("Test question string");
     }
 
     [TestMethod]

@@ -153,17 +153,17 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
     }
 
     [TestMethod]
-    public void Legend_ShouldReturnLocalizedQuestion()
+    public void Question_ShouldReturnLocalizedQuestion()
     {
         // Arrange
         LocalizerMock.Setup(l => l["ManageControlOrganisation.Question"])
             .Returns(new LocalizedString("ManageControlOrganisation.Question", "Test question string"));
 
         // Act
-        var legend = _manageControlOrganisation.Question;
+        var question = _manageControlOrganisation.Question;
 
         // Assert
-        legend.Should().Be("Test question string");
+        question.Should().Be("Test question string");
     }
 
     [TestMethod]

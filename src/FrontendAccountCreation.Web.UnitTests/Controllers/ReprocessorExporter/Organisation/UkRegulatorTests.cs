@@ -134,17 +134,17 @@ public class UkRegulatorTests : OrganisationPageModelTestBase<UkRegulator>
     }
 
     [TestMethod]
-    public void Legend_ShouldReturnLocalizedQuestion()
+    public void Question_ShouldReturnLocalizedQuestion()
     {
         // Arrange
         LocalizerMock.Setup(l => l["UkRegulator.NonUkOrganisation.Question"])
             .Returns(new LocalizedString("UkRegulator.NonUkOrganisation.Question", "Test question string"));
 
         // Act
-        var legend = _ukRegulator.Question;
+        var question = _ukRegulator.Question;
 
         // Assert
-        legend.Should().Be("Test question string");
+        question.Should().Be("Test question string");
     }
 
     [TestMethod]
