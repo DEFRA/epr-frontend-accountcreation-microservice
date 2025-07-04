@@ -435,7 +435,7 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
         {
             InviteUserOption = session.InviteUserOption?.ToString(),
             IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
-        }); 
+        });
     }
 
     [HttpPost]
@@ -455,11 +455,11 @@ public partial class LimitedPartnershipController : ControllerBase<OrganisationS
 
         session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
-       if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
+        if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
         {
             return await SaveSessionAndRedirect(session, "todo", PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: 
         }
-        else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
+        else
         {
             return await SaveSessionAndRedirect(session, "todo", PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
         }
