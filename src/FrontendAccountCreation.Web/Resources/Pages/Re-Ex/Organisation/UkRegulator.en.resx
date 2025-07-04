@@ -123,10 +123,10 @@
   <data name="UkRegulator.ErrorMessage" xml:space="preserve">
     <value>Select a UK regulator to register with</value>
   </data>
-  <data name="UkRegulator.NonUkHint" xml:space="preserve">
+  <data name="UkRegulator.Hint" xml:space="preserve">
     <value>As your organisation is not in the UK, you can choose which regulator to send all your applications to. Once you have chosen you cannot change this.</value>
   </data>
-  <data name="UkRegulator.NonUkOrganisation.Question" xml:space="preserve">
+  <data name="UkRegulator.Question" xml:space="preserve">
     <value>Which UK regulator would you like to register with?</value>
   </data>
 </root>

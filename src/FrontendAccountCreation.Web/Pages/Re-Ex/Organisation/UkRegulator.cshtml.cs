@@ -29,10 +29,6 @@ public class UkRegulator(
 
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
-    public string? Question => Localizer["UkRegulator.NonUkOrganisation.Question"];
-
-    public string? Hint => Localizer["UkRegulator.NonUkHint"];
-
     public async Task<IActionResult> OnGet()
     {
         var session = await SessionManager.GetSessionAsync(HttpContext.Session);
