@@ -98,8 +98,9 @@ public static class PagePath
     // Non Uk Non Companies House paths    
     public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
-    //Non Companies House Partnership paths
+    //Non Companies House Partnership paths 
     public const string NonCompaniesHousePartnershipRole = "non-companies-house-your-partnership-role";
+    public const string NonCompaniesHousePartnershipInviteApprovedPerson = "non-companies-house-partnership-invite-approved-person";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
@@ -107,6 +108,7 @@ public static class PagePath
 
     public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-corporate-individual-partner-names";
     public const string LimitedPartnershipCheckNamesOfPartnersDelete = "organisation-check-corporate-individual-partner-names/delete";
+    public const string WhatRoleDoTheyHaveWithinThePartnership = "what-role-do-they-have-within-the-partnership";
 
     public const string PartnershipType = "partnership-type";
     public const string LimitedPartnershipType = "organisation-partnership-type";

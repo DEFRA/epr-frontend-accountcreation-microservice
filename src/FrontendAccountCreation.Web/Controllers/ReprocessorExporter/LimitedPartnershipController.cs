@@ -3,6 +3,7 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
@@ -413,8 +414,64 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
         session.ReExManualInputSession.RoleInOrganisation = model.RoleInOrganisation;
         session.ReExManualInputSession.IsEligibleToBeApprovedPerson = model.RoleInOrganisation != RoleInOrganisation.NoneOfTheAbove;
 
+        if (model.RoleInOrganisation == RoleInOrganisation.NoneOfTheAbove)
+        {
+            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipInviteApprovedPerson), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+        }
+
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
                     PagePath.NonCompaniesHousePartnershipRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+
+        return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
+        {
+            InviteUserOption = session.InviteUserOption?.ToString(),
+            IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
+        });
+    }
+
+    [HttpPost]
+    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipInviteApprovedPersonViewModel model)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+            model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
+
+            return View(model);
+        }
+
+        session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+
+        if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
+        {
+            return await SaveSessionAndRedirect(session, nameof(WhatRoleDoTheyHaveWithinThePartnership), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.WhatRoleDoTheyHaveWithinThePartnership);
+        }
+        else
+        {
+            return await SaveSessionAndRedirect(session, "ApprovedPersonController", nameof(ApprovedPersonController.CheckYourDetails), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
+        }
+    }
+
+    [HttpGet]
+    [Route(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
+    [OrganisationJourneyAccess(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
+    public async Task<IActionResult> WhatRoleDoTheyHaveWithinThePartnership()
+    {
+        await Task.Yield();
+        throw new NotImplementedException("This feature has not been implemented yet.");
     }
 
     [HttpGet]
