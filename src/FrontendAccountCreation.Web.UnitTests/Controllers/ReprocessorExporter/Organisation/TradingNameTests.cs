@@ -8,6 +8,7 @@ using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
@@ -70,7 +71,7 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
     }
 
     [TestMethod]
-    public async Task POST_GivenTradingName_ThenUpdatesSession()
+    public async Task OnPost_GivenTradingName_ThenUpdatesSession()
     {
         // Arrange
         _tradingName.TextBoxValue = "John Brown Greengrocers";
@@ -165,7 +166,7 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
     }
 
     [TestMethod]
-    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
+    public async Task OnPost_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
     {
         // Arrange
         _tradingName.TextBoxValue = "John Brown Greengrocers";
@@ -201,5 +202,18 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddressOverseas));
+    }
+
+    [TestMethod]
+    public void ButtonText_ThenContinueButtonHasCorrectLabel()
+    {
+        SharedLocalizerMock.Setup(l => l["Continue"])
+            .Returns(new LocalizedString("Continue", "Continue localized"));
+
+        // Act
+        var question = _tradingName.ButtonText;
+
+        // Assert
+        question.Should().Be("Continue localized");
     }
 }

@@ -223,8 +223,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             session.TradingName = null;
         }
 
-        string nextAction, nextPagePath;
-
         if (session.IsTradingNameDifferent == true)
         {
             return await SaveSessionAndRedirectToPage(
