@@ -54,7 +54,8 @@ public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDiff
         {
             Journey = [CurrentPagePath],
             IsUkMainAddress = sessionIsUkMainAddress,
-            OrganisationType = orgType
+            OrganisationType = orgType,
+            TradingName = "Test Trading Name"
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(orgCreationSession);
