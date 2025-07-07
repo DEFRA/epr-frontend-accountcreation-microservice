@@ -231,10 +231,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 PagePath.IsTradingNameDifferent,
                 PagePath.TradingName);
         }
-        
+
         string nextAction, nextPagePath;
 
-        session.TradingName = null;
         if (session.IsUkMainAddress == false)
         {
             nextAction = nameof(AddressOverseas);
