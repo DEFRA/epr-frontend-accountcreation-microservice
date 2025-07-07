@@ -101,12 +101,20 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (model.IsTheOrganisationRegistered == YesNoAnswer.Yes)
         {
+            if (session.ReExManualInputSession != null)
+            {
+                session.ReExManualInputSession = null;
+            }
             return await SaveSessionAndRedirect(session, nameof(CompaniesHouseNumber),
                 PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber);
         }
 
         if (await featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
         {
+            if (session.ReExCompaniesHouseSession != null)
+            {
+                session.ReExCompaniesHouseSession = null;
+            }
             return await SaveSessionAndRedirect(session, nameof(IsUkMainAddress), PagePath.RegisteredWithCompaniesHouse,
                 PagePath.IsUkMainAddress);
         }
@@ -148,8 +156,23 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
-        session.ReExManualInputSession ??= new ReExManualInputSession();
-        session.ReExManualInputSession.ProducerType = model.IsUkMainAddress == YesNoAnswer.No ? ProducerType.NonUkOrganisation : null;
+        if (!string.IsNullOrWhiteSpace(session.TradingName))
+        {
+            session.TradingName = null;
+        }
+
+        // reset values - in case user coming from back button to change the flow
+        session.UkNation = null; 
+        session.IsIndividualInCharge = null;        
+        session.AreTheyIndividualInCharge = null;
+        session.UserManagesOrControls = null;
+        session.TheyManageOrControlOrganisation = null;
+
+        session.ReExManualInputSession = new ReExManualInputSession()
+        {
+            OrganisationName = null,
+            ProducerType = model.IsUkMainAddress == YesNoAnswer.No ? ProducerType.NonUkOrganisation : null
+        };
 
         return await SaveSessionAndRedirect(session, nameof(OrganisationName),
             PagePath.IsUkMainAddress, PagePath.OrganisationName);
@@ -191,6 +214,14 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
+
+        // remove any prev trading name values if answer is Edited
+        if (session.IsTradingNameDifferent.HasValue && 
+            session.IsTradingNameDifferent == false && 
+            !string.IsNullOrWhiteSpace(session.TradingName))
+        {
+            session.TradingName = null;
+        }
 
         string nextAction, nextPagePath;
 
@@ -441,7 +472,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsOrganisationAPartnership == true)
         {
-            // TODO: No option ending up same YES pagePath - to be confirmed
+            // both options 'Yes/No' ending up same pagePath
             return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.PartnershipType), PagePath.IsPartnership,
                 PagePath.PartnershipType);
         }
@@ -531,10 +562,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        if (session.ReExCompaniesHouseSession == null)
-        {
-            session.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
-        }
+        session.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
+        session.TradingName = null;
+        session.IsTradingNameDifferent = null;
 
         Company? company;
 
