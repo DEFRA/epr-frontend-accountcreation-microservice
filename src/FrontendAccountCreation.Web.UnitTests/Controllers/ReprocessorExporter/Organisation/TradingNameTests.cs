@@ -84,25 +84,25 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
-    //{
-    //    // Arrange
-    //    var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-    //    _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-    //    _organisationSession.ReExManualInputSession = new ReExManualInputSession
-    //    {
-    //        ProducerType = ProducerType.SoleTrader
-    //    };
+    [TestMethod]
+    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
+    {
+        // Arrange
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(request);
+        // Act
+        var result = await _tradingName.OnPost();
 
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
 
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
-    //}
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
+    }
 
     //[TestMethod]
     //public async Task POST_GivenTradingName_ThenUpdatesSession()
