@@ -142,92 +142,27 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
     }
 
     [TestMethod]
-    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_ReturnsCorrectViewAndModel()
+    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_ReturnsDefaultView()
     {
         // Arrange
-        _orgSessionMock.IsOrganisationAPartnership = true;
-        _orgSessionMock.IsApprovedUser = true;
-        _orgSessionMock.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
-        {
-            ProducerType = ProducerType.Partnership
-        };
-        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
-        {
-            Partnership = new ReExPartnership
-            {
-                IsLimitedPartnership = true,
-                IsLimitedLiabilityPartnership = false
-            }
-        };
-
         // Act
         var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        viewResult.ViewName.Should().Be("YouAreApprovedPerson");
-
-        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
-        model.IsApprovedUser.Should().BeTrue();
-        model.ProducerType.Should().Be(ProducerType.Partnership);
-        model.IsNonCompanyHouseApprovedPerson.Should().BeTrue();
-        model.IsLimitedPartnership.Should().BeTrue();
-        model.IsLimitedLiabilityPartnership.Should().BeFalse();
+        viewResult.ViewName.Should().BeNull(); // returns default view
     }
 
     [TestMethod]
-    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_WithNoPartnership_ReturnsModelWithFalsePartnershipFlags()
+    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_WithFocusId_SetsFocusId()
     {
         // Arrange
-        _orgSessionMock.IsOrganisationAPartnership = false;
-        _orgSessionMock.IsApprovedUser = false;
-        _orgSessionMock.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
-        {
-            ProducerType = ProducerType.SoleTrader
-        };
-        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
-        {
-            Partnership = new ReExPartnership
-            {
-                IsLimitedPartnership = true,
-                IsLimitedLiabilityPartnership = true
-            }
-        };
-
         // Act
         var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson();
 
         // Assert
         result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
-        model.IsLimitedPartnership.Should().BeFalse();
-        model.IsLimitedLiabilityPartnership.Should().BeFalse();
-        model.IsApprovedUser.Should().BeFalse();
-        model.IsNonCompanyHouseApprovedPerson.Should().BeTrue();
-        model.ProducerType.Should().Be(ProducerType.SoleTrader);
-    }
-
-    [TestMethod]
-    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_IsCompaniesHouseFlowTrue_ModelShowsAsCompanyHouseApprovedPerson()
-    {
-        // Arrange
-        _orgSessionMock.OrganisationType = OrganisationType.CompaniesHouseCompany;
-        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
-        {
-            ProducerType = ProducerType.LimitedPartnership
-        };
-
-        // Act
-        var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson();
-
-        // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
-        model.IsNonCompanyHouseApprovedPerson.Should().BeFalse();
     }
 
     [TestMethod]

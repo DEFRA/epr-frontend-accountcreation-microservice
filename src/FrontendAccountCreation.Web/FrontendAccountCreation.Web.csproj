@@ -107,7 +107,7 @@
       <EmbeddedResource Update="Resources\Pages\Re-Ex\Organisation\UkRegulator.en.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Views\ApprovedPerson\Partials\_NonCompanyHouseYouAreApprovedPerson.en.resx">
+      <EmbeddedResource Update="Resources\Views\ApprovedPerson\NonCompaniesHouseYouAreApprovedPerson.en.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
       <EmbeddedResource Update="Resources\Views\User\ReExAccountFullName.cy.resx">

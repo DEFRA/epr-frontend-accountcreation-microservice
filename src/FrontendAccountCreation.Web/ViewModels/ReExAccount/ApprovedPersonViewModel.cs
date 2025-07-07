@@ -10,5 +10,4 @@ public class ApprovedPersonViewModel
     public bool IsLimitedPartnership { get; set; }
     public bool IsApprovedUser { get; set; }
     public ProducerType? ProducerType { get; set; }
-    public bool IsNonCompanyHouseApprovedPerson { get; set; }
 }

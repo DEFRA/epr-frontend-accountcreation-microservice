@@ -642,8 +642,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
                 IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
                 IsApprovedUser = session.IsApprovedUser,
-                ProducerType = session.ReExManualInputSession?.ProducerType,
-                IsNonCompanyHouseApprovedPerson = !session.IsCompaniesHouseFlow
+                ProducerType = session.ReExManualInputSession?.ProducerType
             };
 
             var id = GetFocusId();
@@ -1070,24 +1069,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var isPartnership = session.IsOrganisationAPartnership ?? false;
-
-            var approvedPersonViewModel = new ApprovedPersonViewModel
-            {
-                IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
-                IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
-                IsApprovedUser = session.IsApprovedUser,
-                ProducerType = session.ReExManualInputSession?.ProducerType,
-                IsNonCompanyHouseApprovedPerson = !session.IsCompaniesHouseFlow
-            };
-
             var id = GetFocusId();
             if (id.HasValue)
             {
                 SetFocusId(id.Value);
             }
 
-            return View("YouAreApprovedPerson", approvedPersonViewModel);
+            return View();
         }
 
         [HttpPost]
