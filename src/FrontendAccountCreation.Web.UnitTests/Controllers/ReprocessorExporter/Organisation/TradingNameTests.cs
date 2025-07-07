@@ -104,23 +104,24 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenTradingName_ThenUpdatesSession()
-    //{
-    //    // Arrange
-    //    var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-    //    _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-    //    _organisationSession.ReExManualInputSession = new ReExManualInputSession
-    //    {
-    //        ProducerType = ProducerType.SoleTrader
-    //    };
+    [TestMethod]
+    public async Task POST_GivenTradingName_ThenUpdatesSession()
+    {
+        // Arrange
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
 
-    //    // Act
-    //    await _systemUnderTest.TradingName(request);
+        // Act
+        await _tradingName.OnPost();
 
-    //    // Assert
-    //    _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    //}
+        // Assert
+        SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
+            Times.Once);
+    }
 
     //[TestMethod]
     //public async Task POST_GivenNoTradingName_ThenSessionNotUpdated()
