@@ -1,0 +1,76 @@
+﻿@model FrontendAccountCreation.Web.FullPages.SingleTextBox.ISingleTextboxPageModel
+
+@{
+    const string textBoxId = "textbox";
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+
+        <partial name="_ErrorSummaryNext" model="Model.Errors" />
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <form method="post" novalidate>
+
+                    @if (!string.IsNullOrEmpty(Model.TextBoxLabel))
+                    {
+                        @* not even the GDS error summary page is consistent in whether the heading goes in the form-group or not!*@
+                        <h1 class="govuk-heading-l">@Model.Question</h1>
+                    }
+
+                    @{
+                        IError? error = Model.Errors.GetErrorIfTriggeredByElementId();
+                    }
+
+                    <div class="govuk-form-group @(error?.FormGroupClass)">
+
+                        @if (!string.IsNullOrEmpty(Model.TextBoxLabel))
+                        {
+                            @* todo: partial for hint? *@
+                            if (!string.IsNullOrEmpty(Model.Hint))
+                            {
+                                <div id="hint" class="govuk-hint">
+                                    @Model.Hint
+                                </div>
+                            }
+                            <label class="govuk-label" for="@textBoxId">
+                                @Model.TextBoxLabel
+                            </label>
+                        }
+                        else
+                        {
+                            <h1 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--l" for="@textBoxId">
+                                    @Model.Question
+                                </label>
+                            </h1>
+
+                            if (!string.IsNullOrEmpty(Model.Hint))
+                            {
+                                <div id="hint" class="govuk-hint">
+                                    @Model.Hint
+                                </div>
+                            }
+                        }
+
+                        <partial name="_ErrorMessageNext" model="error" />
+
+                        @{
+                            string type = "text";
+                        }
+
+                        <input class="govuk-input @(error?.InputClass)" maxlength="@(Model.MaxLength)"
+                               name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
+                               spellcheck="false" autocomplete="on" id="@textBoxId"
+                               aria-describedby="@(string.IsNullOrEmpty(Model.Hint) ? "" : "hint ")@error?.InputErrorMessageParaId">
+                    </div>
+                    <button type="submit" class="govuk-button" data-module="govuk-button">
+                        @Model.ButtonText
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
