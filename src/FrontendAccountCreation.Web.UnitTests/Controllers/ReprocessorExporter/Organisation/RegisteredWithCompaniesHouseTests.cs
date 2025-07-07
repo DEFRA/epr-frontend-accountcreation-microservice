@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
@@ -49,6 +51,31 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
     public async Task RegisteredWithCompaniesHouse_OrganisationIsRegistered_RedirectsToCompaniesHouseNumberPage_AndUpdateSession()
     {
         // Arrange
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.RegisteredWithCompaniesHouse],
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.SoleTrader,
+                BusinessAddress = new Address
+                {                    
+                    Street = "123 Test Street",
+                    Postcode = "AB12 3CD"
+                },
+                TeamMembers =
+                [
+                    new ReExCompanyTeamMember
+                    {
+                        FullName = "Test User",
+                        Email = "Test@test.com"
+                    }
+                ]
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(orgCreationSessionMock);
+
         var request = new RegisteredWithCompaniesHouseViewModel { IsTheOrganisationRegistered = YesNoAnswer.Yes };
        
         // Act
@@ -72,7 +99,15 @@ public class RegisteredWithCompaniesHouseTests : OrganisationTestBase
         var orgCreationSessionMock = new OrganisationSession
         {
             Journey = [PagePath.RegisteredWithCompaniesHouse],
-            OrganisationType = orgType
+            OrganisationType = orgType,
+            ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+            {
+                Company = new Core.Services.Dto.Company.Company
+                {
+                    CompaniesHouseNumber = "12345678",
+                    Name = "Test Company"
+                }
+            }
         };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(orgCreationSessionMock);
