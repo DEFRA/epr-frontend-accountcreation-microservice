@@ -1,14 +1,12 @@
 ﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Threading.Tasks;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
@@ -103,7 +101,7 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
-        redirect.ActionName.Should().Be("YouAreApprovedPerson");
+        redirect.ActionName.Should().Be("NonCompaniesHouseYouAreApprovedPerson");
         _orgSessionMock.IsApprovedUser.Should().BeTrue();
     }
 
@@ -141,5 +139,71 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be("CheckYourDetails");
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_ReturnsCorrectViewAndModel()
+    {
+        // Arrange
+        _orgSessionMock.IsOrganisationAPartnership = true;
+        _orgSessionMock.IsApprovedUser = true;
+        _orgSessionMock.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.Partnership
+        };
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+        {
+            Partnership = new ReExPartnership
+            {
+                IsLimitedPartnership = true,
+                IsLimitedLiabilityPartnership = false
+            }
+        };
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.ViewName.Should().Be("YouAreApprovedPerson");
+
+        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
+        model.IsApprovedUser.Should().BeTrue();
+        model.ProducerType.Should().Be(ProducerType.Partnership);
+        model.IsNonCompanyHouseApprovedPerson.Should().BeTrue();
+        model.IsLimitedPartnership.Should().BeTrue();
+        model.IsLimitedLiabilityPartnership.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHouseYouAreApprovedPerson_Post_InviteApprovedPersonTrue_RedirectsToTeamMemberRole()
+    {
+        // Arrange
+        var inviteApprovedPerson = true;
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson(inviteApprovedPerson);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHouseYouAreApprovedPerson_Post_InviteApprovedPersonFalse_RedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var inviteApprovedPerson = false;
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson(inviteApprovedPerson);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
     }
 }
