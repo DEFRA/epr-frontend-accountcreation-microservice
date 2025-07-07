@@ -179,7 +179,7 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
     [TestMethod]
     public async Task Post_YouAreApprovedPerson_IsUkMainAddress_RedirectsTo_ManageControlOrganisationPage()
     {
-        // Arrange
+        // Arrange 
         var session = new OrganisationSession { IsUkMainAddress = false };
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(session);
