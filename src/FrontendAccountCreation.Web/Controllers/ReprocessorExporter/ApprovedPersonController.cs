@@ -1055,9 +1055,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     session.IsApprovedUser = true;
                     return await SaveSessionAndRedirect(session, nameof(NonCompaniesHouseYouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
                 case nameof(InviteUserOptions.InviteAnotherPerson):
-                    return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: user should be directed to 'What role do they have within the partnership' screen
+                    return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // todo: user should be directed to 'What role do they have within the partnership' screen
                 default:
-                    //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
                     return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
             }
         }
