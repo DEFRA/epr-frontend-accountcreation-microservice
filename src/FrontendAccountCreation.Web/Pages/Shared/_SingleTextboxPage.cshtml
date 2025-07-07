@@ -58,18 +58,8 @@
                         <partial name="_ErrorMessageNext" model="error" />
 
                         @{
-                            // string type = Model switch
-                            // {
-                            //     ISingleTelephoneTextboxPageModel => "tel",
-                            //     ISingleEmailTextboxPageModel => "email",
-                            //     _ => "text"
-                            // };
-
                             string type = "text";
                         }
-
-                        @* todo: flags for spellcheck, autocomplete etc.?*@
-                        @* todo: support govuk-input--width *@
 
                         <input class="govuk-input @(error?.InputClass)" maxlength="@(Model.MaxLength)"
                                name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
