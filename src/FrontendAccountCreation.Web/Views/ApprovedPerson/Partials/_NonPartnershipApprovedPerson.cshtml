@@ -21,6 +21,10 @@
 						// approvded person for a nonCompanyhouse non-UK organisation flow
 						@Localizer["_NonPartnershipApprovedPerson.NonUkOrganisation.ApprovedPerson.Description"].Value
 					}
+					else if (Model.ProducerType != null && Model.ProducerType == ProducerType.UnincorporatedBody && Model.IsApprovedUser)
+					{
+						@Localizer["_NonPartnershipApprovedPerson.Unincorporated.ApprovedPerson.Description"].Value
+					}
 					else
 					{
 						@Localizer["_NonPartnershipApprovedPerson.Description"].Value
