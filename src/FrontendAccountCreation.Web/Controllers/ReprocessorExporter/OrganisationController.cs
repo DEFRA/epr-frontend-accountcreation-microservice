@@ -929,6 +929,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
     [HttpGet]
     [Route(PagePath.DeclarationContinue)]
+    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
