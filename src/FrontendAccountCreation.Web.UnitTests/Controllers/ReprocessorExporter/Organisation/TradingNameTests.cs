@@ -218,9 +218,44 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
     }
 
     [TestMethod]
+    public void Question_ShouldReturnLocalizedQuestion()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["TradingName.Question"])
+            .Returns(new LocalizedString("TradingName.Question", "Test question string"));
+
+        // Act
+        var question = _tradingName.Question;
+
+        // Assert
+        question.Should().Be("Test question string");
+    }
+
+    [TestMethod]
+    public void Hint_ShouldReturnLocalizedDescription()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["TradingName.Hint"])
+            .Returns(new LocalizedString("TradingName.Hint", "Test hint string"));
+
+        // Act
+        var hint = _tradingName.Hint;
+
+        // Assert
+        hint.Should().Be("Test hint string");
+    }
+
+    [TestMethod]
     public void TextBoxLabel_ReturnsNull()
     {
         // Act and Assert
         _tradingName.TextBoxLabel.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void MaxLength_ReturnsMaxLength()
+    {
+        // Act and Assert
+        _tradingName.MaxLength.Should().Be(170);
     }
 }
