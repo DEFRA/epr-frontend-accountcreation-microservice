@@ -55,18 +55,6 @@ public class OrganisationPageModel<T>(
         }
     }
 
-    protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
-        OrganisationSession session,
-        string actionName,
-        string currentPagePath,
-        string? nextPagePath)
-    {
-        session.IsUserChangingDetails = false;
-        await SaveSession(session, currentPagePath, nextPagePath);
-
-        return RedirectToAction(actionName);
-    }
-
     //to-do: change these so don't have to pass actionName and nextPagePath
     // (we should be able to get one from the other and remove a pit of failure)
     protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
