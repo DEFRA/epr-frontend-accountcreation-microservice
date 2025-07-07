@@ -132,7 +132,7 @@
   <data name="TradingName.Title" xml:space="preserve">
     <value>Trading name</value>
   </data>
-  <data name="TradingName.NonCompaniesHouse.Question" xml:space="preserve">
+  <data name="TradingName.Question.NonCompaniesHouse" xml:space="preserve">
     <value>What is the trading name?</value>
   </data>
 </root>

@@ -92,6 +92,6 @@ public class TradingName(
     {
         TextBoxLabel = session.IsCompaniesHouseFlow
             ? Localizer["TradingName.Question"]
-            : Localizer["TradingName.NonCompaniesHouse.Question"];
+            : Localizer["TradingName.Question.NonCompaniesHouse"];
     }
 }
