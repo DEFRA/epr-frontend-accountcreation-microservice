@@ -521,7 +521,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
-                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsUnincorporated = session.ReExManualInputSession ?.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);

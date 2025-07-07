@@ -27,7 +27,12 @@
                     @if (Model.TeamMembers != null && Model.TeamMembers.Count > 0)
                     {
                         <div class="govuk-summary-card__title-wrapper">
-                            <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Help"]</p>
+                            @if (Model.IsUnincorporated) {
+                                <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Unincorporated.Help"]</p>
+                            }
+                            else {
+                                <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Help"]</p>
+                            }
                         </div>
                     }
                     else
@@ -58,6 +63,12 @@
                                     {
                                         <dd class="govuk-summary-list__value">
                                             @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
+                                        </dd>
+                                    }
+                                    @if (Model.IsUnincorporated)
+                                    {
+                                        <dd class="govuk-summary-list__value">
+                                            @Localizer["TeamMemberCheckInvitationDetails.Unincorporated"]
                                         </dd>
                                     }
                                    
@@ -110,7 +121,7 @@
                             <button class="govuk-button" data-module="govuk-button" asp-action="NonCompaniesHouseTeamMemberCheckInvitationDetailsPost">
                                 @SharedLocalizer["Continue"]
                             </button>
-                            @if (Model.IsNonUk)
+                            @if (Model.IsNonUk || Model.IsUnincorporated)
                             {
                                 <input type="hidden" name="invitePerson" value="true" />
                                 <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-action="ManageControlOrganisation" formmethod="get" type="submit">
