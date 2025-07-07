@@ -266,7 +266,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return View(new ManageControlViewModel
         {
-            UserManagesOrControls = session.UserManagesOrControls
+            UserManagesOrControls = session.UserManagesOrControls,
+            IsUnincorporatedFlow = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody
+            
         });
     }
 
