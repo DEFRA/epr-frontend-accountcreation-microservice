@@ -7,6 +7,7 @@ using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
@@ -137,22 +138,18 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
             Times.Never);
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenNoTradingName_ThenReturnView()
-    //{
-    //    // Arrange
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
-    //    var viewModel = new TradingNameViewModel
-    //    {
-    //        TradingName = ""
-    //    };
+    [TestMethod]
+    public async Task OnPost_GivenNoTradingName_ThenReturnPage()
+    {
+        // Arrange
+        _tradingName.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(viewModel);
+        // Act
+        var result = await _tradingName.OnPost();
 
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //}
+        // Assert
+        result.Should().BeOfType<PageResult>();
+    }
 
     //[TestMethod]
     //public async Task POST_GivenTradingNameTooLong_ThenReturnViewWithUsersBadInput()
