@@ -151,46 +151,38 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         result.Should().BeOfType<PageResult>();
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenTradingNameTooLong_ThenReturnViewWithUsersBadInput()
-    //{
-    //    // Arrange
-    //    const string badTradingName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
+    /// <summary>
+    /// This tests that when the user enters a trading name that is too long,
+    /// when we show the page in the errored state, the (too long) trading name they entered is retained
+    /// </summary>
+    [TestMethod]
+    public async Task OnPost_GivenTradingNameTooLong_ThenReturnPageWithUsersBadInput()
+    {
+        // Arrange
+        const string badTradingName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
+        _tradingName.TextBoxValue = badTradingName;
 
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name must be 170 characters or less");
-    //    var viewModel = new TradingNameViewModel
-    //    {
-    //        TradingName = badTradingName
-    //    };
+        _tradingName.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name must be 170 characters or less");
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(viewModel);
+        // Act
+        await _tradingName.OnPost();
 
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
+        // Assert
+        _tradingName.TextBoxValue.Should().Be(badTradingName);
+    }
 
-    //    viewResult.Model.Should().BeOfType<TradingNameViewModel?>();
-    //    var resultViewModel = (TradingNameViewModel?)viewResult.Model;
-    //    resultViewModel!.TradingName.Should().Be(badTradingName);
-    //}
+    [TestMethod]
+    public async Task OnPost_GivenNoTradingName_ThenViewHasCorrectBackLink()
+    {
+        // Arrange
+        _tradingName.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
 
-    //[TestMethod]
-    //public async Task POST_GivenNoTradingName_ThenViewHasCorrectBackLink()
-    //{
-    //    // Arrange
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
+        // Act
+        await _tradingName.OnPost();
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(new TradingNameViewModel());
-
-    //    // Assert
-    //    result.Should().BeOfType<ViewResult>();
-
-    //    var viewResult = (ViewResult)result;
-
-    //    AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
-    //}
+        // Assert
+        AssertBackLink(_tradingName, PagePath.IsTradingNameDifferent);
+    }
 
     //[TestMethod]
     //public async Task POST_GivenTradingName_WithNonUKOrganisationProducerType_Flow_Redirects_To_AddressOverseas()
