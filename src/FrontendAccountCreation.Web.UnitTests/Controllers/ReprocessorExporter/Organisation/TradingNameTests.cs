@@ -44,27 +44,19 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         _tradingName.TextBoxValue.Should().BeNull();
     }
 
-    //[TestMethod]
-    //public async Task GET_WhenTradingNameIsInSession_ThenViewIsReturnedWithTradingName()
-    //{
-    //    //Arrange
-    //    const string tradingName = "Trading name";
-    //    _organisationSession.TradingName = tradingName;
-    //    _organisationSession.ReExManualInputSession = new ReExManualInputSession
-    //    {
-    //        BusinessAddress = new Core.Addresses.Address()
-    //    };
+    [TestMethod]
+    public async Task OnGet_WhenTradingNameIsInSession_ThenViewIsReturnedWithTradingName()
+    {
+        //Arrange
+        const string tradingName = "Trading name";
+        OrganisationSession.TradingName = tradingName;
 
-    //    //Act
-    //    var result = await _systemUnderTest.TradingName();
+        //Act
+        await _tradingName.OnGet();
 
-    //    //Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    viewResult.Model.Should().BeOfType<TradingNameViewModel>();
-    //    var viewModel = (TradingNameViewModel?)viewResult.Model;
-    //    viewModel!.TradingName.Should().Be(tradingName);
-    //}
+        //Assert
+        _tradingName.TextBoxValue.Should().Be(tradingName);
+    }
 
     //[TestMethod]
     //public async Task GET_ThenBackLinkIsCorrect()
