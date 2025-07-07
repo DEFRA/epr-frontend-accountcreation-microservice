@@ -12,8 +12,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
-//todo: going back from address overseas goes to is trading name different
-//todo: check original stories for what the content should be
 //todo: check your details to this page, back link not correct
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
@@ -24,11 +22,8 @@ public class TradingName(
     IStringLocalizer<TradingName> localizer)
     : OrganisationPageModel<TradingName>(sessionManager, sharedLocalizer, localizer), ISingleTextboxPageModel
 {
-    //public string? Heading => null;
-
-    //public string TextBoxLabel { get; private set; } = null!;
     public string? TextBoxLabel => null;
-    
+
     //todo: better to use this than have an error message (or have both?)
     public int? MaxLength => 170;
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
