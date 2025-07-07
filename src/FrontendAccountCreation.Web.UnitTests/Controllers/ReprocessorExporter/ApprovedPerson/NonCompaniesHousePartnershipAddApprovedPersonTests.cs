@@ -178,6 +178,59 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
     }
 
     [TestMethod]
+    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_WithNoPartnership_ReturnsModelWithFalsePartnershipFlags()
+    {
+        // Arrange
+        _orgSessionMock.IsOrganisationAPartnership = false;
+        _orgSessionMock.IsApprovedUser = false;
+        _orgSessionMock.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
+        _orgSessionMock.ReExCompaniesHouseSession = new ReExCompaniesHouseSession
+        {
+            Partnership = new ReExPartnership
+            {
+                IsLimitedPartnership = true,
+                IsLimitedLiabilityPartnership = true
+            }
+        };
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
+        model.IsLimitedPartnership.Should().BeFalse();
+        model.IsLimitedLiabilityPartnership.Should().BeFalse();
+        model.IsApprovedUser.Should().BeFalse();
+        model.IsNonCompanyHouseApprovedPerson.Should().BeTrue();
+        model.ProducerType.Should().Be(ProducerType.SoleTrader);
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHouseYouAreApprovedPerson_Get_IsCompaniesHouseFlowTrue_ModelShowsAsCompanyHouseApprovedPerson()
+    {
+        // Arrange
+        _orgSessionMock.OrganisationType = OrganisationType.CompaniesHouseCompany;
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.LimitedPartnership
+        };
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseYouAreApprovedPerson();
+
+        // Assert
+        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        var model = viewResult.Model.Should().BeOfType<ApprovedPersonViewModel>().Subject;
+        model.IsNonCompanyHouseApprovedPerson.Should().BeFalse();
+    }
+
+    [TestMethod]
     public async Task NonCompaniesHouseYouAreApprovedPerson_Post_InviteApprovedPersonTrue_RedirectsToTeamMemberRole()
     {
         // Arrange
