@@ -58,33 +58,31 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         _tradingName.TextBoxValue.Should().Be(tradingName);
     }
 
-    //[TestMethod]
-    //public async Task GET_ThenBackLinkIsCorrect()
-    //{
-    //    //Act
-    //    var result = await _systemUnderTest.TradingName();
+    [TestMethod]
+    public async Task OnGet_ThenBackLinkIsCorrect()
+    {
+        //Act
+        await _tradingName.OnGet();
 
-    //    //Assert
-    //    result.Should().BeOfType<ViewResult>();
-    //    var viewResult = (ViewResult)result;
-    //    AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
-    //}
+        //Assert
+        AssertBackLink(_tradingName, PagePath.IsTradingNameDifferent);
+    }
 
-    //[TestMethod]
-    //public async Task POST_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
-    //{
-    //    // Arrange
-    //    var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-    //    _organisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
+    [TestMethod]
+    public async Task OnPost_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
+    {
+        // Arrange
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(request);
+        // Act
+        var result = await _tradingName.OnPost();
 
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
 
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
-    //}
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
+    }
 
     //[TestMethod]
     //public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
