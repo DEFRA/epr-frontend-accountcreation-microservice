@@ -192,4 +192,19 @@
   <data name="AddNotApprovedPerson.CompanyDirector" xml:space="preserve">
     <value>company director</value>
   </data>
+  <data name="AddNotApprovedPerson.Chairperson" xml:space="preserve">
+    <value>chairperson</value>
+  </data>
+  <data name="AddNotApprovedPerson.Treasurer" xml:space="preserve">
+    <value>treasurer</value>
+  </data>
+  <data name="AddNotApprovedPerson.Secretary" xml:space="preserve">
+    <value>secretary</value>
+  </data>
+  <data name="AddNotApprovedPerson.Manager" xml:space="preserve">
+    <value>manager</value>
+  </data>
+  <data name="AddNotApprovedPerson.Owner" xml:space="preserve">
+    <value>owner</value>
+  </data>
 </root>
