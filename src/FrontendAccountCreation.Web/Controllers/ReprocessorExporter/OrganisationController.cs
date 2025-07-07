@@ -223,31 +223,33 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             session.TradingName = null;
         }
 
-        string nextAction, nextPagePath;
-
         if (session.IsTradingNameDifferent == true)
         {
-            nextAction = nameof(TradingName);
-            nextPagePath = PagePath.TradingName;
+            return await SaveSessionAndRedirectToPage(
+                session,
+                nameof(TradingName),
+                PagePath.IsTradingNameDifferent,
+                PagePath.TradingName);
+        }
+
+        session.TradingName = null;
+
+        string nextAction, nextPagePath;
+
+        if (session.IsUkMainAddress == false)
+        {
+            nextAction = nameof(AddressOverseas);
+            nextPagePath = PagePath.AddressOverseas;
+        }
+        else if (session.IsCompaniesHouseFlow)
+        {
+            nextAction = nameof(IsOrganisationAPartner);
+            nextPagePath = PagePath.IsPartnership;
         }
         else
         {
-            session.TradingName = null;
-            if (session.IsUkMainAddress == false)
-            {
-                nextAction = nameof(AddressOverseas);
-                nextPagePath = PagePath.AddressOverseas;
-            }
-            else if (session.IsCompaniesHouseFlow)
-            {
-                nextAction = nameof(IsOrganisationAPartner);
-                nextPagePath = PagePath.IsPartnership;
-            }
-            else
-            {
-                nextAction = nameof(TypeOfOrganisation);
-                nextPagePath = PagePath.TypeOfOrganisation;
-            }
+            nextAction = nameof(TypeOfOrganisation);
+            nextPagePath = PagePath.TypeOfOrganisation;
         }
 
         return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
@@ -337,53 +339,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return await SaveSessionAndRedirectToPage(session, nameof(UkRegulator),
             PagePath.AddressOverseas, PagePath.UkRegulator);
-    }
-
-    [HttpGet]
-    [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
-    public async Task<IActionResult> TradingName()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        SetBackLink(session, PagePath.TradingName);
-
-        var viewModel = new TradingNameViewModel()
-        {
-            TradingName = session?.TradingName,
-            IsCompaniesHouseFlow = session?.IsCompaniesHouseFlow ?? false
-        };
-        return View(viewModel);
-    }
-
-    [HttpPost]
-    [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
-    public async Task<IActionResult> TradingName(TradingNameViewModel model)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        if (!ModelState.IsValid)
-        {
-            SetBackLink(session, PagePath.TradingName);
-
-            return View(model);
-        }
-
-        session.TradingName = model.TradingName;
-
-        if (session.IsCompaniesHouseFlow)
-        {
-            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName, PagePath.IsPartnership);
-        }
-        else if (session.ReExManualInputSession.ProducerType.HasValue && session.ReExManualInputSession.ProducerType.Value == ProducerType.NonUkOrganisation)
-        {
-            return await SaveSessionAndRedirect(session, nameof(AddressOverseas), PagePath.TradingName, PagePath.AddressOverseas);
-        }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName, PagePath.TypeOfOrganisation);
-        }
     }
 
     [HttpGet]

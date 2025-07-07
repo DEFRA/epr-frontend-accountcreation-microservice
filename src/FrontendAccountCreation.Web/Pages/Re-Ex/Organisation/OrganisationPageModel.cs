@@ -24,7 +24,13 @@ public class OrganisationPageModel<T>(
     protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
     protected IStringLocalizer<T> Localizer { get; } = localizer;
 
-    public virtual string? Question => Localizer[$"{typeof(T).Name}.Question"];
+    private string? _question;
+
+    public virtual string Question
+    {
+        get => _question ?? Localizer[$"{typeof(T).Name}.Question"];
+        protected set => _question = value;
+    }
 
     public virtual string? Hint
     {
@@ -49,18 +55,8 @@ public class OrganisationPageModel<T>(
         }
     }
 
-    protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
-        OrganisationSession session,
-        string actionName,
-        string currentPagePath,
-        string? nextPagePath)
-    {
-        session.IsUserChangingDetails = false;
-        await SaveSession(session, currentPagePath, nextPagePath);
-
-        return RedirectToAction(actionName);
-    }
-
+    //to-do: change these so don't have to pass actionName and nextPagePath
+    // (we should be able to get one from the other and remove a pit of failure)
     protected async Task<RedirectToActionResult> SaveSessionAndRedirect(
         OrganisationSession session,
         string controllerName,
@@ -79,7 +75,7 @@ public class OrganisationPageModel<T>(
         string currentPagePath,
         string? nextPagePath)
     {
-        var index = session.Journey.FindIndex(x => x != null && x.Contains(currentPagePath.Split("?")[0]));
+        var index = session.Journey.FindIndex(x => x == currentPagePath.Split("?")[0]);
 
         // this also cover if current page not found (index = -1) then it clears all pages
         session.Journey = session.Journey.Take(index + 1).ToList();
