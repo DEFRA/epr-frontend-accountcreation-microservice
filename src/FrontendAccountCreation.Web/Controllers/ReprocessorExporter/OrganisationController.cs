@@ -232,6 +232,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 PagePath.TradingName);
         }
 
+        session.TradingName = null;
+
         string nextAction, nextPagePath;
 
         if (session.IsUkMainAddress == false)
