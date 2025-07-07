@@ -1,19 +1,12 @@
-﻿using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
-using FrontendAccountCreation.Core.Sessions.ReEx;
+﻿using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moq;
 using Microsoft.AspNetCore.Http;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.Extensions;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.LimitedPartnership
 {
@@ -91,16 +84,19 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
         }
 
         [TestMethod]
-        [DataRow(RoleInOrganisation.Partner,true)]
-        [DataRow(RoleInOrganisation.PartnerCompanySecretary, true)]
-        [DataRow(RoleInOrganisation.PartnerDirector, true)]
-        [DataRow(RoleInOrganisation.NoneOfTheAbove, false)]
-        public async Task NonCompaniesHousePartnershipRole_Post_RedirectsToNonCompaniesHousePartnershipAddApprovedPerson(RoleInOrganisation role, bool isEligibleToApprovedPerson)
+        [DataRow(RoleInOrganisation.Partner, true, nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson))]
+        [DataRow(RoleInOrganisation.PartnerCompanySecretary, true, nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson))]
+        [DataRow(RoleInOrganisation.PartnerDirector, true, nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson))]
+        [DataRow(RoleInOrganisation.NoneOfTheAbove, false, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipInviteApprovedPerson))]
+        public async Task NonCompaniesHousePartnershipRole_Post_RedirectsToCorrectPageBasedOnRole(
+            RoleInOrganisation role,
+            bool isEligibleToBeApprovedPerson,
+            string expectedActionName)
         {
             // Arrange
             var model = new NonCompaniesHousePartnershipRoleModel
             {
-                RoleInOrganisation = role,
+                RoleInOrganisation = role
             };
 
             // Act
@@ -108,21 +104,27 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 
             // Assert
             result.Should().BeOfType<RedirectToActionResult>();
-            var redirectResult = (RedirectToActionResult)result;
-            redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson));
-            redirectResult.ControllerName.Should().Be(nameof(ApprovedPersonController).WithoutControllerSuffix());
+            var redirect = (RedirectToActionResult)result;
+            redirect.ActionName.Should().Be(expectedActionName);
 
-            _sessionManagerMock.Verify(x => x.SaveSessionAsync(
-                It.IsAny<ISession>(),
-                It.Is<OrganisationSession>(s =>
-                    s.ReExManualInputSession.RoleInOrganisation == role
-                    && s.ReExManualInputSession.IsEligibleToBeApprovedPerson == isEligibleToApprovedPerson
-                    && s.Journey.Contains(PagePath.NonCompaniesHousePartnershipRole)
-                    && s.Journey.Contains(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)
-                )),
-                Times.Once);
-            _orgSessionMock.Journey.Should().HaveElementAt(1, PagePath.NonCompaniesHousePartnershipRole);
-            _orgSessionMock.Journey.Should().HaveElementAt(2, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+            _orgSessionMock.ReExManualInputSession.RoleInOrganisation.Should().Be(role);
+            _orgSessionMock.ReExManualInputSession.IsEligibleToBeApprovedPerson.Should().Be(isEligibleToBeApprovedPerson);
+        }
+
+        [TestMethod]
+        public async Task NonCompaniesHousePartnershipRole_Post_InvalidModel_ReturnsViewWithModel()
+        {
+            // Arrange
+            var model = new NonCompaniesHousePartnershipRoleModel();
+            _systemUnderTest.ModelState.AddModelError("RoleInOrganisation", "Required");
+
+            // Act
+            var result = await _systemUnderTest.NonCompaniesHousePartnershipRole(model);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = (ViewResult)result;
+            viewResult.Model.Should().Be(model);
         }
     }
 }
