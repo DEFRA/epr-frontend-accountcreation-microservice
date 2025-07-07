@@ -1148,8 +1148,12 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             else
             {
                 // goes to "What are their details?" page which is unavailable because its not been built
-                return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
-                    PagePath.NonCompaniesHousePartnershipTheirRole, PagePath.NonCompaniesHouseTeamMemberDetails);
+                return await SaveSessionAndRedirect(session: session,
+                    actionName: nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
+                    currentPagePath: PagePath.NonCompaniesHousePartnershipTheirRole,
+                    nextPagePath: PagePath.NonCompaniesHouseTeamMemberDetails,
+                    controllerName: nameof(ApprovedPersonController),
+                    routeValues: new { id = approvedPersons[memberIndex].Id });
             }
         }
     }
