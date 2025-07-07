@@ -24,7 +24,13 @@ public class OrganisationPageModel<T>(
     protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
     protected IStringLocalizer<T> Localizer { get; } = localizer;
 
-    public virtual string? Question => Localizer[$"{typeof(T).Name}.Question"];
+    private string? _question;
+
+    public virtual string Question
+    {
+        get => _question ?? Localizer[$"{typeof(T).Name}.Question"];
+        protected set => _question = value;
+    }
 
     public virtual string? Hint
     {
