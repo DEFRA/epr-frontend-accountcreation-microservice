@@ -65,6 +65,24 @@
                                 </div>
                             }
 
+                            @if (Model.IsNonUk || Model.IsUnincorporatedFlow)
+                            {
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["CheckYourDetails.OrganisationType"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @Model.OrganisationType.Value
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="@Url.Action("TypeOfOrganisation", "Organisation")">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
+                                        </a>
+                                    </dd>
+                                </div>
+                            }
+
                             @if (Model.IsCompaniesHouseFlow)
                             {
                                 <div class="govuk-summary-list__row">
