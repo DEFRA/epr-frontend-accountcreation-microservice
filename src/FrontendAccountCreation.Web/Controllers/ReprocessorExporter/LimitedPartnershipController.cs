@@ -457,13 +457,21 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
         {
-            return await SaveSessionAndRedirect(session, "todo", PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: 
+            return await SaveSessionAndRedirect(session, nameof(WhatRoleDoTheyHaveWithinThePartnership), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.WhatRoleDoTheyHaveWithinThePartnership);
         }
         else
         {
-            return await SaveSessionAndRedirect(session, "todo", PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
+            return await SaveSessionAndRedirect(session, "ApprovedPersonController", nameof(ApprovedPersonController.CheckYourDetails), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
         }
+    }
 
+    [HttpGet]
+    [Route(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
+    [OrganisationJourneyAccess(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
+    public async Task<IActionResult> WhatRoleDoTheyHaveWithinThePartnership()
+    {
+        await Task.Yield();
+        throw new NotImplementedException("This feature has not been implemented yet.");
     }
 
     [HttpGet]

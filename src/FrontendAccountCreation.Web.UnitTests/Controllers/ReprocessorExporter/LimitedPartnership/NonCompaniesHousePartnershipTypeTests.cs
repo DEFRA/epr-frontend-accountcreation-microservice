@@ -56,7 +56,7 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
     {
         // Arrange
         _orgSessionMock.ReExManualInputSession = null;
-        
+
         // Act
         var result = await _systemUnderTest.NonCompaniesHousePartnershipType();
 
@@ -291,4 +291,90 @@ public class NonCompaniesHousePartnershipTypeTests : LimitedPartnershipTestBase
         _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
 
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipInviteApprovedPerson_Post_InvalidModelState_ReturnsViewWithModel()
+    {
+        // Arrange
+        var model = new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
+        {
+            InviteUserOption = "InvalidValue"
+        };
+
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.Partnership
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _systemUnderTest.ModelState.AddModelError("SomeField", "Some error");
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipInviteApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        var returnedModel = viewResult.Model as NonCompaniesHousePartnershipInviteApprovedPersonViewModel;
+
+        returnedModel.Should().NotBeNull();
+        returnedModel.IsNonCompaniesHousePartnership.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipInviteApprovedPerson_Post_InviteAnotherPerson_RedirectsToRolePage()
+    {
+        // Arrange
+        var model = new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteAnotherPerson.ToString()
+        };
+
+        var session = new OrganisationSession();
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock.Setup(x => x.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipInviteApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.WhatRoleDoTheyHaveWithinThePartnership));
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipInviteApprovedPerson_Post_CheckDetails_RedirectsToCheckYourDetails()
+    {
+        // Arrange
+        var model = new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
+        {
+            InviteUserOption = InviteUserOptions.InviteLater.ToString(),
+        };
+
+        var session = new OrganisationSession();
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock.Setup(x => x.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipInviteApprovedPerson(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.CheckYourDetails));
+        redirect.ControllerName.Should().Be("ApprovedPerson");
+    }
 }
