@@ -123,19 +123,19 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
             Times.Once);
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenNoTradingName_ThenSessionNotUpdated()
-    //{
-    //    // Arrange
-    //    _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
+    [TestMethod]
+    public async Task OnPost_GivenNoTradingName_ThenSessionNotUpdated()
+    {
+        // Arrange
+        _tradingName.ModelState.AddModelError(nameof(TradingName.TextBoxValue), "Trading name field is required");
 
-    //    // Act
-    //    await _systemUnderTest.TradingName(new TradingNameViewModel());
+        // Act
+        await _tradingName.OnPost();
 
-    //    // Assert
-    //    _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
-    //        Times.Never);
-    //}
+        // Assert
+        SessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
+            Times.Never);
+    }
 
     //[TestMethod]
     //public async Task POST_GivenNoTradingName_ThenReturnView()
