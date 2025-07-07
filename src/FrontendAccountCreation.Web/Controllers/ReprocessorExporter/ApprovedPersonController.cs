@@ -53,7 +53,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsNonUk = session.IsUkMainAddress == false
+                IsNonUk = session.IsUkMainAddress == false,
+                IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);

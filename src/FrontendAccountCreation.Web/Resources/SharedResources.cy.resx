@@ -237,4 +237,19 @@
   <data name="NotSure" xml:space="preserve">
     <value>Ddim yn siŵr</value>
   </data>
+  <data name="Chairperson" xml:space="preserve">
+    <value>W chairperson</value>
+  </data>
+  <data name="Treasurer" xml:space="preserve">
+    <value>W treasurer</value>
+  </data>
+  <data name="Secretary" xml:space="preserve">
+    <value>W secretary</value>
+  </data>
+  <data name="Manager" xml:space="preserve">
+    <value>W manager</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>W owner</value>
+  </data>
 </root>
