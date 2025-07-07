@@ -68,10 +68,20 @@
             @Localizer[$"{localizerPrefix}RolesInstruction"]
         </p>
 
-        @if(!Model.IsSoleTrader)
+        @if (Model.IsUnincorporated)
         {
             <ul class="govuk-list govuk-list--bullet">
-                <li>@Localizer["AddNotApprovedPerson.CompanyDirector"]</li> 
+                <li>@Localizer["AddNotApprovedPerson.Chairperson"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Treasurer"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Secretary"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Manager"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Owner"]</li>
+            </ul>
+        }
+        else if (!Model.IsSoleTrader)
+        {
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Localizer["AddNotApprovedPerson.CompanyDirector"]</li>
                 <li>@Localizer["AddNotApprovedPerson.CompanySecretary"]</li>
             </ul>
         }

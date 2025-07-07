@@ -37,6 +37,17 @@
                 <li>@SharedLocalizer["UnincorporatedRoles"]</li>
             </ul>
         }
+        else if (Model.IsUnincorporated)
+        {
+            <p class="govuk-body">@Localizer["AddAnApprovedPerson.NonUk.RolesInstruction"]:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@SharedLocalizer["Chairperson"]</li>
+                <li>@SharedLocalizer["Treasurer"]</li>
+                <li>@SharedLocalizer["Secretary"]</li>
+                <li>@SharedLocalizer["Manager"]</li>
+                <li>@SharedLocalizer["Owner"]</li>
+            </ul>
+        }
         else // UK
         {
             <p class="govuk-body">@Localizer["AddAnApprovedPerson.RolesInstruction"]:</p>
