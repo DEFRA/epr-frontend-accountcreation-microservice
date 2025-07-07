@@ -521,7 +521,9 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
                 ProducerType = ProducerType.NonUkOrganisation,
                 OrganisationName = "Non-UK Ltd",
                 TeamMembers = [new ReExCompanyTeamMember { FirstName = "Charlie", LastName = "Davis" }]
-            }
+            },
+            IsTradingNameDifferent = true,
+            TradingName = "NonUK Trade"
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
@@ -532,7 +534,8 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
 
         // Assert
-        model.TradingName.Should().Be("Non-UK Ltd");
+        model.CompanyName.Should().Be("Non-UK Ltd");
+        model.TradingName.Should().Be("NonUK Trade");
         model.reExCompanyTeamMembers.Should().ContainSingle(x => x.FirstName == "Charlie");
     }
 
@@ -639,7 +642,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         model.IsNonUk.Should().BeTrue();
         model.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
         model.BusinessAddress.Should().BeSameAs(manualInput.BusinessAddress);
-        model.TradingName.Should().Be("Non UK Org Ltd");
+        model.CompanyName.Should().Be("Non UK Org Ltd");
         model.reExCompanyTeamMembers.Should().HaveCount(1);
         model.reExCompanyTeamMembers![0].FirstName.Should().Be("Jane");
         model.Nation.Should().Be(Nation.NorthernIreland);
@@ -818,7 +821,7 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         viewModel!.IsNonUk.Should().BeTrue();
         viewModel.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
         viewModel.BusinessAddress.Should().BeSameAs(expectedAddress);
-        viewModel.TradingName.Should().Be("Global Org Ltd");
+        viewModel.CompanyName.Should().Be("Global Org Ltd");
         viewModel.reExCompanyTeamMembers.Should().BeEquivalentTo(expectedTeamMembers);
         viewModel.Nation.Should().Be(Nation.England);
     }
@@ -1163,7 +1166,9 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         {
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
             IsUkMainAddress = false,
-            ReExManualInputSession = manualInputSession
+            ReExManualInputSession = manualInputSession,
+            IsTradingNameDifferent = true,
+            TradingName = "NonUK Trade"
         };
 
         _sessionManagerMock
@@ -1179,7 +1184,8 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
 
         model.IsNonUk.Should().BeTrue();
         model.ProducerType.Should().Be(ProducerType.NonUkOrganisation);
-        model.TradingName.Should().Be("NonUk Org");
+        model.CompanyName.Should().Be("NonUk Org");
+        model.TradingName.Should().Be("NonUK Trade");
         model.reExCompanyTeamMembers.Should().ContainSingle();
         model.Nation.Should().Be(Nation.Wales);
 
