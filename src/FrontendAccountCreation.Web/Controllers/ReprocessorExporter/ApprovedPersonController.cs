@@ -505,7 +505,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
-                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsPartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
             };
 
             return View(model);
@@ -633,6 +634,22 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 PagePath.TeamMemberDetails, null);
         }
 
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHouseTeamMemberDetailsEdit)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetailsEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session,
+                nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
+                PagePath.NonCompaniesHouseTeamMemberDetails,
+                null,
+                null,
+                new { id = id });
+        }
+        
         /// <summary>
         /// Show team member details entered so far
         /// </summary>
