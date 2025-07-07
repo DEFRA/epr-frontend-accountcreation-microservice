@@ -70,42 +70,6 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
     }
 
     [TestMethod]
-    public async Task OnPost_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
-    {
-        // Arrange
-        _tradingName.TextBoxValue = "John Brown Greengrocers";
-        OrganisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
-
-        // Act
-        var result = await _tradingName.OnPost();
-
-        // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
-    }
-
-    [TestMethod]
-    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
-    {
-        // Arrange
-        _tradingName.TextBoxValue = "John Brown Greengrocers";
-        OrganisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
-        {
-            ProducerType = ProducerType.SoleTrader
-        };
-
-        // Act
-        var result = await _tradingName.OnPost();
-
-        // Assert
-        result.Should().BeOfType<RedirectToActionResult>();
-
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
-    }
-
-    [TestMethod]
     public async Task POST_GivenTradingName_ThenUpdatesSession()
     {
         // Arrange
@@ -184,22 +148,58 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         AssertBackLink(_tradingName, PagePath.IsTradingNameDifferent);
     }
 
-    //[TestMethod]
-    //public async Task POST_GivenTradingName_WithNonUKOrganisationProducerType_Flow_Redirects_To_AddressOverseas()
-    //{
-    //    // Arrange
-    //    var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-    //    _organisationSession.ReExManualInputSession = new ReExManualInputSession
-    //    {
-    //        ProducerType = ProducerType.NonUkOrganisation
-    //    };
+    [TestMethod]
+    public async Task OnPost_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
+    {
+        // Arrange
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
 
-    //    // Act
-    //    var result = await _systemUnderTest.TradingName(request);
+        // Act
+        var result = await _tradingName.OnPost();
 
-    //    // Assert
-    //    result.Should().BeOfType<RedirectToActionResult>();
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
 
-    //    ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddressOverseas));
-    //}
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.IsOrganisationAPartner));
+    }
+
+    [TestMethod]
+    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
+    {
+        // Arrange
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
+
+        // Act
+        var result = await _tradingName.OnPost();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.TypeOfOrganisation));
+    }
+
+    [TestMethod]
+    public async Task OnPost_GivenTradingName_WithNonUKOrganisationProducerTypeFlow_RedirectsToAddressOverseas()
+    {
+        // Arrange
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.NonUkOrganisation
+        };
+
+        // Act
+        var result = await _tradingName.OnPost();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddressOverseas));
+    }
 }
