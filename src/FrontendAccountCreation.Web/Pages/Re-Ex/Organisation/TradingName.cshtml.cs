@@ -46,8 +46,6 @@ public class TradingName(
 
         TextBoxValue = session.TradingName;
 
-        SetQuestion(session);
-
         return Page();
     }
 
@@ -58,7 +56,6 @@ public class TradingName(
         if (!ModelState.IsValid)
         {
             SetBackLink(session, PagePath.TradingName);
-            SetQuestion(session);
 
             return Page();
         }
@@ -88,12 +85,5 @@ public class TradingName(
             actionName,
             PagePath.TradingName,
             nextPage);
-    }
-
-    private void SetQuestion(OrganisationSession session)
-    {
-        Question = session.IsCompaniesHouseFlow
-            ? Localizer["TradingName.Question"]
-            : Localizer["TradingName.Question.NonCompaniesHouse"];
     }
 }
