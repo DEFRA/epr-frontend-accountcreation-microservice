@@ -56,6 +56,7 @@ public static class PagePath
     public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
     public const string NonCompaniesHousePartnershipCheckNamesOfPartners = "non-companies-house-check-partner-names";
     public const string NonCompaniesHousePartnershipCheckNamesOfPartnersDelete = "non-companies-house-check-partner-names/delete";
+    public const string NonCompaniesHousePartnershipYouAreApprovedPerson = "non-companies-house-partnership-approved-person-confirmation";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";

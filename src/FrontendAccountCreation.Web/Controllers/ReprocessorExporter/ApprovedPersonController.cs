@@ -642,7 +642,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
                 IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
                 IsApprovedUser = session.IsApprovedUser,
-                ProducerType = session.ReExManualInputSession?.ProducerType
+                ProducerType = session.ReExManualInputSession?.ProducerType,
+                IsNonCompanyHouseApprovedPerson = !session.IsCompaniesHouseFlow
             };
 
             var id = GetFocusId();
@@ -1048,19 +1049,66 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
-            if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
+            switch (model.InviteUserOption)
             {
-                session.IsApprovedUser = true;
-                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson); // to do: new non companies house view
-            }
-            else if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
-            {
-                return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: user should be directed to 'What role do they have within the partnership' screen
-            }
-            else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
-            {
-                return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
+                case nameof(InviteUserOptions.BeAnApprovedPerson):
+                    session.IsApprovedUser = true;
+                    return await SaveSessionAndRedirect(session, nameof(NonCompaniesHouseYouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+                case nameof(InviteUserOptions.InviteAnotherPerson):
+                    return await SaveSessionAndRedirect(session, nameof(TeamMemberRoleInOrganisation), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.TeamMemberRoleInOrganisation); // to do: user should be directed to 'What role do they have within the partnership' screen
+                default:
+                    //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
+                    return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
             }
         }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHouseYouAreApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            var isPartnership = session.IsOrganisationAPartnership ?? false;
+
+            var approvedPersonViewModel = new ApprovedPersonViewModel
+            {
+                IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
+                IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
+                IsApprovedUser = session.IsApprovedUser,
+                ProducerType = session.ReExManualInputSession?.ProducerType,
+                IsNonCompanyHouseApprovedPerson = !session.IsCompaniesHouseFlow
+            };
+
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
+
+            return View("YouAreApprovedPerson", approvedPersonViewModel);
+        }
+
+        [HttpPost]
+        [Route(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHouseYouAreApprovedPerson(bool inviteApprovedPerson)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+
+            var nextPage = inviteApprovedPerson
+                ? PagePath.TeamMemberRoleInOrganisation // todo: update this with non-company-house TeamMember role
+                : PagePath.CheckYourDetails;
+
+            var nextAction = inviteApprovedPerson
+                ? nameof(TeamMemberRoleInOrganisation)
+                : nameof(CheckYourDetails);
+
+            return await SaveSessionAndRedirect(session, nextAction, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, nextPage);
+        }
+
     }
 }

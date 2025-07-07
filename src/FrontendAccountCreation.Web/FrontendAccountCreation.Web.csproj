@@ -107,6 +107,9 @@
       <EmbeddedResource Update="Resources\Pages\Re-Ex\Organisation\UkRegulator.en.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\ApprovedPerson\Partials\_NonCompanyHouseYouAreApprovedPerson.en.resx">
+        <SubType>Designer</SubType>
+      </EmbeddedResource>
       <EmbeddedResource Update="Resources\Views\User\ReExAccountFullName.cy.resx">
         <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
         <Generator>ResXFileCodeGenerator</Generator>
