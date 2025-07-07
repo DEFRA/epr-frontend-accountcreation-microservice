@@ -1000,6 +1000,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.BusinessAddress = manualInput?.BusinessAddress;
                 viewModel.TradingName = manualInput?.OrganisationName;
                 viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
+                viewModel.OrganisationType = OrganisationType.UnincorporatedAssociation;
             }
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);

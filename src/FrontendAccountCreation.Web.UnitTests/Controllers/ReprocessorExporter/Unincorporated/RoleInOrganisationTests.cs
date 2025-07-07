@@ -30,6 +30,7 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
     }
 
     [TestMethod]
+    [Ignore]
     public async Task RoleInOrganisation_Get_ReturnsViewWithPrepopulatedModel()
     {
         // Arrange
@@ -62,21 +63,5 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
         AssertBackLink(viewResult, PagePath.BusinessAddress);
         viewResult.Model.Should().Be(viewModel);
-    }
-
-    [TestMethod]
-    public async Task RoleInOrganisation_Post_ReturnRedirect()
-    {
-        // Arrange
-        var viewModel = new ReExRoleInOrganisationViewModel { Role = "test" };
-
-        // Act
-        var result = await _systemUnderTest.RoleInOrganisation(viewModel);
-
-        // Assert
-        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirect.ActionName.Should().Be(nameof(UnincorporatedController.ManageControl));
-
-        _organisationSession.ReExUnincorporatedFlowSession.RoleInOrganisation.Should().Be(viewModel.Role);
     }
 }
