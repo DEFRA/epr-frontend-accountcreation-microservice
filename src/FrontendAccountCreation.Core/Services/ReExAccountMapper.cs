@@ -63,11 +63,22 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
             ProducerType = session.ReExManualInputSession?.ProducerType,
-            Nation = session.ReExManualInputSession?.UkRegulatorNation ?? Nation.NotSet,
+            Nation = GetNation(session),
             OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
             OrganisationName = session.ReExManualInputSession?.OrganisationName,
             NonUkRoleInOrganisation = session.ReExManualInputSession?.NonUkRoleInOrganisation
         };
+    }
+    private static Nation GetNation(OrganisationSession session)
+    {
+        if (session.ReExManualInputSession is not null && session.ReExManualInputSession?.UkRegulatorNation is not null)
+        {
+            return session.ReExManualInputSession.UkRegulatorNation.Value;
+        }
+        else
+        {
+           return session.UkNation ?? Nation.NotSet;
+        }             
     }
 
     private static ReExCompanyModel GetCompanyModel(OrganisationSession session)
