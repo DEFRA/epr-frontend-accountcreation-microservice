@@ -216,4 +216,11 @@ public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
         // Assert
         question.Should().Be("Continue localized");
     }
+
+    [TestMethod]
+    public void TextBoxLabel_ReturnsNull()
+    {
+        // Act and Assert
+        _tradingName.TextBoxLabel.Should().BeNull();
+    }
 }
