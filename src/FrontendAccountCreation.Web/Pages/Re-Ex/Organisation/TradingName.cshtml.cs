@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
-//todo: check your details to this page, back link not correct
+//to-do: check your details to this page, back link not correct
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [OrganisationJourneyAccess(PagePath.TradingName)]
@@ -24,7 +24,6 @@ public class TradingName(
 {
     public string? TextBoxLabel => null;
 
-    //todo: better to use this than have an error message (or have both?)
     public int? MaxLength => 170;
     public IErrorState Errors { get; set; } = ErrorStateEmpty.Instance;
 
