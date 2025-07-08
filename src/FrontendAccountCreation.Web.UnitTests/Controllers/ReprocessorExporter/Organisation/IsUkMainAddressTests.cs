@@ -1,6 +1,15 @@
-﻿using FrontendAccountCreation.Web.Constants;
+﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Models;
+using FrontendAccountCreation.Core.Sessions;
+using FrontendAccountCreation.Core.Sessions.ReEx;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
@@ -22,6 +31,56 @@ public class IsUkMainAddressTests() : YesNoPageTestBase<IsUkMainAddressViewModel
     ];
 
     // Redirect targets
-    protected override string RedirectActionNameOnYes => nameof(OrganisationController.TradingName);
-    protected override string RedirectActionNameOnNo => nameof(OrganisationController.NotImplemented);
+    protected override string RedirectActionNameOnYes => nameof(OrganisationController.OrganisationName);
+    protected override string RedirectActionNameOnNo => nameof(OrganisationController.OrganisationName);
+
+    [TestMethod]
+    [DataRow(YesNoAnswer.Yes)]
+    [DataRow(YesNoAnswer.No)]
+    public async Task IsUkMainAddress_Redirects_To_OrganisationName_With_IsUkMainAddressAs(YesNoAnswer answer)
+    {
+        // Arrange
+        var orgCreationSessionMock = new OrganisationSession
+        {
+            Journey = [PagePath.RegisteredWithCompaniesHouse, PagePath.OrganisationName],
+            TradingName = "Test Trading Name",
+            UkNation = Nation.England,
+            IsIndividualInCharge = true,
+            AreTheyIndividualInCharge = false,
+            UserManagesOrControls = YesNoNotSure.Yes,
+            TheyManageOrControlOrganisation = YesNoNotSure.NotSure,            
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.SoleTrader,
+                BusinessAddress = new Address
+                {
+                    Street = "123 Test Street",
+                    Postcode = "AB12 3CD"
+                },
+                TeamMembers =
+                [
+                    new ReExCompanyTeamMember
+                    {
+                        FullName = "Test User",
+                        Email = "Test@test.com"
+                    }
+                ]
+            }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(orgCreationSessionMock);
+
+        var request = new IsUkMainAddressViewModel { IsUkMainAddress = answer };
+
+        // Act
+        var result = await _systemUnderTest.IsUkMainAddress(request);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.OrganisationName));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
+    }
 }

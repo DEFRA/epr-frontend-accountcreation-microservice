@@ -178,9 +178,60 @@
     <value>Dim un o’r uchod</value>
   </data>
   <data name="PartnerCompanySecretary" xml:space="preserve">
-    <value>Ysgrifennydd y cwmni</value>
+    <value>[Welsh]Company secretary of a corporate partner</value>
   </data>
   <data name="PartnerDirector" xml:space="preserve">
-    <value>Cyfarwyddwr</value>
+    <value>[Welsh]Company director of a corporate partner</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>[Welsh]Member</value>
+  </data>
+  <data name="NotSure" xml:space="preserve">
+    <value>Ddim yn siŵr</value>
+  </data>
+  <data name="CEO" xml:space="preserve">
+    <value>Prif Swyddog Gweithredol</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="CompanyDirectorOrSecretary" xml:space="preserve">
+    <value>Cyfarwyddwr neu Ysgrifennydd y Cwmni</value>
+  </data>
+  <data name="UnincorporatedRoles" xml:space="preserve">
+    <value>Chair, Treasurer or Secretary of an unincorporated organisation</value>
+  </data>
+  <data name="ForExample" xml:space="preserve">
+    <value>Er enghraifft:</value>
+  </data>
+  <data name="CompanyDirector" xml:space="preserve">
+    <value>Company director</value>
+  </data>
+  <data name="England" xml:space="preserve">
+    <value>Lloegr</value>
+  </data>
+  <data name="Scotland" xml:space="preserve">
+    <value>Yr Alban</value>
+  </data>
+  <data name="Wales" xml:space="preserve">
+    <value>Cymru</value>
+  </data>
+  <data name="NorthernIreland" xml:space="preserve">
+    <value>Gogledd Iwerddon</value>
+  </data>
+  <data name="Yes_AreThey" xml:space="preserve">
+    <value>Ydyn</value>
+  </data>
+  <data name="No_AreThey" xml:space="preserve">
+    <value>Nac ydyn</value>
+  </data>
+  <data name="Yes_IsHeSheIt" xml:space="preserve">
+    <value>Ydy</value>
+  </data>
+  <data name="No_IsHeSheIt" xml:space="preserve">
+    <value>Nac ydy</value>
   </data>
 </root>

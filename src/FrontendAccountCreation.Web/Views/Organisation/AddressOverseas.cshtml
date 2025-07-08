@@ -1,0 +1,114 @@
+﻿@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.Constants
+
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.BusinessAddressOverseasViewModel
+
+@{
+    ViewData["Title"] = Localizer["AddressOverseas.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer,
+        nameof(Model.Country), nameof(Model.AddressLine1), nameof(Model.AddressLine2),
+        nameof(Model.TownOrCity), nameof(Model.StateProvinceRegion), nameof(Model.Postcode));
+
+    const string errorClass = "govuk-input--error";
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form method="post" novalidate>
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+                                    @Localizer["AddressOverseas.Question"]
+                                </h1>
+                            </legend>
+                            
+                            <div class="govuk-hint govuk-!-margin-bottom-6" id="address-overseas-hint">
+                                @Localizer["AddressOverseas.Hint"]
+                            </div>
+
+                            <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.Country)) ? " govuk-form-group--error" : "")">
+                                <label gov-for="Country" class="govuk-label">@Localizer["AddressOverseas.CountryLabel"]</label>
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.Country)])
+                                <input class="govuk-input govuk-!-width-full @(errorsViewModel.HasErrorKey(nameof(Model.Country)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="Country"
+                                       gov-value="@Model.Country"
+                                       aria-describedby="address-overseas-hint">
+                            </div>
+
+                            <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.AddressLine1)) ? " govuk-form-group--error" : "")">
+                                <label gov-for="AddressLine1" class="govuk-label">@Localizer["AddressOverseas.AddressLine1Label"]</label>
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.AddressLine1)])
+                                <input class="govuk-input govuk-!-width-full @(errorsViewModel.HasErrorKey(nameof(Model.AddressLine1)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="AddressLine1"
+                                       gov-value="@Model.AddressLine1"
+                                       aria-describedby="address-overseas-hint">
+                            </div>
+
+                            <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.AddressLine2)) ? " govuk-form-group--error" : "")">
+                                <label gov-for="AddressLine2" class="govuk-label">@Localizer["AddressOverseas.AddressLine2Label"]</label>
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.AddressLine2)])
+                                <input class="govuk-input govuk-!-width-full @(errorsViewModel.HasErrorKey(nameof(Model.AddressLine2)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="AddressLine2"
+                                       gov-value="@Model.AddressLine2"
+                                       aria-describedby="address-overseas-hint">
+                            </div>
+
+                            <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.TownOrCity)) ? " govuk-form-group--error" : "")">
+                                <label gov-for="TownOrCity" class="govuk-label">@Localizer["AddressOverseas.TownOrCityLabel"]</label>
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.TownOrCity)])
+                                <input class="govuk-input govuk-!-width-two-thirds @(errorsViewModel.HasErrorKey(nameof(Model.TownOrCity)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="TownOrCity"
+                                       gov-value="@Model.TownOrCity"
+                                       aria-describedby="address-overseas-hint">
+                            </div>
+                            
+                            <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.StateProvinceRegion)) ? " govuk-form-group--error" : "")">
+                                <label gov-for="StateProvinceRegion" class="govuk-label">@Localizer["AddressOverseas.StateProvinceRegionLabel"]</label>
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.StateProvinceRegion)])
+                                <div id="state-province-region-hint" class="govuk-hint">
+                                    @Localizer["AddressOverseas.StateProvinceRegionHint"]
+                                </div>
+                                <input class="govuk-input govuk-!-width-two-thirds @(errorsViewModel.HasErrorKey(nameof(Model.StateProvinceRegion)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="StateProvinceRegion"
+                                       gov-value="@Model.StateProvinceRegion"
+                                       aria-describedby="address-overseas-hint state-province-region-hint">
+                            </div>
+
+                            <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.Postcode)) ? " govuk-form-group--error" : "")">
+                                <label gov-for="Postcode" class="govuk-label">@Localizer["AddressOverseas.PostcodeLabel"]</label>
+                                @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.Postcode)])
+                                <div id="postcode-hint" class="govuk-hint">
+                                    @* todo: 2 separate lines *@
+                                    @Localizer["AddressOverseas.PostcodeHint"]
+                                </div>
+                                <input class="govuk-input govuk-input--width-10 @(errorsViewModel.HasErrorKey(nameof(Model.Postcode)) ? errorClass : "")"
+                                       type="text"
+                                       gov-for="Postcode"
+                                       gov-value="@Model.Postcode"
+                                       aria-describedby="address-overseas-hint postcode-hint">
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

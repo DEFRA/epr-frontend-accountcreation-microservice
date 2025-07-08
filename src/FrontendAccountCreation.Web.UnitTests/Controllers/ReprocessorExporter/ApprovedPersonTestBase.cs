@@ -52,7 +52,8 @@ public abstract class ApprovedPersonTestBase
                 FindAndUpdateCompanyInformation = "dummy url",
                 ReportDataRedirectUrl = "/re-ex",
                 ReportDataLandingRedirectUrl = "/re-ex/landing",
-                ReportDataNewApprovedUser = "/re-ex/approved-person-created?notification=created_new_approved_person"
+                ReportDataNewApprovedUser = "/re-ex/approved-person-created?notification=created_new_approved_person",
+                MakeChangesToYourLimitedCompany = "https://gov.uk/update-company-info" // ✅ Add this
             });
 
         _httpContextMock.Setup(x => x.User.Claims).Returns(new List<Claim>

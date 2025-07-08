@@ -121,7 +121,7 @@
     <value>[Welsh] Member Partnership</value>
   </data>
   <data name="MemberPartnership.Question" xml:space="preserve">
-    <value>[Welsh] Are they a member in the limited liability partnership?</value>
+    <value>[Welsh] Are they a member of the limited liability partnership?</value>
   </data>
   <data name="MemberPartnership.Description" xml:space="preserve">
     <value>[Welsh] Any member of a limited liability partnership can be an approved person. You can still continue to add an organisation without inviting someone if you do not have a name and contact details yet.</value>

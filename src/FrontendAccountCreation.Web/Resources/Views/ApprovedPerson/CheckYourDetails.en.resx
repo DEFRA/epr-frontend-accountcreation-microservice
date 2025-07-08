@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CheckYourDetails.Title" xml:space="preserve">
-    <value>Your details</value>
+    <value>Check your details</value>
   </data>
   <data name="CheckYourDetails.Header" xml:space="preserve">
     <value>Check your details</value>
@@ -214,7 +214,7 @@
     <value>No</value>
   </data>
   <data name="CheckYourDetails.AddedOrganisation" xml:space="preserve">
-    <value>Added Organisation</value>
+    <value>Added organisation</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Email" xml:space="preserve">
     <value>Email</value>
@@ -232,9 +232,21 @@
     <value>Different trading name</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.ApprovedPersonsAdded" xml:space="preserve">
-    <value>Approved persons added</value>
+    <value>Approved person email invitations created</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Invite" xml:space="preserve">
     <value>Invite</value>
+  </data>
+  <data name="CheckYourDetails.LimitedLiabilityPartnership" xml:space="preserve">
+    <value>Limited Liability Partnership</value>
+  </data>
+  <data name="CheckYourDetails.LimitedPartnership" xml:space="preserve">
+    <value>Limited Partnership</value>
+  </data>
+  <data name="CheckYourDetails.NonUkRole" xml:space="preserve">
+    <value>Manage or control business</value>
+  </data>
+  <data name="CheckYourDetails.UkRegulator" xml:space="preserve">
+    <value>Which UK regulator</value>
   </data>
 </root>

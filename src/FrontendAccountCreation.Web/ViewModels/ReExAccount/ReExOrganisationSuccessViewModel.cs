@@ -8,4 +8,6 @@ public class ReExOrganisationSuccessViewModel
     public List<ReExCompanyTeamMember> ReExCompanyTeamMembers { get; set; }
 
     public bool IsSoleTrader { get; set; }
+
+    public bool IsCompaniesHouseFlow { get; set; }
 }

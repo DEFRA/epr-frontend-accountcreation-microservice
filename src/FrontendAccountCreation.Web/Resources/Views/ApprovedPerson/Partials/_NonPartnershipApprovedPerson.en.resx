@@ -118,16 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="_NonPartnershipApprovedPerson.Description" xml:space="preserve">
-    <value>As an inividual named on Companies House you are now an 'approved person' for your organisation.</value>
+    <value>As an individual named on Companies House you are now an 'approved person' for your organisation.</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.Title" xml:space="preserve">
-    <value>approved-person</value>
+    <value>Approved person</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.Header" xml:space="preserve">
     <value>You are now an approved person</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another approved person</value>
+    <value>Invite another person</value>
   </data>
   <data name="_NonPartnershipApprovedPerson.Continue" xml:space="preserve">
     <value>continue to add your organisation</value>
@@ -135,10 +135,10 @@
   <data name="_NonPartnershipApprovedPerson.Invite" xml:space="preserve">
     <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
   </data>
-  <data name="_NonPartnershipApprovedPerson.Title" xml:space="preserve">
-    <value>Approved person</value>
-  </data>
   <data name="_NonPartnershipApprovedPerson.YouCanNow" xml:space="preserve">
     <value>You can now:</value>
+  </data>
+  <data name="_NonPartnershipApprovedPerson.NonUkOrganisation.ApprovedPerson.Description" xml:space="preserve">
+    <value>As a person with control of management of your business, you are now an approved person for your organisation.</value>
   </data>
 </root>

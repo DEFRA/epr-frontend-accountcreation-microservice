@@ -1,0 +1,47 @@
+﻿@using FrontendAccountCreation.Web.Constants
+
+@{
+    ViewData["Title"] = Localizer["NonCompanyHouseYouAreApprovedPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">
+                            @Localizer["NonCompanyHouseYouAreApprovedPerson.Title"]
+                        </h1>
+                    </legend>
+                </fieldset>
+
+                <p class="govuk-body">@Localizer["NonCompanyHouseYouAreApprovedPerson.Description"]</p>
+
+                <p class="govuk-body">@Localizer["NonCompanyHouseYouAreApprovedPerson.YouCanNow"]:</p>
+
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>
+                        @Localizer["NonCompanyHouseYouAreApprovedPerson.Continue"]
+                    <li>
+                            @Localizer["NonCompanyHouseYouAreApprovedPerson.Invite"]
+                    </li>
+                </ul>
+
+                <form asp-controller="ApprovedPerson" asp-action="YouAreApprovedPerson" method="post">
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" data-module="govuk-button" name="inviteApprovedPerson" value="false">
+                            @SharedLocalizer["Continue"]
+                        </button>
+
+                        <a asp-controller="ApprovedPerson" asp-action="TeamMemberRoleInOrganisationAddAnother" class="govuk-link">
+                            @Localizer["NonCompanyHouseYouAreApprovedPerson.InviteLink"]
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,6 +1,7 @@
 ﻿using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.Configs;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.HealthChecks;
 using FrontendAccountCreation.Web.Middleware;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Logging;
-using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +20,14 @@ builder.Services
     .RegisterWebComponents(builder.Configuration)
     .ConfigureMsalDistributedTokenOptions(builder.Configuration);
 
+string pathBase = builder.Configuration.GetValue<string>("PATH_BASE") ?? "";
+
 builder.Services
     .AddAntiforgery(options => {
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.Name = builder.Configuration.GetValue<string>("CookieOptions:AntiForgeryCookieName");
+        options.Cookie.Path = pathBase;
     })
     .AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
     .AddViewLocalization(options =>
@@ -43,7 +46,10 @@ builder.Services.Configure<DeploymentRoleOptions>(options =>
     options.DeploymentRole = builder.Configuration.GetValue<string>(DeploymentRoleOptions.ConfigSection);
 });
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AddPageRoute($"{PageName.Base}/RegisteredAsCharity", "/re-ex/organisation");
+});
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -79,7 +85,7 @@ builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 
 var app = builder.Build();
 
-app.UsePathBase(builder.Configuration.GetValue<string>("PATH_BASE"));
+app.UsePathBase(pathBase);
 
 if (app.Environment.IsDevelopment())
 {

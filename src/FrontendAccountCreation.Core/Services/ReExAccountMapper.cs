@@ -1,4 +1,6 @@
 using FrontendAccountCreation.Core.Addresses;
+using FrontendAccountCreation.Core.Extensions;
+using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
@@ -25,12 +27,34 @@ public class ReExAccountMapper : IReExAccountMapper
     {
         return new ReExOrganisationModel
         {
-            UserRoleInOrganisation = session.ReExCompaniesHouseSession?.RoleInOrganisation?.ToString() ?? null,
+            UserRoleInOrganisation = GetUserRole(session),
             IsApprovedUser = session.IsApprovedUser,
             Company = session.ReExCompaniesHouseSession != null ? GetCompanyModel(session) : null,
             ManualInput = session.ReExManualInputSession != null ? GetManualInputModel(session) : null,
-            InvitedApprovedPersons = GetTeamMembersModel(session.ReExCompaniesHouseSession?.TeamMembers, session.ReExManualInputSession)
+            InvitedApprovedPersons = GetTeamMembersModel(session),
+            Partners = GetPartnersModel(session),
+            TradingName = session.TradingName
         };
+    }
+
+    private static string? GetUserRole(OrganisationSession session)
+    {
+        if (session.IsCompaniesHouseFlow || session.ReExCompaniesHouseSession != null)
+        {
+            return session.ReExCompaniesHouseSession?.RoleInOrganisation?.GetDescriptionOrNull();
+        }
+        else
+        {
+            if (session.ReExManualInputSession?.ProducerType == ProducerType.NonUkOrganisation)
+            {
+                return session.ReExManualInputSession.NonUkRoleInOrganisation;
+            }
+            if (session.ReExManualInputSession?.ProducerType == ProducerType.Partnership)
+            {
+                return session.ReExManualInputSession?.RoleInOrganisation?.GetDescriptionOrNull();
+            }
+        }
+        return null;
     }
 
     private static ReExManualInputModel GetManualInputModel(OrganisationSession session)
@@ -39,10 +63,22 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             BusinessAddress = GetAddressModel(session.ReExManualInputSession?.BusinessAddress),
             ProducerType = session.ReExManualInputSession?.ProducerType,
-            TradingName = session.ReExManualInputSession?.TradingName,
-            Nation = session.UkNation ?? Nation.NotSet,
-            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet
+            Nation = GetNation(session),
+            OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
+            OrganisationName = session.ReExManualInputSession?.OrganisationName,
+            NonUkRoleInOrganisation = session.ReExManualInputSession?.NonUkRoleInOrganisation
         };
+    }
+    private static Nation GetNation(OrganisationSession session)
+    {
+        if (session.ReExManualInputSession is not null && session.ReExManualInputSession?.UkRegulatorNation is not null)
+        {
+            return session.ReExManualInputSession.UkRegulatorNation.Value;
+        }
+        else
+        {
+           return session.UkNation ?? Nation.NotSet;
+        }             
     }
 
     private static ReExCompanyModel GetCompanyModel(OrganisationSession session)
@@ -51,6 +87,7 @@ public class ReExAccountMapper : IReExAccountMapper
         {
             OrganisationId = session.ReExCompaniesHouseSession?.Company?.OrganisationId ?? string.Empty,
             OrganisationType = session.OrganisationType ?? OrganisationType.NotSet,
+            ProducerType = GetProducerType(session),
             CompanyName = session.ReExCompaniesHouseSession?.Company?.Name,
             CompaniesHouseNumber = session.ReExCompaniesHouseSession?.Company?.CompaniesHouseNumber,
             CompanyRegisteredAddress = GetAddressModel(session.ReExCompaniesHouseSession?.Company?.BusinessAddress),
@@ -60,26 +97,23 @@ public class ReExAccountMapper : IReExAccountMapper
         };
     }
 
-    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(IEnumerable<ReExCompanyTeamMember>? teamMembers = null, ReExManualInputSession? reExManualInput = null)
+    private static List<ReExInvitedApprovedPerson> GetTeamMembersModel(OrganisationSession session)
     {
-        List<ReExInvitedApprovedPerson> approvedPeople = [];
+        List<ReExCompanyTeamMember> teamMembers;
 
-        if (reExManualInput != null && reExManualInput.TeamMember != null)
+        if (session.ReExManualInputSession != null && session.ReExManualInputSession.TeamMembers != null)
         {
-            var teamMember = reExManualInput.TeamMember;
-            approvedPeople.Add(new ReExInvitedApprovedPerson
-            {
-                Email = teamMember.Email,
-                FirstName = teamMember.FirstName,
-                Id = teamMember.Id,
-                LastName = teamMember.LastName,
-                Role = teamMember.Role?.ToString() ?? null,
-                TelephoneNumber = teamMember.TelephoneNumber
-            });
-            return approvedPeople;
+            teamMembers = session.ReExManualInputSession.TeamMembers;
+        }
+        else
+        {
+            // If we are in Companies House flow, we get team members from the Companies House session
+            teamMembers = session.ReExCompaniesHouseSession?.TeamMembers ?? [];
         }
 
-        foreach (var member in teamMembers ?? [])
+        List<ReExInvitedApprovedPerson> approvedPeople = new List<ReExInvitedApprovedPerson>();
+
+        foreach (var member in teamMembers)
         {
             var memberModel = new ReExInvitedApprovedPerson()
             {
@@ -87,11 +121,12 @@ public class ReExAccountMapper : IReExAccountMapper
                 FirstName = member.FirstName,
                 LastName = member.LastName,
                 Email = member.Email,
-                Role = member.Role?.ToString() ?? null,
+                Role = member.Role?.GetDescriptionOrNull(),
                 TelephoneNumber = member.TelephoneNumber
             };
             approvedPeople.Add(memberModel);
         }
+
         return approvedPeople;
     }
 
@@ -113,5 +148,42 @@ public class ReExAccountMapper : IReExAccountMapper
             DependentLocality = address.DependentLocality,
             County = address.County
         };
+    }
+
+    private static List<ReExPartnerModel>? GetPartnersModel(OrganisationSession reExOrganisationSession)
+    {
+        List<Web.ViewModels.ReExAccount.ReExPersonOrCompanyPartner>? partners = null;
+
+        if (reExOrganisationSession.IsCompaniesHouseFlow)
+        {
+            partners = reExOrganisationSession.ReExCompaniesHouseSession?.Partnership?.LimitedPartnership?.Partners;
+        }
+        else
+        {
+            partners = reExOrganisationSession.ReExManualInputSession?.TypesOfPartner?.Partners;
+        }
+
+        if (partners == null || partners.Count == 0)
+        {
+            return null;
+        }
+
+        return [.. partners.Select(x => new ReExPartnerModel
+        {
+            Name = x.Name,
+            PartnerRole = x.IsPerson
+                ? PartnerType.IndividualPartner.GetDescription()
+                : PartnerType.CorporatePartner.GetDescription()
+        })];
+    }
+
+    private static string? GetProducerType(OrganisationSession reExOrganisationSession)
+    {
+        var producerType = ProducerType.NotSet.ToString();
+        if (reExOrganisationSession.IsCompaniesHouseFlow)
+        {
+            producerType = reExOrganisationSession.ReExCompaniesHouseSession.ProducerType?.ToString() ?? ProducerType.NotSet.ToString();
+        }
+        return producerType;
     }
 }

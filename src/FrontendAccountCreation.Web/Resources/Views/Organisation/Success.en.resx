@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Success.Title" xml:space="preserve">
-    <value>Organistion added success</value>
+    <value>Success</value>
   </data>
   <data name="Success.SuccessEnrolOrganisation" xml:space="preserve">
     <value>Success</value>
@@ -132,34 +132,19 @@
   <data name="Success.ApprovedPersonsInvite.Paragraph" xml:space="preserve">
     <value>You have invited the following to be an approved person.</value>
   </data>
-  <data name="Success.AfterAddingOrganisation.Heading" xml:space="preserve">
-    <value>What you must do after adding an organisation</value>
-  </data>
-  <data name="Success.AfterAddingOrganisation.1.List.LeadIn" xml:space="preserve">
-    <value>To comply with the law:</value>
-  </data>
   <data name="Success.WhatYouMustDoNext.List.Item1" xml:space="preserve">
     <value>packaging waste material for each UK reprocessing site</value>
   </data>
   <data name="Success.WhatYouMustDoNext.List.Item2" xml:space="preserve">
-    <value>UK-derived packaging waste material to be exported for reprocessing outside the UK</value>
+    <value>packaging waste material to be exported for reprocessing outside the UK</value>
   </data>
   <data name="Success.WhatYouMustDoNext.Paragrah" xml:space="preserve">
-    <value>Now you must apply to register each:</value>
+    <value>Now you must apply to register each UK-derived:</value>
   </data>
-  <data name="Success.AfterAddingOrganisation.3.Paragraph" xml:space="preserve">
-    <value>You can add organisations from the account home.</value>
+  <data name="Success.ApprovedPersonsInvite.Paragraph2" xml:space="preserve">
+    <value>They will receive an invitation where they can accept or reject the role.</value>
   </data>
   <data name="Success.ApprovedPersonsInvite.Heading" xml:space="preserve">
     <value>Approved persons invited</value>
-  </data>
-  <data name="Success.Continue" xml:space="preserve">
-    <value>Return to the dashboard</value>
-  </data>
-  <data name="Success.WhatYouMustDoNext.SoleTrader.List.Item2" xml:space="preserve">
-    <value>packaging waste material to be exported for reprocessing outside the UK</value>
-  </data>
-  <data name="Success.WhatYouMustDoNext.SoleTrader.Paragrah" xml:space="preserve">
-    <value>Now you must apply to register each UK-derived:</value>
   </data>
 </root>

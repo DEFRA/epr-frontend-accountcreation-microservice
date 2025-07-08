@@ -43,18 +43,6 @@
   <data name="NamesOfPartners.Hint_Both" xml:space="preserve">
     <value>[Welsh]This means any corporate partners and individual partners, which are listed as partners within your limited partnership, as registered on Companies House.</value>
   </data>
-  <data name="NamesOfPartners.CompanyName" xml:space="preserve">
-    <value>[Welsh]Corporate partner name</value>
-  </data>
-  <data name="NamesOfPartners.Or" xml:space="preserve">
-    <value>[Welsh]Or</value>
-  </data>
-  <data name="NamesOfPartners.IndividualPartnersFullName" xml:space="preserve">
-    <value>[Welsh]Individual partner’s full name</value>
-  </data>
-  <data name="NamesOfPartners.FullName" xml:space="preserve">
-    <value>[Welsh]Full name</value>
-  </data>
   <data name="NamesOfPartners.AddAnotherPartner" xml:space="preserve">
     <value>[Welsh]Add another partner</value>
   </data>
@@ -66,8 +54,5 @@
   </data>
   <data name="NamesOfPartners.ValidationError_Both" xml:space="preserve">
     <value>[Welsh]Enter a corporate partner name or the full name of an individual partner</value>
-  </data>
-  <data name="NamesOfPartners.Legend" xml:space="preserve">
-    <value>[Welsh]Partner names</value>
   </data>
 </root>

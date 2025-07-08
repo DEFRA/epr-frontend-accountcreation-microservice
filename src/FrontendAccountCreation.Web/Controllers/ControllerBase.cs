@@ -1,27 +1,19 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Core.Sessions.Interfaces;
-using FrontendAccountCreation.Web;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers;
 
-public abstract class ControllerBase<T> : Controller where T : ILocalSession, new()
+public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Controller
+    where T : ILocalSession, new()
 {
-    private readonly ISessionManager<T> _sessionManager;
-
-    protected ControllerBase(ISessionManager<T> sessionManager)
-    {
-        _sessionManager = sessionManager;
-    }
-
+    // should be protected, rather than public with [NonAction] attribute
+    [NonAction]
     public void SetBackLink(T session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
@@ -34,6 +26,20 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         }
     }
 
+    protected async Task<RedirectToPageResult> SaveSessionAndRedirectToPage(
+        T session,
+        string pageName,
+        string currentPagePath,
+        string? nextPagePath)
+    {
+        session.IsUserChangingDetails = false;
+        await SaveSession(session, currentPagePath, nextPagePath);
+        
+        return RedirectToPage($"{PageName.Base}/{pageName}");
+    }
+
+    // should be protected, rather than public with [NonAction] attribute
+    [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
@@ -45,6 +51,8 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         return RedirectToAction(actionName);
     }
 
+    // should be protected, rather than public with [NonAction] attribute
+    [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string controllerName,
         string actionName,
@@ -58,6 +66,8 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
     }
 
     // Would like to get parameters in same order as above
+    // should be protected, rather than public with [NonAction] attribute
+    [NonAction]
     public async Task<RedirectToActionResult> SaveSessionAndRedirect(T session,
         string actionName,
         string currentPagePath,
@@ -72,15 +82,14 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         {
             return RedirectToAction(actionName, controllerName.WithoutControllerSuffix(), routeValues);
         }
-        else
-        {
-            return RedirectToAction(actionName, routeValues);
-        }
+        return RedirectToAction(actionName, routeValues);
     }
 
+    // should be private, rather than public with [NonAction] attribute
+    [NonAction]
     public async Task SaveSession(T session, string currentPagePath, string? nextPagePath)
     {
-        var index = session.Journey.FindIndex(x => x != null && x.Contains(currentPagePath.Split("?")[0]));
+        var index = session.Journey.FindIndex(x => x == currentPagePath.Split("?")[0]);
 
         // this also cover if current page not found (index = -1) then it clears all pages
         session.Journey = session.Journey.Take(index + 1).ToList();
@@ -90,9 +99,11 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         AddPageToWhiteList(session, currentPagePath);
         AddPageToWhiteList(session, nextPagePath);
 
-        await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+        await sessionManager.SaveSessionAsync(HttpContext.Session, session);
     }
 
+    // should be protected, rather than public with [NonAction] attribute
+    [NonAction]
     public Guid? GetFocusId()
     {
         string? focusId = TempData["FocusId"] != null ? TempData["FocusId"].ToString() : null;
@@ -103,9 +114,11 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
         return null;
     }
 
+    // should be protected, rather than public with [NonAction] attribute
+    [NonAction]
     public void SetFocusId(Guid id) => TempData["FocusId"] = id;
 
-    public void DeleteFocusId() => TempData?.Remove("FocusId");
+    protected void DeleteFocusId() => TempData?.Remove("FocusId");
 
     private void AddPageToWhiteList(T session, string currentPagePath)
     {
@@ -118,7 +131,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
     [ExcludeFromCodeCoverage]
     protected async Task<IActionResult> PlaceholderPageGet(string pagePath, bool interstitial = false)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await sessionManager.GetSessionAsync(HttpContext.Session);
         SetBackLink(session, pagePath);
         return PlaceholderPageView(pagePath, interstitial);
     }
@@ -127,7 +140,7 @@ public abstract class ControllerBase<T> : Controller where T : ILocalSession, ne
     protected async Task<IActionResult> PlaceholderPagePost(
         string actionName, string currentPagePath, string? nextPagePath)
     {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await sessionManager.GetSessionAsync(HttpContext.Session);
         return await SaveSessionAndRedirect(session, actionName, currentPagePath, nextPagePath);
     }
 

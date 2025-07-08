@@ -6,84 +6,71 @@
 @inject IOptions<ExternalUrlsOptions> ExternalUrlsOptions;
 
 @{
-	ViewData["Title"] = Localizer["Success.Title"];
-	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-	ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
-	var AddedOrganisationName = Model.CompanyName;
+    ViewData["Title"] = Localizer["Success.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+    var AddedOrganisationName = Model.CompanyName;
 }
 
 <div class="govuk-width-container">
-	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
 
-		<div class="govuk-grid-row">
-			<div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
 
-				<div class="govuk-notification-banner govuk-notification-banner--success"
-					 role="alert"
-					 aria-labelledby="govuk-notification-banner-title"
-					 data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner govuk-notification-banner--success"
+                     role="alert"
+                     aria-labelledby="govuk-notification-banner-title"
+                     data-module="govuk-notification-banner">
 
-					<div class="govuk-notification-banner__header">
-						<h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-							@Localizer["Success.SuccessEnrolOrganisation"]
-						</h2>
-					</div>
-					<div class="govuk-notification-banner__content">
-						<h3 class="govuk-notification-banner__heading">
-							@Localizer["Success.AddedOrganisation"] @AddedOrganisationName
-						</h3>
-					</div>
-				</div>
+                    <div class="govuk-notification-banner__header">
+                        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                            @Localizer["Success.SuccessEnrolOrganisation"]
+                        </h2>
+                    </div>
+                    <div class="govuk-notification-banner__content">
+                        <h3 class="govuk-notification-banner__heading">
+                            @Localizer["Success.AddedOrganisation"] @AddedOrganisationName
+                        </h3>
+                    </div>
+                </div>
 
-				@if (Model.ReExCompanyTeamMembers != null)
-				{
-					<h3 class="govuk-notification-banner__heading">
-						@Localizer["Success.ApprovedPersonsInvite.Heading"]
-					</h3>
-					<p class="govuk-body govuk-!-margin-bottom-7">
-						@Localizer["Success.ApprovedPersonsInvite.Paragraph"]
-					</p>
+                @if (Model.ReExCompanyTeamMembers != null)
+                {
+                    <h3 class="govuk-notification-banner__heading">
+                        @Localizer["Success.ApprovedPersonsInvite.Heading"]
+                    </h3>
+                    <p class="govuk-body">
+                        @Localizer["Success.ApprovedPersonsInvite.Paragraph"]
+                    </p>
 
-					<dl class="govuk-summary-list govuk-!-margin-bottom-0">
-						@for (int i = 0; i < Model.ReExCompanyTeamMembers?.Count; i++)
-						{
-							<div class="govuk-summary-list">
-								@Model.ReExCompanyTeamMembers[i].Email
-							</div>
-						}
-					</dl>
-				}
+                    <div class="govuk-inset-text">
+                        @for (int i = 0; i < Model.ReExCompanyTeamMembers?.Count; i++)
+                        {
+                            <span class="govuk-caption-l govuk-!-margin-bottom-2">@Model.ReExCompanyTeamMembers[i].Email</span>
+                        }
+                    </div>
 
-				<h3 class="govuk-notification-banner__heading">
-					@Localizer["Success.WhatYouMustDoNext.Heading"]
-				</h3>
-				@if (Model.IsSoleTrader)
-				{
-					<p class="govuk-body govuk-!-margin-bottom-7">
-						@Localizer["Success.WhatYouMustDoNext.SoleTrader.Paragrah"]
-					</p>
-				}
-				else
-				{
-					<p class="govuk-body govuk-!-margin-bottom-7">
-						@Localizer["Success.WhatYouMustDoNext.Paragrah"]
-					</p>
-				}
+                    <p class="govuk-body govuk-!-margin-bottom-7">
+                        @Localizer["Success.ApprovedPersonsInvite.Paragraph2"]
+                    </p>
+                }
 
-				<ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
-					<li>@Localizer["Success.WhatYouMustDoNext.List.Item1"]</li>
-					@if (Model.IsSoleTrader)
-					{
-						<li>@Localizer["Success.WhatYouMustDoNext.SoleTrader.List.Item2"]</li>
-					}
-					else
-					{
-						<li>@Localizer["Success.WhatYouMustDoNext.List.Item2"]</li>
-					}
-				</ul>
+                <h3 class="govuk-notification-banner__heading">
+                    @Localizer["Success.WhatYouMustDoNext.Heading"]
+                </h3>
+                <p class="govuk-body">
+                    @Localizer["Success.WhatYouMustDoNext.Paragrah"]
+                </p>
 
-				<a class="govuk-link" href="@ExternalUrlsOptions.Value.PrnRedirectUrl">@Localizer["Success.Continue"]</a>
-			</div>
-		</div>
-	</main>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>@Localizer["Success.WhatYouMustDoNext.List.Item1"]</li>
+                    <li>@Localizer["Success.WhatYouMustDoNext.List.Item2"]</li>
+                </ul>
+
+                <a class="govuk-button" href="@ExternalUrlsOptions.Value.PrnRedirectUrl">@SharedLocalizer["Continue"]</a>
+
+            </div>
+        </div>
+    </main>
 </div>

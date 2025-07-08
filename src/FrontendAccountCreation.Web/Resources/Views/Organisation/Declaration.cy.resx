@@ -121,10 +121,10 @@
     <value>Datganiad</value>
   </data>
   <data name="Declaration.Statement" xml:space="preserve">
-    <value>Drwy gadarnhau'ch manylion, rydych chi'n cytuno bod yr wybodaeth sefydliadol rydych chi wedi'i rhoi yn gyflawn ac yn gywir.</value>
+    <value>[Welsh]By confirming your details, you agree that the organisational enrolment information you’ve given is complete and correct.</value>
   </data>
   <data name="Declaration.Information" xml:space="preserve">
-    <value>If any of the information you provide is inaccurate then this may prevent or delay any subsequent submissions made on this service.</value>
+    <value>Os oes unrhyw ran o'r wybodaeth rydych chi'n ei rhoi yn anghywir, yna gall hyn atal neu ohirio unrhyw gyflwyniadau dilynol a wneir ar y gwasanaeth hwn.</value>
   </data>
   <data name="Declaration.Confirm" xml:space="preserve">
     <value>Cadarnhau ac ychwanegu sefydliad</value>

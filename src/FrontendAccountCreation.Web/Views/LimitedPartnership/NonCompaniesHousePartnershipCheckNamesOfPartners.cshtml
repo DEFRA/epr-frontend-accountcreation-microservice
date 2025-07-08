@@ -1,0 +1,57 @@
+﻿@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+
+@{
+    bool hasIndividualPartners = Model.Exists(x => x.IsPerson);
+    bool hasCompanyPartners = Model.Exists(x => !x.IsPerson);
+    ViewData["Title"] = Localizer[GetLocalizer(hasIndividualPartners, hasCompanyPartners, "Title_Individual", "Title_Company", "Title_Both")];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    // pass data to Views\Shared\Partials\_CheckNamesOfPartnersLinks.cshtml
+    ViewBag.ChangeAction = nameof(LimitedPartnershipController.NonCompaniesHousePartnershipNamesOfPartners);
+    ViewBag.DeleteAction = nameof(LimitedPartnershipController.NonCompaniesHousePartnershipCheckNamesOfPartnersDelete);
+}
+
+@model List<ReExPersonOrCompanyPartner>
+
+<div class="govuk-width-container ">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <br>
+
+                <h1 class="govuk-heading-l">@Localizer[GetLocalizer(hasIndividualPartners, hasCompanyPartners, "H1_Individual", "H1_Company", "H1_Both")]</h1>
+                @await Html.PartialAsync("Partials/_CheckNamesOfPartnersLinks", Model)
+
+                <form method="post">
+                    <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NonCompaniesHousePartnershipCheckNamesOfPartners)" type="submit">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+@{
+    string GetLocalizer(bool isPerson, bool isCompany, string person, string company, string both)
+    {
+        string localizer = both;
+        if (isPerson && isCompany)
+        {
+            localizer = both;
+        }
+        else if (isCompany)
+        {
+            localizer = company;
+        }
+        else if (isPerson)
+        {
+            localizer = person;
+        }
+        return string.Concat("NonCompaniesHousePartnershipCheckNamesOfPartners.", localizer);
+    }
+}

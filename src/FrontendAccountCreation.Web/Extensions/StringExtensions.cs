@@ -11,4 +11,9 @@ public static class StringExtensions
 
         return controllerName;
     }
+
+    public static TEnum? ToEnumOrNull<TEnum>(this string? value) where TEnum : struct, Enum
+    {
+        return Enum.TryParse<TEnum>(value, ignoreCase: true, out var result) ? result : (TEnum?)null;
+    }
 }
