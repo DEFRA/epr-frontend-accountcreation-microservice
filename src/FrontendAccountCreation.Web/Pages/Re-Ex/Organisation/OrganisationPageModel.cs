@@ -9,6 +9,8 @@ using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
+//todo: pass pagepath and remove from all methods
+
 // could have classes between this and the derived classes,
 // so that the most derived classes only have to declare the enum as a type parameter
 // an expression to get the value to/from the session
@@ -55,6 +57,32 @@ public class OrganisationPageModel<T>(
     }
 
     public virtual string ButtonText => SharedLocalizer["Continue"];
+
+    protected Task<OrganisationSession> SetupPage()
+    {
+        ViewData["Title"] = Title;
+        ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+        ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+        return SessionManager.GetSessionAsync(HttpContext.Session)!;
+    }
+
+    //public virtual async Task<IActionResult> Get(OrganisationSession session)
+    //{
+    //    return Page();
+    //}
+
+    //public virtual async Task<IActionResult> OnGet()
+    //{
+    //    ViewData["Title"] = Title;
+    //    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    //    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+    //    var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+
+    //    return await Get(session!);
+    //}
+
 
     public void SetBackLink(OrganisationSession session, string currentPagePath)
     {

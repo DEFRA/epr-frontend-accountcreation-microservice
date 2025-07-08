@@ -34,7 +34,7 @@ public class TradingName(
 
     public async Task<IActionResult> OnGet()
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await SetupPage();
 
         SetBackLink(session, PagePath.TradingName);
 
@@ -45,8 +45,9 @@ public class TradingName(
 
     public async Task<IActionResult> OnPost()
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await SetupPage();
 
+        //todo: HandleErrors
         if (!ModelState.IsValid)
         {
             Errors = ErrorStateFromModelState.Create(ModelState);
