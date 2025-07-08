@@ -32,9 +32,7 @@ public class UkRegulator(
 
     public async Task<IActionResult> OnGet()
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
-
-        SetBackLink(session!);
+        var session = await SetupPage();
 
         SelectedValue = session!.ReExManualInputSession?.UkRegulatorNation?.ToString();
 
@@ -43,12 +41,10 @@ public class UkRegulator(
 
     public async Task<IActionResult> OnPost()
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await SetupPage();
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session!);
-
             Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
         }

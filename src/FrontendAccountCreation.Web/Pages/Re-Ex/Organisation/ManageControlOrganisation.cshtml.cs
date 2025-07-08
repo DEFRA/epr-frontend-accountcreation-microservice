@@ -31,8 +31,7 @@ public class ManageControlOrganisation(
 
     public async Task<IActionResult> OnGet(bool invitePerson = false)
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session!);
+        var session = await SetupPage();
 
         if (!invitePerson)
         {
@@ -44,12 +43,10 @@ public class ManageControlOrganisation(
 
     public async Task<IActionResult> OnPost()
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await SetupPage();
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session!);
-
             Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
         }
