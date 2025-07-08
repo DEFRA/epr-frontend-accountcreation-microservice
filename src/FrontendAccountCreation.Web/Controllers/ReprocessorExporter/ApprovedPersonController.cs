@@ -642,7 +642,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedLiabilityPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false),
                 IsLimitedPartnership = isPartnership && (session.ReExCompaniesHouseSession?.Partnership?.IsLimitedPartnership ?? false),
                 IsApprovedUser = session.IsApprovedUser,
-                ProducerType = session.ReExManualInputSession?.ProducerType
+                ProducerType = session.ReExManualInputSession?.ProducerType,
+                IsUkMainAddress = session.IsUkMainAddress
             };
 
             var id = GetFocusId();
@@ -657,10 +658,20 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpPost]
         [Route(PagePath.YouAreApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
-        public async Task<IActionResult> YouAreApprovedPerson(bool inviteApprovedPerson)
+        public async Task<IActionResult> YouAreApprovedPerson(bool inviteApprovedPerson, bool? isUkMainAddress = null)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
             SetBackLink(session, PagePath.YouAreApprovedPerson);
+
+            if (isUkMainAddress is false)
+            {
+                // Sole- trader non-UK 
+                return await SaveSessionAndRedirectToPage(
+                    session,
+                    nameof(ManageControlOrganisation),
+                    PagePath.AddAnApprovedPerson,
+                    PagePath.ManageControlOrganisation);
+            }
 
             var nextPage = inviteApprovedPerson
                 ? PagePath.TeamMemberRoleInOrganisation
