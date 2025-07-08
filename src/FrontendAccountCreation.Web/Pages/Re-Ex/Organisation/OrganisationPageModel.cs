@@ -14,17 +14,27 @@ namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 // an expression to get the value to/from the session
 // and the actions for each enum value
 public class OrganisationPageModel<T>(
+    string pagePath,
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
     IStringLocalizer<T> localizer)
     : PageModel
     where T : OrganisationPageModel<T>
 {
+    public string Path { get; } = pagePath;
     protected ISessionManager<OrganisationSession> SessionManager { get; } = sessionManager;
     protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
     protected IStringLocalizer<T> Localizer { get; } = localizer;
 
     private string? _question;
+    private string? _title;
+    private string? _hint;
+
+    public virtual string Title
+    {
+        get => _title ?? Localizer[$"{typeof(T).Name}.Title"];
+        protected set => _title = value;
+    }
 
     public virtual string Question
     {
@@ -36,22 +46,40 @@ public class OrganisationPageModel<T>(
     {
         get
         {
+            if (_hint != null)
+            {
+                return _hint;
+            }
             var localized = Localizer[$"{typeof(T).Name}.Hint"];
             return localized.ResourceNotFound ? null : localized.Value;
         }
+        protected set => _hint = value;
     }
 
     public virtual string ButtonText => SharedLocalizer["Continue"];
 
-    public void SetBackLink(OrganisationSession session, string currentPagePath)
+    protected async Task<OrganisationSession> SetupPage()
     {
-        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+        ViewData["Title"] = Title;
+        ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+        ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session!);
+
+        return session!;
+    }
+
+    public void SetBackLink(OrganisationSession session)
+    {
+        if (session.IsUserChangingDetails && Path != PagePath.CheckYourDetails)
         {
             ViewData["BackLinkToDisplay"] = PagePath.CheckYourDetails;
         }
         else
         {
-            ViewData["BackLinkToDisplay"] = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+            ViewData["BackLinkToDisplay"] = session.Journey.PreviousOrDefault(Path) ?? string.Empty;
         }
     }
 
@@ -61,11 +89,10 @@ public class OrganisationPageModel<T>(
         OrganisationSession session,
         string controllerName,
         string actionName,
-        string currentPagePath,
         string? nextPagePath)
     {
         session.IsUserChangingDetails = false;
-        await SaveSession(session, currentPagePath, nextPagePath);
+        await SaveSession(session, Path, nextPagePath);
 
         return RedirectToAction(actionName, controllerName.WithoutControllerSuffix());
     }
