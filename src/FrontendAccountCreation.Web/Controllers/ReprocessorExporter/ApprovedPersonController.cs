@@ -923,7 +923,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 var manualInput = session.ReExManualInputSession;
                 viewModel.ProducerType = manualInput?.ProducerType;
                 viewModel.BusinessAddress = manualInput?.BusinessAddress;
-
+                viewModel.CompanyName = manualInput?.OrganisationName;
                 viewModel.reExCompanyTeamMembers = new List<ReExCompanyTeamMember>();
                 var teamMember = manualInput?.TeamMembers?.FirstOrDefault();
                 if (teamMember != null)
@@ -937,7 +937,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 var manualInput = session.ReExManualInputSession;
                 viewModel.ProducerType = manualInput?.ProducerType;
                 viewModel.BusinessAddress = manualInput?.BusinessAddress;
-                viewModel.TradingName = manualInput?.OrganisationName;
+                viewModel.CompanyName = manualInput?.OrganisationName;
                 viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
                 viewModel.Nation = manualInput?.UkRegulatorNation;
             }

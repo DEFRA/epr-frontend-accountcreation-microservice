@@ -243,4 +243,10 @@
   <data name="CheckYourDetails.LimitedPartnership" xml:space="preserve">
     <value>Limited Partnership</value>
   </data>
+  <data name="CheckYourDetails.NonUkRole" xml:space="preserve">
+    <value>Manage or control business</value>
+  </data>
+  <data name="CheckYourDetails.UkRegulator" xml:space="preserve">
+    <value>Which UK regulator</value>
+  </data>
 </root>
