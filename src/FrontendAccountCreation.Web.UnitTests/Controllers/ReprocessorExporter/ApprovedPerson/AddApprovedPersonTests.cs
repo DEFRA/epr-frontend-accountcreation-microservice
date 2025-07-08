@@ -42,11 +42,16 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_SessionRetrievedAndSaved_ReturnsView()
     {
         // Arrange
-        var session = new OrganisationSession();
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
+            }
+        };
         _sessionManagerMock
             .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
             .ReturnsAsync(session);
@@ -68,12 +73,19 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     public async Task AddApprovedPerson_ModelStateInvalid_ReturnsViewWithModel()
     {
         // Arrange
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
+            }
+        };
         var model = new AddApprovedPersonViewModel();
         _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
 
         _sessionManagerMock
             .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
-            .ReturnsAsync(new OrganisationSession());
+            .ReturnsAsync(session);
 
         // Act
         var result = await _systemUnderTest.AddApprovedPerson(model);
@@ -217,7 +229,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_PartnershipOnly_Render_Partial_LimitedPartnership()
     {
         // Arrange
@@ -226,6 +237,10 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         {
             IsInEligibleToBeApprovedPerson = false,
             IsComplianceScheme = false
+        };
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.UnincorporatedBody
         };
 
         // Act
@@ -263,7 +278,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_NotPartnershipAndNotIneligible_ReturnsDefaultView()
     {
         // Arrange
@@ -272,6 +286,11 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         {
             IsInEligibleToBeApprovedPerson = false
         };
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.UnincorporatedBody
+        };
+
 
         // Act
         var result = await _systemUnderTest.AddApprovedPerson();
@@ -294,6 +313,10 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 IsInEligibleToBeApprovedPerson = false
+            },
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
             }
         };
 
@@ -327,14 +350,17 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_WhenUserIsChangingDetails_SetsBackLinkToCheckYourDetails()
     {
         // Arrange
         var session = new OrganisationSession
         {
             IsUserChangingDetails = true,
-            Journey = _orgSessionMock.Journey
+            Journey = _orgSessionMock.Journey,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
+            }
         };
 
         _sessionManagerMock
@@ -359,6 +385,10 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 IsInEligibleToBeApprovedPerson = true
+            },
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
             }
         };
 
@@ -389,6 +419,10 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 IsInEligibleToBeApprovedPerson = false
+            },
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
             }
         };
 
@@ -432,7 +466,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_SetsAllModelPropertiesCorrectly()
     {
         // Arrange
@@ -447,6 +480,10 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
                     IsLimitedPartnership = true,
                     IsLimitedLiabilityPartnership = false
                 }
+            },
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
             }
         };
 
@@ -505,14 +542,17 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_WhenReExCompaniesHouseSessionIsNull_SetsDefaultModelValues()
     {
         // Arrange
         var session = new OrganisationSession
         {
             IsOrganisationAPartnership = false,
-            ReExCompaniesHouseSession = null // <- this triggers all `?? false` fallback logic
+            ReExCompaniesHouseSession = null, // <- this triggers all `?? false` fallback logic
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
+            }
         };
 
         _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
@@ -955,14 +995,23 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession
             {
                 IsInEligibleToBeApprovedPerson = isIneligible
-            },
-            ReExManualInputSession = isSoleTrader
-                ? new ReExManualInputSession
-                {
-                    ProducerType = ProducerType.SoleTrader
-                }
-                : null
+            }
         };
+        if (isSoleTrader)
+        {
+            session.ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.SoleTrader
+            };
+        }
+        else
+        {
+            session.ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody
+            };
+        };
+
 
         _sessionManagerMock
             .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
