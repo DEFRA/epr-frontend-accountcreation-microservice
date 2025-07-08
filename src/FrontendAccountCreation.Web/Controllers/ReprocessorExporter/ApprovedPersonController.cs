@@ -19,7 +19,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
     {
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
-        const string ApprovedPersonErrorMessage = "AddAnApprovedPerson.OptionError";
+        private const string ApprovedPersonErrorMessage = "AddAnApprovedPerson.OptionError";
 
         public ApprovedPersonController(
             ISessionManager<OrganisationSession> sessionManager,
@@ -1147,7 +1147,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else
             {
-                // goes to "What are their details?" page which is unavailable because its not been built
+                // goes to "What are their details?" page, but should use SetFocusId() rather than route values
                 return await SaveSessionAndRedirect(session: session,
                     actionName: nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
                     currentPagePath: PagePath.NonCompaniesHousePartnershipTheirRole,
