@@ -67,23 +67,6 @@ public class OrganisationPageModel<T>(
         return SessionManager.GetSessionAsync(HttpContext.Session)!;
     }
 
-    //public virtual async Task<IActionResult> Get(OrganisationSession session)
-    //{
-    //    return Page();
-    //}
-
-    //public virtual async Task<IActionResult> OnGet()
-    //{
-    //    ViewData["Title"] = Title;
-    //    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-    //    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
-
-    //    var session = await SessionManager.GetSessionAsync(HttpContext.Session);
-
-    //    return await Get(session!);
-    //}
-
-
     public void SetBackLink(OrganisationSession session, string currentPagePath)
     {
         if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
