@@ -58,6 +58,7 @@ public static class PagePath
     public const string NonCompaniesHousePartnershipCheckNamesOfPartners = "non-companies-house-check-partner-names";
     public const string NonCompaniesHousePartnershipCheckNamesOfPartnersDelete = "non-companies-house-check-partner-names/delete";
     public const string NonCompaniesHousePartnershipYouAreApprovedPerson = "non-companies-house-partnership-approved-person-confirmation";
+    public const string NonCompaniesHousePartnershipTheirRole = "non-companies-house-partnership-role";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
@@ -101,8 +102,8 @@ public static class PagePath
     public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
     //Non Companies House Partnership paths 
-    public const string NonCompaniesHousePartnershipRole = "non-companies-house-your-partnership-role";
     public const string NonCompaniesHousePartnershipInviteApprovedPerson = "non-companies-house-partnership-invite-approved-person";
+    public const string NonCompaniesHousePartnershipYourRole = "non-companies-house-your-partnership-role";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";

@@ -5,7 +5,9 @@ using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -385,12 +387,12 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
     //Non company house User Role in Partnership
     [HttpGet]
-    [Route(PagePath.NonCompaniesHousePartnershipRole)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    [Route(PagePath.NonCompaniesHousePartnershipYourRole)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYourRole)]
     public async Task<IActionResult> NonCompaniesHousePartnershipRole()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.NonCompaniesHousePartnershipRole);
+        SetBackLink(session, PagePath.NonCompaniesHousePartnershipYourRole);
 
         return View(new NonCompaniesHousePartnershipRoleModel
         {
@@ -399,28 +401,23 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
     }
 
     [HttpPost]
-    [Route(PagePath.NonCompaniesHousePartnershipRole)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipRole)]
+    [Route(PagePath.NonCompaniesHousePartnershipYourRole)]
+    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYourRole)]
     public async Task<IActionResult> NonCompaniesHousePartnershipRole(NonCompaniesHousePartnershipRoleModel model)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.NonCompaniesHousePartnershipRole);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipYourRole);
             return View(model);
         }
 
         session.ReExManualInputSession.RoleInOrganisation = model.RoleInOrganisation;
         session.ReExManualInputSession.IsEligibleToBeApprovedPerson = model.RoleInOrganisation != RoleInOrganisation.NoneOfTheAbove;
 
-        if (model.RoleInOrganisation == RoleInOrganisation.NoneOfTheAbove)
-        {
-            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipInviteApprovedPerson), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
-        }
-
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
-                    PagePath.NonCompaniesHousePartnershipRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+                    PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
     }
 
     [HttpGet]
@@ -648,7 +645,7 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
     public async Task<IActionResult> NonCompaniesHousePartnershipCheckNamesOfPartners(List<ReExPersonOrCompanyPartner> modelNotUsed)
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipRole), PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, PagePath.NonCompaniesHousePartnershipRole);
+        return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController.NonCompaniesHousePartnershipRole), PagePath.NonCompaniesHousePartnershipCheckNamesOfPartners, PagePath.NonCompaniesHousePartnershipYourRole);
     }
 
     [HttpGet]

@@ -66,7 +66,7 @@ public class NonCompaniesHousePartnershipYouAreApprovedPersonTests : ApprovedPer
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
-        redirect.ActionName.Should().Be(nameof(_systemUnderTest.TeamMemberRoleInOrganisation));
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHousePartnershipTeamMemberRole));
     }
 
     [TestMethod]
