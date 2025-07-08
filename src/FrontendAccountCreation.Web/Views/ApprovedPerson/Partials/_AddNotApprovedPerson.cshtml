@@ -129,7 +129,15 @@
                        gov-for="InviteUserOption"
                        gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)"
                        gov-first-option="true">
-                    @Localizer[$"{localizerPrefix}InviteAnotherApprovedPerson"]
+                    @if (Model.IsUnincorporated)
+                    {
+                        @Localizer["AddNotApprovedPerson.Unincorporated.InviteAnotherApprovedPerson"]
+                    }
+                    else
+                    {
+                        @Localizer[$"{localizerPrefix}InviteAnotherApprovedPerson"]
+                    }
+
                 </label>
             </div>
 
