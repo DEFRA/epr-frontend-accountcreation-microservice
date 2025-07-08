@@ -91,10 +91,9 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
         }
 
         [TestMethod]
-        [DataRow(RoleInOrganisation.Partner,true)]
+        [DataRow(RoleInOrganisation.Partner, true)]
         [DataRow(RoleInOrganisation.PartnerCompanySecretary, true)]
         [DataRow(RoleInOrganisation.PartnerDirector, true)]
-        [DataRow(RoleInOrganisation.NoneOfTheAbove, false)]
         public async Task NonCompaniesHousePartnershipRole_Post_RedirectsToNonCompaniesHousePartnershipAddApprovedPerson(RoleInOrganisation role, bool isEligibleToApprovedPerson)
         {
             // Arrange
@@ -123,6 +122,34 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
                 Times.Once);
             _orgSessionMock.Journey.Should().HaveElementAt(1, PagePath.NonCompaniesHousePartnershipYourRole);
             _orgSessionMock.Journey.Should().HaveElementAt(2, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+        }
+
+        [TestMethod]
+        public async Task NonCompaniesHousePartnershipRole_Post_NoneOfTheAbove_SetsIsEligibleToBeApprovedPersonFalse_AndRedirects()
+        {
+            // Arrange
+            var model = new NonCompaniesHousePartnershipRoleModel
+            {
+                RoleInOrganisation = RoleInOrganisation.NoneOfTheAbove
+            };
+
+            // Act
+            var result = await _systemUnderTest.NonCompaniesHousePartnershipRole(model);
+
+            // Assert
+            result.Should().BeOfType<RedirectToActionResult>();
+            var redirectResult = (RedirectToActionResult)result;
+
+            redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson));
+
+            _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+                It.IsAny<ISession>(),
+                It.Is<OrganisationSession>(s =>
+                    s.Journey.Contains(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)
+                )),
+                Times.Once);
+
+            _orgSessionMock.Journey.Should().HaveElementAt(0, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
         }
     }
 }
