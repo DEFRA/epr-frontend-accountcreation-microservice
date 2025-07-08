@@ -117,19 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddApprovedPerson.NonUk.EligibleAP.ErrorMessage" xml:space="preserve">
-    <value>Select whether to be an approved person, invite someone else to be one or do this later</value>
-  </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
     <value>Select an option</value>
   </data>
   <data name="AddAnApprovedPerson.Title" xml:space="preserve">
     <value>Add an approved person </value>
-  </data>
-  <data name="AddApprovedPerson.NonUk.IneligibleAP.ErrorMessage" xml:space="preserve">
-    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
-  </data>
-  <data name="AddNotApprovedPerson.SoleTrader.ErrorMessage" xml:space="preserve">
-    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
   </data>
 </root>

@@ -47,9 +47,19 @@
 							@SharedLocalizer["Continue"]
 						</button>
 
-						<button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="inviteApprovedPerson" value="true">
-							@Localizer["_NonPartnershipApprovedPerson.InviteLink"]
-						</button>
+						@if (Model.ProducerType != null && Model.ProducerType == ProducerType.NonUkOrganisation
+												&& Model.IsUkMainAddress != null && Model.IsUkMainAddress == false)
+						{
+							<button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="inviteApprovedPerson" asp-route-isUkMainAddress="@Model.IsUkMainAddress">
+								@Localizer["_NonPartnershipApprovedPerson.InviteLink"]
+							</button>
+						}
+						else
+						{
+							<button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="inviteApprovedPerson" value="true">
+								@Localizer["_NonPartnershipApprovedPerson.InviteLink"]
+							</button>
+						}
 					</div>
 				</form>
 			</div>

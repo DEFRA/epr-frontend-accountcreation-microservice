@@ -101,10 +101,10 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>TradingName.en.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Views\Organisation\UkRegulator.cy.resx">
+      <EmbeddedResource Update="Resources\Pages\Re-Ex\Organisation\UkRegulator.cy.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Views\Organisation\UkRegulator.en.resx">
+      <EmbeddedResource Update="Resources\Pages\Re-Ex\Organisation\UkRegulator.en.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
       <EmbeddedResource Update="Resources\Views\Unincorporated\ApprovedPerson.cy.resx">

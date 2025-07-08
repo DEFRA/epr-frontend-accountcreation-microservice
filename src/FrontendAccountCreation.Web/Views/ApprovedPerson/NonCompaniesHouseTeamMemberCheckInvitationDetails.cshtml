@@ -124,7 +124,7 @@
                             @if (Model.IsNonUk || Model.IsUnincorporated)
                             {
                                 <input type="hidden" name="invitePerson" value="true" />
-                                <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-action="ManageControlOrganisation" formmethod="get" type="submit">
+                                <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-page="@PageName.Base/ManageControlOrganisation" formmethod="get" type="submit">
                                 @Localizer["TeamMemberCheckInvitationDetails.InviteAnotherPerson"]
                              </button>
                             }

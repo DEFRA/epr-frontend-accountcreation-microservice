@@ -33,7 +33,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
                 Journey = new List<string>
             {
                 PreviousPage,
-                PagePath.NonCompaniesHousePartnershipRole
+                PagePath.NonCompaniesHousePartnershipYourRole
             },
                 ReExManualInputSession = new()
             };
@@ -117,11 +117,11 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
                 It.Is<OrganisationSession>(s =>
                     s.ReExManualInputSession.RoleInOrganisation == role
                     && s.ReExManualInputSession.IsEligibleToBeApprovedPerson == isEligibleToApprovedPerson
-                    && s.Journey.Contains(PagePath.NonCompaniesHousePartnershipRole)
+                    && s.Journey.Contains(PagePath.NonCompaniesHousePartnershipYourRole)
                     && s.Journey.Contains(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)
                 )),
                 Times.Once);
-            _orgSessionMock.Journey.Should().HaveElementAt(1, PagePath.NonCompaniesHousePartnershipRole);
+            _orgSessionMock.Journey.Should().HaveElementAt(1, PagePath.NonCompaniesHousePartnershipYourRole);
             _orgSessionMock.Journey.Should().HaveElementAt(2, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
         }
     }
