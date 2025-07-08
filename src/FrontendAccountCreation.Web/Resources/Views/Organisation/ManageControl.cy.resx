@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ManageControl.Hint" xml:space="preserve">
-    <value>This means control or management of a business which does not have a registered office, head office or principal place of business in the UK.</value>
+    <value>Mae hyn yn golygu rheoli busnes sydd heb swyddfa gofrestredig, prif swyddfa neu brif le busnes yn y Deyrnas Unedig.</value>
   </data>
   <data name="ManageControl.Question" xml:space="preserve">
-    <value>Do you manage or control the organisation?</value>
+    <value>Ydych chi'n rheoli'r sefydliad?</value>
   </data>
   <data name="ManageControl.Title" xml:space="preserve">
-    <value>Manage control</value>
+    <value>Rheoli</value>
   </data>
   <data name="ManageControl.UserManagesOrControlsError" xml:space="preserve">
-    <value>Select 'Yes' if you manage or control the organisation, 'No' if you do not or 'Not sure' if you are not sure</value>
+    <value>Dewiswch 'Ydw' os ydych chi'n rheoli'r sefydliad, 'Nac ydw' os nad ydych chi'n ei reoli neu 'Ddim yn siŵr' os nad ydych chi'n siŵr</value>
   </data>
 </root>

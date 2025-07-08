@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Moq;
 using System.Security.Claims;
@@ -27,7 +26,6 @@ public abstract class OrganisationTestBase
     protected Mock<ISessionManager<OrganisationSession>> _sessionManagerMock = null!;
     protected Mock<IFacadeService> _facadeServiceMock = null!;
     protected Mock<IReExAccountMapper> _reExAccountMapperMock = null!;
-    protected Mock<IOptions<DeploymentRoleOptions>> _deploymentRoleOptionMock = null!;
     protected Mock<IFeatureManager> _featureManagerMock = null!;
     protected Mock<ILogger<OrganisationController>> _loggerMock = null!;
     protected Mock<ITempDataDictionary> _tempDataDictionaryMock = null!;
@@ -35,14 +33,13 @@ public abstract class OrganisationTestBase
 
     protected Mock<IMultipleOptions> _multipleOptionsMock = null!;
 
-    protected void SetupBase(string? deploymentRole = null)
+    protected void SetupBase()
     {
         _httpContextMock = new Mock<HttpContext>();
         _sessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         _facadeServiceMock = new Mock<IFacadeService>();
         _reExAccountMapperMock = new Mock<IReExAccountMapper>();
         _multipleOptionsMock = new Mock<IMultipleOptions>();
-        _deploymentRoleOptionMock = new Mock<IOptions<DeploymentRoleOptions>>();
         _featureManagerMock = new Mock<IFeatureManager>();
         _tempDataDictionaryMock = new Mock<ITempDataDictionary>();
 
@@ -65,12 +62,6 @@ public abstract class OrganisationTestBase
             new("Oid", Guid.NewGuid().ToString())
         });
 
-        _deploymentRoleOptionMock.Setup(x => x.Value)
-            .Returns(new DeploymentRoleOptions
-            {
-                DeploymentRole = deploymentRole
-            });
-
         _multipleOptionsMock.Setup(x => x.ServiceKeysOptions)
            .Returns(new ServiceKeysOptions
            {
@@ -88,9 +79,6 @@ public abstract class OrganisationTestBase
             _facadeServiceMock.Object,
             _reExAccountMapperMock.Object,
             _multipleOptionsMock.Object,
-           //_urlsOptionMock.Object, 
-           _deploymentRoleOptionMock.Object,
-           //_serviceKeyOptionsMock.Object,
            _loggerMock.Object);
 
         _systemUnderTest.ControllerContext.HttpContext = _httpContextMock.Object;

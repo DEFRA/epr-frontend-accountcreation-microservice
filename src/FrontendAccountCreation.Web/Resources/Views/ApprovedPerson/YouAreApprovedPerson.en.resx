@@ -121,7 +121,7 @@
     <value>As an individual named on Companies House you are now an 'approved person' for your organisation.</value>
   </data>
   <data name="YouAreApprovedPerson.Title" xml:space="preserve">
-    <value>Approved Person</value>
+    <value>Approved person</value>
   </data>
   <data name="YouAreApprovedPerson.Header" xml:space="preserve">
     <value>You are now an approved person</value>

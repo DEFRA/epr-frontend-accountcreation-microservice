@@ -223,7 +223,7 @@
     <value>(W)Approved person email invitations created</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Email" xml:space="preserve">
-    <value>(W) Email</value>
+    <value>Ebost</value>
   </data>
   <data name="CheckYourDetails.TeamMembers.Invite" xml:space="preserve">
     <value>(W)Invite</value>
@@ -242,5 +242,11 @@
   </data>
   <data name="CheckYourDetails.LimitedPartnership" xml:space="preserve">
     <value>(W)Limited Partnership</value>
+  </data>
+  <data name="CheckYourDetails.NonUkRole" xml:space="preserve">
+    <value>(W)Manage or control business</value>
+  </data>
+  <data name="CheckYourDetails.UkRegulator" xml:space="preserve">
+    <value>(W)Which UK regulator</value>
   </data>
 </root>

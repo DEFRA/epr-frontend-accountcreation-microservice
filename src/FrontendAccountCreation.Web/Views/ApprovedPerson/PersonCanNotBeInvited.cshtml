@@ -24,9 +24,8 @@
 
 						@if (Model.TheyManageOrControlOrganisation.HasValue && Model.TheyManageOrControlOrganisation.Value != YesNoNotSure.Yes)
 						{
-							<a class="govuk-link"
-							   asp-action="ManageControlOrganisation"
-							   asp-controller="ApprovedPerson"
+                            <a class="govuk-link"
+							   asp-page="@PageName.Base/ManageControlOrganisation"
 							   asp-route-invitePerson="true">
 							   @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
 							</a>
