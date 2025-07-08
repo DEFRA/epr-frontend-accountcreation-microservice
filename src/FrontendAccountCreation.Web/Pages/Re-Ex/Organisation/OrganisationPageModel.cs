@@ -25,6 +25,14 @@ public class OrganisationPageModel<T>(
     protected IStringLocalizer<T> Localizer { get; } = localizer;
 
     private string? _question;
+    private string? _title;
+    private string? _hint;
+
+    public virtual string Title
+    {
+        get => _title ?? Localizer[$"{typeof(T).Name}.Title"];
+        protected set => _title = value;
+    }
 
     public virtual string Question
     {
@@ -36,9 +44,14 @@ public class OrganisationPageModel<T>(
     {
         get
         {
+            if (_hint != null)
+            {
+                return _hint;
+            }
             var localized = Localizer[$"{typeof(T).Name}.Hint"];
             return localized.ResourceNotFound ? null : localized.Value;
         }
+        protected set => _hint = value;
     }
 
     public virtual string ButtonText => SharedLocalizer["Continue"];

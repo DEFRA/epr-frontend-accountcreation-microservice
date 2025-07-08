@@ -49,6 +49,8 @@ public class TradingName(
 
         if (!ModelState.IsValid)
         {
+            Errors = ErrorStateFromModelState.Create(ModelState);
+
             SetBackLink(session, PagePath.TradingName);
 
             return Page();
