@@ -676,6 +676,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     PagePath.ManageControlOrganisation);
             }
 
+            if (session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody && inviteApprovedPerson)
+            {
+                return await SaveSessionAndRedirectToPage(
+                    session,
+                    nameof(ManageControlOrganisation),
+                    PagePath.AddAnApprovedPerson,
+                    PagePath.ManageControlOrganisation);
+            }
+
             var nextPage = inviteApprovedPerson
                 ? PagePath.TeamMemberRoleInOrganisation
                 : PagePath.CheckYourDetails;
