@@ -16,12 +16,14 @@ namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 // an expression to get the value to/from the session
 // and the actions for each enum value
 public class OrganisationPageModel<T>(
+    string pagePath,
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
     IStringLocalizer<T> localizer)
     : PageModel
     where T : OrganisationPageModel<T>
 {
+    public string Path { get; } = pagePath;
     protected ISessionManager<OrganisationSession> SessionManager { get; } = sessionManager;
     protected IStringLocalizer<SharedResources> SharedLocalizer { get; } = sharedLocalizer;
     protected IStringLocalizer<T> Localizer { get; } = localizer;
@@ -58,24 +60,28 @@ public class OrganisationPageModel<T>(
 
     public virtual string ButtonText => SharedLocalizer["Continue"];
 
-    protected Task<OrganisationSession> SetupPage()
+    protected async Task<OrganisationSession> SetupPage()
     {
         ViewData["Title"] = Title;
         ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
         ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
-        return SessionManager.GetSessionAsync(HttpContext.Session)!;
+        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+
+        SetBackLink(session!);
+
+        return session!;
     }
 
-    public void SetBackLink(OrganisationSession session, string currentPagePath)
+    public void SetBackLink(OrganisationSession session)
     {
-        if (session.IsUserChangingDetails && currentPagePath != PagePath.CheckYourDetails)
+        if (session.IsUserChangingDetails && Path != PagePath.CheckYourDetails)
         {
             ViewData["BackLinkToDisplay"] = PagePath.CheckYourDetails;
         }
         else
         {
-            ViewData["BackLinkToDisplay"] = session.Journey.PreviousOrDefault(currentPagePath) ?? string.Empty;
+            ViewData["BackLinkToDisplay"] = session.Journey.PreviousOrDefault(Path) ?? string.Empty;
         }
     }
 
@@ -85,11 +91,10 @@ public class OrganisationPageModel<T>(
         OrganisationSession session,
         string controllerName,
         string actionName,
-        string currentPagePath,
         string? nextPagePath)
     {
         session.IsUserChangingDetails = false;
-        await SaveSession(session, currentPagePath, nextPagePath);
+        await SaveSession(session, Path, nextPagePath);
 
         return RedirectToAction(actionName, controllerName.WithoutControllerSuffix());
     }

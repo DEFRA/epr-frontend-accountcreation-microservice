@@ -19,7 +19,8 @@ public class UkRegulator(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
     IStringLocalizer<UkRegulator> localizer)
-    : OrganisationPageModel<UkRegulator>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
+    : OrganisationPageModel<UkRegulator>(PagePath.UkRegulator, sessionManager, sharedLocalizer, localizer),
+        IRadiosPageModel
 {
     public IEnumerable<IRadio> Radios => CommonRadios.HomeNations(SharedLocalizer);
 
@@ -33,7 +34,7 @@ public class UkRegulator(
     {
         var session = await SessionManager.GetSessionAsync(HttpContext.Session);
 
-        SetBackLink(session, PagePath.UkRegulator);
+        SetBackLink(session!);
 
         SelectedValue = session!.ReExManualInputSession?.UkRegulatorNation?.ToString();
 
@@ -46,7 +47,7 @@ public class UkRegulator(
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.UkRegulator);
+            SetBackLink(session!);
 
             Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
@@ -59,7 +60,6 @@ public class UkRegulator(
             session,
             nameof(OrganisationController),
             nameof(OrganisationController.NonUkRoleInOrganisation),
-            PagePath.UkRegulator,
             PagePath.NonUkRoleInOrganisation);
     }
 }

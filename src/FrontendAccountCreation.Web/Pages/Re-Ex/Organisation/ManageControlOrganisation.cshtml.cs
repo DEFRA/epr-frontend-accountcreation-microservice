@@ -18,7 +18,8 @@ public class ManageControlOrganisation(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
     IStringLocalizer<ManageControlOrganisation> localizer)
-    : OrganisationPageModel<ManageControlOrganisation>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
+    : OrganisationPageModel<ManageControlOrganisation>(PagePath.ManageControlOrganisation, sessionManager, sharedLocalizer, localizer),
+        IRadiosPageModel
 {
     public IEnumerable<IRadio> Radios => CommonRadios.YesNoNotSure_AreThey(SharedLocalizer);
 
@@ -31,7 +32,7 @@ public class ManageControlOrganisation(
     public async Task<IActionResult> OnGet(bool invitePerson = false)
     {
         var session = await SessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.ManageControlOrganisation);
+        SetBackLink(session!);
 
         if (!invitePerson)
         {
@@ -47,7 +48,7 @@ public class ManageControlOrganisation(
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.ManageControlOrganisation);
+            SetBackLink(session!);
 
             Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
@@ -62,7 +63,6 @@ public class ManageControlOrganisation(
                 session,
                 nameof(ApprovedPersonController),
                 nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
-                PagePath.ManageControlOrganisation,
                 PagePath.NonCompaniesHouseTeamMemberDetails);
         }
 
@@ -70,7 +70,6 @@ public class ManageControlOrganisation(
             session,
             nameof(ApprovedPersonController),
             nameof(ApprovedPersonController.PersonCanNotBeInvited),
-            PagePath.ManageControlOrganisation,
             PagePath.ApprovedPersonPartnershipCanNotBeInvited);
     }
 }
