@@ -9,8 +9,6 @@ using Microsoft.Extensions.Localization;
 
 namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
-//todo: pass pagepath and remove from all methods
-
 // could have classes between this and the derived classes,
 // so that the most derived classes only have to declare the enum as a type parameter
 // an expression to get the value to/from the session
