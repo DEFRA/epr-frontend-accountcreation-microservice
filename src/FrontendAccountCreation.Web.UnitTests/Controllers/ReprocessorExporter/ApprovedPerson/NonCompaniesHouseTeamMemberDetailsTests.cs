@@ -36,9 +36,13 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
     [TestMethod]
     public async Task GET_WhenTeamMemberIsNotInSession_ThenViewIsReturnedWithoutTeamMemberDetails()
     {
+        // Arrnage
+        var approvedPersonId = Guid.NewGuid();
+
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(approvedPersonId);
+
         //Act
-        var id = Guid.NewGuid();
-        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(id);
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails();
 
         //Assert
         result.Should().BeOfType<ViewResult>();
@@ -52,16 +56,67 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
+    public async Task GET_NonCompaniesHouseTeamMemberDetails_WhenIdIsNull_ShoulCreateEmptyViewModel()
+    {
+        // Arrange
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(null);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails();
+        var model = ((ViewResult)result).Model.As<NonCompaniesHouseTeamMemberViewModel>();
+
+        // Assert
+        model.Should().NotBeNull();
+        model.Id.Should().NotBeEmpty();
+        model.FirstName.Should().BeNull();
+        model.LastName.Should().BeNull();
+        model.Telephone.Should().BeNull();
+        model.Email.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task GET_NonCompaniesHouseTeamMemberDetails_WhenIdIsProvidedButNoTeamMemberExists_ShouldReturnEmptyViewModel()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+
+        var approvedPersonId = Guid.NewGuid();
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(approvedPersonId);
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails();
+        var model = ((ViewResult)result).Model.As<NonCompaniesHouseTeamMemberViewModel>();
+
+        // Assert
+        model.Should().NotBeNull();
+        model.Id.Should().Be(approvedPersonId);
+        model.FirstName.Should().BeNull();
+        model.LastName.Should().BeNull();
+        model.Telephone.Should().BeNull();
+        model.Email.Should().BeNull();
+    }
+
+    [TestMethod]
     public async Task GET_WhenTeamMemberIsInSession_ThenViewIsReturnedWithTeamMemberDetails()
     {
         //Arrange
+        var approvedPersonId = Guid.NewGuid();
         _orgSessionMock!.ReExManualInputSession = new ReExManualInputSession
         {
             TeamMembers = new List<ReExCompanyTeamMember>
                 {
                     new ReExCompanyTeamMember
                     {
-                        Id = Guid.NewGuid(),
+                        Id = approvedPersonId,
                         FirstName = "John",
                         LastName = "Smith",
                         Email = "teammember@email.com",
@@ -70,8 +125,10 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
                 }
         };
 
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(approvedPersonId);
+
         //Act
-        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(_orgSessionMock.ReExManualInputSession.TeamMembers[0].Id);
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails();
 
         //Assert
         result.Should().BeOfType<ViewResult>();
@@ -85,11 +142,53 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
+    public async Task GET_NonCompaniesHouseTeamMemberDetails_WhenIdIsProvidedAndTeamMemberExists_ShouldPopulateViewModel()
+    {
+        // Arrange
+        var approvedPersonId = Guid.NewGuid();
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>
+            {
+                new ReExCompanyTeamMember
+                {
+                    Id = approvedPersonId,
+                    FirstName = "Alice",
+                    LastName = "Johnson",
+                    TelephoneNumber = "0123456789",
+                    Email = "alice@example.com"
+                }
+            }
+            }
+        };
+
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(approvedPersonId);
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails();
+        var model = ((ViewResult)result).Model.As<NonCompaniesHouseTeamMemberViewModel>();
+
+        // Assert
+        model.Should().NotBeNull();
+        model.Id.Should().Be(approvedPersonId);
+        model.FirstName.Should().Be("Alice");
+        model.LastName.Should().Be("Johnson");
+        model.Telephone.Should().Be("0123456789");
+        model.Email.Should().Be("alice@example.com");
+    }
+
+    [TestMethod]
     public async Task GET_ThenBackLinkIsCorrect()
     {
         //Act
-        var id = Guid.NewGuid();
-        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(id);
+        _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(Guid.NewGuid());
+
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails();
 
         //Assert
         result.Should().BeOfType<ViewResult>();
@@ -159,7 +258,6 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
             Times.Once
         );
     }
-
 
     [TestMethod]
     public async Task POST_GivenMissingTeamMemberDetails_ThenSessionNotUpdated()
@@ -337,4 +435,107 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
         updated.LastName.Should().Be("User");
     }
 
+    [TestMethod]
+    public async Task POST_NonCompaniesHouseTeamMemberDetails_WhenModelIsValid_ShouldSaveTeamMemberAndRedirect()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+
+        var model = new NonCompaniesHouseTeamMemberViewModel
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "John",
+            LastName = "Doe",
+            Telephone = "01234567890",
+            Email = "john.doe@example.com"
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+        _sessionManagerMock.Setup(x => x.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberCheckInvitationDetails));
+
+        // Verify the session was updated
+        session.ReExManualInputSession.TeamMembers.Should().ContainSingle(m => m.FirstName == "John" && m.LastName == "Doe");
+    }
+
+    [TestMethod]
+    public async Task POST_NonCompaniesHouseTeamMemberDetails_WhenModelIsInvalid_ShouldReturnToViewWithModelStateErrors()
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                TeamMembers = new List<ReExCompanyTeamMember>()
+            }
+        };
+
+        var model = new NonCompaniesHouseTeamMemberViewModel
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "",
+            LastName = "Doe",
+            Telephone = "01234567890",
+            Email = "john.doe@example.com"
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _systemUnderTest.ModelState.AddModelError("FirstName", "First name is required");
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().Be(model);
+    }
+
+    [TestMethod]
+    public async Task POST_NonCompaniesHouseTeamMemberDetails_WhenModelIsInvalid_ReturnsViewWithModel()
+    {
+        // Arrange
+        var model = new NonCompaniesHouseTeamMemberViewModel
+        {
+            Id = Guid.NewGuid(),
+            FirstName = null,
+            LastName = "",
+            Telephone = "",
+            Email = ""
+        };
+
+        _systemUnderTest.ModelState.AddModelError("FirstName", "First name is required");
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession { TeamMembers = new List<ReExCompanyTeamMember>() }
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = (ViewResult)result;
+        viewResult.Model.Should().Be(model);
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Never); // Ensure SaveSessionAsync is not called
+    }
 }

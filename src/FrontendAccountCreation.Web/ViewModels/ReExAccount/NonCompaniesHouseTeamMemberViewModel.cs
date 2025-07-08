@@ -8,7 +8,8 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 [ExcludeFromCodeCoverage]
 public class NonCompaniesHouseTeamMemberViewModel
 {
-    public Guid? Id { get; set; }
+    [Required]
+    public Guid Id { get; set; }
 
     [Required(ErrorMessage = "TeamMemberDetails.EmailEmptyErrorMessage")]
     [PublicEmailAddress(ErrorMessage= "TeamMemberDetails.EmailInvalidErrorMessage")]

@@ -374,31 +374,38 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
-        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(Guid? id)
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            Guid? id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
+            else
+            {
+                id = Guid.NewGuid();
+            }
 
             SetBackLink(session, PagePath.NonCompaniesHouseTeamMemberDetails);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            var viewModel = new NonCompaniesHouseTeamMemberViewModel();
+            var viewModel = new NonCompaniesHouseTeamMemberViewModel { Id = id.Value };
 
-            if (id.HasValue)
+            var approvedPerson = session.ReExManualInputSession?.TeamMembers?
+                .Find(member => member.Id == id);
+
+            if (approvedPerson != null)
             {
-                var teamMember = session.ReExManualInputSession?.TeamMembers?
-                    .Find(member => member.Id == id.Value);
-
-                if (teamMember != null)
+                viewModel = new NonCompaniesHouseTeamMemberViewModel
                 {
-                    viewModel = new NonCompaniesHouseTeamMemberViewModel
-                    {
-                        Id = teamMember.Id,
-                        FirstName = teamMember.FirstName,
-                        LastName = teamMember.LastName,
-                        Telephone = teamMember.TelephoneNumber,
-                        Email = teamMember.Email
-                    };
-                }
+                    Id = approvedPerson.Id,
+                    FirstName = approvedPerson.FirstName,
+                    LastName = approvedPerson.LastName,
+                    Telephone = approvedPerson.TelephoneNumber,
+                    Email = approvedPerson.Email
+                };
             }
 
             return View(viewModel);
@@ -431,7 +438,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 teamMembers.Add(new ReExCompanyTeamMember
                 {
-                    Id = Guid.NewGuid(),
+                    Id = model.Id,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     TelephoneNumber = model.Telephone,
@@ -665,7 +672,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (isUkMainAddress is false)
             {
-                // Sole- trader non-UK 
+                // Sole- trader non-UK
                 return await SaveSessionAndRedirectToPage(
                     session,
                     nameof(ManageControlOrganisation),
@@ -1152,19 +1159,19 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // check the email, but any field other than Id will do to determine if its an existing approved person
             if (approvedPersons[memberIndex].Email?.Length > 0)
             {
-                // goes to "Check invitation details" page which is unavailable because its not been built
+                // goes to "Check invitation details" page
                 return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberCheckInvitationDetails),
                     PagePath.NonCompaniesHousePartnershipTheirRole, PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails);
             }
             else
             {
-                // goes to "What are their details?" page, but should use SetFocusId() rather than route values
+                // goes to "What are their details?" page
                 return await SaveSessionAndRedirect(session: session,
                     actionName: nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
                     currentPagePath: PagePath.NonCompaniesHousePartnershipTheirRole,
                     nextPagePath: PagePath.NonCompaniesHouseTeamMemberDetails,
                     controllerName: nameof(ApprovedPersonController),
-                    routeValues: new { id = approvedPersons[memberIndex].Id });
+                    routeValues: null);
             }
         }
     }
