@@ -46,7 +46,6 @@ public class TradingName(
     {
         var session = await SetupPage();
 
-        //todo: HandleErrors
         if (!ModelState.IsValid)
         {
             Errors = ErrorStateFromModelState.Create(ModelState);
