@@ -1,6 +1,7 @@
 ﻿using FrontendAccountCreation;
 using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.Configs;
+using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Extensions;
 using FrontendAccountCreation.Web.HealthChecks;
 using FrontendAccountCreation.Web.Middleware;
@@ -45,7 +46,10 @@ builder.Services.Configure<DeploymentRoleOptions>(options =>
     options.DeploymentRole = builder.Configuration.GetValue<string>(DeploymentRoleOptions.ConfigSection);
 });
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AddPageRoute($"{PageName.Base}/RegisteredAsCharity", "/re-ex/organisation");
+});
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

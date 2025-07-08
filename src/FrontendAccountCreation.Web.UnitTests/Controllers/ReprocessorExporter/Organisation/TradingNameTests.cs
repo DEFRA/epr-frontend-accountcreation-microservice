@@ -3,93 +3,161 @@ using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
+using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.Organisation;
 
 [TestClass]
-public class TradingNameTests : OrganisationTestBase
+public class TradingNameTests : OrganisationPageModelTestBase<TradingName>
 {
-    private OrganisationSession _organisationSession = null!;
+    private TradingName _tradingName;
 
     [TestInitialize]
     public void Setup()
     {
         SetupBase();
 
-        _organisationSession = new OrganisationSession
-        {
-            Journey =
-            [
-                PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
-                PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent,
-                PagePath.TradingName
-            ]
-        };
+        OrganisationSession.Journey =
+        [
+            PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber,
+            PagePath.ConfirmCompanyDetails, PagePath.UkNation, PagePath.IsTradingNameDifferent,
+            PagePath.TradingName
+        ];
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSession);
+        _tradingName = new TradingName(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
+        {
+            PageContext = PageContext
+        };
     }
 
     [TestMethod]
-    public async Task GET_WhenTradingNameIsNotInSession_ThenViewIsReturnedWithoutTradingName()
+    public async Task OnGet_WhenTradingNameIsNotInSession_ThenTextBoxValueShouldNotBeSet()
     {
         //Act
-        var result = await _systemUnderTest.TradingName();
+        await _tradingName.OnGet();
 
         //Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<TradingNameViewModel>();
-        var viewModel = (TradingNameViewModel?)viewResult.Model;
-        viewModel!.TradingName.Should().BeNull();
+        _tradingName.TextBoxValue.Should().BeNull();
     }
 
     [TestMethod]
-    public async Task GET_WhenTradingNameIsInSession_ThenViewIsReturnedWithTradingName()
+    public async Task OnGet_WhenTradingNameIsInSession_ThenViewIsReturnedWithTradingName()
     {
         //Arrange
         const string tradingName = "Trading name";
-        _organisationSession.TradingName = tradingName;
-        _organisationSession.ReExManualInputSession = new ReExManualInputSession
-        {
-            BusinessAddress = new Core.Addresses.Address()
-        };
+        OrganisationSession.TradingName = tradingName;
 
         //Act
-        var result = await _systemUnderTest.TradingName();
+        await _tradingName.OnGet();
 
         //Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        viewResult.Model.Should().BeOfType<TradingNameViewModel>();
-        var viewModel = (TradingNameViewModel?)viewResult.Model;
-        viewModel!.TradingName.Should().Be(tradingName);
+        _tradingName.TextBoxValue.Should().Be(tradingName);
     }
 
     [TestMethod]
-    public async Task GET_ThenBackLinkIsCorrect()
+    public async Task OnGet_ThenBackLinkIsCorrect()
     {
         //Act
-        var result = await _systemUnderTest.TradingName();
+        await _tradingName.OnGet();
 
         //Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-        AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
+        AssertBackLink(_tradingName, PagePath.IsTradingNameDifferent);
     }
 
     [TestMethod]
-    public async Task POST_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
+    public async Task OnPost_GivenTradingName_ThenUpdatesSession()
     {
         // Arrange
-        var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-        _organisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader
+        };
 
         // Act
-        var result = await _systemUnderTest.TradingName(request);
+        await _tradingName.OnPost();
+
+        // Assert
+        SessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public async Task OnPost_GivenNoTradingName_ThenSessionNotUpdated()
+    {
+        // Arrange
+        _tradingName.ModelState.AddModelError(nameof(TradingName.TextBoxValue), "Trading name field is required");
+
+        // Act
+        await _tradingName.OnPost();
+
+        // Assert
+        SessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
+            Times.Never);
+    }
+
+    [TestMethod]
+    public async Task OnPost_GivenNoTradingName_ThenReturnPage()
+    {
+        // Arrange
+        _tradingName.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
+
+        // Act
+        var result = await _tradingName.OnPost();
+
+        // Assert
+        result.Should().BeOfType<PageResult>();
+    }
+
+    /// <summary>
+    /// This tests that when the user enters a trading name that is too long,
+    /// when we show the page in the errored state, the (too long) trading name they entered is retained
+    /// </summary>
+    [TestMethod]
+    public async Task OnPost_GivenTradingNameTooLong_ThenReturnPageWithUsersBadInput()
+    {
+        // Arrange
+        const string badTradingName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
+        _tradingName.TextBoxValue = badTradingName;
+
+        _tradingName.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name must be 170 characters or less");
+
+        // Act
+        await _tradingName.OnPost();
+
+        // Assert
+        _tradingName.TextBoxValue.Should().Be(badTradingName);
+    }
+
+    [TestMethod]
+    public async Task OnPost_GivenNoTradingName_ThenViewHasCorrectBackLink()
+    {
+        // Arrange
+        _tradingName.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
+
+        // Act
+        await _tradingName.OnPost();
+
+        // Assert
+        AssertBackLink(_tradingName, PagePath.IsTradingNameDifferent);
+    }
+
+    [TestMethod]
+    public async Task OnPost_GivenTradingName_CompaniesHouseFlow_ThenRedirectToPartnerOrganisation()
+    {
+        // Arrange
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.CompaniesHouseCompany;
+
+        // Act
+        var result = await _tradingName.OnPost();
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -98,18 +166,18 @@ public class TradingNameTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
+    public async Task OnPost_GivenTradingName_NonCompaniesHouseFlow_IsSoleTrader_ThenRedirectToTypeOfOrganisation()
     {
         // Arrange
-        var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-        _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
         {
             ProducerType = ProducerType.SoleTrader
         };
 
         // Act
-        var result = await _systemUnderTest.TradingName(request);
+        var result = await _tradingName.OnPost();
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
@@ -118,111 +186,76 @@ public class TradingNameTests : OrganisationTestBase
     }
 
     [TestMethod]
-    public async Task POST_GivenTradingName_ThenUpdatesSession()
+    public async Task OnPost_GivenTradingName_WithNonUKOrganisationProducerTypeFlow_RedirectsToAddressOverseas()
     {
         // Arrange
-        var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-        _organisationSession.OrganisationType = OrganisationType.NonCompaniesHouseCompany;
-        _organisationSession.ReExManualInputSession = new ReExManualInputSession
-        {
-            ProducerType = ProducerType.SoleTrader
-        };
-
-        // Act
-        await _systemUnderTest.TradingName(request);
-
-        // Assert
-        _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), It.IsAny<OrganisationSession>()), Times.Once);
-    }
-
-    [TestMethod]
-    public async Task POST_GivenNoTradingName_ThenSessionNotUpdated()
-    {
-        // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
-
-        // Act
-        await _systemUnderTest.TradingName(new TradingNameViewModel());
-
-        // Assert
-        _sessionManagerMock.Verify(x => x.UpdateSessionAsync(It.IsAny<ISession>(), It.IsAny<Action<OrganisationSession>>()),
-            Times.Never);
-    }
-
-    [TestMethod]
-    public async Task POST_GivenNoTradingName_ThenReturnView()
-    {
-        // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
-        var viewModel = new TradingNameViewModel
-        {
-            TradingName = ""
-        };
-
-        // Act
-        var result = await _systemUnderTest.TradingName(viewModel);
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-    }
-
-    [TestMethod]
-    public async Task POST_GivenTradingNameTooLong_ThenReturnViewWithUsersBadInput()
-    {
-        // Arrange
-        const string badTradingName = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789";
-
-        _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name must be 170 characters or less");
-        var viewModel = new TradingNameViewModel
-        {
-            TradingName = badTradingName
-        };
-
-        // Act
-        var result = await _systemUnderTest.TradingName(viewModel);
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = (ViewResult)result;
-
-        viewResult.Model.Should().BeOfType<TradingNameViewModel?>();
-        var resultViewModel = (TradingNameViewModel?)viewResult.Model;
-        resultViewModel!.TradingName.Should().Be(badTradingName);
-    }
-
-    [TestMethod]
-    public async Task POST_GivenNoTradingName_ThenViewHasCorrectBackLink()
-    {
-        // Arrange
-        _systemUnderTest.ModelState.AddModelError(nameof(TradingNameViewModel.TradingName), "Trading name field is required");
-
-        // Act
-        var result = await _systemUnderTest.TradingName(new TradingNameViewModel());
-
-        // Assert
-        result.Should().BeOfType<ViewResult>();
-
-        var viewResult = (ViewResult)result;
-
-        AssertBackLink(viewResult, PagePath.IsTradingNameDifferent);
-    }
-
-    [TestMethod]
-    public async Task POST_GivenTradingName_WithNonUKOrganisationProducerType_Flow_Redirects_To_AddressOverseas()
-    {
-        // Arrange
-        var request = new TradingNameViewModel { TradingName = "John Brown Greengrocers" };
-        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        _tradingName.TextBoxValue = "John Brown Greengrocers";
+        OrganisationSession.ReExManualInputSession = new ReExManualInputSession
         {
             ProducerType = ProducerType.NonUkOrganisation
         };
 
         // Act
-        var result = await _systemUnderTest.TradingName(request);
+        var result = await _tradingName.OnPost();
 
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.AddressOverseas));
+    }
+
+    [TestMethod]
+    public void ButtonText_ThenContinueButtonHasCorrectLabel()
+    {
+        SharedLocalizerMock.Setup(l => l["Continue"])
+            .Returns(new LocalizedString("Continue", "Continue localized"));
+
+        // Act
+        var question = _tradingName.ButtonText;
+
+        // Assert
+        question.Should().Be("Continue localized");
+    }
+
+    [TestMethod]
+    public void Question_ShouldReturnLocalizedQuestion()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["TradingName.Question"])
+            .Returns(new LocalizedString("TradingName.Question", "Test question string"));
+
+        // Act
+        var question = _tradingName.Question;
+
+        // Assert
+        question.Should().Be("Test question string");
+    }
+
+    [TestMethod]
+    public void Hint_ShouldReturnLocalizedDescription()
+    {
+        // Arrange
+        LocalizerMock.Setup(l => l["TradingName.Hint"])
+            .Returns(new LocalizedString("TradingName.Hint", "Test hint string"));
+
+        // Act
+        var hint = _tradingName.Hint;
+
+        // Assert
+        hint.Should().Be("Test hint string");
+    }
+
+    [TestMethod]
+    public void TextBoxLabel_ReturnsNull()
+    {
+        // Act and Assert
+        _tradingName.TextBoxLabel.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void MaxLength_ReturnsMaxLength()
+    {
+        // Act and Assert
+        _tradingName.MaxLength.Should().Be(170);
     }
 }
