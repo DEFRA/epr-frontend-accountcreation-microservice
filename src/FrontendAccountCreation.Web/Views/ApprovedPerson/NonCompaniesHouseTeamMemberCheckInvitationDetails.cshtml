@@ -53,15 +53,18 @@
                                         @Localizer["TeamMemberCheckInvitationDetails.Role"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        @(
-                                            Model.IsSoleTrader
-                                            ? Localizer["TeamMemberCheckInvitationDetails.SoleTrader"]
-                                            : Model.IsNonUk
-                                            ? Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
-                                            : Model.IsUnincorporated
-                                            ? Localizer["TeamMemberCheckInvitationDetails.Unincorporated"]
-                                            : string.Empty
-                                            )
+                                        @if (Model.IsSoleTrader)
+                                        {
+                                            @Localizer["TeamMemberCheckInvitationDetails.SoleTrader"];
+                                        }
+                                        else if (Model.IsNonUk)
+                                        {
+                                            @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"];
+                                        }
+                                        else if (Model.IsUnincorporated)
+                                        {
+                                            @Localizer["TeamMemberCheckInvitationDetails.Unincorporated"];
+                                        }
                                     </dd>                                   
                                 </div>
 
