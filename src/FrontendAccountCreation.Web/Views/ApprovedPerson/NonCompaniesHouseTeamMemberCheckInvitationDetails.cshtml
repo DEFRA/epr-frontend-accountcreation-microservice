@@ -54,13 +54,24 @@
                                             @Localizer["TeamMemberCheckInvitationDetails.SoleTrader"]
                                         </dd>
                                     }
-                                    @if (Model.IsNonUk)
+                                    else if (Model.IsNonUk)
                                     {
                                         <dd class="govuk-summary-list__value">
                                             @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
                                         </dd>
                                     }
-                                   
+                                    else if (Model.IsPartnership)
+                                    {
+                                        <dd class="govuk-summary-list__value">
+                                            @Localizer["TeamMemberCheckInvitationDetails.PartnershipRole"]
+                                        </dd>
+                                        <dd class="govuk-summary-list__actions">
+                                            <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetailsEdit), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
+                                                @SharedLocalizer["Change"]
+                                                <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
+                                            </a>
+                                        </dd>
+                                    }
                                 </div>
 
                                 <!-- Name, Email, Telephone -->
