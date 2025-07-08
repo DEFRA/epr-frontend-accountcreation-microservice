@@ -3,7 +3,6 @@ using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
-using FrontendAccountCreation.Web.Controllers;
 using FrontendAccountCreation.Web.Controllers.Attributes;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
@@ -18,6 +17,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 /// </summary>
 [Route("re-ex/user")]
 [Feature(FeatureFlags.ReprocessorExporter)]
+[AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
 public class UserController : ControllerBase<ReExAccountCreationSession>
 {
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
@@ -141,7 +141,6 @@ public class UserController : ControllerBase<ReExAccountCreationSession>
     }
 
     [HttpGet]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.Success)]
     [ReprocessorExporterJourneyAccess(PagePath.Success)]
     public async Task<IActionResult> Success()
