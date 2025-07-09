@@ -35,6 +35,13 @@
                     </div>
                 </div>
 
+                @if(Model.IsSoleTrader && Model.IsAnApprovedPerson.Value)
+                {
+                    <div class="govuk-inset-text" id="IsAnApprovedPersonId">
+                        @Localizer["Success.YouAreApprovedPerson"]
+                    </div>
+                }
+
                 @if (Model.ReExCompanyTeamMembers != null)
                 {
                     <h3 class="govuk-notification-banner__heading">

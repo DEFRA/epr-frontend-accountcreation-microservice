@@ -10,4 +10,6 @@ public class ReExOrganisationSuccessViewModel
     public bool IsSoleTrader { get; set; }
 
     public bool IsCompaniesHouseFlow { get; set; }
+
+    public bool? IsAnApprovedPerson { get; set; }
 }
