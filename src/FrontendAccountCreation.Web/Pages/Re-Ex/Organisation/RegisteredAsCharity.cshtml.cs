@@ -22,7 +22,8 @@ namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 public class RegisteredAsCharity(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
-    IStringLocalizer<RegisteredAsCharity> localizer)
+    IStringLocalizer<RegisteredAsCharity> localizer, 
+    IOptions<ExternalUrlsOptions> externalUrlsOptions)
     : OrganisationPageModel<RegisteredAsCharity>(PagePath.RegisteredAsCharity, sessionManager, sharedLocalizer, localizer),
         IRadiosPageModel
 {
@@ -47,6 +48,7 @@ public class RegisteredAsCharity(
 
         var session = await SessionManager.GetSessionAsync(HttpContext.Session);
 
+        ViewData["BackLinkToDisplay"] = externalUrlsOptions.Value.PrnRedirectUrl;
         SelectedValue = session?.IsTheOrganisationCharity?.ToString();
 
         return Page();
@@ -57,6 +59,7 @@ public class RegisteredAsCharity(
         if (!ModelState.IsValid)
         {
             Errors = ErrorStateFromModelState.Create(ModelState);
+            ViewData["BackLinkToDisplay"] = externalUrlsOptions.Value.PrnRedirectUrl;
             return Page();
         }
 
