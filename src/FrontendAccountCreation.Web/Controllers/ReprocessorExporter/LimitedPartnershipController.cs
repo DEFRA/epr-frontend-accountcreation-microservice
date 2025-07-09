@@ -418,54 +418,14 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         if (model.RoleInOrganisation == RoleInOrganisation.NoneOfTheAbove)
         {
-            return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.NonCompaniesHousePartnershipInviteApprovedPerson), PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipInviteApprovedPerson), PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
         }
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
                     PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
     }
 
-    [HttpGet]
-    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
-
-        return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
-        {
-            InviteUserOption = session.InviteUserOption?.ToString(),
-            IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
-        });
-    }
-
-    [HttpPost]
-    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipInviteApprovedPersonViewModel model)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        if (!ModelState.IsValid)
-        {
-            SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
-            model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
-
-            return View(model);
-        }
-
-        session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
-
-        if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
-        {
-            return await SaveSessionAndRedirect(session, nameof(WhatRoleDoTheyHaveWithinThePartnership), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.WhatRoleDoTheyHaveWithinThePartnership);
-        }
-        else
-        {
-            return await SaveSessionAndRedirect(session, "ApprovedPersonController", nameof(ApprovedPersonController.CheckYourDetails), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
-        }
-    }
+    
 
     [HttpGet]
     [Route(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]

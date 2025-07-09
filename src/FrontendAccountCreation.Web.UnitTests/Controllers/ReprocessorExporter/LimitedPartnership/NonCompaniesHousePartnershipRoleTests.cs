@@ -137,7 +137,7 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             result.Should().BeOfType<RedirectToActionResult>();
             var redirectResult = (RedirectToActionResult)result;
 
-            redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipInviteApprovedPerson));
+            redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipInviteApprovedPerson));
 
             _sessionManagerMock.Verify(x => x.SaveSessionAsync(
         It.IsAny<ISession>(),
