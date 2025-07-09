@@ -20,6 +20,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
         private const string ApprovedPersonErrorMessage = "AddAnApprovedPerson.OptionError";
+        private const string ApprovedPersonUnincorporatedErrorMessage = "AddAnApprovedPerson.Unincorporated.OptionError";
 
         public ApprovedPersonController(
             ISessionManager<OrganisationSession> sessionManager,
@@ -95,7 +96,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
+                var message = model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage
+                ModelState.AddModelError(nameof(model.InviteUserOption), message);
+
                 return View(model);
             }
 
@@ -461,7 +464,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsUnincorporated = session.ReExManualInputSession ?.ProducerType == ProducerType.UnincorporatedBody
+                IsUnincorporated = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);
@@ -668,7 +671,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (isUkMainAddress is false)
             {
-                // Sole- trader non-UK 
+                // Sole- trader non-UK
                 return await SaveSessionAndRedirectToPage(
                     session,
                     nameof(ManageControlOrganisation),
@@ -960,9 +963,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 var manualInput = session.ReExManualInputSession;
                 viewModel.ProducerType = manualInput?.ProducerType;
                 viewModel.BusinessAddress = manualInput?.BusinessAddress;
-                viewModel.TradingName = manualInput?.OrganisationName;
+                viewModel.TradingName = session.IsTradingNameDifferent.GetValueOrDefault() ? session.TradingName : manualInput?.OrganisationName;
                 viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
-                viewModel.OrganisationType = OrganisationType.UnincorporatedAssociation;
             }
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
