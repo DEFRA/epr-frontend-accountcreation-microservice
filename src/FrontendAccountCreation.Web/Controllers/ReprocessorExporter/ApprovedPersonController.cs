@@ -96,7 +96,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                var message = model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage
+                var message = model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage;
                 ModelState.AddModelError(nameof(model.InviteUserOption), message);
 
                 return View(model);
