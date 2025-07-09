@@ -20,6 +20,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
         private const string ApprovedPersonErrorMessage = "AddAnApprovedPerson.OptionError";
+        private const string ApprovedPersonUnincorporatedErrorMessage = "AddAnApprovedPerson.Unincorporated.OptionError";
 
         public ApprovedPersonController(
             ISessionManager<OrganisationSession> sessionManager,
@@ -95,7 +96,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
+                if (model.IsUnincorporated)
+                {
+                    ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonUnincorporatedErrorMessage);
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
+                }
+                // ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
                 return View(model);
             }
 
