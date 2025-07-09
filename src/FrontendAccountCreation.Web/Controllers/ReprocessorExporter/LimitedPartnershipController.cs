@@ -418,7 +418,7 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         if (model.RoleInOrganisation == RoleInOrganisation.NoneOfTheAbove)
         {
-            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
         }
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
