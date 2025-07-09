@@ -96,8 +96,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                ModelState.AddModelError(nameof(model.InviteUserOption),
-                    model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage);
+                var message = model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage
+                ModelState.AddModelError(nameof(model.InviteUserOption), message);
 
                 return View(model);
             }
@@ -464,7 +464,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsUnincorporated = session.ReExManualInputSession ?.ProducerType == ProducerType.UnincorporatedBody
+                IsUnincorporated = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);
@@ -671,7 +671,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (isUkMainAddress is false)
             {
-                // Sole- trader non-UK 
+                // Sole- trader non-UK
                 return await SaveSessionAndRedirectToPage(
                     session,
                     nameof(ManageControlOrganisation),
