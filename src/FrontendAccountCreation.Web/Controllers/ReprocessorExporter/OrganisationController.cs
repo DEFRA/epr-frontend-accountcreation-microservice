@@ -23,6 +23,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
+[AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
 public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
@@ -504,7 +505,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     [HttpPost]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.CompaniesHouseNumber)]
     public async Task<IActionResult> CompaniesHouseNumber(ReExCompaniesHouseNumberViewModel model)
     {
@@ -895,7 +895,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
     [HttpGet]
     [Route(PagePath.DeclarationContinue)]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     public async Task<IActionResult> DeclarationContinue()
     {
         var session = await _sessionManager.GetSessionAsync(HttpContext.Session);

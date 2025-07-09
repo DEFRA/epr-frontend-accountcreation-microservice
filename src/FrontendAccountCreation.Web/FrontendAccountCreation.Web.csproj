@@ -122,6 +122,9 @@
       <EmbeddedResource Update="Resources\Views\Unincorporated\CheckYourDetails.cy.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\ApprovedPerson\NonCompaniesHouseYouAreApprovedPerson.en.resx">
+        <SubType>Designer</SubType>
+      </EmbeddedResource>
       <EmbeddedResource Update="Resources\Views\User\ReExAccountFullName.cy.resx">
         <LastGenOutput>FullName.en.Designer.cs</LastGenOutput>
         <Generator>ResXFileCodeGenerator</Generator>
