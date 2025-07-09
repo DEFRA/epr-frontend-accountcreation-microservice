@@ -416,6 +416,11 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
         session.ReExManualInputSession.RoleInOrganisation = model.RoleInOrganisation;
         session.ReExManualInputSession.IsEligibleToBeApprovedPerson = model.RoleInOrganisation != RoleInOrganisation.NoneOfTheAbove;
 
+        if (model.RoleInOrganisation == RoleInOrganisation.NoneOfTheAbove)
+        {
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+        }
+
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
                     PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
     }
