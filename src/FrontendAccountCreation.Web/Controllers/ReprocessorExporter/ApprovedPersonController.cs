@@ -969,9 +969,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 var manualInput = session.ReExManualInputSession;
                 viewModel.ProducerType = manualInput?.ProducerType;
                 viewModel.BusinessAddress = manualInput?.BusinessAddress;
-                viewModel.TradingName = manualInput?.OrganisationName;
+                viewModel.TradingName = session.IsTradingNameDifferent.GetValueOrDefault() ? session.TradingName : manualInput?.OrganisationName;
                 viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
-                viewModel.OrganisationType = OrganisationType.UnincorporatedAssociation;
             }
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
