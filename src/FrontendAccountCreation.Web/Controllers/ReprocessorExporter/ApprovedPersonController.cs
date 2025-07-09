@@ -383,7 +383,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.NonCompaniesHouseTeamMemberDetailsEdit)]
+        [Route(PagePath.NonCompaniesHousePartnershipTheirRoleEdit)]
         public async Task<IActionResult> NonCompaniesHouseTeamMemberDetailsEdit([FromQuery] Guid id)
         {
             SetFocusId(id);

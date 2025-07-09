@@ -10,7 +10,7 @@
 @model NonCompaniesHouseTeamMemberCheckInvitationDetailsViewModel
 
 @{
-    ViewData["Title"] = Localizer["TeamMemberCheckInvitationDetails.Title"];
+    ViewData["Title"] = Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 }
@@ -20,21 +20,21 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-6">
-                    @Localizer["TeamMemberCheckInvitationDetails.Title"]
+                    @Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Title"]
                 </h1>
 
                 <div class="govuk-summary-card">
                     @if (Model.TeamMembers != null && Model.TeamMembers.Count > 0)
                     {
                         <div class="govuk-summary-card__title-wrapper">
-                            <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Help"]</p>
+                            <p class="govuk-body">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Help"]</p>
                         </div>
                     }
                     else
                     {
                         <div class="govuk-summary-card__title-wrapper">
-                            <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.NoInviterRemovedMsg"]</p>
-                            <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.NoInviterContinueMsg"]</p>
+                            <p class="govuk-body">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.NoInviterRemovedMsg"]</p>
+                            <p class="govuk-body">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.NoInviterContinueMsg"]</p>
                         </div>
                     }
 
@@ -46,34 +46,24 @@
                                 <!-- Role of team member -->
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
                                     <dt class="govuk-summary-list__key">
-                                        @Localizer["TeamMemberCheckInvitationDetails.Role"]
+                                        @Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Role"]
                                     </dt>
                                     @if (Model.IsSoleTrader)
                                     {
                                         <dd class="govuk-summary-list__value">
-                                            @Localizer["TeamMemberCheckInvitationDetails.SoleTrader"]
+                                            @Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.SoleTrader"]
                                         </dd>
                                     }
                                     else if (Model.IsNonUk)
                                     {
                                         <dd class="govuk-summary-list__value">
-                                            @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
+                                            @Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.NonUkRole"]
                                         </dd>
                                     }
                                     else if (Model.IsPartnership)
                                     {
                                         <dd class="govuk-summary-list__value">
-                                            @{
-                                                var role = Model.TeamMembers[i].Role;
-                                                string localizedText = role switch
-                                                {
-                                                    ReExTeamMemberRole.IndividualPartner => @Localizer["TeamMemberCheckInvitationDetails.IndividualPartner"].Value,
-                                                    ReExTeamMemberRole.PartnerDirector => @Localizer["TeamMemberCheckInvitationDetails.CompanyDirector"].Value,
-                                                    ReExTeamMemberRole.PartnerCompanySecretary => @Localizer["TeamMemberCheckInvitationDetails.CompanySecretary"].Value,
-                                                    ReExTeamMemberRole.None => @Localizer["TeamMemberCheckInvitationDetails.None"].Value,
-                                                };
-                                            }
-                                            @localizedText
+                                            @Model.GetLocalizedRole(Model.TeamMembers[i].Role, Localizer)
                                         </dd>
                                         <dd class="govuk-summary-list__actions">
                                             <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetailsEdit), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
@@ -86,7 +76,7 @@
 
                                 <!-- Name, Email, Telephone -->
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.FirstName"]</dt>
+                                    <dt class="govuk-summary-list__key">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.FirstName"]</dt>
                                     <dd class="govuk-summary-list__value">@Model.TeamMembers[i].FirstName</dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
@@ -96,21 +86,21 @@
                                     </dd>
                                 </div>
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.LastName"]</dt>
+                                    <dt class="govuk-summary-list__key">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.LastName"]</dt>
                                     <dd class="govuk-summary-list__value">@Model.TeamMembers[i].LastName</dd>
                                 </div>
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.Email"]</dt>
+                                    <dt class="govuk-summary-list__key">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Email"]</dt>
                                     <dd class="govuk-summary-list__value">@Model.TeamMembers[i].Email</dd>
                                 </div>
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMemberCheckInvitationDetails.Telephone"]</dt>
+                                    <dt class="govuk-summary-list__key">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Telephone"]</dt>
                                     <dd class="govuk-summary-list__value">@Model.TeamMembers[i].TelephoneNumber</dd>
                                 </div>
                             </dl>
                         </div>
                         <form asp-controller="ApprovedPerson"
-                              asp-action="NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete"
+                              asp-action="NonCompaniesHouseNonCompaniesHouseTeamMemberCheckInvitationDetailsDelete"
                               method="post">
                             @Html.AntiForgeryToken()
 
@@ -128,13 +118,13 @@
                     <form asp-controller="ApprovedPerson">
                         <div class="govuk-button-group">
                             <!-- goes to check your details -->
-                            <button class="govuk-button" data-module="govuk-button" asp-action="NonCompaniesHouseTeamMemberCheckInvitationDetailsPost">
+                            <button class="govuk-button" data-module="govuk-button" asp-action="NonCompaniesHouseNonCompaniesHouseTeamMemberCheckInvitationDetailsPost">
                                 @SharedLocalizer["Continue"]
                             </button>
                             @if (Model.IsNonUk || Model.IsPartnership)
                             {
                                 <a asp-controller="ApprovedPerson" asp-action="NonCompaniesHousePartnershipTheirRoleAdd" class="govuk-link">
-                                    @Localizer["TeamMemberCheckInvitationDetails.InviteAnotherPerson"]
+                                    @Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.InviteAnotherPerson"]
                                 </a>
                             }
                         </div>

@@ -77,7 +77,7 @@ public static class PagePath
 
     public const string NonCompaniesHouseTeamMemberCheckInvitationDetails = "non-companies-house-check-invitation-details";
     public const string NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete = "non-companies-house-check-invitation-details/delete";
-    public const string NonCompaniesHouseTeamMemberDetailsEdit = "non-companies-house-team-member-details/edit";
+    public const string NonCompaniesHousePartnershipTheirRoleEdit = "non-companies-house-partnership-their-role/edit";
 
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
