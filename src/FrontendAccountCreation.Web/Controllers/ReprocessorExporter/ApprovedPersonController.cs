@@ -374,7 +374,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
-        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(Guid? id)
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -383,6 +383,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var viewModel = new NonCompaniesHouseTeamMemberViewModel();
 
+            Guid? id = GetFocusId();
             if (id.HasValue)
             {
                 var teamMember = session.ReExManualInputSession?.TeamMembers?
@@ -1187,19 +1188,19 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // check the email, but any field other than Id will do to determine if its an existing approved person
             if (approvedPersons[memberIndex].Email?.Length > 0)
             {
-                // goes to "Check invitation details" page which is unavailable because its not been built
+                // goes to "Check invitation details"
                 return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberCheckInvitationDetails),
                     PagePath.NonCompaniesHousePartnershipTheirRole, PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails);
             }
             else
             {
-                // goes to "What are their details?" page, but should use SetFocusId() rather than route values
+                // goes to "What are their details?"
                 return await SaveSessionAndRedirect(session: session,
                     actionName: nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
                     currentPagePath: PagePath.NonCompaniesHousePartnershipTheirRole,
                     nextPagePath: PagePath.NonCompaniesHouseTeamMemberDetails,
                     controllerName: nameof(ApprovedPersonController),
-                    routeValues: new { id = approvedPersons[memberIndex].Id });
+                    routeValues: null);
             }
         }
 
