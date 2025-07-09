@@ -96,7 +96,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                var message = model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage
+                var message = model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage;
                 ModelState.AddModelError(nameof(model.InviteUserOption), message);
 
                 return View(model);
@@ -113,32 +113,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
 
                 case nameof(InviteUserOptions.InviteAnotherPerson):
-                    string actionName, nextPagePath;
-
-                    if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
-                    {
-                        actionName = nameof(MemberPartnership);
-                        nextPagePath = PagePath.MemberPartnership;
-                    }
-                    else if (session.IsCompaniesHouseFlow)
-                    {
-                        actionName = nameof(TeamMemberRoleInOrganisation);
-                        nextPagePath = PagePath.TeamMemberRoleInOrganisation;
-                    }
-                    else
-                    {
-                        if (session.IsUkMainAddress is false || session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
-                        {
-                            return await SaveSessionAndRedirectToPage(
-                                session,
-                                nameof(ManageControlOrganisation),
-                                PagePath.AddAnApprovedPerson,
-                                PagePath.ManageControlOrganisation);
-                        }
-                        actionName = nameof(AreTheyIndividualInCharge);
-                        nextPagePath = PagePath.IndividualIncharge;
-                    }
-
+                    
+                    var (actionName, nextPagePath) = GetInviteAnotherPersonActionNameAndPath(session);
                     return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
 
                 case nameof(InviteUserOptions.InviteLater):
@@ -1226,6 +1202,37 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     controllerName: nameof(ApprovedPersonController),
                     routeValues: new { id = approvedPersons[memberIndex].Id });
             }
+        }
+
+        private static (string, string) GetInviteAnotherPersonActionNameAndPath(OrganisationSession session)
+        {
+            string actionName;
+            string nextPagePath;
+            if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
+            {
+                actionName = nameof(MemberPartnership);
+                nextPagePath = PagePath.MemberPartnership;
+            }
+            else if (session.IsCompaniesHouseFlow)
+            {
+                actionName = nameof(TeamMemberRoleInOrganisation);
+                nextPagePath = PagePath.TeamMemberRoleInOrganisation;
+            }
+            else
+            {
+                if (session.IsUkMainAddress is false || session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
+                {
+                    actionName = nameof(ManageControlOrganisation);
+                    nextPagePath = PagePath.ManageControlOrganisation;
+                }
+                else
+                {
+                    actionName = nameof(AreTheyIndividualInCharge);
+                    nextPagePath = PagePath.IndividualIncharge;
+                }
+            }
+
+            return (actionName, nextPagePath);
         }
     }
 }
