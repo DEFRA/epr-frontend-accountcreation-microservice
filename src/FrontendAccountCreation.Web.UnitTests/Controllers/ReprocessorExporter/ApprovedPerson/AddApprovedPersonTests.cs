@@ -980,9 +980,9 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
 
     [DataTestMethod]
     [DataRow(true, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "SoleTrader error")]
-    [DataRow(false, true, true, "AddAnApprovedPerson.OptionError", DisplayName = "NonUk and ineligible error")]
-    [DataRow(false, true, false, "AddAnApprovedPerson.OptionError", DisplayName = "NonUk and eligible error")]
-    [DataRow(false, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "Default error")]    
+    [DataRow(false, true, true, "AddAnApprovedPerson.Unincorporated.OptionError", DisplayName = "NonUk and ineligible error")]
+    [DataRow(false, true, false, "AddAnApprovedPerson.Unincorporated.OptionError", DisplayName = "NonUk and eligible error")]
+    [DataRow(false, false, false, "AddAnApprovedPerson.Unincorporated.OptionError", DisplayName = "Default error")]    
     public async Task AddApprovedPerson_ModelStateInvalid_SetsCorrectErrorMessage(
         bool isSoleTrader, bool isNonUk, bool isIneligible, string expectedError)
     {
