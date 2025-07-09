@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Text.Json;
-using FrontendAccountCreation.Core.Addresses;
+﻿using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Models;
 using FrontendAccountCreation.Core.Services;
 using FrontendAccountCreation.Core.Services.Dto.Company;
@@ -10,21 +7,23 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
-using FrontendAccountCreation.Web.Controllers.Errors;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
 [Feature(FeatureFlags.AddOrganisationCompanyHouseDirectorJourney)]
 [Route("re-ex/organisation")]
+[AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
 public class OrganisationController : ControllerBase<OrganisationSession>
 {
     private readonly ISessionManager<OrganisationSession> _sessionManager;
@@ -33,7 +32,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     private readonly IReExAccountMapper _reExAccountMapper;
     private readonly ILogger<OrganisationController> _logger;
     private readonly ExternalUrlsOptions _urlOptions;
-    private readonly DeploymentRoleOptions _deploymentRoleOptions;
     private readonly ServiceKeysOptions _serviceKeyOptions;
 
     public OrganisationController(
@@ -41,13 +39,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
          IFacadeService facadeService,
          IReExAccountMapper reExAccountMapper,
          IMultipleOptions multipleOptions,
-         IOptions<DeploymentRoleOptions> deploymentRoleOptions,
          ILogger<OrganisationController> logger) : base(sessionManager)
     {
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
-        _deploymentRoleOptions = deploymentRoleOptions.Value;
         _urlOptions = multipleOptions.UrlOptions;
         _serviceKeyOptions = multipleOptions.ServiceKeysOptions;
         _logger = logger;
@@ -58,62 +54,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public IActionResult InjectError()
     {
         throw new NotImplementedException();
-    }
-
-    [HttpGet]
-    [Route("")]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
-    [Route(PagePath.RegisteredAsCharity)]
-    public async Task<IActionResult> RegisteredAsCharity()
-    {
-        if (_deploymentRoleOptions.IsRegulator())
-        {
-            return RedirectToAction(nameof(ErrorController.ErrorReEx), nameof(ErrorController).Replace("Controller", ""), new
-            {
-                statusCode = (int)HttpStatusCode.Forbidden
-            });
-        }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        YesNoAnswer? isTheOrganisationCharity = null;
-
-        if (session?.IsTheOrganisationCharity.HasValue == true)
-        {
-            isTheOrganisationCharity = session.IsTheOrganisationCharity == true ? YesNoAnswer.Yes : YesNoAnswer.No;
-        }
-
-        return View(new RegisteredAsCharityRequestViewModel
-        {
-            isTheOrganisationCharity = isTheOrganisationCharity
-        });
-    }
-
-    [HttpPost]
-    [Route(PagePath.RegisteredAsCharity)]
-    public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session)
-            ?? new OrganisationSession()
-            {
-                Journey = [PagePath.RegisteredAsCharity]
-            };
-
-        session.IsTheOrganisationCharity = model.isTheOrganisationCharity == YesNoAnswer.Yes;
-
-        if (session.IsTheOrganisationCharity.Value)
-        {
-            return await SaveSessionAndRedirect(session, nameof(NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
-        }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
-        }
     }
 
     [HttpGet]
@@ -162,12 +102,20 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (model.IsTheOrganisationRegistered == YesNoAnswer.Yes)
         {
+            if (session.ReExManualInputSession != null)
+            {
+                session.ReExManualInputSession = null;
+            }
             return await SaveSessionAndRedirect(session, nameof(CompaniesHouseNumber),
                 PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber);
         }
 
         if (await featureManager.IsEnabledAsync(FeatureFlags.AddOrganisationSoleTraderJourney))
         {
+            if (session.ReExCompaniesHouseSession != null)
+            {
+                session.ReExCompaniesHouseSession = null;
+            }
             return await SaveSessionAndRedirect(session, nameof(IsUkMainAddress), PagePath.RegisteredWithCompaniesHouse,
                 PagePath.IsUkMainAddress);
         }
@@ -209,8 +157,23 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
-        session.ReExManualInputSession ??= new ReExManualInputSession();
-        session.ReExManualInputSession.ProducerType = model.IsUkMainAddress == YesNoAnswer.No ? ProducerType.NonUkOrganisation : null;
+        if (!string.IsNullOrWhiteSpace(session.TradingName))
+        {
+            session.TradingName = null;
+        }
+
+        // reset values - in case user coming from back button to change the flow
+        session.UkNation = null; 
+        session.IsIndividualInCharge = null;        
+        session.AreTheyIndividualInCharge = null;
+        session.UserManagesOrControls = null;
+        session.TheyManageOrControlOrganisation = null;
+
+        session.ReExManualInputSession = new ReExManualInputSession()
+        {
+            OrganisationName = null,
+            ProducerType = model.IsUkMainAddress == YesNoAnswer.No ? ProducerType.NonUkOrganisation : null
+        };
 
         return await SaveSessionAndRedirect(session, nameof(OrganisationName),
             PagePath.IsUkMainAddress, PagePath.OrganisationName);
@@ -253,31 +216,41 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
-        string nextAction, nextPagePath;
+        // remove any prev trading name values if answer is Edited
+        if (session.IsTradingNameDifferent.HasValue && 
+            session.IsTradingNameDifferent == false && 
+            !string.IsNullOrWhiteSpace(session.TradingName))
+        {
+            session.TradingName = null;
+        }
 
         if (session.IsTradingNameDifferent == true)
         {
-            nextAction = nameof(TradingName);
-            nextPagePath = PagePath.TradingName;
+            return await SaveSessionAndRedirectToPage(
+                session,
+                nameof(TradingName),
+                PagePath.IsTradingNameDifferent,
+                PagePath.TradingName);
+        }
+
+        session.TradingName = null;
+
+        string nextAction, nextPagePath;
+
+        if (session.IsUkMainAddress == false)
+        {
+            nextAction = nameof(AddressOverseas);
+            nextPagePath = PagePath.AddressOverseas;
+        }
+        else if (session.IsCompaniesHouseFlow)
+        {
+            nextAction = nameof(IsOrganisationAPartner);
+            nextPagePath = PagePath.IsPartnership;
         }
         else
         {
-            session.TradingName = null;
-            if (session.IsUkMainAddress == false)
-            {
-                nextAction = nameof(AddressOverseas);
-                nextPagePath = PagePath.AddressOverseas;
-            }
-            else if (session.IsCompaniesHouseFlow)
-            {
-                nextAction = nameof(IsOrganisationAPartner);
-                nextPagePath = PagePath.IsPartnership;
-            }
-            else
-            {
-                nextAction = nameof(TypeOfOrganisation);
-                nextPagePath = PagePath.TypeOfOrganisation;
-            }
+            nextAction = nameof(TypeOfOrganisation);
+            nextPagePath = PagePath.TypeOfOrganisation;
         }
 
         return await SaveSessionAndRedirect(session, nextAction, PagePath.IsTradingNameDifferent, nextPagePath);
@@ -367,98 +340,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         address.Postcode = model.Postcode;
         address.IsManualAddress = true;
 
-        return await SaveSessionAndRedirect(session, nameof(UkRegulator),
+        return await SaveSessionAndRedirectToPage(session, nameof(UkRegulator),
             PagePath.AddressOverseas, PagePath.UkRegulator);
-    }
-
-    /// <summary>
-    /// Non-Uk organisation flow to select regulator's UK nation.
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    [Route(PagePath.UkRegulator)]
-    [OrganisationJourneyAccess(PagePath.UkRegulator)]
-    public async Task<IActionResult> UkRegulator()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.UkRegulator);
-
-        var viewModel = new UkRegulatorForNonUKViewModel();
-        if (session?.ReExManualInputSession?.UkRegulatorNation != null)
-        {
-            viewModel.UkRegulatorNation = session.ReExManualInputSession.UkRegulatorNation;
-        }
-
-        return View(viewModel);
-    }
-
-    [HttpPost]
-    [Route(PagePath.UkRegulator)]
-    [OrganisationJourneyAccess(PagePath.UkRegulator)]
-    public async Task<IActionResult> UkRegulator(UkRegulatorForNonUKViewModel model)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        if (!ModelState.IsValid)
-        {
-            SetBackLink(session, PagePath.UkRegulator);
-            return View(model);
-        }
-
-        session.ReExManualInputSession ??= new ReExManualInputSession();
-        session.ReExManualInputSession.UkRegulatorNation = model.UkRegulatorNation!;
-
-        return await SaveSessionAndRedirect(session,
-            actionName: nameof(NonUkRoleInOrganisation),
-            currentPagePath: PagePath.UkRegulator,
-            nextPagePath: PagePath.NonUkRoleInOrganisation);
-    }
-
-    [HttpGet]
-    [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
-    public async Task<IActionResult> TradingName()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        SetBackLink(session, PagePath.TradingName);
-
-        var viewModel = new TradingNameViewModel()
-        {
-            TradingName = session?.TradingName,
-            IsCompaniesHouseFlow = session?.IsCompaniesHouseFlow ?? false
-        };
-        return View(viewModel);
-    }
-
-    [HttpPost]
-    [Route(PagePath.TradingName)]
-    [OrganisationJourneyAccess(PagePath.TradingName)]
-    public async Task<IActionResult> TradingName(TradingNameViewModel model)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        if (!ModelState.IsValid)
-        {
-            SetBackLink(session, PagePath.TradingName);
-
-            return View(model);
-        }
-
-        session.TradingName = model.TradingName;
-
-        if (session.IsCompaniesHouseFlow)
-        {
-            return await SaveSessionAndRedirect(session, nameof(IsOrganisationAPartner), PagePath.TradingName, PagePath.IsPartnership);
-        }
-        else if (session.ReExManualInputSession.ProducerType.HasValue && session.ReExManualInputSession.ProducerType.Value == ProducerType.NonUkOrganisation)
-        {
-            return await SaveSessionAndRedirect(session, nameof(AddressOverseas), PagePath.TradingName, PagePath.AddressOverseas);
-        }
-        else
-        {
-            return await SaveSessionAndRedirect(session, nameof(TypeOfOrganisation), PagePath.TradingName, PagePath.TypeOfOrganisation);
-        }
     }
 
     [HttpGet]
@@ -547,7 +430,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         if (session.IsOrganisationAPartnership == true)
         {
-            // TODO: No option ending up same YES pagePath - to be confirmed
+            // both options 'Yes/No' ending up same pagePath
             return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.PartnershipType), PagePath.IsPartnership,
                 PagePath.PartnershipType);
         }
@@ -622,7 +505,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     }
 
     [HttpPost]
-    [AuthorizeForScopes(ScopeKeySection = ConfigKeys.FacadeScope)]
     [Route(PagePath.CompaniesHouseNumber)]
     public async Task<IActionResult> CompaniesHouseNumber(ReExCompaniesHouseNumberViewModel model)
     {
@@ -637,10 +519,9 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             return View(model);
         }
 
-        if (session.ReExCompaniesHouseSession == null)
-        {
-            session.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
-        }
+        session.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
+        session.TradingName = null;
+        session.IsTradingNameDifferent = null;
 
         Company? company;
 
@@ -1061,11 +942,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
     public IActionResult NotImplemented()
     {
         return View();
-    }
-
-    public IActionResult RedirectToStart()
-    {
-        return RedirectToAction(nameof(RegisteredAsCharity));
     }
 
     #region Private Methods

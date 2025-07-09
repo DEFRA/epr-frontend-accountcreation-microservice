@@ -9,7 +9,14 @@
 
     <p class="govuk-body">@Localizer["AddAnApprovedPerson.Introtext1"]</p>
 
-    <p class="govuk-body">@Localizer["AddAnApprovedPerson.IntroInstruction"]:</p>
+    @if (Model.IsUnincorporated)
+    {
+        <p class="govuk-body">@Localizer["AddAnApprovedPerson.Unincorporated.IntroInstruction"]:</p>
+    }
+    else
+    {
+        <p class="govuk-body">@Localizer["AddAnApprovedPerson.IntroInstruction"]:</p>
+    }
 
     <ul class="govuk-list govuk-list--bullet">
         <li>@Localizer["AddAnApprovedPerson.BulletAccreditation"]</li>
@@ -21,7 +28,14 @@
     </p>
 
     <p class="govuk-body">
-        @Localizer["AddAnApprovedPerson.IntroText3"]
+        @if (Model.IsUnincorporated)
+        {
+            @Localizer["AddAnApprovedPerson.Unincorporated.IntroText3"]
+        }
+        else
+        {
+            @Localizer["AddAnApprovedPerson.IntroText3"]
+        }
     </p>
 
     <div class="section">
@@ -39,13 +53,14 @@
         }
         else if (Model.IsUnincorporated)
         {
-            <p class="govuk-body">@Localizer["AddAnApprovedPerson.NonUk.RolesInstruction"]:</p>
+            <p class="govuk-body">@Localizer["AddAnApprovedPerson.Unincorporated.RolesInstruction"]:</p>
+            <p class="govuk-body">@Localizer["AddAnApprovedPerson.ForExample"]:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>@SharedLocalizer["Chairperson"]</li>
                 <li>@SharedLocalizer["Treasurer"]</li>
                 <li>@SharedLocalizer["Secretary"]</li>
                 <li>@SharedLocalizer["Manager"]</li>
-                <li>@SharedLocalizer["Owner"]</li>
+                <li>@SharedLocalizer["Unincorporated.Owner"]</li>
             </ul>
         }
         else // UK
@@ -91,7 +106,14 @@
                 <label class="govuk-label govuk-radios__label"
                        gov-for="InviteUserOption"
                        gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
-                    @Localizer["AddAnApprovedPerson.IWillInviteAnotherApprovedPerson"]
+                    @if (Model.IsUnincorporated)
+                    {
+                        @Localizer["AddAnApprovedPerson.Unincorporated.IWillInviteAnotherApprovedPerson"]
+                    }
+                    else
+                    {
+                        @Localizer["AddAnApprovedPerson.IWillInviteAnotherApprovedPerson"]
+                    }
                 </label>
             </div>
 

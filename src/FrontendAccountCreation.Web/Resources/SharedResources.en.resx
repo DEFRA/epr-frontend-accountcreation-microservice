@@ -210,6 +210,30 @@
   <data name="CompanyDirector" xml:space="preserve">
     <value>Company director</value>
   </data>
+  <data name="England" xml:space="preserve">
+    <value>England</value>
+  </data>
+  <data name="Scotland" xml:space="preserve">
+    <value>Scotland</value>
+  </data>
+  <data name="Wales" xml:space="preserve">
+    <value>Wales</value>
+  </data>
+  <data name="NorthernIreland" xml:space="preserve">
+    <value>Northern Ireland</value>
+  </data>
+  <data name="Yes_AreThey" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No_AreThey" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Yes_IsHeSheIt" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No_IsHeSheIt" xml:space="preserve">
+    <value>No</value>
+  </data>
   <data name="NotSure" xml:space="preserve">
     <value>Not sure</value>
   </data>
@@ -225,7 +249,7 @@
   <data name="Manager" xml:space="preserve">
     <value>manager</value>
   </data>
-  <data name="Owner" xml:space="preserve">
+  <data name="Unincorporated.Owner" xml:space="preserve">
     <value>owner</value>
   </data>
 </root>

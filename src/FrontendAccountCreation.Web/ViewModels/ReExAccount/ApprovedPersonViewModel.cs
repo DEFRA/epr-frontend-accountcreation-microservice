@@ -10,5 +10,6 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
         public bool IsLimitedPartnership { get; set; }
         public bool IsApprovedUser { get; set; }
         public ProducerType? ProducerType { get; set; }
+        public bool? IsUkMainAddress { get; set; }
     }
 }

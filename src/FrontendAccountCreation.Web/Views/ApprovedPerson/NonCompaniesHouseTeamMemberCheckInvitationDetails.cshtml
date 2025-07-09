@@ -27,12 +27,11 @@
                     @if (Model.TeamMembers != null && Model.TeamMembers.Count > 0)
                     {
                         <div class="govuk-summary-card__title-wrapper">
-                            @if (Model.IsUnincorporated) {
-                                <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Unincorporated.Help"]</p>
-                            }
-                            else {
-                                <p class="govuk-body">@Localizer["TeamMemberCheckInvitationDetails.Help"]</p>
-                            }
+                            <p class="govuk-body">
+                                @(Model.IsUnincorporated
+                                    ? Localizer["TeamMemberCheckInvitationDetails.Unincorporated.Help"]
+                                    : Localizer["TeamMemberCheckInvitationDetails.Help"])
+                            </p>
                         </div>
                     }
                     else
@@ -53,25 +52,20 @@
                                     <dt class="govuk-summary-list__key">
                                         @Localizer["TeamMemberCheckInvitationDetails.Role"]
                                     </dt>
-                                    @if (Model.IsSoleTrader)
-                                    {
-                                        <dd class="govuk-summary-list__value">
+                                    <dd class="govuk-summary-list__value">
+                                        @if (Model.IsSoleTrader)
+                                        {
                                             @Localizer["TeamMemberCheckInvitationDetails.SoleTrader"]
-                                        </dd>
-                                    }
-                                    @if (Model.IsNonUk)
-                                    {
-                                        <dd class="govuk-summary-list__value">
+                                        }
+                                        else if (Model.IsNonUk)
+                                        {
                                             @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
-                                        </dd>
-                                    }
-                                    @if (Model.IsUnincorporated)
-                                    {
-                                        <dd class="govuk-summary-list__value">
+                                        }
+                                        else if (Model.IsUnincorporated)
+                                        {
                                             @Localizer["TeamMemberCheckInvitationDetails.Unincorporated"]
-                                        </dd>
-                                    }
-                                   
+                                        }
+                                    </dd>
                                 </div>
 
                                 <!-- Name, Email, Telephone -->
@@ -124,7 +118,7 @@
                             @if (Model.IsNonUk || Model.IsUnincorporated)
                             {
                                 <input type="hidden" name="invitePerson" value="true" />
-                                <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-action="ManageControlOrganisation" formmethod="get" type="submit">
+                                <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-page="@PageName.Base/ManageControlOrganisation" formmethod="get" type="submit">
                                 @Localizer["TeamMemberCheckInvitationDetails.InviteAnotherPerson"]
                              </button>
                             }
