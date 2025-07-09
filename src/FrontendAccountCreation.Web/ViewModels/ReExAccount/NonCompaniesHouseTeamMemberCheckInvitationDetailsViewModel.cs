@@ -10,6 +10,9 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
 
         public bool IsNonUk { get; set; }
 
+        public bool IsUnincorporated { get; set; }
+
+
         public List<ReExCompanyTeamMember>? TeamMembers { get; set; }
     }
 }

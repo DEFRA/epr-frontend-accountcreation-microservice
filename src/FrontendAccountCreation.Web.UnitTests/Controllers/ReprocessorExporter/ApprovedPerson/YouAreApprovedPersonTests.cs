@@ -193,6 +193,22 @@ public class YouAreApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
+    public async Task Post_YouAreApprovedPerson_UnIncorporatedFlow_RedirectsTo_ManageControlOrganisationPage()
+    {
+        // Arrange 
+        var session = new OrganisationSession { ReExManualInputSession = new ReExManualInputSession() { ProducerType = Core.Sessions.ProducerType.UnincorporatedBody} };
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.YouAreApprovedPerson(inviteApprovedPerson: true, isUkMainAddress: true);
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
+        redirectResult.PageName.Should().Contain(nameof(ManageControlOrganisation));
+    }
+
+    [TestMethod]
     public async Task Post_YouAreApprovedPerson_InviteApprovedPersonFalse_RedirectsToCheckYourDetails()
     {
         // Arrange

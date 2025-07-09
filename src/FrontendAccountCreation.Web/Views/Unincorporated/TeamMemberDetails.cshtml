@@ -1,0 +1,66 @@
+﻿@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated.ReExTeamMemberDetailsViewModel
+
+@{
+    ViewData["Title"] = Localizer["ReExTeamMemberDetails.Title"];
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form method="post" asp-controller="Unincorporated" asp-action="TeamMemberDetails">
+
+                    <h1 class="govuk-heading-l">@Localizer["ReExTeamMemberDetails.Title"]</h1>
+
+                    @Html.HiddenFor(x => x.Id)
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" asp-for="FirstName">
+                            @Localizer["ReExTeamMemberDetails.FirstName"]
+                        </label>
+                        <input class="govuk-input" asp-for="FirstName" type="text" />
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" asp-for="LastName">
+                            @Localizer["ReExTeamMemberDetails.LastName"]
+                        </label>
+                        <input class="govuk-input" asp-for="LastName" type="text" />
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" asp-for="Email">
+                            @Localizer["ReExTeamMemberDetails.Email"]
+                        </label>
+                        <div class="govuk-hint">
+                            @Localizer["ReExTeamMemberDetails.Hint.Email"]
+                        </div>
+                        <input class="govuk-input" asp-for="Email" type="email" />
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" asp-for="Telephone">
+                            @Localizer["ReExTeamMemberDetails.Telephone"]
+                        </label>
+                        <div class="govuk-hint">
+                            @Localizer["ReExTeamMemberDetails.Hint.Telephone"]
+                        </div>
+                        <input class="govuk-input" asp-for="Telephone" type="tel" />
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button" type="submit">
+                        @SharedLocalizer["Continue"]
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
