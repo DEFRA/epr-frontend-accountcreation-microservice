@@ -20,7 +20,8 @@ public class TradingName(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
     IStringLocalizer<TradingName> localizer)
-    : OrganisationPageModel<TradingName>(sessionManager, sharedLocalizer, localizer), ISingleTextboxPageModel
+    : OrganisationPageModel<TradingName>(PagePath.TradingName, sessionManager, sharedLocalizer, localizer),
+        ISingleTextboxPageModel
 {
     public string? TextBoxLabel => null;
 
@@ -34,9 +35,7 @@ public class TradingName(
 
     public async Task<IActionResult> OnGet()
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
-
-        SetBackLink(session, PagePath.TradingName);
+        var session = await SetupPage();
 
         TextBoxValue = session.TradingName;
 
@@ -45,12 +44,11 @@ public class TradingName(
 
     public async Task<IActionResult> OnPost()
     {
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await SetupPage();
 
         if (!ModelState.IsValid)
         {
-            SetBackLink(session, PagePath.TradingName);
-
+            Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
         }
 
@@ -73,11 +71,6 @@ public class TradingName(
             nextPage = PagePath.TypeOfOrganisation;
         }
 
-        return await SaveSessionAndRedirect(
-            session,
-            nameof(OrganisationController),
-            actionName,
-            PagePath.TradingName,
-            nextPage);
+        return await SaveSessionAndRedirect(session, nameof(OrganisationController), actionName, nextPage);
     }
 }

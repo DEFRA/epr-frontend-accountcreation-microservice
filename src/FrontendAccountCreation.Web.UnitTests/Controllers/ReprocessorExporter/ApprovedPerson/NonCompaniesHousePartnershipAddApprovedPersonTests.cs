@@ -4,11 +4,9 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
-using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Threading.Tasks;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
@@ -103,7 +101,7 @@ public class NonCompaniesHousePartnershipAddApprovedPersonTests : ApprovedPerson
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
-        redirect.ActionName.Should().Be("YouAreApprovedPerson");
+        redirect.ActionName.Should().Be("NonCompaniesHouseYouAreApprovedPerson");
         _orgSessionMock.IsApprovedUser.Should().BeTrue();
     }
 
