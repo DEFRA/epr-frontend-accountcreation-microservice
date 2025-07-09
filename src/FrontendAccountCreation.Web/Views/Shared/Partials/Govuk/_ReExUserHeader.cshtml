@@ -1,4 +1,6 @@
-﻿<header role="banner">
+﻿@model FrontendAccountCreation.Web.Configs.ExternalUrlsOptions
+
+<header role="banner">
     <div class="govuk-header epr-header epr-header--with-additional-navigation" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
             <div class="govuk-header__logo">
@@ -15,7 +17,7 @@
             </div>
             <div class="govuk-header__content">
                 @* todo: where this will link to hasn't been decided yet *@
-                <a class="epr-header__service-name epr-header__service-name--linked" href="#">
+                <a class="epr-header__service-name epr-header__service-name--linked" href="@Model.PrnRedirectUrl">
                     @SharedLocalizer["EprForPackaging"]
                 </a>
                 <nav class="epr-sign-out-nav">
