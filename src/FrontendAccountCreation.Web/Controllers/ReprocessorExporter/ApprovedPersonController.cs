@@ -113,33 +113,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
 
                 case nameof(InviteUserOptions.InviteAnotherPerson):
-                    string actionName, nextPagePath;
-
-                    if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
-                    {
-                        actionName = nameof(MemberPartnership);
-                        nextPagePath = PagePath.MemberPartnership;
-                    }
-                    else if (session.IsCompaniesHouseFlow)
-                    {
-                        actionName = nameof(TeamMemberRoleInOrganisation);
-                        nextPagePath = PagePath.TeamMemberRoleInOrganisation;
-                    }
-                    else
-                    {
-                        if (session.IsUkMainAddress is false || session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
-                        {
-                            return await SaveSessionAndRedirectToPage(
-                                session,
-                                nameof(ManageControlOrganisation),
-                                PagePath.AddAnApprovedPerson,
-                                PagePath.ManageControlOrganisation);
-                        }
-                        actionName = nameof(AreTheyIndividualInCharge);
-                        nextPagePath = PagePath.IndividualIncharge;
-                    }
-
-                    return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
+                    return await GetInviteAnotherPersonActionResult(session);
 
                 case nameof(InviteUserOptions.InviteLater):
                     return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
@@ -1226,6 +1200,36 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     controllerName: nameof(ApprovedPersonController),
                     routeValues: new { id = approvedPersons[memberIndex].Id });
             }
+        }
+
+        private async Task<IActionResult> GetInviteAnotherPersonActionResult(OrganisationSession session)
+        {
+            string actionName, nextPagePath;
+            if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
+            {
+                actionName = nameof(MemberPartnership);
+                nextPagePath = PagePath.MemberPartnership;
+            }
+            else if (session.IsCompaniesHouseFlow)
+            {
+                actionName = nameof(TeamMemberRoleInOrganisation);
+                nextPagePath = PagePath.TeamMemberRoleInOrganisation;
+            }
+            else
+            {
+                if (session.IsUkMainAddress is false || session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
+                {
+                    return await SaveSessionAndRedirectToPage(
+                        session,
+                        nameof(ManageControlOrganisation),
+                        PagePath.AddAnApprovedPerson,
+                        PagePath.ManageControlOrganisation);
+                }
+                actionName = nameof(AreTheyIndividualInCharge);
+                nextPagePath = PagePath.IndividualIncharge;
+            }
+
+            return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
         }
     }
 }
