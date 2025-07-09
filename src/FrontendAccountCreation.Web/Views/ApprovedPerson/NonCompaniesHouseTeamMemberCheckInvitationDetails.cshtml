@@ -54,13 +54,34 @@
                                             @Localizer["TeamMemberCheckInvitationDetails.SoleTrader"]
                                         </dd>
                                     }
-                                    @if (Model.IsNonUk)
+                                    else if (Model.IsNonUk)
                                     {
                                         <dd class="govuk-summary-list__value">
                                             @Localizer["TeamMemberCheckInvitationDetails.NonUkRole"]
                                         </dd>
                                     }
-                                   
+                                    else if (Model.IsPartnership)
+                                    {
+                                        <dd class="govuk-summary-list__value">
+                                            @{
+                                                var role = Model.TeamMembers[i].Role;
+                                                string localizedText = role switch
+                                                {
+                                                    ReExTeamMemberRole.IndividualPartner => @Localizer["TeamMemberCheckInvitationDetails.IndividualPartner"].Value,
+                                                    ReExTeamMemberRole.PartnerDirector => @Localizer["TeamMemberCheckInvitationDetails.CompanyDirector"].Value,
+                                                    ReExTeamMemberRole.PartnerCompanySecretary => @Localizer["TeamMemberCheckInvitationDetails.CompanySecretary"].Value,
+                                                    ReExTeamMemberRole.None => @Localizer["TeamMemberCheckInvitationDetails.None"].Value,
+                                                };
+                                            }
+                                            @localizedText
+                                        </dd>
+                                        <dd class="govuk-summary-list__actions">
+                                            <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetailsEdit), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
+                                                @SharedLocalizer["Change"]
+                                                <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
+                                            </a>
+                                        </dd>
+                                    }
                                 </div>
 
                                 <!-- Name, Email, Telephone -->
@@ -110,12 +131,11 @@
                             <button class="govuk-button" data-module="govuk-button" asp-action="NonCompaniesHouseTeamMemberCheckInvitationDetailsPost">
                                 @SharedLocalizer["Continue"]
                             </button>
-                            @if (Model.IsNonUk)
+                            @if (Model.IsNonUk || Model.IsPartnership)
                             {
-                                <input type="hidden" name="invitePerson" value="true" />
-                                <button class="govuk-button govuk-button--secondary" data-module="govuk-button" asp-page="@PageName.Base/ManageControlOrganisation" formmethod="get" type="submit">
-                                @Localizer["TeamMemberCheckInvitationDetails.InviteAnotherPerson"]
-                             </button>
+                                <a asp-controller="ApprovedPerson" asp-action="NonCompaniesHousePartnershipTheirRoleAdd" class="govuk-link">
+                                    @Localizer["TeamMemberCheckInvitationDetails.InviteAnotherPerson"]
+                                </a>
                             }
                         </div>
                     </form>

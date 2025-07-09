@@ -372,6 +372,29 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipTheirRoleAdd)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipTheirRoleAdd()
+        {
+            DeleteFocusId();
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole),
+                PagePath.NonCompaniesHousePartnershipTheirRole, PagePath.NonCompaniesHousePartnershipTheirRole);
+        }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHouseTeamMemberDetailsEdit)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetailsEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session,
+                nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole),
+                PagePath.NonCompaniesHousePartnershipTheirRole, null);
+        }
+
+        [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
         public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(Guid? id)
@@ -458,7 +481,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
-                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsPartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
             };
 
             return View(model);
@@ -625,7 +649,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails),
                 PagePath.TeamMembersCheckInvitationDetails, null);
         }
-
+            
         [HttpGet]
         [Route(PagePath.YouAreApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]

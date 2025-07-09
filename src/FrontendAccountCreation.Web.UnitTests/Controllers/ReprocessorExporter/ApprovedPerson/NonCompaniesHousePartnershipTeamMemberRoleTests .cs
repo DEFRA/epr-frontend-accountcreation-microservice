@@ -641,4 +641,30 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
         _orgSessionMock.ReExManualInputSession.TeamMembers[0].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
         _orgSessionMock.ReExManualInputSession.TeamMembers[1].Role.Should().Be(ReExTeamMemberRole.Director);
     }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipTheirRoleAdd_RedirectsToTeamMemberRole()
+    {
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipTheirRoleAdd();
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole));
+        redirect.RouteValues.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHouseTeamMemberDetailsEdit_RedirectsToDetailsWithId()
+    {
+        // Arrange
+        var teamMemberId = Guid.NewGuid();
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetailsEdit(teamMemberId);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole));
+    }
 }

@@ -156,6 +156,21 @@
   <data name="TeamMemberCheckInvitationDetails.NonUkRole" xml:space="preserve">
     <value>Manage or control business</value>
   </data>
+  <data name="TeamMemberCheckInvitationDetails.PartnershipRole" xml:space="preserve">
+    <value>Manage or control Partnership</value>
+  </data>
+  <data name="TeamMemberCheckInvitationDetails.IndividualPartner" xml:space="preserve">
+    <value>Individual partner within the partnership</value>
+  </data>
+  <data name="TeamMemberCheckInvitationDetails.CompanyDirector" xml:space="preserve">
+    <value>Company director of a corporate partner within the partnership</value>
+  </data>
+  <data name="TeamMemberCheckInvitationDetails.CompanySecretary" xml:space="preserve">
+    <value>Company secretary of a corporate partner within the partnership</value>
+  </data>
+    <data name="TeamMemberCheckInvitationDetails.None" xml:space="preserve">
+    <value>None of the above</value>
+  </data>
   <data name="TeamMemberCheckInvitationDetails.NoInviterContinueMsg" xml:space="preserve">
     <value>You can continue to add your organisation without inviting another eligible person at this stage.</value>
   </data>
