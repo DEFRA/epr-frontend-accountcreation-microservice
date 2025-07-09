@@ -96,15 +96,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                if (model.IsUnincorporated)
-                {
-                    ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonUnincorporatedErrorMessage);
-                }
-                else
-                {
-                    ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
-                }
-                // ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
+                var message = model.IsUnincorporated ? ApprovedPersonUnincorporatedErrorMessage : ApprovedPersonErrorMessage
+                ModelState.AddModelError(nameof(model.InviteUserOption), message);
+
                 return View(model);
             }
 
@@ -470,7 +464,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsUnincorporated = session.ReExManualInputSession ?.ProducerType == ProducerType.UnincorporatedBody
+                IsUnincorporated = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);
@@ -677,7 +671,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (isUkMainAddress is false)
             {
-                // Sole- trader non-UK 
+                // Sole- trader non-UK
                 return await SaveSessionAndRedirectToPage(
                     session,
                     nameof(ManageControlOrganisation),
@@ -1090,20 +1084,55 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
-            if (model.InviteUserOption == nameof(InviteUserOptions.BeAnApprovedPerson))
+            switch (model.InviteUserOption)
             {
-                session.IsApprovedUser = true;
-                return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.YouAreApprovedPerson); // to do: new non companies house view
-            }
-            else if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
-            {
-                return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
-            }
-            else //(model.InviteUserOption == nameof(InviteUserOptions.InviteLater))
-            {
-                return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
+                case nameof(InviteUserOptions.BeAnApprovedPerson):
+                    session.IsApprovedUser = true;
+                    return await SaveSessionAndRedirect(session, nameof(NonCompaniesHouseYouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+                case nameof(InviteUserOptions.InviteAnotherPerson):
+                    return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
+                default:
+                    return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
             }
         }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHouseYouAreApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+            await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
+
+            var id = GetFocusId();
+            if (id.HasValue)
+            {
+                SetFocusId(id.Value);
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [Route(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHouseYouAreApprovedPerson(bool inviteApprovedPerson)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+
+            var nextPage = inviteApprovedPerson
+                ? PagePath.NonCompaniesHousePartnershipTheirRole
+                : PagePath.CheckYourDetails;
+
+            var nextAction = inviteApprovedPerson
+                ? nameof(NonCompaniesHousePartnershipTeamMemberRole)
+                : nameof(CheckYourDetails);
+
+            return await SaveSessionAndRedirect(session, nextAction, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, nextPage);
+        }
+
 
         [HttpGet]
         [Route(PagePath.NonCompaniesHousePartnershipTheirRole)]

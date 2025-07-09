@@ -23,7 +23,8 @@ public class RegisteredAsCharity(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
     IStringLocalizer<RegisteredAsCharity> localizer)
-    : OrganisationPageModel<RegisteredAsCharity>(sessionManager, sharedLocalizer, localizer), IRadiosPageModel
+    : OrganisationPageModel<RegisteredAsCharity>(PagePath.RegisteredAsCharity, sessionManager, sharedLocalizer, localizer),
+        IRadiosPageModel
 {
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo_IsHeSheIt(SharedLocalizer);
 
@@ -70,9 +71,9 @@ public class RegisteredAsCharity(
         if (session.IsTheOrganisationCharity == true)
         {
             return await SaveSessionAndRedirect(session, nameof(OrganisationController),
-                nameof(OrganisationController.NotAffected), PagePath.RegisteredAsCharity, PagePath.NotAffected);
+                nameof(OrganisationController.NotAffected), PagePath.NotAffected);
         }
         return await SaveSessionAndRedirect(session, nameof(OrganisationController),
-            nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse);
+            nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredWithCompaniesHouse);
     }
 }
