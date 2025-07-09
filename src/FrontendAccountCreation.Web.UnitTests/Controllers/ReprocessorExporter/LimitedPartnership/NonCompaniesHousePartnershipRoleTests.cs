@@ -137,18 +137,18 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
             result.Should().BeOfType<RedirectToActionResult>();
             var redirectResult = (RedirectToActionResult)result;
 
-            redirectResult.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson));
+            redirectResult.ActionName.Should().Be(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipInviteApprovedPerson));
 
             _sessionManagerMock.Verify(x => x.SaveSessionAsync(
         It.IsAny<ISession>(),
         It.Is<OrganisationSession>(s =>
             s.ReExManualInputSession.RoleInOrganisation == role &&
             s.ReExManualInputSession.IsEligibleToBeApprovedPerson == false &&
-            s.Journey.Contains(PagePath.NonCompaniesHousePartnershipAddApprovedPerson)
+            s.Journey.Contains(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)
         )),
         Times.Once);
 
-            _orgSessionMock.Journey.Should().HaveElementAt(0, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
+            _orgSessionMock.Journey.Should().HaveElementAt(2, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
         }
     }
 }
