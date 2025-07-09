@@ -113,9 +113,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
 
                 case nameof(InviteUserOptions.InviteAnotherPerson):
-                    
-                    var (actionName, nextPagePath) = GetInviteAnotherPersonActionNameAndPath(session);
-                    return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
+                    return await GetInviteAnotherPersonActionResult(session);
 
                 case nameof(InviteUserOptions.InviteLater):
                     return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
@@ -1204,10 +1202,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
         }
 
-        private static (string, string) GetInviteAnotherPersonActionNameAndPath(OrganisationSession session)
+        private async Task<IActionResult> GetInviteAnotherPersonActionResult(OrganisationSession session)
         {
-            string actionName;
-            string nextPagePath;
+            string actionName, nextPagePath;
             if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
             {
                 actionName = nameof(MemberPartnership);
@@ -1222,17 +1219,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 if (session.IsUkMainAddress is false || session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
                 {
-                    actionName = nameof(ManageControlOrganisation);
-                    nextPagePath = PagePath.ManageControlOrganisation;
+                    return await SaveSessionAndRedirectToPage(
+                        session,
+                        nameof(ManageControlOrganisation),
+                        PagePath.AddAnApprovedPerson,
+                        PagePath.ManageControlOrganisation);
                 }
-                else
-                {
-                    actionName = nameof(AreTheyIndividualInCharge);
-                    nextPagePath = PagePath.IndividualIncharge;
-                }
+                actionName = nameof(AreTheyIndividualInCharge);
+                nextPagePath = PagePath.IndividualIncharge;
             }
 
-            return (actionName, nextPagePath);
+            return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
         }
     }
 }
