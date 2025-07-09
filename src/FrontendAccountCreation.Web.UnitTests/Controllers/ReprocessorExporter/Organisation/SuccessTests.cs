@@ -179,7 +179,6 @@ public class SuccessTests : OrganisationTestBase
 		var session = new OrganisationSession
 		{
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
-            InviteUserOption = InviteUserOptions.BeAnApprovedPerson,
             ReExManualInputSession = new ReExManualInputSession
 			{
 				ProducerType = ProducerType.SoleTrader,
@@ -211,7 +210,6 @@ public class SuccessTests : OrganisationTestBase
 		viewModel.ReExCompanyTeamMembers.Should().HaveCount(1);
 		viewModel.ReExCompanyTeamMembers![0].FirstName.Should().Be("Bob");
 		viewModel.IsSoleTrader.Should().BeTrue();
-        viewModel.IsAnApprovedPerson.Should().BeTrue();
 	}
 
 	[TestMethod]
@@ -221,7 +219,6 @@ public class SuccessTests : OrganisationTestBase
 		var session = new OrganisationSession
 		{
             OrganisationType = OrganisationType.NonCompaniesHouseCompany,
-            InviteUserOption = InviteUserOptions.InviteLater,
             ReExManualInputSession = new ReExManualInputSession
 			{
 				ProducerType = ProducerType.SoleTrader,
@@ -244,7 +241,6 @@ public class SuccessTests : OrganisationTestBase
 		viewModel.CompanyName.Should().Be("Solo Ltd");
 		viewModel.ReExCompanyTeamMembers.Should().BeNullOrEmpty();
 		viewModel.IsSoleTrader.Should().BeTrue();
-        viewModel.IsAnApprovedPerson.Should().BeFalse();
 	}
 
 	[TestMethod]

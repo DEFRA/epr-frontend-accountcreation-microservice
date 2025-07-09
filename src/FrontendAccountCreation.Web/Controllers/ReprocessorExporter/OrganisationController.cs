@@ -785,16 +785,11 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         if (session.IsIndividualInCharge == true)
         {
             session.ReExManualInputSession.TeamMembers = null;
-            session.InviteUserOption = InviteUserOptions.BeAnApprovedPerson;
             return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
                 currentPagePath: PagePath.SoleTrader,
                 nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
-        }
-        else
-        {
-            session.InviteUserOption = null;
         }
 
         //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
@@ -924,7 +919,6 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             viewModel.IsSoleTrader = manualInput?.ProducerType == ProducerType.SoleTrader;
             viewModel.CompanyName = manualInput?.OrganisationName;
             viewModel.ReExCompanyTeamMembers = manualInput?.TeamMembers;
-            viewModel.IsAnApprovedPerson = session.InviteUserOption == InviteUserOptions.BeAnApprovedPerson;
         }
 
         return View(viewModel);

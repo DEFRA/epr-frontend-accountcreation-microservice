@@ -147,7 +147,4 @@
   <data name="Success.ApprovedPersonsInvite.Heading" xml:space="preserve">
     <value>(W)Approved persons invited</value>
   </data>
-  <data name="Success.YouAreApprovedPerson" xml:space="preserve">
-    <value>(W)You are the approved person for your organisation.</value>
-  </data>
 </root>
