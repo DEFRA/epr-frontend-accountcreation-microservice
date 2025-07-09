@@ -374,7 +374,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
-        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(Guid? id)
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -383,6 +383,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var viewModel = new NonCompaniesHouseTeamMemberViewModel();
 
+            Guid? id = GetFocusId();
             if (id.HasValue)
             {
                 var teamMember = session.ReExManualInputSession?.TeamMembers?
