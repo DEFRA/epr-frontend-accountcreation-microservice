@@ -128,7 +128,7 @@ public class NonCompaniesHousePartnershipInviteApprovedPersonTests : ApprovedPer
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
         var redirect = (RedirectToActionResult)result;
-        redirect.ActionName.Should().Be(nameof(LimitedPartnershipController.WhatRoleDoTheyHaveWithinThePartnership));
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHousePartnershipTeamMemberRole));
     }
 
     [TestMethod]

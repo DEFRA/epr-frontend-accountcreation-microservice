@@ -1237,8 +1237,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
-            {
-                return await SaveSessionAndRedirect(session, nameof(LimitedPartnershipController), nameof(LimitedPartnershipController.WhatRoleDoTheyHaveWithinThePartnership), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.WhatRoleDoTheyHaveWithinThePartnership);
+            {           
+                return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
             }
             else
             {

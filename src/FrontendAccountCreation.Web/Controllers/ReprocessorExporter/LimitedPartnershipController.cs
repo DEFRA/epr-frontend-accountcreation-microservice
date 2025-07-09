@@ -425,17 +425,6 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
                     PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
     }
 
-    
-
-    [HttpGet]
-    [Route(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
-    [OrganisationJourneyAccess(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
-    public async Task<IActionResult> WhatRoleDoTheyHaveWithinThePartnership()
-    {
-        await Task.Yield();
-        throw new NotImplementedException("This feature has not been implemented yet.");
-    }
-
     [HttpGet]
     [Route(PagePath.NonCompaniesHousePartnershipType)]
     [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipType)]
