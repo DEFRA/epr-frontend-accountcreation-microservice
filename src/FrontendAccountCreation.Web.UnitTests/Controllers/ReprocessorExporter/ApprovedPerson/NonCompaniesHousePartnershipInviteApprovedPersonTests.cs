@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.ApprovedPerson;
 
 [TestClass]
-public class NonCompaniesHousePartnershipInviteTest : ApprovedPersonTestBase
+public class NonCompaniesHousePartnershipInviteApprovedPersonTests : ApprovedPersonTestBase
 {
     private OrganisationSession _orgSessionMock = null!;
 
