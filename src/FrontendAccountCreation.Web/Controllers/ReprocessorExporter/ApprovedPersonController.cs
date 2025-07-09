@@ -193,14 +193,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (model.AreTheyIndividualInCharge.HasValue && model.AreTheyIndividualInCharge == YesNoAnswer.Yes)
             {
-                //// Sole-Trader UK address flow can only add 1 AP
-                //if (session.IsUkMainAddress == true && 
-                //    session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader &&
-                //    session.ReExManualInputSession?.TeamMembers?.Count > 0)
-                //{
-                //    session.ReExManualInputSession.TeamMembers.Clear();
-                //}
-
                 return await SaveSessionAndRedirect(session,
                     nameof(NonCompaniesHouseTeamMemberDetails),
                     PagePath.IndividualIncharge,
@@ -437,7 +429,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else
             {
-                // Sole-Trader UK address flow can only add 1 AP
+                // Sole-Trader UK address flow can only add 1 AP - clears any existing one before adding new
                 if (session.IsUkMainAddress == true &&
                     session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader &&
                     session.ReExManualInputSession?.TeamMembers?.Count > 0)

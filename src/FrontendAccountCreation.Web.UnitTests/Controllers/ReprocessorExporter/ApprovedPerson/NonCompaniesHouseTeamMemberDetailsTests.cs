@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
@@ -337,4 +338,107 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
         updated.LastName.Should().Be("User");
     }
 
+    [TestMethod]
+    public async Task Post_NonCompaniesHousePartnershipTeamMember_OnlyAdds_OneTeamMember_ForSoleTrader_UKAddressFlow()
+    {
+        // Arrange
+        _orgSessionMock.IsUkMainAddress = true;
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.SoleTrader,
+            TeamMembers =
+            [
+                new() {
+                    FirstName = "John",
+                    LastName = "Doe",
+                    Email = "director@gmail.com"
+                },
+                new() {
+                    FirstName = "Teddy",
+                    LastName = "Smith",
+                    Id = Guid.NewGuid(),
+                    Email = "teddy.smith@gmail.com"
+                }
+            ]
+        };
+
+        var model = new NonCompaniesHouseTeamMemberViewModel
+        {
+            FirstName = "Teddy",
+            LastName = "Smith",
+            Telephone = "1234567890",
+            Email = "teddy.smith@gmail.com"
+        };
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberCheckInvitationDetails));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.ReExManualInputSession.TeamMembers.Count == 1 &&
+                s.ReExManualInputSession.TeamMembers[0].FirstName == "Teddy"
+            )),
+            Times.Once);
+    }
+
+
+    [TestMethod]
+    [DataRow(null, null, 2)]
+    [DataRow(false, ProducerType.SoleTrader, 2)]
+    [DataRow(true, null, 2)]
+    [DataRow(true, ProducerType.SoleTrader, 1)]
+    [DataRow(true, ProducerType.SoleTrader, 0)] // set TeamMembers to null in session using expectedCount = 0
+    [DataRow(true, ProducerType.LimitedPartnership, 2)]
+    [DataRow(true, ProducerType.SoleTrader, 1, true)]
+    public async Task Post_NonCompaniesHousePartnershipTeamMember_Adds_OneTeamMember_ForSoleTrader_NonUKAddressFlow(bool? isUkMainAddress, ProducerType? producerType, int expectedCount, bool isCountZero = false)
+    {
+        // Arrange
+        _orgSessionMock.IsUkMainAddress = isUkMainAddress;
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
+        {
+            ProducerType = producerType,
+            TeamMembers = isCountZero? [] :
+            [
+                new()
+                {
+                    FirstName = "John",
+                    LastName = "Doe",
+                    Email = "director@gmail.com"
+                }
+            ]
+        };
+
+        if (expectedCount == 0)
+        {
+            _orgSessionMock.ReExManualInputSession.TeamMembers = null;
+            expectedCount = 1;
+        }
+
+        var model = new NonCompaniesHouseTeamMemberViewModel
+        {
+            FirstName = "Teddy",
+            LastName = "Smith",
+            Id = Guid.NewGuid(),
+            Email = "teddy.smith@gmail.com"
+        };
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+
+        // Assert
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberCheckInvitationDetails));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.ReExManualInputSession.TeamMembers.Count == expectedCount
+            )),
+            Times.Once);
+    }
 }
