@@ -151,7 +151,7 @@
     <value>Ffôn</value>
   </data>
   <data name="TeamMemberDetails.Title" xml:space="preserve">
-    <value>Manylion yr Aelod o'r Tîm</value>
+    <value>Manylion y person cymwys</value>
   </data>
   <data name="TeamMemberDetails.TelephoneNumberEmptyErrorMessage" xml:space="preserve">
     <value>Rhowch rif ffôn</value>
