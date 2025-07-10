@@ -104,7 +104,7 @@ public static class PagePath
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
 
-    public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-cannot-be-invited";
+    public const string ApprovedPersonCanNotBeInvited = "approved-person-cannot-be-invited";
     
     public const string MemberPartnership = "member-partnership";
     public const string MemberPartnershipAdd = "member-partnership/add";
