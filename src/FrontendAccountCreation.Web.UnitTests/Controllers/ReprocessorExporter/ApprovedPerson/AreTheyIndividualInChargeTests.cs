@@ -21,15 +21,18 @@ public class AreTheyIndividualInChargeTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    public async Task Get_AreTheyIndividualInCharge_ShouldReturnViewWithCorrectModel_WhenSessionHasValueAndNotReset()
+    [DataRow(true, YesNoAnswer.Yes)]
+    [DataRow(false, YesNoAnswer.No)]
+    public async Task Get_AreTheyIndividualInCharge_ShouldReturnViewWithCorrectModel_WhenSessionHasValueAndNotReset(bool areTheyInCharge, YesNoAnswer expectedAnswer)
     {
         // Arrange
         var session = new OrganisationSession
         {
-            AreTheyIndividualInCharge = true
+            AreTheyIndividualInCharge = areTheyInCharge
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
 
         // Act
         var result = await _systemUnderTest.AreTheyIndividualInCharge(resetOptions: false);
@@ -39,7 +42,7 @@ public class AreTheyIndividualInChargeTests : ApprovedPersonTestBase
         viewResult.Should().NotBeNull();
         var model = viewResult!.Model as TheyIndividualInChargeViewModel;
         model.Should().NotBeNull();
-        model!.AreTheyIndividualInCharge.Should().Be(YesNoAnswer.Yes);
+        model!.AreTheyIndividualInCharge.Should().Be(expectedAnswer);
 
         _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
     }
