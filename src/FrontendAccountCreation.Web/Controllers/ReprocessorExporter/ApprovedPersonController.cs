@@ -162,7 +162,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AreTheyIndividualInCharge(bool resetOptions = false)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.ManageControlOrganisation);
+            SetBackLink(session, PagePath.IndividualIncharge);
 
             YesNoAnswer? theyInCharge = null;
             if (session.AreTheyIndividualInCharge.HasValue && !resetOptions)
