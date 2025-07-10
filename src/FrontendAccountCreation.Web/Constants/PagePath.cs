@@ -71,6 +71,7 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationContinueWithoutInvitation = "check-companies-house-role/continue-without-invitation";
 
     public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
+    public const string NonCompaniesHouseTeamMemberDetailsEdit = "non-companies-house-team-member-details/edit";
 
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";

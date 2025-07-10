@@ -384,7 +384,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
         [HttpGet]
         [Route(PagePath.NonCompaniesHousePartnershipTheirRoleEdit)]
-        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetailsEdit([FromQuery] Guid id)
+        public async Task<IActionResult> NonCompaniesHousePartnershipTeamMemberRoleEdit([FromQuery] Guid id)
         {
             SetFocusId(id);
             OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
@@ -392,6 +392,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return await SaveSessionAndRedirect(session,
                 nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole),
                 PagePath.NonCompaniesHousePartnershipTheirRole, null);
+        }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHouseTeamMemberDetailsEdit)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetailsEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session,
+                nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
+                PagePath.NonCompaniesHouseTeamMemberDetails, null);
         }
 
         [HttpGet]

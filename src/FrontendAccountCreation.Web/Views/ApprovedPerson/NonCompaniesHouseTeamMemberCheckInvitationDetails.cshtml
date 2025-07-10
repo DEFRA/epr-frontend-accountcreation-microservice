@@ -66,7 +66,7 @@
                                             @Model.GetLocalizedRole(Model.TeamMembers[i].Role, Localizer)
                                         </dd>
                                         <dd class="govuk-summary-list__actions">
-                                            <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetailsEdit), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
+                                            <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRoleEdit), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
                                                 @SharedLocalizer["Change"]
                                                 <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
                                             </a>
@@ -79,7 +79,7 @@
                                     <dt class="govuk-summary-list__key">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.FirstName"]</dt>
                                     <dd class="govuk-summary-list__value">@Model.TeamMembers[i].FirstName</dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
+                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetailsEdit), "ApprovedPerson", new { id = Model.TeamMembers[i].Id })">
                                             @SharedLocalizer["Change"]
                                             <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
                                         </a>
@@ -100,7 +100,7 @@
                             </dl>
                         </div>
                         <form asp-controller="ApprovedPerson"
-                              asp-action="NonCompaniesHouseNonCompaniesHouseTeamMemberCheckInvitationDetailsDelete"
+                              asp-action="NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete"
                               method="post">
                             @Html.AntiForgeryToken()
 
@@ -118,7 +118,7 @@
                     <form asp-controller="ApprovedPerson">
                         <div class="govuk-button-group">
                             <!-- goes to check your details -->
-                            <button class="govuk-button" data-module="govuk-button" asp-action="NonCompaniesHouseNonCompaniesHouseTeamMemberCheckInvitationDetailsPost">
+                            <button class="govuk-button" data-module="govuk-button" asp-action="NonCompaniesHouseTeamMemberCheckInvitationDetailsPost">
                                 @SharedLocalizer["Continue"]
                             </button>
                             @if (Model.IsNonUk || Model.IsPartnership)

@@ -655,7 +655,7 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
     }
 
     [TestMethod]
-    public async Task NonCompaniesHouseTeamMemberDetailsEdit_RedirectsToDetailsWithId()
+    public async Task NonCompaniesHouseTeamMemberDetailsEdit_RedirectsToNonCompaniesHouseTeamMemberDetails()
     {
         // Arrange
         var teamMemberId = Guid.NewGuid();
@@ -665,6 +665,22 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails));
+        redirect.RouteValues.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipTeamMemberRoleEdit_RedirectsToNonCompaniesHousePartnershipTeamMemberRole()
+    {
+        // Arrange
+        var teamMemberId = Guid.NewGuid();
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipTeamMemberRoleEdit(teamMemberId);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
         redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole));
+        redirect.RouteValues.Should().BeNull();
     }
 }
