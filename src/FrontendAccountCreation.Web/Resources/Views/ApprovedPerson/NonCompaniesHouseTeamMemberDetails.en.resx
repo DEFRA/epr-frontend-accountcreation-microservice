@@ -171,4 +171,7 @@
   <data name="TeamMemberDetails.NonUk.Question" xml:space="preserve">
     <value>What are your team member's details?</value>
   </data>
+  <data name="NonCompaniesHouseTeamMemberDetails.Title" xml:space="preserve">
+    <value>Eligible-person-details</value>
+  </data>
 </root>

@@ -1126,6 +1126,18 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View();
         }
 
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipTheirRoleAddAnother)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+            DeleteFocusId();
+            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole),
+                PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
+        }
+
         [HttpPost]
         [Route(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
@@ -1144,7 +1156,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             return await SaveSessionAndRedirect(session, nextAction, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, nextPage);
         }
-
 
         [HttpGet]
         [Route(PagePath.NonCompaniesHousePartnershipTheirRole)]
