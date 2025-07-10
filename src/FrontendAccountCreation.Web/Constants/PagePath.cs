@@ -59,6 +59,7 @@ public static class PagePath
     public const string NonCompaniesHousePartnershipCheckNamesOfPartnersDelete = "non-companies-house-check-partner-names/delete";
     public const string NonCompaniesHousePartnershipYouAreApprovedPerson = "non-companies-house-partnership-approved-person-confirmation";
     public const string NonCompaniesHousePartnershipTheirRole = "non-companies-house-partnership-role";
+    public const string NonCompaniesHousePartnershipTheirRoleAdd = "non-companies-house-partnership-role/add";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
@@ -70,12 +71,14 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationContinueWithoutInvitation = "check-companies-house-role/continue-without-invitation";
 
     public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
+    public const string NonCompaniesHouseTeamMemberDetailsEdit = "non-companies-house-team-member-details/edit";
 
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";
 
     public const string NonCompaniesHouseTeamMemberCheckInvitationDetails = "non-companies-house-check-invitation-details";
     public const string NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete = "non-companies-house-check-invitation-details/delete";
+    public const string NonCompaniesHousePartnershipTheirRoleEdit = "non-companies-house-partnership-their-role/edit";
 
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
@@ -111,7 +114,6 @@ public static class PagePath
 
     public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-corporate-individual-partner-names";
     public const string LimitedPartnershipCheckNamesOfPartnersDelete = "organisation-check-corporate-individual-partner-names/delete";
-    public const string WhatRoleDoTheyHaveWithinThePartnership = "what-role-do-they-have-within-the-partnership";
 
     public const string PartnershipType = "partnership-type";
     public const string LimitedPartnershipType = "organisation-partnership-type";

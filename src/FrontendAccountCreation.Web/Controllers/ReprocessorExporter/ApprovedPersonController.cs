@@ -372,6 +372,41 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipTheirRoleAdd)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipTheirRoleAdd()
+        {
+            DeleteFocusId();
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole),
+                PagePath.NonCompaniesHousePartnershipTheirRole, PagePath.NonCompaniesHousePartnershipTheirRole);
+        }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipTheirRoleEdit)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipTeamMemberRoleEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session,
+                nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole),
+                PagePath.NonCompaniesHousePartnershipTheirRole, null);
+        }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHouseTeamMemberDetailsEdit)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetailsEdit([FromQuery] Guid id)
+        {
+            SetFocusId(id);
+            OrganisationSession? session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            return await SaveSessionAndRedirect(session,
+                nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
+                PagePath.NonCompaniesHouseTeamMemberDetails, null);
+        }
+
+        [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
         public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails()
@@ -459,7 +494,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
-                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader
+                IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsPartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
             };
 
             return View(model);
@@ -626,7 +662,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails),
                 PagePath.TeamMembersCheckInvitationDetails, null);
         }
-
+            
         [HttpGet]
         [Route(PagePath.YouAreApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
@@ -1212,6 +1248,48 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     nextPagePath: PagePath.NonCompaniesHouseTeamMemberDetails,
                     controllerName: nameof(ApprovedPersonController),
                     routeValues: null);
+            }
+        }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+
+            return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
+            {
+                InviteUserOption = session.InviteUserOption?.ToString(),
+                IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
+            });
+        }
+
+        [HttpPost]
+        [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipInviteApprovedPersonViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+                model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
+
+                return View(model);
+            }
+
+            session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+
+            if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
+            {           
+                return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
+            }
+            else
+            {
+                return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
             }
         }
     }
