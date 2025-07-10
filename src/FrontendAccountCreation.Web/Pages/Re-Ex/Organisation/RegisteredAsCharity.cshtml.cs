@@ -46,9 +46,8 @@ public class RegisteredAsCharity(
             });
         }
 
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await SetupRegisteredAsCharityPage();
 
-        ViewData["BackLinkToDisplay"] = externalUrlsOptions.Value.PrnRedirectUrl;
         SelectedValue = session?.IsTheOrganisationCharity?.ToString();
 
         return Page();
@@ -56,18 +55,17 @@ public class RegisteredAsCharity(
 
     public async Task<IActionResult> OnPost()
     {
+        var session = await SetupRegisteredAsCharityPage()
+                      ?? new OrganisationSession
+                      {
+                          Journey = [PagePath.RegisteredAsCharity]
+                      };
+
         if (!ModelState.IsValid)
         {
             Errors = ErrorStateFromModelState.Create(ModelState);
-            ViewData["BackLinkToDisplay"] = externalUrlsOptions.Value.PrnRedirectUrl;
             return Page();
         }
-
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session)
-            ?? new OrganisationSession
-            {
-                Journey = [PagePath.RegisteredAsCharity]
-            };
 
         session.IsTheOrganisationCharity = bool.Parse(SelectedValue!);
 
@@ -78,5 +76,16 @@ public class RegisteredAsCharity(
         }
         return await SaveSessionAndRedirect(session, nameof(OrganisationController),
             nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredWithCompaniesHouse);
+    }
+
+    private async Task<OrganisationSession?> SetupRegisteredAsCharityPage()
+    {
+        ViewData["Title"] = Title;
+        ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+        ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+        ViewData["BackLinkToDisplay"] = externalUrlsOptions.Value.PrnRedirectUrl;
+
+        return await SessionManager.GetSessionAsync(HttpContext.Session);
     }
 }
