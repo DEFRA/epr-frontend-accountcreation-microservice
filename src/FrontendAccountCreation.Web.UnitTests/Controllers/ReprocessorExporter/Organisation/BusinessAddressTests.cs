@@ -245,6 +245,6 @@ public class BusinessAddressTests : OrganisationTestBase
         // Assert
         result.Should().BeOfType<RedirectToActionResult>();
 
-        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(UnincorporatedController.RoleInOrganisation));
+        ((RedirectToActionResult)result).ActionName.Should().Be(nameof(OrganisationController.UnincorporatedRoleInOrganisation));
     }
 }

@@ -120,16 +120,6 @@ public static class PagePath
 
     // Unincorporated paths
     public const string UnincorporatedRoleInOrganisation = "unincorporated-role-in-organisation";
-    public const string UnincorporatedManageControl = "unincorporated-manage-control";
-    public const string UnincorporatedManageAccountPerson = "unincorporated-manage-account-person";
-    public const string UnincorporatedManageAccountPersonUserFromTeam = "unincorporated-manage-account-person-user-from-team";
-    public const string UnincorporatedApprovedPerson = "unincorporated-approved-person";
-    public const string UnincorporatedNotImplemented = "unincorporated-not-implemented";
-    public const string UnincorporatedManageControlOrganisation = "unincorporated-manage-control-organisation";
-    public const string UnincorporatedApprovedPersonCannotBeInvited = "unincorporated-approved-person-cannot-be-invited";
-    public const string UnincorporatedTeamMemberDetails = "unincorporated-team-member-details";
-    public const string UnincorporatedCheckInvitation = "unincorporated-check-invitation";
-    public const string UnincorporatedCheckYourDetails = "unincorporated-check-your-details";
 
     // Non journey paths
     public const string Accessibility = "accessibility";
