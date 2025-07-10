@@ -19,7 +19,7 @@
 
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="Unincorporated" asp-action="RoleInOrganisation" method="post">
+                <form asp-controller="Organisation" asp-action="UnincorporatedRoleInOrganisation" method="post">
                     <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-label-wrapper">
