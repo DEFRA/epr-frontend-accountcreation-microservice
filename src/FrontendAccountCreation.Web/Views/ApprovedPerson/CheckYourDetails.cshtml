@@ -1,3 +1,4 @@
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.Constants
 
@@ -225,10 +226,16 @@
 
                         @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true, IsLimitedLiabilityPartnership: false })
                         {
+                            // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
+                            ViewBag.ChangeApprovedPersonController = "ApprovedPerson";
+                            ViewBag.ChangeApprovedPersonAction = nameof(ApprovedPersonController.TeamMemberDetails);
                             @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
                         else if (Model is { IsManualInputFlow: true, IsOrganisationAPartnership: true })
                         {
+                            // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
+                            ViewBag.ChangeApprovedPersonController = "LimitedPartnership";
+                            ViewBag.ChangeApprovedPersonAction = nameof(LimitedPartnershipController.NonCompaniesHousePartnershipNamesOfPartners);
                             @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
 
@@ -299,7 +306,7 @@
                                                     else if (Model.IsManualInputFlow)
                                                     {
                                                         <dd class="govuk-summary-list__actions">
-                                                            <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisationEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                            <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRoleEdit), "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                                 @SharedLocalizer["Change"]
                                                                 <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
                                                             </a>
@@ -329,7 +336,7 @@
                                                else
                                                 {
                                                     <dd class="govuk-summary-list__actions">
-                                                    <a class="govuk-link" href="@Url.Action("NonCompaniesHouseTeamMemberDetails", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                    <a class="govuk-link" href="@Url.Action("NonCompaniesHouseTeamMemberDetailsEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                             @SharedLocalizer["Change"]
                                                             <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.ContactDetails"]</span>
                                                         </a>

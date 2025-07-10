@@ -17,7 +17,7 @@
                 @partner.Name
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="@Url.Action("NamesOfPartners", "LimitedPartnership")">
+                <a class="govuk-link" href="@Url.Action((string) @ViewBag.ChangeApprovedPersonAction, (string) @ViewBag.ChangeApprovedPersonController)">
                     @SharedLocalizer["Change"]
                 </a>
             </dd>
