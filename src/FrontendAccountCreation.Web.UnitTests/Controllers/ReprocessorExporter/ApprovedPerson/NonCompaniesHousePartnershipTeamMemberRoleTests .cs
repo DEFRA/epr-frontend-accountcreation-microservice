@@ -534,7 +534,6 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
     }
 
     [TestMethod]
-    // As the test name implies, this test needs to be rewritten when the target page is ready
     public async Task NonCompaniesHousePartnershipTeamMemberRole_Post_WithNoneRoleAndNonExistingMember_RedirectsToCannotBeInvited()
     {
         // Arrange
