@@ -28,7 +28,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
 
         _deploymentRoleOptionsMock = GetMockDeploymentRoleOptions();
 
-        _registeredAsCharity = new RegisteredAsCharity(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object)
+        _registeredAsCharity = new RegisteredAsCharity(SessionManagerMock.Object, SharedLocalizerMock.Object, LocalizerMock.Object, UrlsOptionMock.Object)
         {
             PageContext = PageContext
         };
@@ -130,7 +130,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
     }
 
     [TestMethod]
-    public async Task OnGet_RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIsNull()
+    public async Task OnGet_RegisteredAsCharity_RegisteredAsCharityPageIsEntered_BackLinkIs_As_Expected()
     {
         //Arrange
         var accountCreationSessionMock = new OrganisationSession
@@ -144,7 +144,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         await _registeredAsCharity.OnGet(_deploymentRoleOptionsMock.Object);
 
         //Assert
-        _registeredAsCharity.ViewData["BackLinkToDisplay"].Should().BeNull();
+        _registeredAsCharity.ViewData["BackLinkToDisplay"].Should().Be("/epr-prn");
     }
 
     //to-do: split into 2
