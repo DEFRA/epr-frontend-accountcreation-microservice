@@ -33,7 +33,10 @@ public class UnincorporatedRoleInOrganisationTests : OrganisationTestBase
     {
         // Arrange
         var role = "test";
-        _organisationSession.ReExManualInputSession.RoleInUnincorporatedOrganisation = role;
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            RoleInUnincorporatedOrganisation = role,
+        };
 
         // Act
         var result = await _systemUnderTest.UnincorporatedRoleInOrganisation();
