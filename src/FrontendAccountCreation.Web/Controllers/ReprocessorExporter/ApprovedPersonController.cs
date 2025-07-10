@@ -203,7 +203,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 return await SaveSessionAndRedirect(session,
                     nameof(PersonCanNotBeInvited),
                     PagePath.IndividualIncharge,
-                    PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+                    PagePath.ApprovedPersonCanNotBeInvited);
             }
         }
 
@@ -301,7 +301,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     session,
                     nameof(PersonCanNotBeInvited),
                     $"{PagePath.TeamMemberRoleInOrganisation}?id={queryStringId}",
-                    PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+                    PagePath.ApprovedPersonCanNotBeInvited);
             }
 
             if (isExistingMember)
@@ -998,33 +998,34 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         }
 
         [HttpGet]
-        [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-        [OrganisationJourneyAccess(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
+        [Route(PagePath.ApprovedPersonCanNotBeInvited)]
+        [OrganisationJourneyAccess(PagePath.ApprovedPersonCanNotBeInvited)]
         public async Task<IActionResult> PersonCanNotBeInvited([FromQuery] Guid id)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+            SetBackLink(session, PagePath.ApprovedPersonCanNotBeInvited);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel
+            return View(new ApprovedPersonCanNotBeInvitedViewModel
             {
                 Id = id,
                 TheyManageOrControlOrganisation = session.TheyManageOrControlOrganisation,
-                AreTheyIndividualInCharge = session.AreTheyIndividualInCharge
+                AreTheyIndividualInCharge = session.AreTheyIndividualInCharge,
+                IsNonCompanyHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership,
             });
         }
 
         [HttpPost]
-        [Route(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-        [OrganisationJourneyAccess(PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-        public async Task<IActionResult> PersonCanNotBeInvited(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        [Route(PagePath.ApprovedPersonCanNotBeInvited)]
+        [OrganisationJourneyAccess(PagePath.ApprovedPersonCanNotBeInvited)]
+        public async Task<IActionResult> PersonCanNotBeInvited(ApprovedPersonCanNotBeInvitedViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.ApprovedPersonPartnershipCanNotBeInvited, PagePath.CheckYourDetails);
+            return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.ApprovedPersonCanNotBeInvited, PagePath.CheckYourDetails);
         }
 
         [HttpGet]
@@ -1036,13 +1037,13 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             SetBackLink(session, PagePath.CanNotInviteThisPerson);
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
 
-            return View(new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = id });
+            return View(new ApprovedPersonCanNotBeInvitedViewModel { Id = id });
         }
 
         [HttpPost]
         [Route(PagePath.CanNotInviteThisPerson)]
         [OrganisationJourneyAccess(PagePath.CanNotInviteThisPerson)]
-        public async Task<IActionResult> CanNotInviteThisPerson(LimitedPartnershipPersonCanNotBeInvitedViewModel model)
+        public async Task<IActionResult> CanNotInviteThisPerson(ApprovedPersonCanNotBeInvitedViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -1195,8 +1196,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 if (memberIndex < 0)
                 {
-                    // goes to "You cannot invite this person to be an approved person" page which is unavailable because its not been built
-                    throw new NotImplementedException("You cannot invite this person to be an approved person");
+                    return await SaveSessionAndRedirect(session, nameof(PersonCanNotBeInvited),
+                        PagePath.NonCompaniesHousePartnershipTheirRole, PagePath.ApprovedPersonCanNotBeInvited);
                 }
 
                 approvedPersons.RemoveAt(memberIndex);
