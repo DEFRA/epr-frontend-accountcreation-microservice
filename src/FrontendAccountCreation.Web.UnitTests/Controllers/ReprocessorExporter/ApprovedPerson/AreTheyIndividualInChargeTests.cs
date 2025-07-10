@@ -31,7 +31,8 @@ public class AreTheyIndividualInChargeTests : ApprovedPersonTestBase
             AreTheyIndividualInCharge = areTheyInCharge
         };
 
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
 
         // Act
         var result = await _systemUnderTest.AreTheyIndividualInCharge(resetOptions: false);
