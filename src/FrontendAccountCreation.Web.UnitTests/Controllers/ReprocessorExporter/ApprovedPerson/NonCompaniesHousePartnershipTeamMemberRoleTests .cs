@@ -652,6 +652,13 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
         redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole));
         redirect.RouteValues.Should().BeNull();
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.Journey.Contains(PagePath.NonCompaniesHousePartnershipTheirRole)
+            )),
+            Times.Once);
     }
 
     [TestMethod]
