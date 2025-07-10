@@ -397,7 +397,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         [HttpGet]
         [Route(PagePath.NonCompaniesHouseTeamMemberDetails)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHouseTeamMemberDetails)]
-        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails(Guid? id)
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberDetails()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
 
@@ -406,6 +406,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             var viewModel = new NonCompaniesHouseTeamMemberViewModel();
 
+            Guid? id = GetFocusId();
             if (id.HasValue)
             {
                 var teamMember = session.ReExManualInputSession?.TeamMembers?
@@ -1211,19 +1212,61 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             // check the email, but any field other than Id will do to determine if its an existing approved person
             if (approvedPersons[memberIndex].Email?.Length > 0)
             {
-                // goes to "Check invitation details" page which is unavailable because its not been built
+                // goes to "Check invitation details"
                 return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberCheckInvitationDetails),
                     PagePath.NonCompaniesHousePartnershipTheirRole, PagePath.NonCompaniesHouseTeamMemberCheckInvitationDetails);
             }
             else
             {
-                // goes to "What are their details?" page, but should use SetFocusId() rather than route values
+                // goes to "What are their details?"
                 return await SaveSessionAndRedirect(session: session,
                     actionName: nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails),
                     currentPagePath: PagePath.NonCompaniesHousePartnershipTheirRole,
                     nextPagePath: PagePath.NonCompaniesHouseTeamMemberDetails,
                     controllerName: nameof(ApprovedPersonController),
-                    routeValues: new { id = approvedPersons[memberIndex].Id });
+                    routeValues: null);
+            }
+        }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+
+            return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
+            {
+                InviteUserOption = session.InviteUserOption?.ToString(),
+                IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
+            });
+        }
+
+        [HttpPost]
+        [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipInviteApprovedPersonViewModel model)
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+            if (!ModelState.IsValid)
+            {
+                SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+                model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
+
+                return View(model);
+            }
+
+            session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
+
+            if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
+            {           
+                return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
+            }
+            else
+            {
+                return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
             }
         }
     }

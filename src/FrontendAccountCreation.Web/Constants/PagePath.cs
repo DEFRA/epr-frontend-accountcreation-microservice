@@ -113,7 +113,6 @@ public static class PagePath
 
     public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-corporate-individual-partner-names";
     public const string LimitedPartnershipCheckNamesOfPartnersDelete = "organisation-check-corporate-individual-partner-names/delete";
-    public const string WhatRoleDoTheyHaveWithinThePartnership = "what-role-do-they-have-within-the-partnership";
 
     public const string PartnershipType = "partnership-type";
     public const string LimitedPartnershipType = "organisation-partnership-type";
