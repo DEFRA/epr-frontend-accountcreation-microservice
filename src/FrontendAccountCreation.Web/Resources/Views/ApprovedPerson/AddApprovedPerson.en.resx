@@ -123,6 +123,9 @@
   <data name="AddAnApprovedPerson.Unincorporated.OptionError" xml:space="preserve">
     <value>Select whether to be an approved person, invite someone else to be one or do this later</value>
   </data>
+  <data name="AddAnApprovedPerson.Unincorporated.Ineligible.OptionError" xml:space="preserve">
+    <value>Select whether to invite the individual in charge of the business to be an approved person or do this later</value>
+  </data>
   <data name="AddAnApprovedPerson.Title" xml:space="preserve">
     <value>Add an approved person </value>
   </data>

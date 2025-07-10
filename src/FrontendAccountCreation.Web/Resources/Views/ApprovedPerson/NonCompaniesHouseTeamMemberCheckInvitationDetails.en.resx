@@ -127,7 +127,7 @@
     <value>An invite created for the individual in charge of the business will be sent once the organisation is added.</value>
   </data>
   <data name="TeamMemberCheckInvitationDetails.Unincorporated.Help" xml:space="preserve">
-    <value>An invite created for one or more  approved persons will be sent once the organisation is added.</value>
+    <value>Any invites created for one or more  approved persons will be sent once the organisation is added.</value>
   </data>
   <data name="TeamMemberCheckInvitationDetails.Role" xml:space="preserve">
     <value>Role</value>
