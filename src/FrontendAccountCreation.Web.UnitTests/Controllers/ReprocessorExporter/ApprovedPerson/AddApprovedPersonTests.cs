@@ -205,7 +205,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_PartnershipAndIneligible_Renders_Partail_InEligible()
     {   
         // Arrange
@@ -215,6 +214,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             IsInEligibleToBeApprovedPerson = true,
             IsComplianceScheme = true
         };
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession();
 
         // Act
         var result = await _systemUnderTest.AddApprovedPerson();
@@ -238,10 +238,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             IsInEligibleToBeApprovedPerson = false,
             IsComplianceScheme = false
         };
-        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
-        {
-            ProducerType = ProducerType.UnincorporatedBody
-        };
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession();
 
         // Act
         var result = await _systemUnderTest.AddApprovedPerson();
@@ -256,7 +253,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_NotPartnershipButIneligible_Renders_Partial_AddNotApprovedPerson()
     {
         // Arrange
@@ -265,6 +261,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         {   
             IsInEligibleToBeApprovedPerson = true
         };
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession();
 
         // Act
         var result = await _systemUnderTest.AddApprovedPerson();
@@ -286,11 +283,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         {
             IsInEligibleToBeApprovedPerson = false
         };
-        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession
-        {
-            ProducerType = ProducerType.UnincorporatedBody
-        };
-
+        _orgSessionMock.ReExManualInputSession = new ReExManualInputSession();
 
         // Act
         var result = await _systemUnderTest.AddApprovedPerson();
@@ -314,10 +307,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             {
                 IsInEligibleToBeApprovedPerson = false
             },
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                ProducerType = ProducerType.UnincorporatedBody
-            }
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
@@ -357,10 +347,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         {
             IsUserChangingDetails = true,
             Journey = _orgSessionMock.Journey,
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                ProducerType = ProducerType.UnincorporatedBody
-            }
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _sessionManagerMock
@@ -386,10 +373,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             {
                 IsInEligibleToBeApprovedPerson = true
             },
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                ProducerType = ProducerType.UnincorporatedBody
-            }
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
@@ -420,10 +404,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             {
                 IsInEligibleToBeApprovedPerson = false
             },
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                ProducerType = ProducerType.UnincorporatedBody
-            }
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _systemUnderTest.ModelState.AddModelError("InviteUserOption", "Required");
@@ -481,10 +462,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
                     IsLimitedLiabilityPartnership = false
                 }
             },
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                ProducerType = ProducerType.UnincorporatedBody
-            }
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _sessionManagerMock
@@ -549,10 +527,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         {
             IsOrganisationAPartnership = false,
             ReExCompaniesHouseSession = null, // <- this triggers all `?? false` fallback logic
-            ReExManualInputSession = new ReExManualInputSession
-            {
-                ProducerType = ProducerType.UnincorporatedBody
-            }
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
@@ -733,13 +708,13 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_PopulatesInviteUserOptionFromSession()
     {
         // Arrange
         var session = new OrganisationSession
         {
-            InviteUserOption = InviteUserOptions.BeAnApprovedPerson
+            InviteUserOption = InviteUserOptions.BeAnApprovedPerson,
+            ReExManualInputSession = new ReExManualInputSession()
         };
 
         _sessionManagerMock
@@ -760,7 +735,6 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
     }
 
     [TestMethod]
-    [Ignore("Temporarely to pass the build")]
     public async Task AddApprovedPerson_Get_WithFocusIdFromTempData_SetsFocusIdInController()
     {
         // Arrange
@@ -768,6 +742,16 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
 
         var tempDataMock = new Mock<ITempDataDictionary>();
         tempDataMock.Setup(t => t["FocusId"]).Returns(focusId.ToString());
+
+
+        var session = new OrganisationSession
+        {
+            ReExManualInputSession = new ReExManualInputSession(),
+        };
+
+        _sessionManagerMock
+            .Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
 
         _systemUnderTest.TempData = tempDataMock.Object;
 

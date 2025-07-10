@@ -30,12 +30,14 @@ public class RoleInOrganisationTests : UnincorporatedTestBase
     }
 
     [TestMethod]
-    [Ignore]
     public async Task RoleInOrganisation_Get_ReturnsViewWithPrepopulatedModel()
     {
         // Arrange
         var role = "test";
-        _organisationSession.ReExUnincorporatedFlowSession.RoleInOrganisation = role;
+        _organisationSession.ReExManualInputSession = new ReExManualInputSession
+        {
+            RoleInUnincorporatedOrganisation = role,
+        };
 
         // Act
         var result = await _systemUnderTest.RoleInOrganisation();
