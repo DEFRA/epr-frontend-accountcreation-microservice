@@ -110,6 +110,9 @@
       <EmbeddedResource Update="Resources\Views\ApprovedPerson\NonCompaniesHouseYouAreApprovedPerson.en.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Views\ApprovedPerson\NonCompaniesHouseYouAreApprovedPerson.en.resx">
+        <SubType>Designer</SubType>
+      </EmbeddedResource>
       <EmbeddedResource Update="Resources\Views\Unincorporated\ApprovedPerson.cy.resx">
         <SubType>Designer</SubType>
       </EmbeddedResource>
