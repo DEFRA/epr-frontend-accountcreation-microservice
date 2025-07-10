@@ -29,6 +29,7 @@
                             </h1>
                         </legend>
                         
+                        @Html.HiddenFor(x => x.Id)
                         <div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(Model.FirstName)) ? " govuk-form-group--error" : "")">
                             <label gov-for="FirstName" class="govuk-label">@Localizer["TeamMemberDetails.FirstName"]</label>
                             @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(Model.FirstName)])
