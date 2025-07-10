@@ -84,10 +84,8 @@ public class RegisteredAsCharity(
         ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
         ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
-
         ViewData["BackLinkToDisplay"] = externalUrlsOptions.Value.PrnRedirectUrl;
 
-        return session;
+        return await SessionManager.GetSessionAsync(HttpContext.Session);
     }
 }
