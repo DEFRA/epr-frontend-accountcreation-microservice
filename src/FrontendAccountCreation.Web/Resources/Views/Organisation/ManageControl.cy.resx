@@ -126,6 +126,9 @@
   <data name="ManageControl.Title" xml:space="preserve">
     <value>Rheoli</value>
   </data>
+  <data name="ManageControl.Unincorporated.Hint" xml:space="preserve">
+    <value>WThis means control or management of an unincorporated association which has a registered office, head office or principal place of business in the United Kingdom.</value>
+  </data>
   <data name="ManageControl.UserManagesOrControlsError" xml:space="preserve">
     <value>Dewiswch 'Ydw' os ydych chi'n rheoli'r sefydliad, 'Nac ydw' os nad ydych chi'n ei reoli neu 'Ddim yn siŵr' os nad ydych chi'n siŵr</value>
   </data>

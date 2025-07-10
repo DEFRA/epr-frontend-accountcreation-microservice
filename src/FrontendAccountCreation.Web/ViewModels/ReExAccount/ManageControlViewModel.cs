@@ -9,4 +9,5 @@ public class ManageControlViewModel
 {
     [Required(ErrorMessage = "ManageControl.UserManagesOrControlsError")]
     public YesNoNotSure? UserManagesOrControls { get; set; }
+    public bool IsUnincorporatedFlow { get; set; }
 }

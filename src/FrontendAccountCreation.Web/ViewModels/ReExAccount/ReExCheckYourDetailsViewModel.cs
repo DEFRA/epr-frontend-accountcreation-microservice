@@ -41,6 +41,8 @@ public class ReExCheckYourDetailsViewModel
 
     public bool IsNonUk {  get; set; }
 
+    public bool IsUnincorporatedFlow { get; set; }
+
     private static string GetCheckYourDetailsKey<TEnum>(TEnum? enumValue) where TEnum : struct, Enum
     {
         if (enumValue == null || !Enum.IsDefined(typeof(TEnum), enumValue))

@@ -126,6 +126,9 @@
   <data name="TeamMemberCheckInvitationDetails.Help" xml:space="preserve">
     <value>[Welsh]Any invites created for one or more approved persons will be sent once the organisation is added.</value>
   </data>
+  <data name="TeamMemberCheckInvitationDetails.Unincorporated.Help" xml:space="preserve">
+    <value>[Welsh]Any invites created for one or more  approved persons will be sent once the organisation is added.</value>
+  </data>
   <data name="TeamMemberCheckInvitationDetails.Role" xml:space="preserve">
     <value>[Welsh]Role</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="TeamMemberCheckInvitationDetails.SoleTrader" xml:space="preserve">
     <value>Unig fasnachwr</value>
+  </data>
+  <data name="TeamMemberCheckInvitationDetails.Unincorporated" xml:space="preserve">
+    <value>W Manage or control organisation</value>
   </data>
   <data name="TeamMemberCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
     <value>[Welsh]Invite another person</value>
