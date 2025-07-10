@@ -919,6 +919,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.reExCompanyTeamMembers = companyHouseSession?.TeamMembers;
             }
 
+            if (viewModel.IsManualInputFlow)
+            {
+                var manualInput = session.ReExManualInputSession;
+                viewModel.ProducerType = manualInput?.ProducerType; // show when not a Sole Trader
+                viewModel.BusinessAddress = manualInput?.BusinessAddress; // show for Non Companies House
+                viewModel.CompanyName = manualInput?.OrganisationName; // show for Companies House and Non Companies House
+                viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers; // show when count > 0
+                viewModel.IsOrganisationAPartnership = manualInput?.ProducerType == ProducerType.Partnership;
+                viewModel.LimitedPartnershipPartners = manualInput?.TypesOfPartner?.Partners;
+            }
+
             if (viewModel.IsSoleTrader)
             {
                 var manualInput = session.ReExManualInputSession;

@@ -227,6 +227,10 @@
                         {
                             @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
+                        else if (Model is { IsManualInputFlow: true, IsOrganisationAPartnership: true })
+                        {
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
+                        }
 
                         @if (Model.reExCompanyTeamMembers != null && Model.reExCompanyTeamMembers?.Count > 0)
                         {
@@ -271,13 +275,28 @@
                                                             @Localizer[Model.TypeOfProducer].Value
                                                         </dd>
                                                     }
-                                                    @if (Model.IsNonUk)
+                                                    else if (Model.IsNonUk)
                                                     {
                                                         <dd class="govuk-summary-list__value">
                                                             @Localizer["CheckYourDetails.NonUkRole"]
                                                         </dd>
                                                     }
+                                                    else if (Model.IsManualInputFlow)
+                                                    {
+                                                        <dd class="govuk-summary-list__value">
+                                                            @Model.reExCompanyTeamMembers[i].Role
+                                                        </dd>
+                                                    }
                                                     @if (Model.IsCompaniesHouseFlow)
+                                                    {
+                                                        <dd class="govuk-summary-list__actions">
+                                                            <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisationEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                                @SharedLocalizer["Change"]
+                                                                <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
+                                                            </a>
+                                                        </dd>
+                                                    }
+                                                    else if (Model.IsManualInputFlow)
                                                     {
                                                         <dd class="govuk-summary-list__actions">
                                                             <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisationEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
