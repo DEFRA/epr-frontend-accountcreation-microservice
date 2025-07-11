@@ -20,8 +20,8 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
             return role switch
             {
                 ReExTeamMemberRole.IndividualPartner => localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.IndividualPartner"].Value,
-                ReExTeamMemberRole.PartnerDirector => localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.CompanyDirector"].Value,
-                ReExTeamMemberRole.PartnerCompanySecretary => localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.CompanySecretary"].Value,
+                ReExTeamMemberRole.PartnerDirector => localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnerDirector"].Value,
+                ReExTeamMemberRole.PartnerCompanySecretary => localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnerCompanySecretary"].Value,
                 ReExTeamMemberRole.None => localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.None"].Value
             };
         }
