@@ -227,16 +227,14 @@
                         @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true, IsLimitedLiabilityPartnership: false })
                         {
                             // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
-                            ViewBag.ChangeApprovedPersonController = "ApprovedPerson";
-                            ViewBag.ChangeApprovedPersonAction = nameof(ApprovedPersonController.TeamMemberDetails);
-                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
+                            ViewBag.TypeOfPartnerShip = "LimitedLiabilityPartnership";
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners);
                         }
                         else if (Model is { IsManualInputFlow: true, IsOrganisationAPartnership: true })
                         {
                             // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
-                            ViewBag.ChangeApprovedPersonController = "LimitedPartnership";
-                            ViewBag.ChangeApprovedPersonAction = nameof(LimitedPartnershipController.NonCompaniesHousePartnershipNamesOfPartners);
-                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
+                            ViewBag.TypeOfPartnerShip = "NonCompaniesHouse";
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners);
                         }
 
                         @if (Model.reExCompanyTeamMembers != null && Model.reExCompanyTeamMembers?.Count > 0)

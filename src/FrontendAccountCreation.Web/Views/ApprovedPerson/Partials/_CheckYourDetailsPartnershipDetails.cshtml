@@ -1,7 +1,15 @@
-﻿@model IList<FrontendAccountCreation.Web.ViewModels.ReExAccount.ReExPersonOrCompanyPartner>
+﻿@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
+@model IList<FrontendAccountCreation.Web.ViewModels.ReExAccount.ReExPersonOrCompanyPartner>
 
 <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4">
-    @Localizer["_CheckYourDetailsPartnershipDetails.PartnersSectionTitle"]
+    @if (@ViewBag.TypeOfPartnerShip == "NonCompaniesHouse")
+    {
+        @Localizer["Partners within a partnership"]
+    }
+    else
+    {
+        @Localizer["_CheckYourDetailsPartnershipDetails.PartnersSectionTitle"]
+    }
 </h2>
 
 <dl class="govuk-summary-list govuk-!-margin-bottom-6">
@@ -17,9 +25,18 @@
                 @partner.Name
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="@Url.Action((string) @ViewBag.ChangeApprovedPersonAction, (string) @ViewBag.ChangeApprovedPersonController)">
+                @if (@ViewBag.TypeOfPartnerShip == "NonCompaniesHouse")
+                {
+                <a class="govuk-link" href="@Url.Action(nameof(LimitedPartnershipController.NonCompaniesHousePartnershipNamesOfPartners), "LimitedPartnership")">
                     @SharedLocalizer["Change"]
                 </a>
+                }
+                else
+                {
+                <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetails), "ApprovedPerson")">
+                    @SharedLocalizer["Change"]
+                </a>
+                }
             </dd>
         </div>
     }
