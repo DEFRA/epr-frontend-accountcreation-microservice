@@ -662,7 +662,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return await SaveSessionAndRedirect(session, nameof(TeamMembersCheckInvitationDetails),
                 PagePath.TeamMembersCheckInvitationDetails, null);
         }
-            
+
         [HttpGet]
         [Route(PagePath.YouAreApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.YouAreApprovedPerson)]
@@ -702,7 +702,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 
             if (isUkMainAddress is false)
             {
-                // Sole- trader non-UK 
+                // Sole- trader non-UK
                 return await SaveSessionAndRedirectToPage(
                     session,
                     nameof(ManageControlOrganisation),
@@ -955,6 +955,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.reExCompanyTeamMembers = companyHouseSession?.TeamMembers;
             }
 
+            if (viewModel.IsManualInputFlow)
+            {
+                var manualInput = session.ReExManualInputSession;
+                viewModel.ProducerType = manualInput?.ProducerType; // show when not a Sole Trader
+                viewModel.BusinessAddress = manualInput?.BusinessAddress; // show for Non Companies House
+                viewModel.CompanyName = manualInput?.OrganisationName; // show for Companies House and Non Companies House
+                viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers; // show when count > 0
+                viewModel.IsOrganisationAPartnership = manualInput?.ProducerType == ProducerType.Partnership;
+                viewModel.LimitedPartnershipPartners = manualInput?.TypesOfPartner?.Partners;
+            }
+
             if (viewModel.IsSoleTrader)
             {
                 var manualInput = session.ReExManualInputSession;
@@ -1102,8 +1113,10 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 case nameof(InviteUserOptions.BeAnApprovedPerson):
                     session.IsApprovedUser = true;
                     return await SaveSessionAndRedirect(session, nameof(NonCompaniesHouseYouAreApprovedPerson), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
+
                 case nameof(InviteUserOptions.InviteAnotherPerson):
                     return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
+
                 default:
                     return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipAddApprovedPerson, PagePath.CheckYourDetails);
             }
@@ -1284,7 +1297,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
 
             if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
-            {           
+            {
                 return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
             }
             else

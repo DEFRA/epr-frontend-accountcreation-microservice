@@ -1,3 +1,5 @@
+@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.Constants
 
@@ -225,7 +227,15 @@
 
                         @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true, IsLimitedLiabilityPartnership: false })
                         {
-                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
+                            // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
+                            ViewBag.TypeOfPartnerShip = "Limited";
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners);
+                        }
+                        else if (Model is { IsManualInputFlow: true, IsOrganisationAPartnership: true })
+                        {
+                            // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
+                            ViewBag.TypeOfPartnerShip = "NonCompaniesHouse";
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners);
                         }
 
                         @if (Model.reExCompanyTeamMembers != null && Model.reExCompanyTeamMembers?.Count > 0)
@@ -271,16 +281,31 @@
                                                             @Localizer[Model.TypeOfProducer].Value
                                                         </dd>
                                                     }
-                                                    @if (Model.IsNonUk)
+                                                    else if (Model.IsNonUk)
                                                     {
                                                         <dd class="govuk-summary-list__value">
                                                             @Localizer["CheckYourDetails.NonUkRole"]
+                                                        </dd>
+                                                    }
+                                                    else if (Model.IsManualInputFlow)
+                                                    {
+                                                        <dd class="govuk-summary-list__value">
+                                                            @GetLocalizedRoleOfApprovedPerson(@Model.reExCompanyTeamMembers[i].Role)
                                                         </dd>
                                                     }
                                                     @if (Model.IsCompaniesHouseFlow)
                                                     {
                                                         <dd class="govuk-summary-list__actions">
                                                             <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisationEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                                @SharedLocalizer["Change"]
+                                                                <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
+                                                            </a>
+                                                        </dd>
+                                                    }
+                                                    else if (Model.IsManualInputFlow)
+                                                    {
+                                                        <dd class="govuk-summary-list__actions">
+                                                            <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRoleEdit), "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                                 @SharedLocalizer["Change"]
                                                                 <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
                                                             </a>
@@ -310,7 +335,7 @@
                                                else
                                                 {
                                                     <dd class="govuk-summary-list__actions">
-                                                    <a class="govuk-link" href="@Url.Action("NonCompaniesHouseTeamMemberDetails", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                    <a class="govuk-link" href="@Url.Action("NonCompaniesHouseTeamMemberDetailsEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                             @SharedLocalizer["Change"]
                                                             <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.ContactDetails"]</span>
                                                         </a>
@@ -357,5 +382,17 @@
                 <a href="@ViewBag.MakeChangesToYourLimitedCompanyLink" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener noreferrer">@Localizer[linkDescription]</a>.
             </p>
         </div>
+    }
+
+    string GetLocalizedRoleOfApprovedPerson(ReExTeamMemberRole? role)
+    {
+        return role switch
+        {
+            ReExTeamMemberRole.IndividualPartner => @Localizer["CheckYourDetails.IndividualPartner"].Value,
+            ReExTeamMemberRole.PartnerDirector => @Localizer["CheckYourDetails.PartnerDirector"].Value,
+            ReExTeamMemberRole.PartnerCompanySecretary => @Localizer["CheckYourDetails.PartnerCompanySecretary"].Value,
+            ReExTeamMemberRole.None => @Localizer["CheckYourDetails.None"].Value,
+            _ => @Localizer["CheckYourDetails.Missing"].Value
+        };
     }
 }
