@@ -81,7 +81,11 @@ public class CompaniesHouseNumberTests : OrganisationTestBase
         _organisationSessionMock = new OrganisationSession
         {
             Journey = [PagePath.RegisteredAsCharity, PagePath.RegisteredWithCompaniesHouse, PagePath.CompaniesHouseNumber],
-            ReExCompaniesHouseSession = null
+            ReExCompaniesHouseSession = null,
+            ReExManualInputSession = new ReExManualInputSession(),
+            TradingName = "testing trading name",
+            IsTradingNameDifferent = false,
+            IsUkMainAddress = true
         };
 
         _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(_organisationSessionMock);
