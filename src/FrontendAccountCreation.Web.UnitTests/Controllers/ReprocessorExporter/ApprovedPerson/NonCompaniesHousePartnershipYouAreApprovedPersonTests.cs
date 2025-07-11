@@ -85,7 +85,7 @@ public class NonCompaniesHousePartnershipYouAreApprovedPersonTests : ApprovedPer
     }
 
     [TestMethod]
-    public async Task NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother_Get_SetsBackLinkAndRedirectsToTeamMemberRole()
+    public async Task NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother_Get_RedirectsToTeamMemberRole()
     {
         // Act
         var result = await _systemUnderTest.NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother();
@@ -95,23 +95,4 @@ public class NonCompaniesHousePartnershipYouAreApprovedPersonTests : ApprovedPer
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHousePartnershipTeamMemberRole));
     }
-
-    [TestMethod]
-    public async Task NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother_Get_SetsBackLinkCorrectly()
-    {
-        // Arrange
-        var session = new OrganisationSession
-        {
-            ReExManualInputSession = new ReExManualInputSession(),
-            Journey = [PagePath.NonCompaniesHousePartnershipAddApprovedPerson]
-        };
-        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(session);
-
-        // Act
-        await _systemUnderTest.NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother();
-
-        // Assert
-        _sessionManagerMock.Verify(x => x.GetSessionAsync(It.IsAny<ISession>()), Times.Once);
-    }
-
 }

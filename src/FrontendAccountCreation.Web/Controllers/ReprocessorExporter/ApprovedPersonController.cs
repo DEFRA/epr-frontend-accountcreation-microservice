@@ -1133,7 +1133,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother()
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson);
             DeleteFocusId();
             return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole),
                 PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
