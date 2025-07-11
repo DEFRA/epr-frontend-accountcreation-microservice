@@ -83,4 +83,16 @@ public class NonCompaniesHousePartnershipYouAreApprovedPersonTests : ApprovedPer
         var redirect = (RedirectToActionResult)result;
         redirect.ActionName.Should().Be(nameof(_systemUnderTest.CheckYourDetails));
     }
+
+    [TestMethod]
+    public async Task NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother_Get_RedirectsToTeamMemberRole()
+    {
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother();
+
+        // Assert
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirect = (RedirectToActionResult)result;
+        redirect.ActionName.Should().Be(nameof(_systemUnderTest.NonCompaniesHousePartnershipTeamMemberRole));
+    }
 }
