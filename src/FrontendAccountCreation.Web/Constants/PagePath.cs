@@ -58,7 +58,6 @@ public static class PagePath
     public const string NonCompaniesHousePartnershipCheckNamesOfPartners = "non-companies-house-check-partner-names";
     public const string NonCompaniesHousePartnershipCheckNamesOfPartnersDelete = "non-companies-house-check-partner-names/delete";
     public const string NonCompaniesHousePartnershipYouAreApprovedPerson = "non-companies-house-partnership-approved-person-confirmation";
-    public const string NonCompaniesHousePartnershipTheirRole = "non-companies-house-partnership-role";
     public const string NonCompaniesHousePartnershipTheirRoleAdd = "non-companies-house-partnership-role/add";
 
     // Approve person paths
@@ -80,10 +79,15 @@ public static class PagePath
     public const string NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete = "non-companies-house-check-invitation-details/delete";
     public const string NonCompaniesHousePartnershipTheirRoleEdit = "non-companies-house-partnership-their-role/edit";
 
+    public const string NonCompaniesHousePartnershipTheirRole = "non-companies-house-partnership-role";
+    public const string NonCompaniesHousePartnershipTheirRoleEdit = "non-companies-house-partnership-their-role/edit";
+    public const string NonCompaniesHousePartnershipTheirRoleAdd = "non-companies-house-partnership-role/add";
+    public const string NonCompaniesHousePartnershipTheirRoleAddAnother = "non-companies-house-partnership-role/add-another";
+
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
 
-    public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-cannot-be-invited";
+    public const string ApprovedPersonCanNotBeInvited = "approved-person-cannot-be-invited";
     
     public const string MemberPartnership = "member-partnership";
     public const string MemberPartnershipAdd = "member-partnership/add";
