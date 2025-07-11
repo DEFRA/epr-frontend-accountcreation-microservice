@@ -1,3 +1,4 @@
+@using FrontendAccountCreation.Core.Sessions.ReEx
 @using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.Constants
@@ -227,7 +228,7 @@
                         @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true, IsLimitedLiabilityPartnership: false })
                         {
                             // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
-                            ViewBag.TypeOfPartnerShip = "LimitedLiabilityPartnership";
+                            ViewBag.TypeOfPartnerShip = "Limited";
                             @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners);
                         }
                         else if (Model is { IsManualInputFlow: true, IsOrganisationAPartnership: true })
@@ -289,7 +290,7 @@
                                                     else if (Model.IsManualInputFlow)
                                                     {
                                                         <dd class="govuk-summary-list__value">
-                                                            @Model.reExCompanyTeamMembers[i].Role
+                                                            @GetLocalizedRoleOfApprovedPerson(@Model.reExCompanyTeamMembers[i].Role)
                                                         </dd>
                                                     }
                                                     @if (Model.IsCompaniesHouseFlow)
@@ -381,5 +382,17 @@
                 <a href="@ViewBag.MakeChangesToYourLimitedCompanyLink" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener noreferrer">@Localizer[linkDescription]</a>.
             </p>
         </div>
+    }
+
+    string GetLocalizedRoleOfApprovedPerson(ReExTeamMemberRole? role)
+    {
+        return role switch
+        {
+            ReExTeamMemberRole.IndividualPartner => @Localizer["CheckYourDetails.IndividualPartner"].Value,
+            ReExTeamMemberRole.PartnerDirector => @Localizer["CheckYourDetails.PartnerDirector"].Value,
+            ReExTeamMemberRole.PartnerCompanySecretary => @Localizer["CheckYourDetails.PartnerCompanySecretary"].Value,
+            ReExTeamMemberRole.None => @Localizer["CheckYourDetails.None"].Value,
+            _ => @Localizer["CheckYourDetails.Missing"].Value
+        };
     }
 }

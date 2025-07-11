@@ -2,9 +2,9 @@
 @model IList<FrontendAccountCreation.Web.ViewModels.ReExAccount.ReExPersonOrCompanyPartner>
 
 <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-4">
-    @if (@ViewBag.TypeOfPartnerShip == "NonCompaniesHouse")
+    @if (@ViewBag.TypeOfPartnerShip == "Limited")
     {
-        @Localizer["Partners within a partnership"]
+        @Localizer["_CheckYourDetailsPartnershipDetails.LimitedPartnersSectionTitle"]
     }
     else
     {
