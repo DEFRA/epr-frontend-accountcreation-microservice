@@ -53,7 +53,6 @@ public static class PagePath
     public const string ManageControl = "manage-control";
     public const string ManageControlOrganisation = "manage-control-organisation";
     public const string IndividualIncharge = "individual-in-charge";
-    public const string NonCompaniesHousePartnershipTheirRoleAdd = "non-companies-house-partnership-role/add";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
@@ -67,7 +66,6 @@ public static class PagePath
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";
 
-    public const string NonCompaniesHousePartnershipTheirRoleEdit = "non-companies-house-partnership-their-role/edit";
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
 
