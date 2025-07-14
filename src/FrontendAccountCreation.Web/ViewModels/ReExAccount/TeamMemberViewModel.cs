@@ -12,19 +12,31 @@ public class TeamMemberViewModel
     [Required]
     public Guid Id { get; set; }
 
-    [Required(ErrorMessage = "TeamMemberDetails.EmailError")]
-    [PublicEmailAddress(ErrorMessage = "TeamMemberDetails.EmailInvalidErrorMessage")]
-    public string? Email { get; set; }
-
-    [Required(ErrorMessage = "TeamMemberDetails.TelephoneNumberErrorMessage")]
-    [TeamMemberTelephoneNumberValidation(ErrorMessage = "TeamMemberDetails.TelephoneNumberInvalidErrorMessage")]
-    public string? Telephone { get; set; }
-
+    /// <summary>
+    /// Gets or sets first name of the team member.
+    /// </summary>
     [Required(ErrorMessage = "TeamMemberDetails.FirstNameErrorMessage")]
     [MaxLength(50, ErrorMessage = "TeamMemberDetails.FirstNameLengthErrorMessage")]
     public string? FirstName { get; set; }
 
+    /// <summary>
+    /// Gets or sets the last name of the team member.
+    /// </summary>
     [Required(ErrorMessage = "TeamMemberDetails.LastNameErrorMessage")]
     [MaxLength(50, ErrorMessage = "TeamMemberDetails.LastNameLengthErrorMessage")]
-    public string? LastName { get; set; }    
+    public string? LastName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the email address of the team member.
+    /// </summary>
+    [Required(ErrorMessage = "TeamMemberDetails.EmailError")]
+    [PublicEmailAddress(ErrorMessage = "TeamMemberDetails.EmailInvalidErrorMessage")]
+    public string? Email { get; set; }
+
+    /// <summary>
+    /// Gets or sets the telephone number of the team member.
+    /// </summary>
+    [Required(ErrorMessage = "TeamMemberDetails.TelephoneNumberErrorMessage")]
+    [TeamMemberTelephoneNumberValidation(ErrorMessage = "TeamMemberDetails.TelephoneNumberInvalidErrorMessage")]
+    public string? Telephone { get; set; }
 }
