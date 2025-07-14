@@ -1291,6 +1291,9 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
                 model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
 
+                ModelState.ClearValidationState(nameof(model.InviteUserOption));
+                ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
+
                 return View(model);
             }
 
