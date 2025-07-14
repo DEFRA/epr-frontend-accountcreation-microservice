@@ -61,8 +61,18 @@
 
                                 <!-- Name, Email, Telephone -->
                                 <div class="govuk-summary-list__row ">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.Name"]</dt>
-                                    <dd class="govuk-summary-list__value">@($"{Model[i].FirstName} {Model[i].LastName}")</dd>
+                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.FirstName"]</dt>
+                                    <dd class="govuk-summary-list__value">@($"{Model[i].FirstName}")</dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetailsEdit), "ApprovedPerson", new { id = Model[i].Id })">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
+                                        </a>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row ">
+                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.LastName"]</dt>
+                                    <dd class="govuk-summary-list__value">@($"{Model[i].LastName}")</dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetailsEdit), "ApprovedPerson", new { id = Model[i].Id })">
                                             @SharedLocalizer["Change"]
