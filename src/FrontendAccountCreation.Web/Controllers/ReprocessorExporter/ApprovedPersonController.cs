@@ -435,6 +435,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                         Email = teamMember.Email
                     };
                 }
+                SetFocusId(id.Value);
             }
 
             return View(viewModel);
