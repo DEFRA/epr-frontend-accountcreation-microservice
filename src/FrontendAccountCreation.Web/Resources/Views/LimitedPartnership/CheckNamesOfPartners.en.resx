@@ -20,7 +20,7 @@
     <value>Check individual partner names</value>
   </data>
   <data name="CheckNamesOfPartners.Title_Company" xml:space="preserve">
-    <value>Check corporate partners</value>
+    <value>Check corporate partner names</value>
   </data>
   <data name="CheckNamesOfPartners.Title_Both" xml:space="preserve">
     <value>Check partners names</value>
