@@ -8,13 +8,14 @@
 	ViewData["Title"] = Localizer["TeamMemberDetails.Title"];
 	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
 	ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
-	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, nameof(Model.FirstName),
-							  nameof(Model.LastName), nameof(Model.Email), nameof(Model.Telephone));
 
 	var _firstName = Model.FirstName;
 	var _lastName = Model.LastName;
 	var _email = Model.Email;
 	var _telephone = Model.Telephone;
+
+	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer,
+							nameof(_firstName), nameof(_lastName), nameof(_email), nameof(_telephone));
 }
 
 <div class="govuk-width-container">
@@ -38,7 +39,7 @@
 							@await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(_firstName)])
 							<input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(_firstName)) ? "govuk-input--error" : "")"
 								   type="text"
-								   gov-for="FirstName" 
+								   gov-for="FirstName"
 								   gov-value="@_firstName">
 						</div>
 
@@ -49,7 +50,7 @@
 							@await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(_lastName)])
 							<input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(_lastName)) ? "govuk-input--error" : "")"
 								   type="text"
-								   gov-for="LastName" 
+								   gov-for="LastName"
 								   gov-value="@_lastName">
 						</div>
 
