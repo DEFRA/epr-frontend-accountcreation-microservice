@@ -60,7 +60,7 @@
                                 </div>
 
                                 <!-- Name, Email, Telephone -->
-                                <div class="govuk-summary-list__row ">
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
                                     <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.FirstName"]</dt>
                                     <dd class="govuk-summary-list__value">@($"{Model[i].FirstName}")</dd>
                                     <dd class="govuk-summary-list__actions">
@@ -70,15 +70,9 @@
                                         </a>
                                     </dd>
                                 </div>
-                                <div class="govuk-summary-list__row ">
+                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
                                     <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.LastName"]</dt>
-                                    <dd class="govuk-summary-list__value">@($"{Model[i].LastName}")</dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetailsEdit), "ApprovedPerson", new { id = Model[i].Id })">
-                                            @SharedLocalizer["Change"]
-                                            <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
-                                        </a>
-                                    </dd>
+                                    <dd class="govuk-summary-list__value">@($"{Model[i].LastName}")</dd>                                  
                                 </div>
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-actions govuk-summary-list__row--no-border">
                                     <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.Email"]</dt>
