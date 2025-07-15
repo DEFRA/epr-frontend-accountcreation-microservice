@@ -12,7 +12,7 @@
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
-    string manageControlHint = Model.IsUnincorporatedFlow == true
+    var manageControlHint = Model.IsUnincorporatedFlow
        ? "ManageControl.Unincorporated.Hint"
        : "ManageControl.Hint";
     

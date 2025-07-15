@@ -81,4 +81,26 @@ public class UnincorporatedRoleInOrganisationTests : OrganisationTestBase
 
         _organisationSession.ReExManualInputSession.RoleInUnincorporatedOrganisation.Should().Be(viewModel.Role);
     }
+    
+    [TestMethod]
+    public async Task RoleInOrganisation_PostWithNullReExManualInputSession_ReturnRedirect()
+    {
+        // Arrange
+        var viewModel = new ReExRoleInOrganisationViewModel { Role = "test" };
+        var organisationSession = new OrganisationSession
+        {
+            Journey = new List<string> { PagePath.BusinessAddress, PagePath.UnincorporatedRoleInOrganisation },
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(organisationSession);
+
+        // Act
+        var result = await _systemUnderTest.UnincorporatedRoleInOrganisation(viewModel);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be(nameof(OrganisationController.ManageControl));
+
+        organisationSession.ReExManualInputSession.RoleInUnincorporatedOrganisation.Should().Be(viewModel.Role);
+    }
 }

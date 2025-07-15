@@ -1192,4 +1192,35 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
     }
 
+    [TestMethod]
+    public async Task CheckYourDetails_WhenIsUnincorporatedFlowIsTrue_ShouldPopulateWithUnincorporatedDetails()
+    {
+        // Arrange
+        const string tradingName = "Unincorporated company trading name";
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            IsUkMainAddress = true,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody,
+                OrganisationName = "Unincorporated company",
+                TeamMembers = [new ReExCompanyTeamMember { FirstName = "Charlie", LastName = "Davis" }]
+            },
+            IsTradingNameDifferent = true,
+            TradingName = tradingName
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.ProducerType.Should().Be(session.ReExManualInputSession.ProducerType);
+        model.TradingName.Should().Be(tradingName);
+        model.reExCompanyTeamMembers.Should().ContainSingle(x => x.FirstName == "Charlie");
+    }
 }
