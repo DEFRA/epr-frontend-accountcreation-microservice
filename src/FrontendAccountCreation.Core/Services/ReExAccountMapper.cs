@@ -55,7 +55,7 @@ public class ReExAccountMapper : IReExAccountMapper
             }
             if (session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
             {
-                return session.ReExManualInputSession?.RoleInUnincorporatedOrganisation;
+                return session.ReExManualInputSession.RoleInUnincorporatedOrganisation;
             }
         }
         return null;
