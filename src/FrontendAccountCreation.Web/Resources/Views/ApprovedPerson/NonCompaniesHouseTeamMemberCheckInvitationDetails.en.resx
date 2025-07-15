@@ -162,10 +162,10 @@
   <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.IndividualPartner" xml:space="preserve">
     <value>Individual partner within the partnership</value>
   </data>
-  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.CompanyDirector" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnerDirector" xml:space="preserve">
     <value>Company director of a corporate partner within the partnership</value>
   </data>
-  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.CompanySecretary" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnerCompanySecretary" xml:space="preserve">
     <value>Company secretary of a corporate partner within the partnership</value>
   </data>
     <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.None" xml:space="preserve">
