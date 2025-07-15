@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
 {
-    [ExcludeFromCodeCoverage]
     public class NonCompaniesHouseTeamMemberCheckInvitationDetailsViewModel
     {
         public bool IsSoleTrader { get; set; }
