@@ -59,6 +59,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NonCompaniesHousePartnershipInviteApprovedPerson.Title" xml:space="preserve">
-    <value>Invite-an-approved-person</value>
+    <value>[Welsh]Add an approved person</value>
+  </data>
+  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
+    <value>[Welsh]Select whether to invite someone to be an approved person or do this later</value>
   </data>
 </root>
