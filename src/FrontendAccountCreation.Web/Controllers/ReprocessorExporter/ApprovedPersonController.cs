@@ -489,7 +489,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsPartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
+                IsPartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership,
                 IsUnincorporated = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody
             };
 
