@@ -27,4 +27,17 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    [AllowAnonymous]
+    [Route(PagePath.TimeoutSignedOut)]
+    public IActionResult TimeoutSignedOut()
+    {
+        HttpContext.Session.Clear();
+        return View("TimeoutSignedOut");
+    }
+
+    public IActionResult SessionTimeoutModal()
+    {
+        return PartialView("_TimeoutSessionWarning");
+    }
 }

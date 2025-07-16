@@ -29,7 +29,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="~/images/govuk-apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="~/images/govuk-apple-touch-icon.png">
     <link rel="stylesheet" href="~/css/application.css">
-
+    
     @if (useGoogleAnalyticsCookie == true)
     {
         <!-- Google Tag Manager -->
@@ -61,7 +61,6 @@
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
     }
-
     <script nonce="@scriptNonce">
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
@@ -86,7 +85,10 @@
     </div>
 
     @RenderBody()
-
+    @if (headerPartial.Contains("ReEx", StringComparison.OrdinalIgnoreCase))
+    {
+        @await Component.InvokeAsync("SessionTimeoutWarning")
+    }
     @await Html.PartialAsync("Partials/Govuk/_Footer", ExternalUrlsOptions.Value)
 
     <script src="~/js/govuk.js"></script>
