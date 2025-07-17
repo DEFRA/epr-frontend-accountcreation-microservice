@@ -136,10 +136,10 @@
     <value>[Welsh] Continue</value>
   </data>
   <data name="PartnerDetails.Title" xml:space="preserve">
-    <value>[Welsh] What are your team member’s details?</value>
+    <value>[Welsh] What are their details?</value>
   </data>
   <data name="PartnerDetails.Header" xml:space="preserve">
-    <value>[Welsh] Team Member Details</value>
+    <value>[Welsh] What are their details?</value>
   </data>
   <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
     <value>[Welsh] Enter a valid telephone number</value>
