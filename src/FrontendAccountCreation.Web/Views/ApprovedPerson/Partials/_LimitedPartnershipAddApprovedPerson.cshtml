@@ -3,7 +3,7 @@
 @using FrontendAccountCreation.Core.Sessions;
 @model AddApprovedPersonViewModel
 
-<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : string.Empty)">
+<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
     <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
         @Localizer["LimitedPartnershipAddApprovedPerson.Title"]
     </h1>
@@ -86,8 +86,6 @@
                     @Localizer["LimitedPartnershipAddApprovedPerson.IWillInviteApprovedPersonLater"]
                 </label>
             </div>
-
         </div>
     </fieldset>
-
 </div>
