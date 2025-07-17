@@ -142,7 +142,7 @@
     <value>Remove</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>Invite another approved person</value>
+    <value>Invite another person</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.ContactDetails" xml:space="preserve">
     <value>contact details</value>
@@ -152,5 +152,11 @@
   </data>
   <data name="TeamMembersCheckInvitationDetails.NoInviterRemovedMsg" xml:space="preserve">
     <value>You have removed any invitations created for one or more approved persons.</value>
+  </data>
+  <data name="TeamMembersCheckInvitationDetails.FirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="TeamMembersCheckInvitationDetails.LastName" xml:space="preserve">
+    <value>Last name</value>
   </data>
 </root>
