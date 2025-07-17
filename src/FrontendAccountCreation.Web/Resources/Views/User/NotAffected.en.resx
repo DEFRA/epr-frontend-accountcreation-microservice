@@ -132,4 +132,7 @@
   <data name="NotAffected.Title" xml:space="preserve">
     <value>Not affected</value>
   </data>
+  <data name="NotAffected.Charity.ReEx.Paragraph1" xml:space="preserve">
+    <value>This is because your organisation is a charity. Charities are not affected by extended producer responsibility (EPR) for reprocessors and exporters.</value>
+  </data>
 </root>
