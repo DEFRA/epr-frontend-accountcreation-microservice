@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IsTradingNameDifferent.ErrorMessage" xml:space="preserve">
-    <value>Dewiswch os yw enw masnachu'ch sefydliad yn wahanol i'w enw yn Nhŷ'r Cwmnïau</value>
+    <value>Dewiswch ie os yw'r enw masnachu yn wahanol i enw'r sefydliad</value>
   </data>
   <data name="IsTradingNameDifferent.NonUk.ErrorMessage" xml:space="preserve">
-    <value>Dewiswch os yw'r enw masnachu yn wahanol i enw'r sefydliad</value>
+    <value>Dewiswch ie os yw'r enw masnachol yn wahanol i enw'r sefydliad</value>
   </data>
   <data name="IsTradingNameDifferent.NonUk.Question" xml:space="preserve">
     <value>Ydy'r enw masnachu yn wahanol i enw'r sefydliad?</value>
