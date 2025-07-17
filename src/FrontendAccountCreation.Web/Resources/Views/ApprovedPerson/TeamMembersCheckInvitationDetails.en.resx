@@ -142,7 +142,7 @@
     <value>Remove</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>Invite another approved person</value>
+    <value>Invite another person</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.ContactDetails" xml:space="preserve">
     <value>contact details</value>
