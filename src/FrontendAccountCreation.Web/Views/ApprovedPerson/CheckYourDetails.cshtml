@@ -239,13 +239,13 @@
                         {
                             // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
                             ViewBag.TypeOfPartnerShip = "Limited";
-                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners);
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
                         else if (Model is { IsManualInputFlow: true, IsOrganisationAPartnership: true })
                         {
                             // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
                             ViewBag.TypeOfPartnerShip = "NonCompaniesHouse";
-                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners);
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
 
                         @if (Model.reExCompanyTeamMembers != null && Model.reExCompanyTeamMembers?.Count > 0)
