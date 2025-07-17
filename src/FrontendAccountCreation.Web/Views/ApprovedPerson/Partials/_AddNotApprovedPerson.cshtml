@@ -18,8 +18,11 @@
     </p>
 
     <p class="govuk-body">
-        @Localizer[$"{localizerPrefix}IntroText2"]
+        @(Model.IsUnincorporated
+            ? Localizer["AddNotApprovedPerson.Unincorporated.IntroText2"]
+            : Localizer[$"{localizerPrefix}IntroText2"])
     </p>
+
 
     <ul class="govuk-list govuk-list--bullet">
         <li>@Localizer["AddNotApprovedPerson.BulletAccreditation"]</li>
@@ -32,7 +35,14 @@
 
     @if(!Model.IsSoleTrader){
         <p class="govuk-body">
-            @Localizer["AddNotApprovedPerson.IntroText3"]
+            @if (Model.IsUnincorporated)
+            {
+                @Localizer["AddNotApprovedPerson.Unincorporated.IntroText3"]
+            }
+            else
+            {
+                @Localizer["AddNotApprovedPerson.IntroText3"]
+            }
         </p>
     }
 
@@ -65,13 +75,29 @@
     else
     {
         <p class="govuk-body">
-            @Localizer[$"{localizerPrefix}RolesInstruction"]
+            @(Model.IsUnincorporated
+                ? Localizer["AddNotApprovedPerson.Unincorporated.RolesInstruction"]
+                : Localizer[$"{localizerPrefix}RolesInstruction"])
         </p>
 
-        @if(!Model.IsSoleTrader)
+
+        @if (Model.IsUnincorporated)
+        {
+            <p class="govuk-body">
+                @Localizer["AddNotApprovedPerson.ForExample"]
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Localizer["AddNotApprovedPerson.Chairperson"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Treasurer"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Secretary"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Manager"]</li>
+                <li>@Localizer["AddNotApprovedPerson.Owner"]</li>
+            </ul>
+        }
+        else if (!Model.IsSoleTrader)
         {
             <ul class="govuk-list govuk-list--bullet">
-                <li>@Localizer["AddNotApprovedPerson.CompanyDirector"]</li> 
+                <li>@Localizer["AddNotApprovedPerson.CompanyDirector"]</li>
                 <li>@Localizer["AddNotApprovedPerson.CompanySecretary"]</li>
             </ul>
         }
@@ -103,7 +129,15 @@
                        gov-for="InviteUserOption"
                        gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)"
                        gov-first-option="true">
-                    @Localizer[$"{localizerPrefix}InviteAnotherApprovedPerson"]
+                    @if (Model.IsUnincorporated)
+                    {
+                        @Localizer["AddNotApprovedPerson.Unincorporated.InviteAnotherApprovedPerson"]
+                    }
+                    else
+                    {
+                        @Localizer[$"{localizerPrefix}InviteAnotherApprovedPerson"]
+                    }
+
                 </label>
             </div>
 

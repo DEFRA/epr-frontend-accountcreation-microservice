@@ -249,4 +249,22 @@
   <data name="CheckYourDetails.UkRegulator" xml:space="preserve">
     <value>(W)Which UK regulator</value>
   </data>
+  <data name="CheckYourDetails.IndividualPartner" xml:space="preserve">
+    <value>(W)Individual partner</value>
+  </data>
+  <data name="CheckYourDetails.PartnerDirector" xml:space="preserve">
+    <value>(W)Company director of a corporate partner</value>
+  </data>
+  <data name="CheckYourDetails.PartnerCompanySecretary" xml:space="preserve">
+    <value>(W)Company secretary of a corporate partner</value>
+  </data>
+  <data name="CheckYourDetails.None" xml:space="preserve">
+    <value>(W)None of the above</value>
+  </data>
+   <data name="CheckYourDetails.Missing" xml:space="preserve">
+    <value>(W)Missing</value>
+  </data> 
+  <data name="CheckYourDetails.ManageOrControlOrganisation" xml:space="preserve">
+    <value>(W)Manage or control organisation</value>
+  </data>
 </root>

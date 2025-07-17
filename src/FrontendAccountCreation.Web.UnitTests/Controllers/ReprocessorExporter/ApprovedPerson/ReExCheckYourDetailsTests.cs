@@ -1192,4 +1192,131 @@ public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
         _sessionManagerMock.Verify(m => m.SaveSessionAsync(It.IsAny<ISession>(), session), Times.Once);
     }
 
+    [TestMethod]
+    public async Task GET_CheckYourDetails_WhenIsNonCompaniesHousePartnership_SetsCorrectViewModelProperties()
+    {
+        // Arrange
+        var alfred = new ReExCompanyTeamMember
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "Alfred",
+            LastName = "Hitchcock",
+            Role = ReExTeamMemberRole.PartnerDirector,
+            Email = "director@gmail.com"
+        };
+
+        var donald = new ReExCompanyTeamMember
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "Donald",
+            LastName = "Duck",
+            Role = ReExTeamMemberRole.PartnerCompanySecretary,
+            Email = "donaald@gmail.com"
+        };
+
+        List<ReExCompanyTeamMember> approvedPersons = [alfred, donald];
+
+        var jack = new ReExPersonOrCompanyPartner
+        {
+            Id = Guid.NewGuid(),
+            Name = "Jack",
+            IsPerson = true,
+        };
+
+        var jill = new ReExPersonOrCompanyPartner
+        {
+            Id = Guid.NewGuid(),
+            Name = "Jill",
+            IsPerson = true,
+        };
+
+        ReExTypesOfPartner typesOfPartner = new()
+        {
+            HasIndividualPartners = true,
+            Partners = [jack, jill]
+        };
+
+        var manualInputSession = new ReExManualInputSession
+        {
+            ProducerType = ProducerType.Partnership,
+            BusinessAddress = new Address
+            {
+                Country = "UK",
+                BuildingName = "address line 1",
+                Street = "address line 2",
+                Town = "London",
+                County = "London",
+                Postcode = "AB1 2BC",
+                IsManualAddress = true,
+            },
+            OrganisationName = "Snibbo",
+            TeamMembers = approvedPersons,
+            TypesOfPartner = typesOfPartner
+        };
+
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            ReExManualInputSession = manualInputSession
+        };
+
+        _sessionManagerMock.Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        _sessionManagerMock.Setup(s => s.SaveSessionAsync(It.IsAny<ISession>(), session))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        var model = (ReExCheckYourDetailsViewModel)viewResult!.Model!;
+
+        model.ProducerType.Should().Be(ProducerType.Partnership);
+        model.BusinessAddress.Should().BeSameAs(manualInputSession.BusinessAddress);
+        model.CompanyName.Should().Be("Snibbo");
+        model.IsOrganisationAPartnership.Should().BeTrue();
+
+        model.reExCompanyTeamMembers.Should().HaveCount(2);
+
+        model.reExCompanyTeamMembers[0].Should().BeEquivalentTo(alfred);
+        model.reExCompanyTeamMembers[1].Should().BeEquivalentTo(donald);
+
+        model.LimitedPartnershipPartners.Should().HaveCount(2);
+        model.LimitedPartnershipPartners[0].Should().BeEquivalentTo(jack);
+        model.LimitedPartnershipPartners[1].Should().BeEquivalentTo(jill);
+    }
+    [TestMethod]
+    public async Task CheckYourDetails_WhenIsUnincorporatedFlowIsTrue_ShouldPopulateWithUnincorporatedDetails()
+    {
+        // Arrange
+        const string tradingName = "Unincorporated company trading name";
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            IsUkMainAddress = true,
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                ProducerType = ProducerType.UnincorporatedBody,
+                OrganisationName = "Unincorporated company",
+                TeamMembers = [new ReExCompanyTeamMember { FirstName = "Charlie", LastName = "Davis" }]
+            },
+            IsTradingNameDifferent = true,
+            TradingName = tradingName
+        };
+
+        _sessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>()))
+            .ReturnsAsync(session);
+
+        // Act
+        var result = await _systemUnderTest.CheckYourDetails();
+        var model = ((ViewResult)result).Model.As<ReExCheckYourDetailsViewModel>();
+
+        // Assert
+        model.ProducerType.Should().Be(session.ReExManualInputSession.ProducerType);
+        model.TradingName.Should().Be(tradingName);
+        model.reExCompanyTeamMembers.Should().ContainSingle(x => x.FirstName == "Charlie");
+    }
 }

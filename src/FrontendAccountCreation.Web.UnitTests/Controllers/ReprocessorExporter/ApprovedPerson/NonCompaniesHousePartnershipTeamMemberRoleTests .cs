@@ -534,7 +534,6 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
     }
 
     [TestMethod]
-    // As the test name implies, this test needs to be rewritten when the target page is ready
     public async Task NonCompaniesHousePartnershipTeamMemberRole_Post_WithNoneRoleAndNonExistingMember_RedirectsToCannotBeInvited()
     {
         // Arrange
@@ -552,10 +551,20 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
         };
 
         // Act
-        var act = async () => await _systemUnderTest.NonCompaniesHousePartnershipTeamMemberRole(model);
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipTeamMemberRole(model);
 
         // Assert
-        act.Should().ThrowAsync<NotImplementedException>().WithMessage("You cannot invite this person to be an approved person");
+        var redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirectToActionResult.ActionName.Should().Be(nameof(ApprovedPersonController.PersonCanNotBeInvited));
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.ReExManualInputSession.TeamMembers.Count == 0 
+                    && s.Journey.Contains(PagePath.NonCompaniesHousePartnershipTheirRole)
+                    && s.Journey.Contains(PagePath.ApprovedPersonCanNotBeInvited)
+            )),
+            Times.Once);
     }
 
     [TestMethod]
@@ -640,5 +649,54 @@ public class NonCompaniesHousePartnershipTeamMemberRoleTests : ApprovedPersonTes
 
         _orgSessionMock.ReExManualInputSession.TeamMembers[0].Role.Should().Be(ReExTeamMemberRole.CompanySecretary);
         _orgSessionMock.ReExManualInputSession.TeamMembers[1].Role.Should().Be(ReExTeamMemberRole.Director);
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipTheirRoleAdd_RedirectsToTeamMemberRole()
+    {
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipTheirRoleAdd();
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole));
+        redirect.RouteValues.Should().BeNull();
+
+        _sessionManagerMock.Verify(x => x.SaveSessionAsync(
+            It.IsAny<ISession>(),
+            It.Is<OrganisationSession>(s =>
+                s.Journey.Contains(PagePath.NonCompaniesHousePartnershipTheirRole)
+            )),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHouseTeamMemberDetailsEdit_RedirectsToNonCompaniesHouseTeamMemberDetails()
+    {
+        // Arrange
+        var teamMemberId = Guid.NewGuid();
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetailsEdit(teamMemberId);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails));
+        redirect.RouteValues.Should().BeNull();
+    }
+
+    [TestMethod]
+    public async Task NonCompaniesHousePartnershipTeamMemberRoleEdit_RedirectsToNonCompaniesHousePartnershipTeamMemberRole()
+    {
+        // Arrange
+        var teamMemberId = Guid.NewGuid();
+
+        // Act
+        var result = await _systemUnderTest.NonCompaniesHousePartnershipTeamMemberRoleEdit(teamMemberId);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Which;
+        redirect.ActionName.Should().Be(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRole));
+        redirect.RouteValues.Should().BeNull();
     }
 }

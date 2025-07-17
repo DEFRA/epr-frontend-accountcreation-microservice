@@ -105,8 +105,8 @@ public class ManageControlOrganisationTests : OrganisationPageModelTestBase<Mana
     //to-do: split this into 2?
     [TestMethod]
     [DataRow(YesNoNotSure.Yes, nameof(ApprovedPersonController.NonCompaniesHouseTeamMemberDetails), PagePath.NonCompaniesHouseTeamMemberDetails)]
-    [DataRow(YesNoNotSure.No, nameof(ApprovedPersonController.PersonCanNotBeInvited), PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
-    [DataRow(YesNoNotSure.NotSure, nameof(ApprovedPersonController.PersonCanNotBeInvited), PagePath.ApprovedPersonPartnershipCanNotBeInvited)]
+    [DataRow(YesNoNotSure.No, nameof(ApprovedPersonController.PersonCanNotBeInvited), PagePath.ApprovedPersonCanNotBeInvited)]
+    [DataRow(YesNoNotSure.NotSure, nameof(ApprovedPersonController.PersonCanNotBeInvited), PagePath.ApprovedPersonCanNotBeInvited)]
     public async Task OnPost_ValidModel_Redirects(
         YesNoNotSure yesNoNotSure, string expectedActionName, string expectedNextPagePath)
     {

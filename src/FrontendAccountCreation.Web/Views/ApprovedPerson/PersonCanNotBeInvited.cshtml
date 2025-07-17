@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using FrontendAccountCreation.Core.Models
 
-@model FrontendAccountCreation.Web.ViewModels.ReExAccount.LimitedPartnershipPersonCanNotBeInvitedViewModel
+@model FrontendAccountCreation.Web.ViewModels.ReExAccount.ApprovedPersonCanNotBeInvitedViewModel
 
 @{
 	ViewData["Title"] = Localizer["PersonCanNotBeInvited.Title"];
@@ -24,18 +24,26 @@
 
 						@if (Model.TheyManageOrControlOrganisation.HasValue && Model.TheyManageOrControlOrganisation.Value != YesNoNotSure.Yes)
 						{
-                            <a class="govuk-link"
-							   asp-page="@PageName.Base/ManageControlOrganisation"
-							   asp-route-invitePerson="true">
-							   @Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
+							<a class="govuk-link"
+							asp-page="@PageName.Base/ManageControlOrganisation"
+							asp-route-invitePerson="true">
+								@Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
 							</a>
 						}
 						else if (Model.AreTheyIndividualInCharge.HasValue && Model.AreTheyIndividualInCharge == false)
 						{
 							<a class="govuk-link"
-							   asp-action="AreTheyIndividualInCharge"
-							   asp-controller="ApprovedPerson"
-							   asp-route-resetOptions="true">
+							asp-action="AreTheyIndividualInCharge"
+							asp-controller="ApprovedPerson"
+							asp-route-resetOptions="true">
+								@Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
+							</a>
+						}
+						else if (Model.IsNonCompanyHousePartnership)
+						{
+							<a class="govuk-link"
+							   asp-action="NonCompaniesHousePartnershipTeamMemberRole"
+							   asp-controller="ApprovedPerson">
 								@Localizer["PersonCanNotBeInvited.InviteEligiblePerson"]
 							</a>
 						}

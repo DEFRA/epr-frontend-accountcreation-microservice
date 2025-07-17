@@ -1205,4 +1205,31 @@ public class ReExAccountMapperTests
                     options => options.Excluding(x => x.Id)
                 );
     }
+
+    [TestMethod]
+    [DataRow(null)]
+    [DataRow("TestRole")]
+    public void GetManualInputModel_Returns_UserRoleAsRoleInUnincorporatedOrganisation(string? role)
+    {
+        // Arrange
+        var session = new OrganisationSession
+        {
+            OrganisationType = OrganisationType.NonCompaniesHouseCompany,
+            TradingName = "TradeName",
+            ReExManualInputSession = new ReExManualInputSession
+            {
+                UkRegulatorNation = Nation.Wales,
+                ProducerType = ProducerType.UnincorporatedBody,
+                RoleInUnincorporatedOrganisation = role,
+                BusinessAddress = new Address()
+            }
+        };
+
+        // Act
+        var result = _mapper.CreateReExOrganisationModel(session);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.UserRoleInOrganisation.Should().Be(role);
+    }
 }

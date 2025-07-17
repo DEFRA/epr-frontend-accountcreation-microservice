@@ -676,7 +676,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         // Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = (ViewResult)result;
-        var viewModel = viewResult.Model.Should().BeOfType<LimitedPartnershipPersonCanNotBeInvitedViewModel>().Subject;
+        var viewModel = viewResult.Model.Should().BeOfType<ApprovedPersonCanNotBeInvitedViewModel>().Subject;
         viewModel.Id.Should().Be(testId);
     }
 
@@ -684,7 +684,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     public async Task CanNotInviteThisPerson_Post_RedirectsToCheckYourDetails()
     {
         // Arrange
-        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        var model = new ApprovedPersonCanNotBeInvitedViewModel
         {
             Id = Guid.NewGuid()
         };
@@ -841,7 +841,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     public async Task PersonCanNotBeInvited_Post_InvalidModel_ReturnsView()
     {
         // Arrange
-        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        var model = new ApprovedPersonCanNotBeInvitedViewModel
         {
             Id = Guid.NewGuid()
         };
@@ -860,7 +860,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     public async Task PersonCanNotBeInvited_Post_ValidModel_RedirectsToCheckYourDetails()
     {
         // Arrange
-        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        var model = new ApprovedPersonCanNotBeInvitedViewModel
         {
             Id = Guid.NewGuid()
         };
@@ -877,7 +877,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
     public async Task CanNotInviteThisPerson_Post_InvalidModel_ReturnsView()
     {
         // Arrange
-        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = Guid.NewGuid() };
+        var model = new ApprovedPersonCanNotBeInvitedViewModel { Id = Guid.NewGuid() };
         _systemUnderTest.ModelState.AddModelError("Test", "Required");
 
         // Act
