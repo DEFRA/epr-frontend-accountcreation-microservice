@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UkNation.Title" xml:space="preserve">
-    <value>Cenedl yn y Deyrnas Unedig</value>
+    <value>[Welsh]Where in the UK is your business based?</value>
   </data>
   <data name="UkNation.LimitedCompany.Question" xml:space="preserve">
     <value>Ble yn y Deyrnas Unedig mae eich sefydliad chi wedi’i leoli?</value>
