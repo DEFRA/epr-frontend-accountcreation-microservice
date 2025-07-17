@@ -1,0 +1,49 @@
+@using FrontendAccountCreation.Web.Constants
+@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
+
+@model ReExRoleInOrganisationViewModel
+
+@{
+    ViewData["Title"] = Localizer["ReExRoleInOrganisation.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+}
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+
+                <form asp-controller="Organisation" asp-action="UnincorporatedRoleInOrganisation" method="post">
+                    <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--l" for="Role">
+                                    @Localizer["ReExRoleInOrganisation.Question"]
+                                </label>
+                            </h1>
+                            <div class="govuk-hint" id="hint">
+                                @Localizer["ReExRoleInOrganisation.Hint"]
+                            </div>
+                        </legend>
+
+                        @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)
+
+                        <div class="govuk-form-group">
+                            <input id="Role" class="govuk-input" aria-describedby="hint" name="role" type="text" autocomplete="off" value="@Model.Role">
+                        </div>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        @SharedLocalizer["Continue"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

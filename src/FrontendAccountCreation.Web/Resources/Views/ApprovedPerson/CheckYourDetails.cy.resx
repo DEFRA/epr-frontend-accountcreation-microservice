@@ -264,4 +264,7 @@
    <data name="CheckYourDetails.Missing" xml:space="preserve">
     <value>(W)Missing</value>
   </data> 
+  <data name="CheckYourDetails.ManageOrControlOrganisation" xml:space="preserve">
+    <value>(W)Manage or control organisation</value>
+  </data>
 </root>

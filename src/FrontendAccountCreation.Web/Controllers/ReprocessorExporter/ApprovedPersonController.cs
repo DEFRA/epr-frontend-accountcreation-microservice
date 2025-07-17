@@ -20,6 +20,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         private readonly ISessionManager<OrganisationSession> _sessionManager;
         private readonly ExternalUrlsOptions _urlOptions;
         private const string ApprovedPersonErrorMessage = "AddAnApprovedPerson.OptionError";
+        private const string ApprovedPersonUnincorporatedErrorMessage = "AddAnApprovedPerson.Unincorporated.OptionError";
+        private const string ApprovedPersonUnincorporatedIneligibleErrorMessage = "AddAnApprovedPerson.Unincorporated.Ineligible.OptionError";
 
         public ApprovedPersonController(
             ISessionManager<OrganisationSession> sessionManager,
@@ -53,7 +55,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false,
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsNonUk = session.IsUkMainAddress == false
+                IsNonUk = session.IsUkMainAddress == false,
+                IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);
@@ -91,9 +94,25 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
                 model.IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session);
                 model.IsNonUk = session.IsUkMainAddress == false;
+                model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
-                ModelState.AddModelError(nameof(model.InviteUserOption), ApprovedPersonErrorMessage);
+
+                string message;
+
+                if (model.IsUnincorporated)
+                {
+                    message = model.IsInEligibleToBeApprovedPerson
+                        ? ApprovedPersonUnincorporatedIneligibleErrorMessage
+                        : ApprovedPersonUnincorporatedErrorMessage;
+                }
+                else
+                {
+                    message = ApprovedPersonErrorMessage;
+                }
+
+                ModelState.AddModelError(nameof(model.InviteUserOption), message);
+
                 return View(model);
             }
 
@@ -108,33 +127,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                     return await SaveSessionAndRedirect(session, nameof(YouAreApprovedPerson), PagePath.AddAnApprovedPerson, PagePath.YouAreApprovedPerson);
 
                 case nameof(InviteUserOptions.InviteAnotherPerson):
-                    string actionName, nextPagePath;
-
-                    if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
-                    {
-                        actionName = nameof(MemberPartnership);
-                        nextPagePath = PagePath.MemberPartnership;
-                    }
-                    else if (session.IsCompaniesHouseFlow)
-                    {
-                        actionName = nameof(TeamMemberRoleInOrganisation);
-                        nextPagePath = PagePath.TeamMemberRoleInOrganisation;
-                    }
-                    else
-                    {
-                        if (session.IsUkMainAddress is false)
-                        {
-                            return await SaveSessionAndRedirectToPage(
-                                session,
-                                nameof(ManageControlOrganisation),
-                                PagePath.AddAnApprovedPerson,
-                                PagePath.ManageControlOrganisation);
-                        }
-                        actionName = nameof(AreTheyIndividualInCharge);
-                        nextPagePath = PagePath.IndividualIncharge;
-                    }
-
-                    return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
+                    return await GetInviteAnotherPersonActionResult(session);
 
                 case nameof(InviteUserOptions.InviteLater):
                     return await SaveSessionAndRedirect(session, nameof(CheckYourDetails), PagePath.AddAnApprovedPerson, PagePath.CheckYourDetails);
@@ -496,7 +489,8 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 TeamMembers = session.ReExManualInputSession?.TeamMembers,
                 IsNonUk = session.IsUkMainAddress == false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
-                IsPartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
+                IsPartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership,
+                IsUnincorporated = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);
@@ -704,6 +698,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             if (isUkMainAddress is false)
             {
                 // Sole- trader non-UK
+                return await SaveSessionAndRedirectToPage(
+                    session,
+                    nameof(ManageControlOrganisation),
+                    PagePath.AddAnApprovedPerson,
+                    PagePath.ManageControlOrganisation);
+            }
+
+            if (session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody && inviteApprovedPerson)
+            {
                 return await SaveSessionAndRedirectToPage(
                     session,
                     nameof(ManageControlOrganisation),
@@ -939,6 +942,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 Nation = session.UkNation,
                 IsNonUk = !(session.IsUkMainAddress ?? true),
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
+                IsUnincorporatedFlow = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody,
                 TradingName = session.TradingName
             };
 
@@ -989,6 +993,15 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 viewModel.CompanyName = manualInput?.OrganisationName;
                 viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
                 viewModel.Nation = manualInput?.UkRegulatorNation;
+            }
+
+            if (viewModel.IsUnincorporatedFlow)
+            {
+                var manualInput = session.ReExManualInputSession;
+                viewModel.ProducerType = manualInput?.ProducerType;
+                viewModel.BusinessAddress = manualInput?.BusinessAddress;
+                viewModel.TradingName = session.IsTradingNameDifferent.GetValueOrDefault() ? session.TradingName : manualInput?.OrganisationName;
+                viewModel.reExCompanyTeamMembers = manualInput?.TeamMembers;
             }
 
             await _sessionManager.SaveSessionAsync(HttpContext.Session, session);
@@ -1141,17 +1154,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View();
         }
 
-        [HttpGet]
-        [Route(PagePath.NonCompaniesHousePartnershipTheirRoleAddAnother)]
-        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
-        public async Task<IActionResult> NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother()
-        {
-            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            DeleteFocusId();
-            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole),
-                PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
-        }
-
         [HttpPost]
         [Route(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
@@ -1169,6 +1171,17 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 : nameof(CheckYourDetails);
 
             return await SaveSessionAndRedirect(session, nextAction, PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, nextPage);
+        }
+
+        [HttpGet]
+        [Route(PagePath.NonCompaniesHousePartnershipTheirRoleAddAnother)]
+        [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson)]
+        public async Task<IActionResult> NonCompaniesHouseTeamMemberRoleInOrganisationAddAnother()
+        {
+            var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+            DeleteFocusId();
+            return await SaveSessionAndRedirect(session, nameof(NonCompaniesHousePartnershipTeamMemberRole),
+                PagePath.NonCompaniesHousePartnershipYouAreApprovedPerson, PagePath.NonCompaniesHousePartnershipTheirRole);
         }
 
         [HttpGet]
@@ -1308,6 +1321,36 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             {
                 return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(CheckYourDetails), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
             }
+        }
+
+        private async Task<IActionResult> GetInviteAnotherPersonActionResult(OrganisationSession session)
+        {
+            string actionName, nextPagePath;
+            if (session is { IsOrganisationAPartnership: true, ReExCompaniesHouseSession.Partnership.IsLimitedLiabilityPartnership: true })
+            {
+                actionName = nameof(MemberPartnership);
+                nextPagePath = PagePath.MemberPartnership;
+            }
+            else if (session.IsCompaniesHouseFlow)
+            {
+                actionName = nameof(TeamMemberRoleInOrganisation);
+                nextPagePath = PagePath.TeamMemberRoleInOrganisation;
+            }
+            else
+            {
+                if (session.IsUkMainAddress is false || session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
+                {
+                    return await SaveSessionAndRedirectToPage(
+                        session,
+                        nameof(ManageControlOrganisation),
+                        PagePath.AddAnApprovedPerson,
+                        PagePath.ManageControlOrganisation);
+                }
+                actionName = nameof(AreTheyIndividualInCharge);
+                nextPagePath = PagePath.IndividualIncharge;
+            }
+
+            return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
         }
     }
 }
