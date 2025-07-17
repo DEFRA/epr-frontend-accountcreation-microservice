@@ -129,8 +129,8 @@
   <data name="TeamMembersCheckInvitationDetails.Role" xml:space="preserve">
     <value>[Welsh]Role</value>
   </data>
-  <data name="TeamMembersCheckInvitationDetails.Name" xml:space="preserve">
-    <value>[Welsh]Name</value>
+  <data name="TeamMembersCheckInvitationDetails.FirstName" xml:space="preserve">
+    <value>[Welsh]First name</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Email" xml:space="preserve">
     <value>[Welsh]Email</value>
@@ -142,7 +142,7 @@
     <value>[Welsh]Remove</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>[Welsh]Invite another approved person</value>
+    <value>[Welsh]Invite another person</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.ContactDetails" xml:space="preserve">
     <value>[Welsh]contact details</value>
@@ -152,5 +152,8 @@
   </data>
   <data name="TeamMembersCheckInvitationDetails.NoInviterRemovedMsg" xml:space="preserve">
     <value>You have removed any invitations created for one or more approved persons.</value>
+  </data>
+  <data name="TeamMembersCheckInvitationDetails.LastName" xml:space="preserve">
+    <value>[Welsh]Last name</value>
   </data>
 </root>
