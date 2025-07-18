@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
  <data name="_LimitedLiabilityPartnershipApprovedPerson.Title" xml:space="preserve">
-    <value>[Welsh] Approved person</value>
+    <value>Rydych chi nawr yn berson a gymeradwywyd</value>
   </data>
   <data name="_LimitedLiabilityPartnershipApprovedPerson.Header" xml:space="preserve">
-    <value>[Welsh] You are now an approved person</value>
+    <value>Rydych chi nawr yn berson a gymeradwywyd</value>
   </data>
   <data name="_LimitedLiabilityPartnershipApprovedPerson.Description" xml:space="preserve">
     <value>[Welsh] As an individual named on Companies House, you are now an approved person for your organisation.</value>

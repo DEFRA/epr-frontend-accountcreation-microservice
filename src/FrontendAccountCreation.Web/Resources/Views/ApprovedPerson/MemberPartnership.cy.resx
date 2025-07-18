@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MemberPartnership.Title" xml:space="preserve">
-    <value>[Welsh] Member Partnership</value>
+    <value>[Welsh] Are they a member of the limited liability partnership?</value>
   </data>
   <data name="MemberPartnership.Question" xml:space="preserve">
     <value>[Welsh] Are they a member of the limited liability partnership?</value>
