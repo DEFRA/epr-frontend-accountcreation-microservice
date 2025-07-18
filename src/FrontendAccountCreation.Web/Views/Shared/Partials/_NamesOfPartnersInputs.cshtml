@@ -1,4 +1,6 @@
-﻿@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+﻿@using FrontendAccountCreation.Web.Extensions
+@using FrontendAccountCreation.Web.ViewModels.ReExAccount
+@using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
 @model PartnershipPartnersViewModel
 @inject IViewLocalizer Localizer
 
@@ -6,19 +8,28 @@
 @Html.HiddenFor(m => m.ExpectsIndividualPartners)
 @Html.HiddenFor(m => m.DeleteAction)
 
+@{
+    var errorsViewModel = ViewBag.ErrorsViewModel as ErrorsViewModel;
+}
+
 @for (int i = 0; i < Model.Partners.Count; ++i)
 {
     <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden">@Localizer["_NamesOfPartnersInputs.Legend"]</legend>
         <p></p>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group@(errorsViewModel.HasErrorKey($"Partners[{i}].PersonName") 
+            || errorsViewModel.HasErrorKey($"Partners[{i}].CompanyName") ? " govuk-form-group--error" : "")">
             @Html.HiddenFor(m => m.Partners[i].Id)
 
             @if (Model.ExpectsCompanyPartners)
             {
-                <!-- Company partner name -->
-                @Html.LabelFor(m => m.Partners[i].CompanyName, @Localizer["_NamesOfPartnersInputs.CompanyName"].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
-                @Html.EditorFor(m => m.Partners[i].CompanyName, new { htmlAttributes = new { @class = "govuk-input" } })
+                @* <div class="govuk-form-group@(errorsViewModel.HasErrorKey($"Partners[{i}].CompanyName") ? " govuk-form-group--error" : "")"> *@
+                    <label gov-for="Partners[i].CompanyName" class="govuk-label govuk-!-font-weight-bold">@Localizer["_NamesOfPartnersInputs.CompanyName"]</label>
+                    @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[$"Partners[{i}].CompanyName"])
+                    <input class="govuk-input @(errorsViewModel.HasErrorKey($"Partners[{i}].CompanyName") ? "govuk-input--error" : "")"
+                           type="text"
+                           gov-for="Partners[i].CompanyName" gov-value="@Model.Partners[i].CompanyName">
+                @* </div> *@
             }
 
             @if (Model.ExpectsCompanyPartners && Model.ExpectsIndividualPartners)
@@ -31,8 +42,13 @@
             {
                 string personNameLabel = Model.ExpectsCompanyPartners ? "_NamesOfPartnersInputs.IndividualPartnersFullName" : "_NamesOfPartnersInputs.FullName";
                 <!-- Individual partner’s full name -->
-                @Html.LabelFor(m => m.Partners[i].PersonName, @Localizer[personNameLabel].Value, htmlAttributes: new { @class = "govuk-label govuk-!-font-weight-bold" })
-                @Html.EditorFor(m => m.Partners[i].PersonName, new { htmlAttributes = new { @class = "govuk-input" } })
+                @* <div class="govuk-form-group@(errorsViewModel.HasErrorKey($"Partners[{i}].PersonName") ? " govuk-form-group--error" : "")"> *@
+                    <label gov-for="Partners[i].PersonName" class="govuk-label govuk-!-font-weight-bold">@Localizer[personNameLabel]</label>
+                    @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[$"Partners[{i}].PersonName"])
+                    <input class="govuk-input @(errorsViewModel.HasErrorKey($"Partners[{i}].PersonName") ? "govuk-input--error" : "")"
+                           type="text"
+                           gov-for="Partners[i].PersonName" gov-value="@Model.Partners[i].PersonName">
+                @* </div> *@
             }
 
             <br /><br />

@@ -61,10 +61,7 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         if (!ModelState.IsValid)
         {
-            ModelState.Clear();
-            string errorMessage = OverrideNamesOfPartnersValidationErrorMessage("NamesOfPartners.", model);
-            ModelState.AddModelError(nameof(model.Partners), errorMessage);
-
+            AddCustomValidationErrors("NamesOfPartners.", model);
             SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
             return View(model);
         }
@@ -519,10 +516,7 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         if (!ModelState.IsValid)
         {
-            ModelState.Clear();
-            string errorMessage = OverrideNamesOfPartnersValidationErrorMessage("NonCompaniesHousePartnershipNamesOfPartners.", model);
-            ModelState.AddModelError(nameof(model.Partners), errorMessage);
-
+            AddCustomValidationErrors("NonCompaniesHousePartnershipNamesOfPartners.", model);
             SetBackLink(session, PagePath.NonCompaniesHousePartnershipNamesOfPartners);
             return View(model);
         }
@@ -632,23 +626,40 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
         return partnersSession;
     }
 
-    private static string OverrideNamesOfPartnersValidationErrorMessage(string localizerPrefix, PartnershipPartnersViewModel model)
+    private void AddCustomValidationErrors(string localizerPrefix, PartnershipPartnersViewModel model)
     {
-        string errorMessage = "ValidationError_Both";
-        if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)
-        {
-            errorMessage = "ValidationError_Both";
-        }
-        else if (model.ExpectsCompanyPartners)
-        {
-            errorMessage = "ValidationError_Company";
-        }
-        else if (model.ExpectsIndividualPartners)
-        {
-            errorMessage = "ValidationError_Individual";
-        }
+        var keysToUpdate = ModelState.Keys
+            .Where(k => k.StartsWith("Partners[") && k.EndsWith("].IsPersonOrCompanyButNotBoth"))
+            .ToList();
 
-        return string.Concat(localizerPrefix, errorMessage);
+        foreach (var key in keysToUpdate)
+        {
+            // Only process if the current key is invalid
+            if (ModelState.GetFieldValidationState(key) == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+            {
+                // Extract the index between the brackets
+                int start = "Partners[".Length;
+                int end = key.IndexOf(']', start);
+                if (end > start && int.TryParse(key.Substring(start, end - start), out int index))
+                {
+                    // Remove the old error
+                    ModelState.Remove(key);
+
+                    if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)
+                    {
+                        ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Both"));
+                    }
+                    else if (model.ExpectsCompanyPartners)
+                    {
+                        ModelState.AddModelError($"Partners[{index}].CompanyName", string.Concat(localizerPrefix, "ValidationError_Company"));
+                    }
+                    else if (model.ExpectsIndividualPartners)
+                    {
+                        ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Individual"));
+                    }
+                }
+            }
+        }
     }
 
     private static List<PartnershipPersonOrCompanyViewModel> GetExistingPartners(List<ReExPersonOrCompanyPartner>? partnersSession,
