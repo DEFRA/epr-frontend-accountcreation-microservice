@@ -121,12 +121,15 @@
     <value>Dewiswch 'Ydyn' os ydyn nhw'n rheoli'r sefydliad, 'Nac ydyn' os nad ydyn nhw'n ei reoli neu 'Ddim yn siŵr' os nad ydych chi'n siŵr</value>
   </data>
   <data name="ManageControlOrganisation.Hint" xml:space="preserve">
-    <value>Mae hyn yn golygu rheoli cymdeithas anghorfforedig sydd â swyddfa gofrestredig, prif swyddfa neu brif le busnes yn y Deyrnas Unedig.</value>
+    <value>(W)This means control or management of a business which does not have a registered office, head office or principal place of business in the UK.</value>
   </data>
   <data name="ManageControlOrganisation.Question" xml:space="preserve">
     <value>Ydyn nhw'n rheoli'r sefydliad?</value>
   </data>
   <data name="ManageControlOrganisation.Title" xml:space="preserve">
     <value>Rheoli'r sefydliad</value>
+  </data>
+  <data name="ManageControlOrganisation.Unincorporated.Hint" xml:space="preserve">
+    <value>Mae hyn yn golygu rheoli cymdeithas anghorfforedig sydd â swyddfa gofrestredig, prif swyddfa neu brif le busnes yn y Deyrnas Unedig.</value>
   </data>
 </root>
