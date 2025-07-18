@@ -21,7 +21,7 @@ public class SessionTimeoutWarningViewComponent : ViewComponent
     {
         var sessionTimeoutWarningModel = new SessionTimeoutWarningModel
         {
-           ShowSessionTimeoutWarning = await _featureManager.IsEnabledAsync(FeatureFlags.ShowSessionTimeoutWarning)
+           ShowSessionTimeoutWarning = await _featureManager.IsEnabledAsync(FeatureFlags.ShowSessionTimeoutWarningForReEx)
         };
 
         return View(sessionTimeoutWarningModel);
