@@ -644,7 +644,7 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
                 {
                     // Remove the old error
                     ModelState.Remove(key);
-
+                    
                     if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)
                     {
                         ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Both"));
@@ -656,6 +656,10 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
                     else if (model.ExpectsIndividualPartners)
                     {
                         ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Individual"));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Both"));
                     }
                 }
             }

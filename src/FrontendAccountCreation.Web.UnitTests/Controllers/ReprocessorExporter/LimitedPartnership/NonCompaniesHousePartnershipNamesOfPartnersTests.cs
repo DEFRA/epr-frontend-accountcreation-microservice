@@ -246,7 +246,7 @@ public class NonCompaniesHousePartnershipNamesOfPartnersTests : LimitedPartnersh
             ExpectsIndividualPartners = hasIndividualPartners
         };
 
-        _systemUnderTest.ModelState.AddModelError("Error", "Error Message");
+        _systemUnderTest.ModelState.AddModelError("Partners[0].IsPersonOrCompanyButNotBoth", "Error Message");
 
         // Act
         var result = await _systemUnderTest.NonCompaniesHousePartnershipNamesOfPartners(model, "save");

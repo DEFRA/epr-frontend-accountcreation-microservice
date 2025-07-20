@@ -21,20 +21,10 @@ public class ErrorsViewModel
     private static List<(string Key, List<ErrorViewModel> Errors)> GetNestedOrderedErrors(
         List<(string Key, List<ErrorViewModel> Errors)> errors, Func<string, string> localiseFunc, Dictionary<string, string[]> fieldOrder)
     {
-        // Extracted helper method to reduce complexity
-        static (int baseIdx, int? index, int subIdx, string key) GetOrderParts(string key, Dictionary<string, string[]> fieldOrder)
-        {
-            var (baseKey, idx) = ExtractBaseKeyAndIndex(key);
-            var baseIdx = GetBaseIndex(baseKey, fieldOrder);
-            var subIdx = GetSubIndex(key, baseKey, fieldOrder);
-
-            return (baseIdx, idx, subIdx, key);
-        }
-
         static (string baseKey, int? index) ExtractBaseKeyAndIndex(string key)
         {
-            var dotIdx = key.IndexOf('.');
-            string main = dotIdx >= 0 ? key.Substring(0, dotIdx) : key;
+            int dotIdx = key.IndexOf('.');
+            string main = dotIdx >= 0 ? key[..dotIdx] : key;
 
             int bracketStart = main.IndexOf('[');
             int? idx = null;
@@ -44,36 +34,41 @@ public class ErrorsViewModel
                 int bracketEnd = main.IndexOf(']', bracketStart);
                 if (bracketEnd > bracketStart)
                 {
-                    if (int.TryParse(main.Substring(bracketStart + 1, bracketEnd - bracketStart - 1), out int parsedIdx))
+                    if (int.TryParse(main[(bracketStart + 1)..bracketEnd], out int parsedIdx))
                         idx = parsedIdx;
-                    baseKey = main.Substring(0, bracketStart);
+                    baseKey = main[..bracketStart];
                 }
             }
-
             return (baseKey, idx);
         }
 
         static int GetBaseIndex(string baseKey, Dictionary<string, string[]> fieldOrder)
         {
-            var baseKeys = fieldOrder.Keys.ToList();
-            int baseIdx = baseKeys.IndexOf(baseKey);
+            int baseIdx = fieldOrder.Keys.ToList().IndexOf(baseKey);
             return baseIdx == -1 ? int.MaxValue : baseIdx;
         }
 
         static int GetSubIndex(string key, string baseKey, Dictionary<string, string[]> fieldOrder)
         {
-            var dotIdx = key.IndexOf('.');
-            string? sub = dotIdx >= 0 ? key.Substring(dotIdx + 1) : null;
+            int dotIdx = key.IndexOf('.');
+            if (dotIdx < 0) return int.MaxValue;
 
-            int subIdx = int.MaxValue;
-            if (sub != null && fieldOrder.TryGetValue(baseKey, out var subProps) && subProps.Length > 0)
+            string sub = key[(dotIdx + 1)..];
+            if (fieldOrder.TryGetValue(baseKey, out var subProps) && subProps.Length > 0)
             {
-                var subPart = sub.Split('.')[0];
+                string subPart = sub.Split('.')[0];
                 int idx2 = Array.IndexOf(subProps, subPart);
-                if (idx2 >= 0) subIdx = idx2;
+                if (idx2 >= 0) return idx2;
             }
+            return int.MaxValue;
+        }
 
-            return subIdx;
+        static (int baseIdx, int? index, int subIdx) GetOrderParts(string key, Dictionary<string, string[]> fieldOrder)
+        {
+            var (baseKey, idx) = ExtractBaseKeyAndIndex(key);
+            int baseIdx = GetBaseIndex(baseKey, fieldOrder);
+            int subIdx = GetSubIndex(key, baseKey, fieldOrder);
+            return (baseIdx, idx, subIdx);
         }
 
         var ordered = errors
