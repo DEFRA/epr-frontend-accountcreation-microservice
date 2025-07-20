@@ -18,10 +18,10 @@ namespace FrontendAccountCreation.Web.UnitTests.ViewModels.Shared.GovUK
             // Arrange
             var errors = new List<(string Key, List<ErrorViewModel> Errors)>
             {
-                ("person[1].name", new List<ErrorViewModel> { new ErrorViewModel { Key = "person[1].name", Message = "NameError" } }),
-                ("person[0].age", new List<ErrorViewModel> { new ErrorViewModel { Key = "person[0].age", Message = "AgeError" } }),
-                ("person[0].name", new List<ErrorViewModel> { new ErrorViewModel { Key = "person[0].name", Message = "NameError" } }),
-                ("address", new List<ErrorViewModel> { new ErrorViewModel { Key = "address", Message = "AddressError" } }),
+                ("person[1].name", new List<ErrorViewModel> { new() { Key = "person[1].name", Message = "NameError" } }),
+                ("person[0].age", new List<ErrorViewModel> { new() { Key = "person[0].age", Message = "AgeError" } }),
+                ("person[0].name", new List<ErrorViewModel> { new() { Key = "person[0].name", Message = "NameError" } }),
+                ("address", new List<ErrorViewModel> { new() { Key = "address", Message = "AddressError" } }),
             };
 
             var fieldOrder = new Dictionary<string, string[]>
