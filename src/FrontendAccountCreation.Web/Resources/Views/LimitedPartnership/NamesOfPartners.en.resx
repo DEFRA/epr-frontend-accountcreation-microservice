@@ -150,6 +150,9 @@
   <data name="NamesOfPartners.ValidationError_Individual" xml:space="preserve">
     <value>Enter the full name of an individual partner</value>
   </data>
+  <data name="Partners.NameLengthError" xml:space="preserve">
+    <value>Partner name must be 100 characters or less</value>
+  </data>
   <data name="NamesOfPartners.ValidationError_Company" xml:space="preserve">
     <value>Enter a corporate partner name</value>
   </data>

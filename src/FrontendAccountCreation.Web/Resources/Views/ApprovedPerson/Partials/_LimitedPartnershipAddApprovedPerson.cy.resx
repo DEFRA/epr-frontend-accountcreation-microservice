@@ -148,7 +148,7 @@
     <value>[Welsh]More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
   </data>
   <data name="LimitedPartnershipAddApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
-    <value>[Welsh]I will invite an eligible person to be an approved person</value>
+    <value>Byddaf yn gwahodd person cymwys i fod yn berson a gymeradwywyd</value>
   </data>
   <data name="LimitedPartnershipAddApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
     <value>[Welsh]I will invite an approved person later</value>
