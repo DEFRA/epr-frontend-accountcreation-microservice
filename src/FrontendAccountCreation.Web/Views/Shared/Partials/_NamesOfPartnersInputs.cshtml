@@ -23,13 +23,11 @@
 
             @if (Model.ExpectsCompanyPartners)
             {
-                @* <div class="govuk-form-group@(errorsViewModel.HasErrorKey($"Partners[{i}].CompanyName") ? " govuk-form-group--error" : "")"> *@
                     <label gov-for="Partners[i].CompanyName" class="govuk-label govuk-!-font-weight-bold">@Localizer["_NamesOfPartnersInputs.CompanyName"]</label>
                     @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[$"Partners[{i}].CompanyName"])
                     <input class="govuk-input @(errorsViewModel.HasErrorKey($"Partners[{i}].CompanyName") ? "govuk-input--error" : "")"
                            type="text"
                            gov-for="Partners[i].CompanyName" gov-value="@Model.Partners[i].CompanyName">
-                @* </div> *@
             }
 
             @if (Model.ExpectsCompanyPartners && Model.ExpectsIndividualPartners)
@@ -42,13 +40,11 @@
             {
                 string personNameLabel = Model.ExpectsCompanyPartners ? "_NamesOfPartnersInputs.IndividualPartnersFullName" : "_NamesOfPartnersInputs.FullName";
                 <!-- Individual partner’s full name -->
-                @* <div class="govuk-form-group@(errorsViewModel.HasErrorKey($"Partners[{i}].PersonName") ? " govuk-form-group--error" : "")"> *@
                     <label gov-for="Partners[i].PersonName" class="govuk-label govuk-!-font-weight-bold">@Localizer[personNameLabel]</label>
                     @await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[$"Partners[{i}].PersonName"])
                     <input class="govuk-input @(errorsViewModel.HasErrorKey($"Partners[{i}].PersonName") ? "govuk-input--error" : "")"
                            type="text"
                            gov-for="Partners[i].PersonName" gov-value="@Model.Partners[i].PersonName">
-                @* </div> *@
             }
 
             <br /><br />
