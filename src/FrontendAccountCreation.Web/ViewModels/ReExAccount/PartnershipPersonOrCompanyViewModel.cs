@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FrontendAccountCreation.Core.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
@@ -10,9 +11,11 @@ public class PartnershipPersonOrCompanyViewModel
     [Required]
     public Guid Id { get; set; }
 
-    public string? PersonName { get; set; }
-
+    [MaxLength(100, ErrorMessage = "Partners.NameLengthError")]
     public string? CompanyName { get; set; }
+
+    [MaxLength(100, ErrorMessage = "Partners.NameLengthError")]
+    public string? PersonName { get; set; }
 
     public bool IsPerson => !string.IsNullOrWhiteSpace(PersonName);
 
