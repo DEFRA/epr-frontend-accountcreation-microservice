@@ -17,7 +17,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PartnershipType.Title" xml:space="preserve">
-    <value>[Welsh]Partnership type</value>
+    <value>[Welsh]Which type of partnership is your organisation?</value>
   </data>
   <data name="PartnershipType.Question" xml:space="preserve">
     <value>[Welsh]Which type of partnership is your organisation?</value>
