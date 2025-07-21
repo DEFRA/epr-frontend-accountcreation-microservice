@@ -12,7 +12,15 @@
 
     Model.DeleteAction = nameof(LimitedPartnershipController.NamesOfPartnersDelete);
 
-    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+    var fieldOrder = new Dictionary<string, string[]>
+    {
+        { nameof(PartnershipPartnersViewModel.Partners), new[] {
+            nameof(PartnershipPersonOrCompanyViewModel.CompanyName),
+            nameof(PartnershipPersonOrCompanyViewModel.PersonName)
+        } },
+    };
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer, fieldOrder);
+    ViewBag.ErrorsViewModel = errorsViewModel;
 }
 
 <div class="govuk-width-container" name="divContainer">
@@ -31,26 +39,24 @@
                 <hr>
                 <br>
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
-                <div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : "")" name="divFormGroup">
-                    <form method="post">
-                        
-                        @await Html.PartialAsync("Partials/_NamesOfPartnersInputs", Model)
+                <form method="post">
 
-                        <div class="govuk-button-group" name="divForm">
+                    @await Html.PartialAsync("Partials/_NamesOfPartnersInputs", Model)
 
-                            <!-- Add another partner-->
-                            <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="add" type="submit">
-                                @Localizer["NamesOfPartners.AddAnotherPartner"]
-                            </button>
+                    <div class="govuk-button-group" name="divForm">
 
-                            <!-- save partners -->
-                            <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="save" type="submit">
-                                @SharedLocalizer["Continue"]
-                            </button>
-                        </div>
+                        <!-- Add another partner-->
+                        <button class="govuk-button govuk-button--secondary" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="add" type="submit">
+                            @Localizer["NamesOfPartners.AddAnotherPartner"]
+                        </button>
 
-                    </form>
-                </div>
+                        <!-- save partners -->
+                        <button class="govuk-button" asp-controller="LimitedPartnership" asp-action="@nameof(LimitedPartnershipController.NamesOfPartners)" name="command" value="save" type="submit">
+                            @SharedLocalizer["Continue"]
+                        </button>
+                    </div>
+
+                </form>
             </div>
         </div>
     </main>
