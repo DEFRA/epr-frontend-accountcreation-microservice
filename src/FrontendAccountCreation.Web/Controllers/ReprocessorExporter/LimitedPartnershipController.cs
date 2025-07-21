@@ -634,35 +634,46 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         foreach (var key in keysToUpdate)
         {
-            // Only process if the current key is invalid
             if (ModelState.GetFieldValidationState(key) == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
             {
-                // Extract the index between the brackets
-                int start = "Partners[".Length;
-                int end = key.IndexOf(']', start);
-                if (end > start && int.TryParse(key.Substring(start, end - start), out int index))
+                int? index = ExtractIndexFromKey(key);
+                if (index.HasValue)
                 {
-                    // Remove the old error
                     ModelState.Remove(key);
-                    
-                    if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)
-                    {
-                        ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Both"));
-                    }
-                    else if (model.ExpectsCompanyPartners)
-                    {
-                        ModelState.AddModelError($"Partners[{index}].CompanyName", string.Concat(localizerPrefix, "ValidationError_Company"));
-                    }
-                    else if (model.ExpectsIndividualPartners)
-                    {
-                        ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Individual"));
-                    }
-                    else
-                    {
-                        ModelState.AddModelError($"Partners[{index}].PersonName", string.Concat(localizerPrefix, "ValidationError_Both"));
-                    }
+                    AddValidationError(localizerPrefix, model, index.Value);
                 }
             }
+        }
+    }
+
+    private static int? ExtractIndexFromKey(string key)
+    {
+        int start = "Partners[".Length;
+        int end = key.IndexOf(']', start);
+        if (end > start && int.TryParse(key.AsSpan(start, end - start), out int index))
+        {
+            return index;
+        }
+        return null;
+    }
+
+    private void AddValidationError(string localizerPrefix, PartnershipPartnersViewModel model, int index)
+    {
+        if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)
+        {
+            ModelState.AddModelError($"Partners[{index}].PersonName", $"{localizerPrefix}ValidationError_Both");
+        }
+        else if (model.ExpectsCompanyPartners)
+        {
+            ModelState.AddModelError($"Partners[{index}].CompanyName", $"{localizerPrefix}ValidationError_Company");
+        }
+        else if (model.ExpectsIndividualPartners)
+        {
+            ModelState.AddModelError($"Partners[{index}].PersonName", $"{localizerPrefix}ValidationError_Individual");
+        }
+        else
+        {
+            ModelState.AddModelError($"Partners[{index}].PersonName", $"{localizerPrefix}ValidationError_Both");
         }
     }
 

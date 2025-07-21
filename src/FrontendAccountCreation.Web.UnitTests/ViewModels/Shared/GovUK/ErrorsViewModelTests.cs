@@ -12,6 +12,8 @@ namespace FrontendAccountCreation.Web.UnitTests.ViewModels.Shared.GovUK
     [TestClass]
     public class ErrorsViewModelTests
     {
+        private static readonly string[] value = ["name", "age"];
+
         [TestMethod]
         public void Constructor_WithIViewLocalizerAndFieldOrderDictionary_OrdersAndLocalizesErrors()
         {
@@ -27,7 +29,7 @@ namespace FrontendAccountCreation.Web.UnitTests.ViewModels.Shared.GovUK
             var fieldOrder = new Dictionary<string, string[]>
             {
                 { "address", Array.Empty<string>() },
-                { "person", new[] { "name", "age" } }
+                { "person", value }
             };
 
             var localizerMock = new Mock<IViewLocalizer>();
