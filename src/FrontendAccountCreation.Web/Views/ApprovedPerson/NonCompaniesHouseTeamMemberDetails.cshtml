@@ -8,7 +8,7 @@
 @{
     ViewData["Title"] = Localizer["NonCompaniesHouseTeamMemberDetails.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer,
         nameof(Model.FirstName), nameof(Model.LastName), nameof(Model.Email), nameof(Model.Telephone));
 }

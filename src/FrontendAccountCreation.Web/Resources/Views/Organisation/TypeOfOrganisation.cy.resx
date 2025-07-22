@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ReExTypeOfOrganisation.Title" xml:space="preserve">
-    <value>Math o sefydliad</value>
+    <value>[Welsh]What type of business are you adding?</value>
   </data>
   <data name="ReExTypeOfOrganisation.Question" xml:space="preserve">
     <value>Pa fath o fusnes rydych chi'n ei ychwanegu?</value>
