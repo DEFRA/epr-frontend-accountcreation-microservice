@@ -56,7 +56,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 IsIndividualInCharge = session.IsIndividualInCharge ?? false,
                 IsSoleTrader = session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader,
                 IsNonUk = session.IsUkMainAddress == false,
-                IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody
+                IsUnincorporated = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody
             };
 
             return View(model);

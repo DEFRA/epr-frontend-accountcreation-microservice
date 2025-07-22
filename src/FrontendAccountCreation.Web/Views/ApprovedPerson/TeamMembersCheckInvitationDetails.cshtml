@@ -42,10 +42,10 @@
                     {
                         <div class="govuk-summary-card__content">
                             <dl class="govuk-summary-list">
-
+                                <div class="govuk-summary-list__row"></div>
                                 <!-- Role of team member -->
                                 <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
+                                    <dt class="govuk-summary-list">
                                         @Localizer["TeamMembersCheckInvitationDetails.Role"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
@@ -61,7 +61,7 @@
 
                                 <!-- Name, Email, Telephone -->
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.FirstName"]</dt>
+                                    <dt class="govuk-summary-list">@Localizer["TeamMembersCheckInvitationDetails.FirstName"]</dt>
                                     <dd class="govuk-summary-list__value">@($"{Model[i].FirstName}")</dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.TeamMemberDetailsEdit), "ApprovedPerson", new { id = Model[i].Id })">
@@ -71,16 +71,16 @@
                                     </dd>
                                 </div>
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.LastName"]</dt>
+                                    <dt class="govuk-summary-list">@Localizer["TeamMembersCheckInvitationDetails.LastName"]</dt>
                                     <dd class="govuk-summary-list__value">@($"{Model[i].LastName}")</dd>   
                                 </div>
                                 <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.Email"]</dt>
+                                    <dt class="govuk-summary-list">@Localizer["TeamMembersCheckInvitationDetails.Email"]</dt>
                                     <dd class="govuk-summary-list__value">@Model[i].Email</dd>
                                 </div>
 
                                 <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.Telephone"]</dt>
+                                    <dt class="govuk-summary-list">@Localizer["TeamMembersCheckInvitationDetails.Telephone"]</dt>
                                     <dd class="govuk-summary-list__value">@Model[i].TelephoneNumber</dd>
                                 </div>
 
