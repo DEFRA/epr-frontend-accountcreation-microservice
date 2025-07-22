@@ -31,7 +31,8 @@
                     else
                     {
                         @* todo: sign in should take user to our service. which page though? *@
-                        <a class="govuk-link epr-sign-out-nav__link" asp-controller="Account" asp-action="SignIn">
+                        <a class="govuk-link epr-sign-out-nav__link"
+                           asp-controller="Account" asp-action="SignIn" asp-route-redirectUri="/create-account/re-ex/user">
                             @SharedLocalizer["Header.SignIn"]
                         </a>
                     }

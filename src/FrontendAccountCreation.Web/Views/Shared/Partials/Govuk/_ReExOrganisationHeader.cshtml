@@ -63,7 +63,10 @@
                         }
                         else
                         {
-                            <a class="govuk-header__link" asp-controller="Account" asp-action="SignIn">@SharedLocalizer["Header.SignIn"]</a>
+                            <a class="govuk-header__link"
+                               asp-controller="Account" asp-action="SignIn" asp-route-redirectUri="/create-account/re-ex/user">
+                                @SharedLocalizer["Header.SignIn"]
+                            </a>
                         }
                     </li>
                 </ul>
