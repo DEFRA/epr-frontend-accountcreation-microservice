@@ -138,6 +138,9 @@
   <data name="AddAnApprovedPerson.IntroInstruction" xml:space="preserve">
     <value>You can continue to add the organisation without inviting someone to be an approved person. One must be added in time to</value>
   </data>
+  <data name="AddAnApprovedPerson.Unincorporated.IntroInstruction" xml:space="preserve">
+    <value>You can continue to add the organisation without inviting someone to be an approved person. One must be appointed before you can</value>
+  </data>
   <data name="AddAnApprovedPerson.Introtext1" xml:space="preserve">
     <value>You are eligible to become an 'approved person' or you can invite somebody else to do this. An approved person needs to be invited to take on tasks on behalf of the organisation.</value>
   </data>
@@ -147,7 +150,13 @@
   <data name="AddAnApprovedPerson.IntroText3" xml:space="preserve">
     <value>More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
   </data>
+  <data name="AddAnApprovedPerson.Unincorporated.IntroText3" xml:space="preserve">
+    <value>More than one person can be nominated - you will need to confirm their role, enter their name and contact details.</value>
+  </data>
   <data name="AddAnApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
+    <value>I will invite an eligible person to be an approved person</value>
+  </data>
+  <data name="AddAnApprovedPerson.Unincorporated.IWillInviteAnotherApprovedPerson" xml:space="preserve">
     <value>I will invite an eligible person to be an approved person</value>
   </data>
   <data name="AddAnApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
@@ -155,6 +164,12 @@
   </data>
   <data name="AddAnApprovedPerson.NonUk.RolesInstruction" xml:space="preserve">
     <value>A person who has control or management of a business that does not have a registered office, head office or principal place of business in the UK. For example</value>
+  </data>
+  <data name="AddAnApprovedPerson.Unincorporated.RolesInstruction" xml:space="preserve">
+    <value>A person who manages or controls an unincorporated association or organisation with a registered address, head office or principal place of business in the UK.</value>
+  </data>
+  <data name="AddAnApprovedPerson.ForExample" xml:space="preserve">
+    <value>For example</value>
   </data>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
     <value>Select an option</value>

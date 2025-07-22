@@ -27,5 +27,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
         public bool IsNonUk { get; set; }
 
         public bool IsNonCompaniesHousePartnership { get; set; }
+
+        public bool IsUnincorporated { get; set; }
     }
 }

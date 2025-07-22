@@ -27,7 +27,12 @@
                     @if (Model.TeamMembers != null && Model.TeamMembers.Count > 0)
                     {
                         <div class="govuk-summary-card__title-wrapper">
-                            <p class="govuk-body">@Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Help"]</p>
+
+                            <p class="govuk-body">
+                                @(Model.IsUnincorporated
+                                    ? Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.Help"]
+                                    : Localizer["TeamMemberCheckInvitationDetails.Help"])
+                            </p>
                         </div>
                     }
                     else
@@ -70,6 +75,12 @@
                                                 @SharedLocalizer["Change"]
                                                 <span class="govuk-visually-hidden"> @Localizer["TeamMembersCheckInvitationDetails.ContactDetails"]</span>
                                             </a>
+                                        </dd>
+                                    }
+                                    else if (Model.IsUnincorporated)
+                                    {
+                                        <dd class="govuk-summary-list__value">
+                                            @Localizer["TeamMemberCheckInvitationDetails.Unincorporated"]
                                         </dd>
                                     }
                                 </div>
@@ -121,7 +132,7 @@
                             <button class="govuk-button" data-module="govuk-button" asp-action="NonCompaniesHouseTeamMemberCheckInvitationDetailsPost">
                                 @SharedLocalizer["Continue"]
                             </button>
-                            @if (Model.IsNonUk || Model.IsPartnership)
+                            @if (Model.IsNonUk || Model.IsPartnership || Model.IsUnincorporated)
                             {
                                 <a asp-controller="ApprovedPerson" asp-action="NonCompaniesHousePartnershipTheirRoleAdd" class="govuk-link">
                                     @Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.InviteAnotherPerson"]

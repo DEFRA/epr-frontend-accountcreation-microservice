@@ -145,6 +145,9 @@ public static class PagePath
     public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
     public const string LimitedLiabilityPartnership = "partner-you";
 
+    // Unincorporated paths
+    public const string UnincorporatedRoleInOrganisation = "unincorporated-role-in-organisation";
+
     // Non journey paths
     public const string Accessibility = "accessibility";
 

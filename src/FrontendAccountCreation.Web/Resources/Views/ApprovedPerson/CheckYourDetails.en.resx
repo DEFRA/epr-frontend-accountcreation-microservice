@@ -169,7 +169,7 @@
     <value>Sole trader</value>
   </data>
   <data name="CheckYourDetails.UnincorporatedBody" xml:space="preserve">
-    <value>Unincorporated body</value>
+    <value>Unincorporated association</value>
   </data>
   <data name="CheckYourDetails.Other" xml:space="preserve">
     <value>Other</value>
@@ -264,4 +264,7 @@
    <data name="CheckYourDetails.Missing" xml:space="preserve">
     <value>Missing</value>
   </data> 
+  <data name="CheckYourDetails.ManageOrControlOrganisation" xml:space="preserve">
+    <value>Manage or control organisation</value>
+  </data>
 </root>

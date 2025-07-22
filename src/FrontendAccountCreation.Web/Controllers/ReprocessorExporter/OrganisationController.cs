@@ -7,17 +7,18 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.Attributes;
+using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using FrontendAccountCreation.Web.Sessions;
 using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
+using FrontendAccountCreation.Web.ViewModels.ReExAccount.Unincorporated;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 
 namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 
@@ -266,7 +267,8 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return View(new ManageControlViewModel
         {
-            UserManagesOrControls = session.UserManagesOrControls
+            UserManagesOrControls = session.UserManagesOrControls,
+            IsUnincorporatedFlow = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody
         });
     }
 
@@ -475,6 +477,32 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.AddApprovedPerson), PagePath.RoleInOrganisation,
                 PagePath.AddAnApprovedPerson);
+    }
+
+    [HttpGet]
+    [Route(PagePath.UnincorporatedRoleInOrganisation)]
+    public async Task<IActionResult> UnincorporatedRoleInOrganisation()
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+        SetBackLink(session, PagePath.UnincorporatedRoleInOrganisation);
+        return View(new ReExRoleInOrganisationViewModel { Role = session.ReExManualInputSession.RoleInUnincorporatedOrganisation });
+    }
+
+    [HttpPost]
+    [Route(PagePath.UnincorporatedRoleInOrganisation)]
+    public async Task<IActionResult> UnincorporatedRoleInOrganisation(ReExRoleInOrganisationViewModel viewModel)
+    {
+        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
+
+        if (!ModelState.IsValid)
+        {
+            SetBackLink(session, PagePath.UnincorporatedRoleInOrganisation);
+            return View(viewModel);
+        }
+        session.ReExManualInputSession ??= new ReExManualInputSession();
+        session.ReExManualInputSession.RoleInUnincorporatedOrganisation = viewModel.Role;
+
+        return await SaveSessionAndRedirect(session, nameof(ManageControl), PagePath.UnincorporatedRoleInOrganisation, PagePath.ManageControl);
     }
 
     [HttpGet]
@@ -745,6 +773,10 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.ReExManualInputSession.TypesOfPartner = null;
+        if (session.OrganisationType == OrganisationType.NonCompaniesHouseCompany && session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody)
+        {
+            return await SaveSessionAndRedirect(session, nameof(UnincorporatedRoleInOrganisation), PagePath.BusinessAddress, PagePath.UnincorporatedRoleInOrganisation);
+        }
         return await SaveSessionAndRedirect(session, nameof(SoleTrader),
             PagePath.BusinessAddress, PagePath.SoleTrader);
     }
