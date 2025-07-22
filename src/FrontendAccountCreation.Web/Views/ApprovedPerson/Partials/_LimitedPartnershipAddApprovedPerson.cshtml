@@ -3,91 +3,86 @@
 @using FrontendAccountCreation.Core.Sessions;
 @model AddApprovedPersonViewModel
 
-<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? "govuk-form-group--error" : string.Empty)">
-    <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
-        @Localizer["LimitedPartnershipAddApprovedPerson.Title"]
-    </h1>
+<h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+	@Localizer["LimitedPartnershipAddApprovedPerson.Title"]
+</h1>
 
-    <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.Introtext1"]</p>
+<p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.Introtext1"]</p>
 
-    <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.IntroInstruction"]:</p>
+<p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.IntroInstruction"]:</p>
 
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@Localizer["LimitedPartnershipAddApprovedPerson.BulletAccreditation"]</li>
-        <li>@Localizer["LimitedPartnershipAddApprovedPerson.BulletSubmit"]</li>
-    </ul>
+<ul class="govuk-list govuk-list--bullet">
+	<li>@Localizer["LimitedPartnershipAddApprovedPerson.BulletAccreditation"]</li>
+	<li>@Localizer["LimitedPartnershipAddApprovedPerson.BulletSubmit"]</li>
+</ul>
 
-    <p class="govuk-inset-text">
-        @Localizer["LimitedPartnershipAddApprovedPerson.IntroText2"]
-    </p>
+<p class="govuk-inset-text">
+	@Localizer["LimitedPartnershipAddApprovedPerson.IntroText2"]
+</p>
 
-    <p class="govuk-body">
-        @Localizer["LimitedPartnershipAddApprovedPerson.IntroText3"]
-    </p>
+<p class="govuk-body">
+	@Localizer["LimitedPartnershipAddApprovedPerson.IntroText3"]
+</p>
 
-    <div class="section">
-        <h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.RolesHeading"]</h3>
-        @if (Model.IsLimitedPartnership || (Model.IsNonCompaniesHousePartnership))
-        {
-            <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.RolesInstruction"]:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>@Localizer["LimitedPartnershipAddApprovedPerson.Individual"]</li>
-                <li>@Localizer["LimitedPartnershipAddApprovedPerson.Director"]</li>
-                <li>@Localizer["LimitedPartnershipAddApprovedPerson.CompanySecretary"]</li>
-            </ul>
-        }
-        else if (Model.IsLimitedLiablePartnership)
-        {
-            <p class="govuk-body">@Localizer["LimitedLiablePartnershipAddApprovedPerson.RolesInstruction"]:</p>
-        }
-    </div>
-
-    <div class="section">
-        <h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.UserHeading"]</h3>
-        <p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.SelectOptionText"]</p>
-    </div>
-
-    <fieldset class="govuk-fieldset">
-        <legend></legend>
-
-        @await Html.PartialAsync("Partials/Govuk/_ErrorList", Model.ErrorsViewModel)
-
-        <div class="govuk-radios" data-module="govuk-radios">
-
-            <div class="govuk-radios__item">
-                <input class="govuk-radios__input" type="radio" id="rdoIAgreeToBeAnApprovedPerson"
-                       gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
-                <label class="govuk-label govuk-radios__label"
-                       gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
-                    @Localizer["LimitedPartnershipAddApprovedPerson.IAgreeToBeAnApprovedPerson"]
-                </label>
-            </div>
-
-            <div class="govuk-radios__item">
-                <input class="govuk-radios__input" type="radio" id="rdoIWillInviteAnotherApprovedPerson"
-                       gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
-                <label class="govuk-label govuk-radios__label"
-                       gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
-                    @Localizer["LimitedPartnershipAddApprovedPerson.IWillInviteAnotherApprovedPerson"]
-                </label>
-            </div>
-
-            <div class="govuk-radios__item">
-                <input class="govuk-radios__input" type="radio" id="rdoIWillInviteApprovedPersonLater"
-                       gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.InviteLater)">
-                <label class="govuk-label govuk-radios__label"
-                       gov-for="InviteUserOption"
-                       gov-value="@nameof(InviteUserOptions.InviteLater)">
-                    @Localizer["LimitedPartnershipAddApprovedPerson.IWillInviteApprovedPersonLater"]
-                </label>
-            </div>
-
-        </div>
-    </fieldset>
-
+<div class="section">
+	<h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.RolesHeading"]</h3>
+	@if (Model.IsLimitedPartnership || (Model.IsNonCompaniesHousePartnership))
+	{
+		<p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.RolesInstruction"]:</p>
+		<ul class="govuk-list govuk-list--bullet">
+			<li>@Localizer["LimitedPartnershipAddApprovedPerson.Individual"]</li>
+			<li>@Localizer["LimitedPartnershipAddApprovedPerson.Director"]</li>
+			<li>@Localizer["LimitedPartnershipAddApprovedPerson.CompanySecretary"]</li>
+		</ul>
+	}
+	else if (Model.IsLimitedLiablePartnership)
+	{
+		<p class="govuk-body">@Localizer["LimitedLiablePartnershipAddApprovedPerson.RolesInstruction"]:</p>
+	}
 </div>
+
+<div class="section">
+	<h3 class="govuk-heading-m">@Localizer["LimitedPartnershipAddApprovedPerson.UserHeading"]</h3>
+	<p class="govuk-body">@Localizer["LimitedPartnershipAddApprovedPerson.SelectOptionText"]</p>
+</div>
+
+<fieldset class="govuk-fieldset">
+	<legend></legend>
+	@await Html.PartialAsync("Partials/Govuk/_ErrorList", Model.ErrorsViewModel)
+
+	<div class="govuk-radios" data-module="govuk-radios">
+
+		<div class="govuk-radios__item">
+			<input class="govuk-radios__input" type="radio" id="rdoIAgreeToBeAnApprovedPerson"
+				   gov-for="InviteUserOption"
+				   gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
+			<label class="govuk-label govuk-radios__label"
+				   gov-for="InviteUserOption"
+				   gov-value="@nameof(InviteUserOptions.BeAnApprovedPerson)">
+				@Localizer["LimitedPartnershipAddApprovedPerson.IAgreeToBeAnApprovedPerson"]
+			</label>
+		</div>
+
+		<div class="govuk-radios__item">
+			<input class="govuk-radios__input" type="radio" id="rdoIWillInviteAnotherApprovedPerson"
+				   gov-for="InviteUserOption"
+				   gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
+			<label class="govuk-label govuk-radios__label"
+				   gov-for="InviteUserOption"
+				   gov-value="@nameof(InviteUserOptions.InviteAnotherPerson)">
+				@Localizer["LimitedPartnershipAddApprovedPerson.IWillInviteAnotherApprovedPerson"]
+			</label>
+		</div>
+
+		<div class="govuk-radios__item">
+			<input class="govuk-radios__input" type="radio" id="rdoIWillInviteApprovedPersonLater"
+				   gov-for="InviteUserOption"
+				   gov-value="@nameof(InviteUserOptions.InviteLater)">
+			<label class="govuk-label govuk-radios__label"
+				   gov-for="InviteUserOption"
+				   gov-value="@nameof(InviteUserOptions.InviteLater)">
+				@Localizer["LimitedPartnershipAddApprovedPerson.IWillInviteApprovedPersonLater"]
+			</label>
+		</div>
+	</div>
+</fieldset>

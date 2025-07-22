@@ -247,6 +247,15 @@
     <value>(W)Manage or control business</value>
   </data>
   <data name="CheckYourDetails.UkRegulator" xml:space="preserve">
-    <value>(W)Which UK regulator</value>
+    <value>(W)UK regulator</value>
+  </data>
+  <data name="CheckYourDetails.BusinessType" xml:space="preserve">
+    <value>(W)Type of business</value>
+  </data>
+  <data name="CheckYourDetails.OrganisationName" xml:space="preserve">
+    <value>(W)Organisation name</value>
+  </data>
+  <data name="CheckYourDetails.RegisteredInTheUK" xml:space="preserve">
+    <value>(W)Registered in the UK?</value>
   </data>
 </root>

@@ -6,55 +6,54 @@
 @model AddApprovedPersonViewModel
 
 @{
-    ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
-    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
-    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
-    Model.ErrorsViewModel = errorsViewModel;
+	ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
+	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+	ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+	Model.ErrorsViewModel = errorsViewModel;
 }
 
 <div class="govuk-width-container">
-    <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+	<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
 
-                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+				@await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form asp-controller="ApprovedPerson" method="post">
-                    @{
-                        if (Model.IsOrganisationAPartnership == true)
-                        {
-                            if (Model.IsInEligibleToBeApprovedPerson)
-                            {
-                                @await Html.PartialAsync("Partials/_InEligibleAddNotApprovedPerson", Model)
-                            }
-                            else
-                            {
-                                @await Html.PartialAsync("Partials/_LimitedPartnershipAddApprovedPerson", Model)
-                            }
-                                
-                        }
-                        else
-                        {
-                            // might be better to calculate the logic in the controller
-                            if (Model.IsInEligibleToBeApprovedPerson || (Model.IsSoleTrader && !Model.IsIndividualInCharge))
-                            {
-                                // _AddNotApprovedPerson is a poor name, as still adding an approved person
-                                @await Html.PartialAsync("Partials/_AddNotApprovedPerson", Model)
-                            }
-                            else
-                            {
-                                @await Html.PartialAsync("Partials/_AddApprovedPerson", Model)
-                            }
-                        }
-                    }
-
-                    <button class="govuk-button" data-module="govuk-button">
-                        @SharedLocalizer["Confirm"]
-                    </button>
-
-                </form>
-            </div>
-        </div>
-    </main>
+				<form asp-controller="ApprovedPerson" method="post">
+					<div class="govuk-form-group@(!ViewData.ModelState.IsValid ? " govuk-form-group--error" : string.Empty)">
+						@{
+							if (Model.IsOrganisationAPartnership == true)
+							{
+								if (Model.IsInEligibleToBeApprovedPerson)
+								{
+									@await Html.PartialAsync("Partials/_InEligibleAddNotApprovedPerson", Model)
+								}
+								else
+								{
+									@await Html.PartialAsync("Partials/_LimitedPartnershipAddApprovedPerson", Model)
+								}
+							}
+							else
+							{
+								// might be better to calculate the logic in the controller
+								if (Model.IsInEligibleToBeApprovedPerson || (Model.IsSoleTrader && !Model.IsIndividualInCharge))
+								{
+									// _AddNotApprovedPerson is a poor name, as still adding an approved person
+									@await Html.PartialAsync("Partials/_AddNotApprovedPerson", Model)
+								}
+								else
+								{
+									@await Html.PartialAsync("Partials/_AddApprovedPerson", Model)
+								}
+							}
+						}
+					</div>
+					<button class="govuk-button" data-module="govuk-button">
+						@SharedLocalizer["Confirm"]
+					</button>
+				</form>
+			</div>
+		</div>
+	</main>
 </div>

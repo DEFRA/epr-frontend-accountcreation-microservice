@@ -174,4 +174,7 @@
   <data name="LimitedPartnershipAddApprovedPerson.UserHeading" xml:space="preserve">
     <value>Invite users in your team</value>
   </data>
+  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
+    <value>Select an option</value>
+  </data>
 </root>

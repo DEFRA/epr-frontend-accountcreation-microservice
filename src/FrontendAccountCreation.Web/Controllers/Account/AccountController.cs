@@ -1,9 +1,11 @@
+using FrontendAccountCreation.Web.Controllers.Home;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.Account
 {
@@ -68,6 +70,38 @@ namespace FrontendAccountCreation.Web.Controllers.Account
                  CookieAuthenticationDefaults.AuthenticationScheme,
                  scheme);
 
+        }
+
+        /// <summary>
+        /// Handles the session timeout sign-out.
+        /// </summary>
+        /// <param name="scheme">Authentication scheme.</param>
+        /// <returns>Session Timeout Sign out result.</returns>
+        [ExcludeFromCodeCoverage(Justification = "Unable to mock authentication")]
+        [HttpGet("{scheme?}")]
+        [AllowAnonymous]
+        public IActionResult SessionSignOut([FromRoute] string? scheme)
+        {
+            if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
+            {
+                if (AppServicesAuthenticationInformation.LogoutUrl != null)
+                {
+                    return LocalRedirect(AppServicesAuthenticationInformation.LogoutUrl);
+                }
+
+                return Ok();
+            }
+
+            scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
+            var callbackUrl = Url.Action(action: "TimeoutSignedOut", controller: "Home", values: null, protocol: Request.Scheme);
+
+            return SignOut(
+                new AuthenticationProperties
+                {
+                    RedirectUri = callbackUrl,
+                },
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                scheme);
         }
     }
 }
