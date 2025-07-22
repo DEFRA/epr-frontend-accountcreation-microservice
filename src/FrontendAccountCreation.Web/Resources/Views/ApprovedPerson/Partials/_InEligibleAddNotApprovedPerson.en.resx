@@ -148,7 +148,7 @@
     <value>More than one person can be invited - you will need to confirm their role, enter their name and contact details.</value>
   </data>
   <data name="InEligibleAddNotApprovedPerson.IWillInviteAnotherApprovedPerson" xml:space="preserve">
-    <value>I will invite another eligible person to be an approved person instead</value>
+    <value>I will invite an eligible person to be an approved person</value>
   </data>
   <data name="InEligibleAddNotApprovedPerson.IWillInviteApprovedPersonLater" xml:space="preserve">
     <value>I will invite an approved person later</value>

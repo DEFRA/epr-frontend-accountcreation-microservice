@@ -24,7 +24,7 @@ public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
 
         // Assert
         result.Should().BeOfType<ViewResult>();
-        var viewModel = ((ViewResult)result).Model.Should().BeOfType<LimitedPartnershipPersonCanNotBeInvitedViewModel>().Subject;
+        var viewModel = ((ViewResult)result).Model.Should().BeOfType<ApprovedPersonCanNotBeInvitedViewModel>().Subject;
         viewModel.Id.Should().Be(_testId);
     }
 
@@ -32,7 +32,7 @@ public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
     public async Task Post_RedirectsToCheckYourDetails()
     {
         // Arrange
-        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel { Id = _testId };
+        var model = new ApprovedPersonCanNotBeInvitedViewModel { Id = _testId };
 
         // Act
         var result = await _systemUnderTest.PersonCanNotBeInvited(model);
@@ -47,7 +47,7 @@ public class PersonCanNotBeInvitedTests : ApprovedPersonTestBase
     public async Task PersonCanNotBeInvited_Post_ReturnsRedirectToCheckYourDetails()
     {
         // Arrange
-        var model = new LimitedPartnershipPersonCanNotBeInvitedViewModel
+        var model = new ApprovedPersonCanNotBeInvitedViewModel
         {
             Id = Guid.NewGuid()
         };

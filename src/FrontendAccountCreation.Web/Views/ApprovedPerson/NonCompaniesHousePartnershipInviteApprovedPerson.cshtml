@@ -9,9 +9,16 @@
 @{
     ViewData["Title"] = Localizer["NonCompaniesHousePartnershipInviteApprovedPerson.Title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-    ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
     Model.ErrorsViewModel = errorsViewModel;
+
+    var addApprovedPersonViewModel = new AddApprovedPersonViewModel
+    {
+        ErrorsViewModel = errorsViewModel,
+        IsNonCompaniesHousePartnership = Model.IsNonCompaniesHousePartnership,
+        InviteUserOption = Model?.InviteUserOption
+    };
 
 }
 
@@ -23,7 +30,7 @@
                 @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
                 <form method="post">
-                    @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_InEligibleAddNotApprovedPerson.cshtml", new AddApprovedPersonViewModel { ErrorsViewModel = errorsViewModel, IsNonCompaniesHousePartnership = Model.IsNonCompaniesHousePartnership })
+                    @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_InEligibleAddNotApprovedPerson.cshtml", addApprovedPersonViewModel)
 
                     <button class="govuk-button govuk-!-margin-top-3" data-module="govuk-button">
                         @SharedLocalizer["Confirm"]
