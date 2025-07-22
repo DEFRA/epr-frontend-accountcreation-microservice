@@ -93,7 +93,7 @@ namespace FrontendAccountCreation.Web.Controllers.Account
             }
 
             scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
-            var callbackUrl = Url.Action(action: "TimeoutSignedOut", controller: nameof(HomeController), values: null, protocol: Request.Scheme);
+            var callbackUrl = Url.Action(action: "TimeoutSignedOut", controller: "Home", values: null, protocol: Request.Scheme);
 
             return SignOut(
                 new AuthenticationProperties
