@@ -80,7 +80,8 @@ namespace FrontendAccountCreation.Web.Controllers.Account
         [ExcludeFromCodeCoverage(Justification = "Unable to mock authentication")]
         [HttpGet("{scheme?}")]
         [AllowAnonymous]
-        public IActionResult SessionSignOut([FromRoute] string? scheme)
+        public IActionResult SessionSignOut([FromRoute] string? scheme,
+            bool? reEx)
         {
             if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
             {
@@ -93,7 +94,7 @@ namespace FrontendAccountCreation.Web.Controllers.Account
             }
 
             scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
-            var callbackUrl = Url.Action(action: "TimeoutSignedOut", controller: "Home", values: null, protocol: Request.Scheme);
+            var callbackUrl = Url.Action(action: "TimeoutSignedOut", controller: "Home", values: new { reEx }, protocol: Request.Scheme);
 
             return SignOut(
                 new AuthenticationProperties

@@ -45,19 +45,19 @@ const SessionTimeoutManager = {
         const { modal, overlay } = this.uiElements;
         [modal, overlay].forEach(el => el && (el.style.display = isVisible ? "block" : "none"));
     },
-
     startLogoutCountdown() {
-        let timeRemaining = this.countdownDuration;
-        this.updateCountdownDisplay(timeRemaining);
+        const endTime = Date.now() + this.countdownDuration * 1000;
 
         clearInterval(logoutCountdown);
         logoutCountdown = setInterval(() => {
-            timeRemaining--;
+            const timeRemaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+
+            this.updateCountdownDisplay(timeRemaining);
+
             if (timeRemaining <= 0) {
                 clearInterval(logoutCountdown);
                 this.redirectToLogout();
             }
-            this.updateCountdownDisplay(timeRemaining);
         }, 1000);
     },
 
