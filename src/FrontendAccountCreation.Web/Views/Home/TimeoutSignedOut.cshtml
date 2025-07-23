@@ -1,7 +1,7 @@
 ﻿@using FrontendAccountCreation.Web.Constants
 
 @{
-    ViewData["Title"] = Localizer["SignedOutReEx.Title"];
+    ViewData["Title"] = Localizer["timeout_signed_out_title"];
     ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
     ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
 }
@@ -17,7 +17,7 @@
                 @Localizer["you_have_been_signed_out_reason"]
             </p>
 
-            <a class="govuk-button" data-module="govuk-button" asp-controller="Account" asp-action="SignIn">
+            <a class="govuk-button" data-module="govuk-button" asp-controller="Account" asp-action="SignIn" asp-route-redirectUri="/create-account/re-ex/user">
                 @Localizer["sign_back_in"]
             </a>
         </div>
