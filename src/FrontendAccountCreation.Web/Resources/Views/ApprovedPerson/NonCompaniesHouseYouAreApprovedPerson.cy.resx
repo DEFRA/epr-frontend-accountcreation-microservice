@@ -121,7 +121,7 @@
     <value>[Welsh]As a partner, company director or secretary in your business you are now an 'approved person' for your organisation.</value>
   </data>
   <data name="NonCompanyHouseYouAreApprovedPerson.InviteLink" xml:space="preserve">
-    <value>[Welsh]Invite another approved eligible person</value>
+    <value>Gwahodd person arall</value>
   </data>
   <data name="NonCompanyHouseYouAreApprovedPerson.Invite" xml:space="preserve">
     <value>[Welsh]invite additional people within your organisation to be an approved person, from the eligible roles</value>

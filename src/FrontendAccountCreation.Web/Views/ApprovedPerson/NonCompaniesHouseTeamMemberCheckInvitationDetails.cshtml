@@ -134,7 +134,7 @@
                             </button>
                             @if (Model.IsNonUk || Model.IsPartnership || Model.IsUnincorporated)
                             {
-                                <a asp-controller="ApprovedPerson" asp-action="NonCompaniesHousePartnershipTheirRoleAdd" class="govuk-link">
+                                <a asp-controller="ApprovedPerson" asp-action="NonCompaniesHousePartnershipTheirRoleAdd" class="govuk-button govuk-button--secondary">
                                     @Localizer["NonCompaniesHouseTeamMemberCheckInvitationDetails.InviteAnotherPerson"]
                                 </a>
                             }
