@@ -142,7 +142,7 @@
     <value>[Welsh]Remove</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>[Welsh]Invite another person</value>
+    <value>Gwahodd person arall</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.ContactDetails" xml:space="preserve">
     <value>[Welsh]contact details</value>

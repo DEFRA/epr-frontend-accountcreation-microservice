@@ -157,7 +157,7 @@
     <value>W Manage or control organisation</value>
   </data>
   <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>[Welsh]Invite another person</value>
+    <value>Gwahodd person arall</value>
   </data>
   <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.NonUkRole" xml:space="preserve">
     <value>[Welsh]Manage or control business</value>

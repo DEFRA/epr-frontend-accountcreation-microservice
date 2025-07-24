@@ -136,6 +136,6 @@
     <value>invite additional people within your organisation to be an approved person, from the eligible roles</value>
   </data>
   <data name="_LimitedLiabilityPartnershipApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another eligible person</value>
+    <value>Invite another person</value>
   </data>
 </root>
