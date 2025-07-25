@@ -7,7 +7,7 @@ namespace FrontendAccountCreation.Web.ViewModels.ReExAccount
     [ExcludeFromCodeCoverage]
     public class AddApprovedPersonViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "AddAnApprovedPerson.OptionError")]
         public string InviteUserOption { get; set; }
 
         public bool? IsOrganisationAPartnership { get; set; }

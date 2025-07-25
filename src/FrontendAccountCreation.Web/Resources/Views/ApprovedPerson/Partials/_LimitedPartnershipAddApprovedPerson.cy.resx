@@ -115,4 +115,7 @@
   <data name="LimitedPartnershipAddApprovedPerson.UserHeading" xml:space="preserve">
     <value>[Welsh]Invite users in your team</value>
   </data>
+  <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
+    <value>Dewiswch opsiwn</value>
+  </data>
 </root>

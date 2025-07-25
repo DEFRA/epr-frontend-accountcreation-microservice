@@ -118,8 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddAnApprovedPerson.OptionError" xml:space="preserve">
-    <value>[Welsh]Select whether to be an approved person, invite someone else to be one or do this later</value>
-    <comment>f</comment>
+    <value>Select an option</value>
+  </data>
+  <data name="NonCompaniesHousePartnershipAddApprovedPerson.OptionError" xml:space="preserve">
+    <value>[Welsh]Select an option</value>
   </data>
   <data name="NonCompaniesHousePartnershipAddApprovedPerson.Title" xml:space="preserve">
     <value>[Welsh]Add an approved person</value>

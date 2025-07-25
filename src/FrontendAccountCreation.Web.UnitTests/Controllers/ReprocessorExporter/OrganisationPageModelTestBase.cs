@@ -9,6 +9,8 @@ using Moq;
 using System.Security.Claims;
 using FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 using FrontendAccountCreation.Web.Sessions;
+using FrontendAccountCreation.Web.Configs;
+using Microsoft.Extensions.Options;
 
 namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter;
 
@@ -24,6 +26,7 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
     protected Mock<IStringLocalizer<SharedResources>> SharedLocalizerMock = null!;
     protected Mock<IStringLocalizer<T>> LocalizerMock = null!;
     protected OrganisationSession OrganisationSession = new();
+    protected Mock<IOptions<ExternalUrlsOptions>> UrlsOptionMock = null!;
 
     protected void SetupBase()
     {
@@ -31,7 +34,15 @@ public abstract class OrganisationPageModelTestBase<T> where T : OrganisationPag
         SessionManagerMock = new Mock<ISessionManager<OrganisationSession>>();
         SharedLocalizerMock = new Mock<IStringLocalizer<SharedResources>>();
         LocalizerMock = new Mock<IStringLocalizer<T>>();
-        
+        UrlsOptionMock = new Mock<IOptions<ExternalUrlsOptions>>();
+        UrlsOptionMock.Setup(x => x.Value)
+            .Returns(new ExternalUrlsOptions
+            {
+                ReportDataRedirectUrl = "/report-data",
+                PrnRedirectUrl = "/epr-prn"
+            });
+
+
         SessionManagerMock.Setup(sm => sm.GetSessionAsync(It.IsAny<ISession>()))
             .Returns(Task.FromResult<OrganisationSession?>(OrganisationSession));
 

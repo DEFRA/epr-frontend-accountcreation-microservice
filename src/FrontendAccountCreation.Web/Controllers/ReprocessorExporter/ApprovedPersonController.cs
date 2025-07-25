@@ -155,7 +155,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
         public async Task<IActionResult> AreTheyIndividualInCharge(bool resetOptions = false)
         {
             var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-            SetBackLink(session, PagePath.ManageControlOrganisation);
+            SetBackLink(session, PagePath.IndividualIncharge);
 
             YesNoAnswer? theyInCharge = null;
             if (session.AreTheyIndividualInCharge.HasValue && !resetOptions)
@@ -459,6 +459,14 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
             else
             {
+                // Sole-Trader UK address flow can only add 1 AP - clears any existing one before adding new
+                if (session.IsUkMainAddress == true &&
+                    session.ReExManualInputSession?.ProducerType == ProducerType.SoleTrader &&
+                    session.ReExManualInputSession?.TeamMembers?.Count > 0)
+                {
+                    session.ReExManualInputSession.TeamMembers.Clear();
+                }
+
                 teamMembers.Add(new ReExCompanyTeamMember
                 {
                     Id = Guid.NewGuid(),

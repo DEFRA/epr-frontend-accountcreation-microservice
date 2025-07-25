@@ -158,14 +158,18 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsUkMainAddress = model.IsUkMainAddress == YesNoAnswer.Yes;
 
+        // reset some values - if flow has been changed
+        session.AreTheyIndividualInCharge = null;
+        session.TheyManageOrControlOrganisation = null;
+
         if (!string.IsNullOrWhiteSpace(session.TradingName))
         {
             session.TradingName = null;
         }
 
         // reset values - in case user coming from back button to change the flow
-        session.UkNation = null; 
-        session.IsIndividualInCharge = null;        
+        session.UkNation = null;
+        session.IsIndividualInCharge = null;
         session.AreTheyIndividualInCharge = null;
         session.UserManagesOrControls = null;
         session.TheyManageOrControlOrganisation = null;
@@ -217,15 +221,10 @@ public class OrganisationController : ControllerBase<OrganisationSession>
 
         session.IsTradingNameDifferent = model.IsTradingNameDifferent == YesNoAnswer.Yes;
 
-        // remove any prev trading name values if answer is Edited
-        if (session.IsTradingNameDifferent.HasValue && 
-            session.IsTradingNameDifferent == false && 
-            !string.IsNullOrWhiteSpace(session.TradingName))
-        {
-            session.TradingName = null;
-        }
+        // remove any prev trading name values
+        session.TradingName = null;
 
-        if (session.IsTradingNameDifferent == true)
+        if (model.IsTradingNameDifferent == YesNoAnswer.Yes)
         {
             return await SaveSessionAndRedirectToPage(
                 session,
@@ -234,19 +233,17 @@ public class OrganisationController : ControllerBase<OrganisationSession>
                 PagePath.TradingName);
         }
 
-        session.TradingName = null;
-
         string nextAction, nextPagePath;
 
-        if (session.IsUkMainAddress == false)
-        {
-            nextAction = nameof(AddressOverseas);
-            nextPagePath = PagePath.AddressOverseas;
-        }
-        else if (session.IsCompaniesHouseFlow)
+        if (session.IsCompaniesHouseFlow)
         {
             nextAction = nameof(IsOrganisationAPartner);
             nextPagePath = PagePath.IsPartnership;
+        }
+        else if (session.IsUkMainAddress == false)
+        {
+            nextAction = nameof(AddressOverseas);
+            nextPagePath = PagePath.AddressOverseas;
         }
         else
         {
@@ -546,8 +543,15 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         }
 
         session.ReExCompaniesHouseSession = new ReExCompaniesHouseSession();
+
+        // reset data - if coming from different flow i.e. Sole-trader
         session.TradingName = null;
         session.IsTradingNameDifferent = null;
+        session.IsUkMainAddress = null;
+        if (session.ReExManualInputSession != null)
+        {
+            session.ReExManualInputSession = null;
+        }
 
         Company? company;
 
@@ -817,11 +821,16 @@ public class OrganisationController : ControllerBase<OrganisationSession>
         if (session.IsIndividualInCharge == true)
         {
             session.ReExManualInputSession.TeamMembers = null;
+            session.InviteUserOption = InviteUserOptions.BeAnApprovedPerson;
             return await SaveSessionAndRedirect(session,
                 controllerName: nameof(ApprovedPersonController),
                 actionName: nameof(ApprovedPersonController.YouAreApprovedPersonSoleTrader),
                 currentPagePath: PagePath.SoleTrader,
                 nextPagePath: PagePath.YouAreApprovedPersonSoleTrader);
+        }
+        else
+        {
+            session.InviteUserOption = null;
         }
 
         //to-do: we skip to a later page here to handle out-of-order build, it will probably go to NotApprovedPerson
@@ -951,6 +960,7 @@ public class OrganisationController : ControllerBase<OrganisationSession>
             viewModel.IsSoleTrader = manualInput?.ProducerType == ProducerType.SoleTrader;
             viewModel.CompanyName = manualInput?.OrganisationName;
             viewModel.ReExCompanyTeamMembers = manualInput?.TeamMembers;
+            viewModel.IsAnApprovedPerson = session.InviteUserOption == InviteUserOptions.BeAnApprovedPerson;
         }
 
         return View(viewModel);

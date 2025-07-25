@@ -74,7 +74,8 @@ public class SoleTraderTests() : YesNoPageTestBase<SoleTraderViewModel>(
             ReExManualInputSession = new ReExManualInputSession
             {
                 TeamMembers = null
-            }
+            },
+            InviteUserOption = Core.Sessions.InviteUserOptions.BeAnApprovedPerson
         });
 
         await PostPageAction(_systemUnderTest, requestViewModel);

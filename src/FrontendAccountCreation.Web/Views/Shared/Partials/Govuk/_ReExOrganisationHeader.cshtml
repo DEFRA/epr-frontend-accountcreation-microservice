@@ -40,7 +40,8 @@
                 <ul id="navigation" class="govuk-header__navigation-list">
                     <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
                         @* todo: this will link to the dashboard page, once it's built *@
-                        <a class="govuk-header__link" href="#">
+                        <a class="govuk-header__link" href="@Model.PrnRedirectUrl">
+                           
                             @Localizer["Header.Home"]
                         </a>
                     </li>
@@ -62,7 +63,10 @@
                         }
                         else
                         {
-                            <a class="govuk-header__link" asp-controller="Account" asp-action="SignIn">@SharedLocalizer["Header.SignIn"]</a>
+                            <a class="govuk-header__link"
+                               asp-controller="Account" asp-action="SignIn" asp-route-redirectUri="/create-account/re-ex/user">
+                                @SharedLocalizer["Header.SignIn"]
+                            </a>
                         }
                     </li>
                 </ul>

@@ -141,7 +141,7 @@
   <data name="TeamMemberDetails.Header" xml:space="preserve">
     <value>[Welsh] What are their details?</value>
   </data>
-  <data name="TelephoneNumber.TelephoneNumberErrorMessage" xml:space="preserve">
+  <data name="TeamMemberDetails.TelephoneNumberErrorMessage" xml:space="preserve">
     <value>[Welsh] Enter a valid telephone number</value>
   </data>
   <data name="TeamMemberDetails.FullNameError" xml:space="preserve">
@@ -154,7 +154,7 @@
     <value>Enw cyntaf</value>
   </data>
   <data name="TeamMemberDetails.FirstNameErrorMessage" xml:space="preserve">
-    <value>Rhowch eich enw cyntaf</value>
+    <value>Rhowch eu henw cyntaf</value>
   </data>
   <data name="TeamMemberDetails.FirstNameLengthErrorMessage" xml:space="preserve">
     <value>Rhaid i’r enw cyntaf fod yn 50 neu lai o gymeriadau</value>
@@ -163,9 +163,15 @@
     <value>Enw Olaf</value>
   </data>
   <data name="TeamMemberDetails.LastNameErrorMessage" xml:space="preserve">
-    <value>Rhowch eich enw olaf</value>
+    <value>Rhowch eu henw olaf</value>
   </data>
   <data name="TeamMemberDetails.LastNameLengthErrorMessage" xml:space="preserve">
     <value>Rhaid i’r enw olaf fod yn 50 neu lai o gymeriadau</value>
+  </data>
+  <data name="TeamMemberDetails.EmailInvalidErrorMessage" xml:space="preserve">
+    <value>Enter an email address with a name, @ symbol and a domain name, like yourname@example.com</value>
+  </data>
+  <data name="TeamMemberDetails.TelephoneNumberInvalidErrorMessage" xml:space="preserve">
+    <value>Enter a valid telephone number, like 01642 123 456, 07777 777 777 or +33 1 23 45 67 88</value>
   </data>
 </root>

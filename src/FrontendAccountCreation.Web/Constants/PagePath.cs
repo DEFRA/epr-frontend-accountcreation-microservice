@@ -156,6 +156,7 @@ public static class PagePath
     public const string AError = "auth-error";
     public const string ErrorReEx = "error-reex";
     public const string Culture = "culture";
+    public const string TimeoutSignedOut = "timeout-signed-out";
 
     public const string PageNotFound = "page-not-found";
 

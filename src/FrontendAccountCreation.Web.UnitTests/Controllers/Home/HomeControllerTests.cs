@@ -75,4 +75,32 @@ public class HomeControllerTests
 
     }
 
+    [TestMethod]
+    public void TimeoutSignedOut_ClearsSessionAndReturnsCorrectView()
+    {
+        // Arrange
+        _sessionMock.Setup(s => s.Clear());
+
+        // Act
+        var result = _systemUnderTest.TimeoutSignedOut();
+
+        // Assert
+        _sessionMock.Verify(s => s.Clear(), Times.Once);
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+        viewResult.ViewName.Should().Be("TimeoutSignedOut");
+    }
+
+    [TestMethod]
+    public void SessionTimeoutModal_ReturnsTimeoutPartialView()
+    {
+        // Act
+        var result = _systemUnderTest.SessionTimeoutModal();
+
+        // Assert
+        result.Should().BeOfType<PartialViewResult>();
+        var partialResult = result as PartialViewResult;
+        partialResult.ViewName.Should().Be("_TimeoutSessionWarning");
+    }
+
 }

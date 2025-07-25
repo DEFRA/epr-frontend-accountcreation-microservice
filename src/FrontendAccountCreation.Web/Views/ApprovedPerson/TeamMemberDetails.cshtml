@@ -1,68 +1,99 @@
 ﻿@using FrontendAccountCreation.Web.Constants
 @using FrontendAccountCreation.Web.Extensions
 @using FrontendAccountCreation.Web.ViewModels.Shared.GovUK
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model FrontendAccountCreation.Web.ViewModels.ReExAccount.TeamMemberViewModel
 
 @{
-    ViewData["Title"] = Localizer["TeamMemberDetails.Title"];
-    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
-    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+	ViewData["Title"] = Localizer["TeamMemberDetails.Title"];
+	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+	ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
+
+	var _firstName = Model.FirstName;
+	var _lastName = Model.LastName;
+	var _email = Model.Email;
+	var _telephone = Model.Telephone;
+
+	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer,
+							nameof(_firstName), nameof(_lastName), nameof(_email), nameof(_telephone));
 }
 
 <div class="govuk-width-container">
-    <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                @await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
+	<main class="govuk-main-wrapper" id="main-content" role="main">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
+				@await Html.PartialAsync("Partials/Govuk/_ErrorSummary", errorsViewModel)
 
-                <form method="post">
+				<form method="post" novalidate>
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+							<h1 class="govuk-heading-l govuk-!-margin-bottom-4">@Localizer["TeamMemberDetails.Header"]</h1>
+						</legend>
 
-                    <h1 class="govuk-heading-l">@Localizer["TeamMemberDetails.Header"]</h1>
+						@Html.HiddenFor(x => x.Id)
 
-                    @Html.HiddenFor(x => x.Id)
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" asp-for="FirstName">
-                            @Localizer["TeamMemberDetails.FirstName"]
-                        </label>
-                        <input class="govuk-input" asp-for="FirstName" type="text" />
-                    </div>
+						<div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(_firstName)) ? " govuk-form-group--error" : "")">
+							<label gov-for="FirstName" class="govuk-label">
+								@Localizer["TeamMemberDetails.FirstName"]
+							</label>
+							@await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(_firstName)])
+							<input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(_firstName)) ? "govuk-input--error" : "")"
+								   type="text"
+								   gov-for="FirstName"
+								   gov-value="@_firstName">
+						</div>
 
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" asp-for="LastName">
-                            @Localizer["TeamMemberDetails.LastName"]
-                        </label>
-                        <input class="govuk-input" asp-for="LastName" type="text" />
-                    </div>
+						<div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(_lastName)) ? " govuk-form-group--error" : "")">
+							<label gov-for="LastName" class="govuk-label">
+								@Localizer["TeamMemberDetails.LastName"]
+							</label>
+							@await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(_lastName)])
+							<input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(_lastName)) ? "govuk-input--error" : "")"
+								   type="text"
+								   gov-for="LastName"
+								   gov-value="@_lastName">
+						</div>
 
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" asp-for="Email">
-                            @Localizer["TeamMemberDetails.Email"]
-                        </label>
-                        <div class="govuk-hint">
-                            @Localizer["TeamMemberDetails.HintEmail"]
-                        </div>
-                        <input class="govuk-input" asp-for="Email" type="email" />
-                    </div>
+						<div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(_email)) ? " govuk-form-group--error" : "")">
+							<label gov-for="Email" class="govuk-label">
+								@Localizer["TeamMemberDetails.Email"]
+							</label>
 
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" asp-for="Telephone">
-                            @Localizer["TeamMemberDetails.Telephone"]
-                        </label>
-                        <div class="govuk-hint">
-                            @Localizer["TeamMemberDetails.HintTelephone"]
-                        </div>
-                        <input class="govuk-input" asp-for="Telephone" type="tel" />
-                    </div>
+							<div id="email-hint" class="govuk-hint">
+								@Localizer["TeamMemberDetails.HintEmail"]
+							</div>
 
-                    <button class="govuk-button" data-module="govuk-button" asp-action="TeamMemberDetails" type="submit">
-                        @Localizer["TeamMemberDetails.Continue"]
-                    </button>
+							@await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(_email)])
+							<input class="govuk-input @(errorsViewModel.HasErrorKey(nameof(_email)) ? "govuk-input--error" : "")"
+								   type="email"
+								   spellcheck="false"
+								   autocomplete="email"
+								   gov-for="Email" gov-value="@_email"
+								   aria-describedby="email-hint">
+						</div>
 
-                </form>
-            </div>
-        </div>
-    </main>
+						<div class="govuk-form-group@(errorsViewModel.HasErrorKey(nameof(_telephone)) ? " govuk-form-group--error" : "")">
+							<label gov-for="Telephone" class="govuk-label">
+								@Localizer["TeamMemberDetails.Telephone"]
+							</label>
+
+							<div id="tel-hint" class="govuk-hint">
+								@Localizer["TeamMemberDetails.HintTelephone"]
+							</div>
+
+							@await Html.PartialAsync("Partials/Govuk/_FormItemError", errorsViewModel[nameof(_telephone)])
+							<input class="govuk-input govuk-!-width-one-half @(errorsViewModel.HasErrorKey(nameof(_telephone)) ? "govuk-input--error" : "")"
+								   type="tel"
+								   autocomplete="tel"
+								   gov-for="Telephone"
+								   gov-value="@_telephone"
+								   aria-describedby="tel-hint">
+						</div>
+
+						<button class="govuk-button" data-module="govuk-button" asp-action="TeamMemberDetails" type="submit">@Localizer["TeamMemberDetails.Continue"]</button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</main>
 </div>

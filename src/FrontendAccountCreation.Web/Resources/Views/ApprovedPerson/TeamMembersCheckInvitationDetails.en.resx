@@ -129,8 +129,8 @@
   <data name="TeamMembersCheckInvitationDetails.Role" xml:space="preserve">
     <value>Role</value>
   </data>
-  <data name="TeamMembersCheckInvitationDetails.Name" xml:space="preserve">
-    <value>Name</value>
+  <data name="TeamMembersCheckInvitationDetails.FirstName" xml:space="preserve">
+    <value>First name</value>
   </data>
   <data name="TeamMembersCheckInvitationDetails.Email" xml:space="preserve">
     <value>Email</value>

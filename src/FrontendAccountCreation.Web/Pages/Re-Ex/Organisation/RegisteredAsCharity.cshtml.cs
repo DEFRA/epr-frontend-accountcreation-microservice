@@ -22,7 +22,8 @@ namespace FrontendAccountCreation.Web.Pages.Re_Ex.Organisation;
 public class RegisteredAsCharity(
     ISessionManager<OrganisationSession> sessionManager,
     IStringLocalizer<SharedResources> sharedLocalizer,
-    IStringLocalizer<RegisteredAsCharity> localizer)
+    IStringLocalizer<RegisteredAsCharity> localizer, 
+    IOptions<ExternalUrlsOptions> externalUrlsOptions)
     : OrganisationPageModel<RegisteredAsCharity>(PagePath.RegisteredAsCharity, sessionManager, sharedLocalizer, localizer),
         IRadiosPageModel
 {
@@ -45,7 +46,7 @@ public class RegisteredAsCharity(
             });
         }
 
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session);
+        var session = await SetupRegisteredAsCharityPage();
 
         SelectedValue = session?.IsTheOrganisationCharity?.ToString();
 
@@ -54,17 +55,17 @@ public class RegisteredAsCharity(
 
     public async Task<IActionResult> OnPost()
     {
+        var session = await SetupRegisteredAsCharityPage()
+                      ?? new OrganisationSession
+                      {
+                          Journey = [PagePath.RegisteredAsCharity]
+                      };
+
         if (!ModelState.IsValid)
         {
             Errors = ErrorStateFromModelState.Create(ModelState);
             return Page();
         }
-
-        var session = await SessionManager.GetSessionAsync(HttpContext.Session)
-            ?? new OrganisationSession
-            {
-                Journey = [PagePath.RegisteredAsCharity]
-            };
 
         session.IsTheOrganisationCharity = bool.Parse(SelectedValue!);
 
@@ -75,5 +76,16 @@ public class RegisteredAsCharity(
         }
         return await SaveSessionAndRedirect(session, nameof(OrganisationController),
             nameof(OrganisationController.RegisteredWithCompaniesHouse), PagePath.RegisteredWithCompaniesHouse);
+    }
+
+    private async Task<OrganisationSession?> SetupRegisteredAsCharityPage()
+    {
+        ViewData["Title"] = Title;
+        ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+        ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+
+        ViewData["BackLinkToDisplay"] = externalUrlsOptions.Value.PrnRedirectUrl;
+
+        return await SessionManager.GetSessionAsync(HttpContext.Session);
     }
 }
