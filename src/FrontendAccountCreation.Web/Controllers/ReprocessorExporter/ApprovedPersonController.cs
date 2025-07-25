@@ -94,7 +94,7 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
                 model.IsLimitedLiablePartnership = session.ReExCompaniesHouseSession?.Partnership?.IsLimitedLiabilityPartnership ?? false;
                 model.IsInEligibleToBeApprovedPerson = !IsEligibleToBeApprovedPerson(session);
                 model.IsNonUk = session.IsUkMainAddress == false;
-                model.IsUnincorporated = session.ReExManualInputSession.ProducerType == ProducerType.UnincorporatedBody;
+                model.IsUnincorporated = session.ReExManualInputSession?.ProducerType == ProducerType.UnincorporatedBody;
 
                 ModelState.ClearValidationState(nameof(model.InviteUserOption));
 
