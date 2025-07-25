@@ -12,6 +12,10 @@
     ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+    var manageControlHint = Model.IsUnincorporatedFlow
+       ? "ManageControl.Unincorporated.Hint"
+       : "ManageControl.Hint";
+    
 }
 
 <div class="govuk-width-container">
@@ -29,7 +33,7 @@
                                 </h1>
                             </legend>
                             <div class="govuk-hint" id="manage-control-hint">
-                                @Localizer["ManageControl.Hint"]
+                                @Localizer[manageControlHint]
                             </div>
 
                             @await Html.PartialAsync("Partials/Govuk/_ErrorList", errorsViewModel)

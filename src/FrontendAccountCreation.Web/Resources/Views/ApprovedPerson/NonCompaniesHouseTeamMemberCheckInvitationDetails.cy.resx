@@ -117,49 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TeamMemberCheckInvitationDetails.Title" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.Title" xml:space="preserve">
     <value>[Welsh]Check invitation details</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.CheckInvitationDetails" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.CheckInvitationDetails" xml:space="preserve">
     <value>[Welsh]Check invitation details</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.Help" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.Help" xml:space="preserve">
     <value>[Welsh]Any invites created for one or more approved persons will be sent once the organisation is added.</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.Role" xml:space="preserve">
+  <data name="TeamMemberCheckInvitationDetails.Unincorporated.Help" xml:space="preserve">
+    <value>[Welsh]Any invites created for one or more  approved persons will be sent once the organisation is added.</value>
+  </data>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.Role" xml:space="preserve">
     <value>[Welsh]Role</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.FirstName" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.FirstName" xml:space="preserve">
     <value>Enw cyntaf</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.Email" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.Email" xml:space="preserve">
     <value>[Welsh]Email</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.Telephone" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.Telephone" xml:space="preserve">
     <value>Ffôn</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.Remove" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.Remove" xml:space="preserve">
     <value>[Welsh]Remove</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.ContactDetails" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.ContactDetails" xml:space="preserve">
     <value>[Welsh]contact details</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.LastName" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.LastName" xml:space="preserve">
     <value>Enw Olaf</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.SoleTrader" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.SoleTrader" xml:space="preserve">
     <value>Unig fasnachwr</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
-    <value>[Welsh]Invite another person</value>
+  <data name="TeamMemberCheckInvitationDetails.Unincorporated" xml:space="preserve">
+    <value>W Manage or control organisation</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.NonUkRole" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.InviteAnotherPerson" xml:space="preserve">
+    <value>Gwahodd person arall</value>
+  </data>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.NonUkRole" xml:space="preserve">
     <value>[Welsh]Manage or control business</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.NoInviterContinueMsg" xml:space="preserve">
-    <value>You can continue to add your organisation without inviting another eligible person at this stage.</value>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnershipRole" xml:space="preserve">
+    <value>[Welsh]Manage or control Partnership</value>
   </data>
-  <data name="TeamMemberCheckInvitationDetails.NoInviterRemovedMsg" xml:space="preserve">
-    <value>You have removed any invitations created for one or more approved persons.</value>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.IndividualPartner" xml:space="preserve">
+    <value>[Welsh]Individual partner within the partnership</value>
+  </data>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnerDirector" xml:space="preserve">
+    <value>[Welsh]Company director of a corporate partner within the partnership</value>
+  </data>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnerCompanySecretary" xml:space="preserve">
+    <value>[Welsh]Company secretary of a corporate partner within the partnership</value>
+  </data>
+    <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.None" xml:space="preserve">
+    <value>[Welsh]None of the above</value>
+  </data>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.NoInviterContinueMsg" xml:space="preserve">
+    <value>[Welsh]You can continue to add your organisation without inviting another eligible person at this stage.</value>
+  </data>
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.NoInviterRemovedMsg" xml:space="preserve">
+    <value>[Welsh]You have removed any invitations created for one or more approved persons.</value>
   </data>
 </root>

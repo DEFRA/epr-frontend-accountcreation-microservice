@@ -61,10 +61,7 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         if (!ModelState.IsValid)
         {
-            ModelState.Clear();
-            string errorMessage = OverrideNamesOfPartnersValidationErrorMessage("NamesOfPartners.", model);
-            ModelState.AddModelError(nameof(model.Partners), errorMessage);
-
+            AddCustomValidationErrors("NamesOfPartners.", model);
             SetBackLink(session, PagePath.LimitedPartnershipNamesOfPartners);
             return View(model);
         }
@@ -416,59 +413,13 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
         session.ReExManualInputSession.RoleInOrganisation = model.RoleInOrganisation;
         session.ReExManualInputSession.IsEligibleToBeApprovedPerson = model.RoleInOrganisation != RoleInOrganisation.NoneOfTheAbove;
 
+        if (model.RoleInOrganisation == RoleInOrganisation.NoneOfTheAbove)
+        {
+            return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipInviteApprovedPerson), PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
+        }
+
         return await SaveSessionAndRedirect(session, nameof(ApprovedPersonController), nameof(ApprovedPersonController.NonCompaniesHousePartnershipAddApprovedPerson),
                     PagePath.NonCompaniesHousePartnershipYourRole, PagePath.NonCompaniesHousePartnershipAddApprovedPerson);
-    }
-
-    [HttpGet]
-    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson()
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-        SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
-
-        return View(new NonCompaniesHousePartnershipInviteApprovedPersonViewModel
-        {
-            InviteUserOption = session.InviteUserOption?.ToString(),
-            IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership
-        });
-    }
-
-    [HttpPost]
-    [Route(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    [OrganisationJourneyAccess(PagePath.NonCompaniesHousePartnershipInviteApprovedPerson)]
-    public async Task<IActionResult> NonCompaniesHousePartnershipInviteApprovedPerson(NonCompaniesHousePartnershipInviteApprovedPersonViewModel model)
-    {
-        var session = await _sessionManager.GetSessionAsync(HttpContext.Session);
-
-        if (!ModelState.IsValid)
-        {
-            SetBackLink(session, PagePath.NonCompaniesHousePartnershipInviteApprovedPerson);
-            model.IsNonCompaniesHousePartnership = session.ReExManualInputSession?.ProducerType == ProducerType.Partnership;
-
-            return View(model);
-        }
-
-        session.InviteUserOption = model.InviteUserOption.ToEnumOrNull<InviteUserOptions>();
-
-        if (model.InviteUserOption == nameof(InviteUserOptions.InviteAnotherPerson))
-        {
-            return await SaveSessionAndRedirect(session, nameof(WhatRoleDoTheyHaveWithinThePartnership), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.WhatRoleDoTheyHaveWithinThePartnership);
-        }
-        else
-        {
-            return await SaveSessionAndRedirect(session, "ApprovedPersonController", nameof(ApprovedPersonController.CheckYourDetails), PagePath.NonCompaniesHousePartnershipInviteApprovedPerson, PagePath.CheckYourDetails);
-        }
-    }
-
-    [HttpGet]
-    [Route(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
-    [OrganisationJourneyAccess(PagePath.WhatRoleDoTheyHaveWithinThePartnership)]
-    public async Task<IActionResult> WhatRoleDoTheyHaveWithinThePartnership()
-    {
-        await Task.Yield();
-        throw new NotImplementedException("This feature has not been implemented yet.");
     }
 
     [HttpGet]
@@ -565,10 +516,7 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
 
         if (!ModelState.IsValid)
         {
-            ModelState.Clear();
-            string errorMessage = OverrideNamesOfPartnersValidationErrorMessage("NonCompaniesHousePartnershipNamesOfPartners.", model);
-            ModelState.AddModelError(nameof(model.Partners), errorMessage);
-
+            AddCustomValidationErrors("NonCompaniesHousePartnershipNamesOfPartners.", model);
             SetBackLink(session, PagePath.NonCompaniesHousePartnershipNamesOfPartners);
             return View(model);
         }
@@ -678,23 +626,55 @@ public class LimitedPartnershipController : ControllerBase<OrganisationSession>
         return partnersSession;
     }
 
-    private static string OverrideNamesOfPartnersValidationErrorMessage(string localizerPrefix, PartnershipPartnersViewModel model)
+    private void AddCustomValidationErrors(string localizerPrefix, PartnershipPartnersViewModel model)
     {
-        string errorMessage = "ValidationError_Both";
+        var keysToUpdate = ModelState.Keys
+            .Where(k => k.StartsWith("Partners[") && k.EndsWith("].IsPersonOrCompanyButNotBoth"))
+            .ToList();
+
+        foreach (var key in keysToUpdate)
+        {
+            if (ModelState.GetFieldValidationState(key) == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+            {
+                int? index = ExtractIndexFromKey(key);
+                if (index.HasValue)
+                {
+                    ModelState.Remove(key);
+                    AddValidationError(localizerPrefix, model, index.Value);
+                }
+            }
+        }
+    }
+
+    private static int? ExtractIndexFromKey(string key)
+    {
+        int start = "Partners[".Length;
+        int end = key.IndexOf(']', start);
+        if (end > start && int.TryParse(key.AsSpan(start, end - start), out int index))
+        {
+            return index;
+        }
+        return null;
+    }
+
+    private void AddValidationError(string localizerPrefix, PartnershipPartnersViewModel model, int index)
+    {
         if (model.ExpectsCompanyPartners && model.ExpectsIndividualPartners)
         {
-            errorMessage = "ValidationError_Both";
+            ModelState.AddModelError($"Partners[{index}].PersonName", $"{localizerPrefix}ValidationError_Both");
         }
         else if (model.ExpectsCompanyPartners)
         {
-            errorMessage = "ValidationError_Company";
+            ModelState.AddModelError($"Partners[{index}].CompanyName", $"{localizerPrefix}ValidationError_Company");
         }
         else if (model.ExpectsIndividualPartners)
         {
-            errorMessage = "ValidationError_Individual";
+            ModelState.AddModelError($"Partners[{index}].PersonName", $"{localizerPrefix}ValidationError_Individual");
         }
-
-        return string.Concat(localizerPrefix, errorMessage);
+        else
+        {
+            ModelState.AddModelError($"Partners[{index}].PersonName", $"{localizerPrefix}ValidationError_Both");
+        }
     }
 
     private static List<PartnershipPersonOrCompanyViewModel> GetExistingPartners(List<ReExPersonOrCompanyPartner>? partnersSession,

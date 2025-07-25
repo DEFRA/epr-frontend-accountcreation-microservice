@@ -121,7 +121,7 @@
     <value>As a partner, company director or secretary in your business you are now an 'approved person' for your organisation.</value>
   </data>
   <data name="NonCompanyHouseYouAreApprovedPerson.InviteLink" xml:space="preserve">
-    <value>Invite another eligible person</value>
+    <value>Invite another person</value>
   </data>
   <data name="NonCompanyHouseYouAreApprovedPerson.Continue" xml:space="preserve">
     <value>continue to add your organisation</value>

@@ -42,10 +42,10 @@
                     {
                         <div class="govuk-summary-card__content">
                             <dl class="govuk-summary-list">
-
+                                <div class="govuk-summary-list__row"></div>
                                 <!-- Role of team member -->
                                 <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
+                                    <dt class="govuk-summary-list__value">
                                         @Localizer["TeamMembersCheckInvitationDetails.Role"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
@@ -79,8 +79,8 @@
                                     <dd class="govuk-summary-list__value">@Model[i].Email</dd>
                                 </div>
 
-                                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
-                                    <dt class="govuk-summary-list__key">@Localizer["TeamMembersCheckInvitationDetails.Telephone"]</dt>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__value">@Localizer["TeamMembersCheckInvitationDetails.Telephone"]</dt>
                                     <dd class="govuk-summary-list__value">@Model[i].TelephoneNumber</dd>
                                 </div>
                             </dl>
@@ -107,9 +107,9 @@
                             </button>
 
                             <!-- goes to invite others -->
-                            <a asp-action="TeamMemberRoleInOrganisationAdd" class="govuk-button govuk-button--secondary">
+                            <a class="govuk-button govuk-button--secondary" asp-action="TeamMemberRoleInOrganisationAdd">
                                 @Localizer["TeamMembersCheckInvitationDetails.InviteAnotherPerson"]
-                            </a>
+                                </a>
                         </div>
                     </form>
                 </div>

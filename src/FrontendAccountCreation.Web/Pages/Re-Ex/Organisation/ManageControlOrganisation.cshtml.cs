@@ -67,6 +67,6 @@ public class ManageControlOrganisation(
             session,
             nameof(ApprovedPersonController),
             nameof(ApprovedPersonController.PersonCanNotBeInvited),
-            PagePath.ApprovedPersonPartnershipCanNotBeInvited);
+            PagePath.ApprovedPersonCanNotBeInvited);
     }
 }

@@ -91,7 +91,7 @@ public class RegisteredAsCharityTests : OrganisationPageModelTestBase<Registered
         //Arrange
         var organisationSessionMock = new OrganisationSession
         {
-            IsTheOrganisationCharity = isCharityOrganisation
+            IsTheOrganisationCharity = isCharityOrganisation,
         };
 
         SessionManagerMock.Setup(x => x.GetSessionAsync(It.IsAny<ISession>())).ReturnsAsync(organisationSessionMock);

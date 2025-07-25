@@ -1,3 +1,5 @@
+@using FrontendAccountCreation.Core.Sessions.ReEx
+@using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
 @using FrontendAccountCreation.Web.Constants
 
@@ -19,7 +21,17 @@
                             @Localizer["CheckYourDetails.Header"]
                         </h1>
 
-                        <h2 class="govuk-heading-m govuk-!-margin-bottom-4">@Localizer["CheckYourDetails.YourOrganisation"]</h2>
+                        <h2 class="govuk-heading-m govuk-!-margin-bottom-4">
+                            @if (Model.IsUnincorporatedFlow)
+                            {
+                                @Model.TradingName
+                            }
+                            else
+                            {
+
+                                @Localizer["CheckYourDetails.YourOrganisation"]
+                            }
+                        </h2>
 
                         <dl class="govuk-summary-list govuk-!-margin-bottom-4">
                             <div class="govuk-summary-list__row">
@@ -86,46 +98,94 @@
                                     </dd>
                                 </div>
                             }
-                            else
+                            @if (!Model.IsUnincorporatedFlow)
                             {
+                                @if (Model.IsCompaniesHouseFlow)
+                                {
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            @Localizer["CheckYourDetails.CompaniesHouseNumber"]
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            @Localizer[Model.CompaniesHouseNumber].Value
+                                        </dd>
+                                    </div>
+                                }
+
+                                @if (Model.IsCompaniesHouseFlow)
+                                {
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            @Localizer["CheckYourDetails.OrganisationDetails"]
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            @{
+                                                RenderAddressParts(new[] { Model.CompanyName });
+                                                RenderAddressParts(Model?.BusinessAddress?.AddressFields);
+                                            }
+                                        </dd>
+                                        <dd class="govuk-summary-list__actions"></dd>
+                                    </div>
+                                }
+
+                                @if (Model.IsManualInputFlow)
+                                {
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            @Localizer["CheckYourDetails.OrganisationDetails"]
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            @(Model.CompanyName)
+                                        </dd>
+                                        <dd class="govuk-summary-list__actions">
+                                            <a href="~/re-ex/organisation/@PagePath.OrganisationName" class="govuk-link govuk-link--no-visited-state">
+                                                @SharedLocalizer["Change"]
+                                                <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.OrganisationDetails"].Value.ToLower()</span>
+                                            </a>
+                                        </dd>
+                                    </div>
+                                }
+                            else
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            @Localizer["CheckYourDetails.CompaniesHouseNumber"]
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @Localizer[Model.CompaniesHouseNumber].Value
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            @Localizer["CheckYourDetails.OrganisationDetails"]
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @{
+                RenderAddressParts(new[] { Model.CompanyName });
+                RenderAddressParts(Model?.BusinessAddress?.AddressFields);
+            }
+        </dd>
+        <dd class="govuk-summary-list__actions"></dd>
+    </div>
+}
+
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        @Localizer["CheckYourDetails.CompaniesHouseNumber"]
+                                        @Localizer["CheckYourDetails.DifferentTradingName"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        @Localizer[Model.CompaniesHouseNumber].Value
+                                        @(Model.IsTradingNameDifferent.Value ? "Yes" : "No")
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a href="~/re-ex/organisation/@PagePath.IsTradingNameDifferent" class="govuk-link govuk-link--no-visited-state">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.DifferentTradingName"].Value.ToLower()</span>
+                                        </a>
                                     </dd>
                                 </div>
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        @Localizer["CheckYourDetails.OrganisationDetails"]
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        @{
-                                            RenderAddressParts(new[] { Model.CompanyName });
-                                            RenderAddressParts(Model?.BusinessAddress?.AddressFields);
-                                        }
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions"></dd>
-                                </div>
+
                             }
-
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">
-                                    @Localizer["CheckYourDetails.DifferentTradingName"]
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    @(Model.IsTradingNameDifferent.Value ? "Yes" : "No")
-                                </dd>
-                                <dd class="govuk-summary-list__actions">
-                                    <a href="~/re-ex/organisation/@PagePath.IsTradingNameDifferent" class="govuk-link govuk-link--no-visited-state">
-                                        @SharedLocalizer["Change"]
-                                        <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.DifferentTradingName"].Value.ToLower()</span>
-                                    </a>
-                                </dd>
-                            </div>
-
-                            @if (Model.IsTradingNameDifferent.Value)
+                            @if (Model.IsTradingNameDifferent.Value || Model.IsUnincorporatedFlow)
                             {
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
@@ -142,24 +202,41 @@
                                     </dd>
                                 </div>
                             }
-
-                            @if (Model.IsManualInputFlow && !Model.IsNonUk)
+                            @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true })
                             {
+                                string partnershipType = Model.IsLimitedLiabilityPartnership ? "CheckYourDetails.LimitedLiabilityPartnership" : "CheckYourDetails.LimitedPartnership";
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        @Localizer["CheckYourDetails.BusinessType"]
+                                        @Localizer["CheckYourDetails.Partnership"]
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        @Localizer[Model.TypeOfProducer].Value
+                                        @Localizer[partnershipType].Value
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a href="~/re-ex/organisation/@PagePath.TypeOfOrganisation" class="govuk-link govuk-link--no-visited-state">
+                                        <a href="~/re-ex/organisation/@PagePath.PartnershipType" class="govuk-link govuk-link--no-visited-state">
                                             @SharedLocalizer["Change"]
-                                            <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.BusinessType"].Value.ToLower()</span>
+                                            <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.Partnership"].Value.ToLower()</span>
                                         </a>
                                     </dd>
                                 </div>
                             }
+                             @if (Model.IsManualInputFlow && !Model.IsNonUk)
+ {
+     <div class="govuk-summary-list__row">
+         <dt class="govuk-summary-list__key">
+             @Localizer["CheckYourDetails.BusinessType"]
+         </dt>
+         <dd class="govuk-summary-list__value">
+             @Localizer[Model.TypeOfProducer].Value
+         </dd>
+         <dd class="govuk-summary-list__actions">
+             <a href="~/re-ex/organisation/@PagePath.TypeOfOrganisation" class="govuk-link govuk-link--no-visited-state">
+                 @SharedLocalizer["Change"]
+                 <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.BusinessType"].Value.ToLower()</span>
+             </a>
+         </dd>
+     </div>
+ }
 
                             @if (!Model.IsCompaniesHouseFlow)
                             {
@@ -189,29 +266,26 @@
                                         }
                                         </dd>
                                 </div>
-                                @if (Model.IsNonUk)
-                                {
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
-                                            @Localizer["CheckYourDetails.UkRegulator"]
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">
-                                            @Localizer[Model.UkNation].Value
-                                        </dd>
-                                        <dd class="govuk-summary-list__actions">
-                                            <a href="~/re-ex/organisation/@PagePath.UkRegulator" class="govuk-link govuk-link--no-visited-state">
-                                                @SharedLocalizer["Change"]
-                                                <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.UkRegulator"].Value.ToLower()</span>
-                                            </a>
-                                        </dd>
-                                    </div>
-                                }
                             }
 
-                            @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true })
-                            {
-                                string partnershipType = Model.IsLimitedLiabilityPartnership ? "CheckYourDetails.LimitedLiabilityPartnership" : "CheckYourDetails.LimitedPartnership";
-                                <div class="govuk-summary-list__row">
+                            <div class="govuk-summary-list__row">
+                                @if (!Model.IsNonUk)
+                                {
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["CheckYourDetails.UkNation"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @Localizer[Model.UkNation].Value
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a href="~/re-ex/organisation/@PagePath.UkNation" class="govuk-link govuk-link--no-visited-state">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.UkNation"].Value.ToLower()</span>
+                                        </a>
+                                    </dd>
+                                }
+                                else
+                                {
                                     <dt class="govuk-summary-list__key">
                                         @Localizer["CheckYourDetails.Partnership"]
                                     </dt>
@@ -224,9 +298,9 @@
                                             <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.Partnership"].Value.ToLower()</span>
                                         </a>
                                     </dd>
-                                </div>
-                            }
+                                }
 
+                            </div>
                         </dl>
 
                         @if (Model.IsCompaniesHouseFlow)
@@ -236,6 +310,14 @@
 
                         @if (Model is { IsCompaniesHouseFlow: true, IsOrganisationAPartnership: true, IsLimitedLiabilityPartnership: false })
                         {
+                            // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
+                            ViewBag.TypeOfPartnerShip = "Limited";
+                            @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
+                        }
+                        else if (Model is { IsManualInputFlow: true, IsOrganisationAPartnership: true })
+                        {
+                            // pass data to Views\ApprovedPerson\Partials\_CheckYourDetailsPartnershipDetails.cshtml
+                            ViewBag.TypeOfPartnerShip = "NonCompaniesHouse";
                             @await Html.PartialAsync("~/Views/ApprovedPerson/Partials/_CheckYourDetailsPartnershipDetails.cshtml", Model.LimitedPartnershipPartners)
                         }
 
@@ -276,22 +358,45 @@
                                                 }
                                                 else
                                                 {
+                                                    @if (Model.IsUnincorporatedFlow)
+                                                    {
+                                                        <dd class="govuk-summary-list__value">
+                                                            @Localizer["CheckYourDetails.ManageOrControlOrganisation"].Value
+                                                        </dd>
+                                                    }
+                                                   
                                                     @if (Model.IsSoleTrader)
                                                     {
                                                         <dd class="govuk-summary-list__value">
                                                             @Localizer[Model.TypeOfProducer].Value
                                                         </dd>
                                                     }
-                                                    @if (Model.IsNonUk)
+                                                    else if (Model.IsNonUk)
                                                     {
                                                         <dd class="govuk-summary-list__value">
                                                             @Localizer["CheckYourDetails.NonUkRole"]
                                                         </dd>
                                                     }
-                                                    @if (Model.IsCompaniesHouseFlow)
+                                                    else if (Model.IsManualInputFlow)
+                                                    {
+                                                        <dd class="govuk-summary-list__value">
+                                                            @GetLocalizedRoleOfApprovedPerson(@Model.reExCompanyTeamMembers[i].Role)
+                                                        </dd>
+                                                    }
+                                                
+                                                    @if (Model.IsCompaniesHouseFlow && !Model.IsUnincorporatedFlow)
                                                     {
                                                         <dd class="govuk-summary-list__actions">
                                                             <a class="govuk-link" href="@Url.Action("TeamMemberRoleInOrganisationEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                                @SharedLocalizer["Change"]
+                                                                <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
+                                                            </a>
+                                                        </dd>
+                                                    }
+                                                    else if (Model.IsManualInputFlow)
+                                                    {
+                                                        <dd class="govuk-summary-list__actions">
+                                                            <a class="govuk-link" href="@Url.Action(nameof(ApprovedPersonController.NonCompaniesHousePartnershipTeamMemberRoleEdit), "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                                 @SharedLocalizer["Change"]
                                                                 <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.Role"].Value.ToLower()</span>
                                                             </a>
@@ -318,10 +423,10 @@
                                                         </a>
                                                     </dd>
                                                 }
-                                               else
+                                                else
                                                 {
                                                     <dd class="govuk-summary-list__actions">
-                                                    <a class="govuk-link" href="@Url.Action("NonCompaniesHouseTeamMemberDetails", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
+                                                    <a class="govuk-link" href="@Url.Action("NonCompaniesHouseTeamMemberDetailsEdit", "ApprovedPerson", new { id = Model.reExCompanyTeamMembers[i].Id })">
                                                             @SharedLocalizer["Change"]
                                                             <span class="govuk-visually-hidden"> @Localizer["CheckYourDetails.TeamMembers.ContactDetails"]</span>
                                                         </a>
@@ -368,5 +473,17 @@
                 <a href="@ViewBag.MakeChangesToYourLimitedCompanyLink" class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener noreferrer">@Localizer[linkDescription]</a>.
             </p>
         </div>
+    }
+
+    string GetLocalizedRoleOfApprovedPerson(ReExTeamMemberRole? role)
+    {
+        return role switch
+        {
+            ReExTeamMemberRole.IndividualPartner => @Localizer["CheckYourDetails.IndividualPartner"].Value,
+            ReExTeamMemberRole.PartnerDirector => @Localizer["CheckYourDetails.PartnerDirector"].Value,
+            ReExTeamMemberRole.PartnerCompanySecretary => @Localizer["CheckYourDetails.PartnerCompanySecretary"].Value,
+            ReExTeamMemberRole.None => @Localizer["CheckYourDetails.None"].Value,
+            _ => @Localizer["CheckYourDetails.Missing"].Value
+        };
     }
 }

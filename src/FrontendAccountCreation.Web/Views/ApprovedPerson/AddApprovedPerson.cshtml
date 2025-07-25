@@ -6,11 +6,11 @@
 @model AddApprovedPersonViewModel
 
 @{
-	ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
-	ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
-	ViewData["HeaderOverride"] = LayoutOverrides.ReExUserHeaderOverride;
-	var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
-	Model.ErrorsViewModel = errorsViewModel;
+    ViewData["Title"] = Localizer["AddAnApprovedPerson.Title"];
+    ViewData["ApplicationTitleOverride"] = LayoutOverrides.ReExTitleOverride;
+    ViewData["HeaderOverride"] = LayoutOverrides.ReExOrganisationHeaderOverride;
+    var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
+    Model.ErrorsViewModel = errorsViewModel;
 }
 
 <div class="govuk-width-container">

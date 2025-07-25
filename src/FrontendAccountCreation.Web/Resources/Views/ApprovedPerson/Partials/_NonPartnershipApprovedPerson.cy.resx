@@ -141,4 +141,7 @@
   <data name="_NonPartnershipApprovedPerson.NonUkOrganisation.ApprovedPerson.Description" xml:space="preserve">
     <value>Fel person sydd â rheolaeth dros eich busnes, rydych chi bellach yn berson a gymeradwywyd i'ch sefydliad</value>
   </data>
+  <data name="_NonPartnershipApprovedPerson.Unincorporated.ApprovedPerson.Description" xml:space="preserve">
+    <value>W As a person with control of management of your business, you are now an approved person for your organisation.</value>
+  </data>
 </root>

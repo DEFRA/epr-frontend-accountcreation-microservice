@@ -39,8 +39,10 @@ public static class PagePath
     public const string PartnerOrganisation = "partner-organisation";
     public const string ManageAccountPerson = "manage-account-person";
     public const string YouAreApprovedPerson = "approved-person";
+
     //to-do: don't think this is used anymore
     public const string AddApprovedPerson = "add-approved-person";
+
     public const string ApprovedPersonContinue = "person-approved-continue";
     public const string DeclarationContinue = "declaration-continue";
     public const string SoleTrader = "sole-trader";
@@ -51,14 +53,6 @@ public static class PagePath
     public const string ManageControl = "manage-control";
     public const string ManageControlOrganisation = "manage-control-organisation";
     public const string IndividualIncharge = "individual-in-charge";
-    public const string NonCompaniesHousePartnershipType = "non-companies-house-partner-type";
-    public const string NonCompaniesHousePartnershipNamesOfPartners = "non-companies-house-partner-names";
-    public const string NonCompaniesHousePartnershipNamesOfPartnersDelete = "non-companies-house-partner-names/delete";
-    public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
-    public const string NonCompaniesHousePartnershipCheckNamesOfPartners = "non-companies-house-check-partner-names";
-    public const string NonCompaniesHousePartnershipCheckNamesOfPartnersDelete = "non-companies-house-check-partner-names/delete";
-    public const string NonCompaniesHousePartnershipYouAreApprovedPerson = "non-companies-house-partnership-approved-person-confirmation";
-    public const string NonCompaniesHousePartnershipTheirRole = "non-companies-house-partnership-role";
 
     // Approve person paths
     public const string AddAnApprovedPerson = "add-an-approved-person";
@@ -69,19 +63,14 @@ public static class PagePath
     public const string TeamMemberRoleInOrganisationEdit = "check-companies-house-role/edit";
     public const string TeamMemberRoleInOrganisationContinueWithoutInvitation = "check-companies-house-role/continue-without-invitation";
 
-    public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
-
     public const string TeamMemberDetails = "eligible-person-details";
     public const string TeamMemberDetailsEdit = "eligible-person-details/edit";
-
-    public const string NonCompaniesHouseTeamMemberCheckInvitationDetails = "non-companies-house-check-invitation-details";
-    public const string NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete = "non-companies-house-check-invitation-details/delete";
 
     public const string TeamMembersCheckInvitationDetails = "check-invitation-details";
     public const string TeamMembersCheckInvitationDetailsDelete = "check-invitation-details/delete";
 
-    public const string ApprovedPersonPartnershipCanNotBeInvited = "approved-person-cannot-be-invited";
-    
+    public const string ApprovedPersonCanNotBeInvited = "approved-person-cannot-be-invited";
+
     public const string MemberPartnership = "member-partnership";
     public const string MemberPartnershipAdd = "member-partnership/add";
     public const string MemberPartnershipEdit = "member-partnership/edit";
@@ -93,17 +82,56 @@ public static class PagePath
 
     // Sole Trader paths
     public const string YouAreApprovedPersonSoleTrader = "soletrader-approved-person";
+
     public const string SoleTraderContinue = "soletrader-continue";
 
     // UK & Non-UK Non-Companies-House path
     public const string OrganisationName = "organisation-name";
 
-    // Non Uk Non Companies House paths    
+    // Non Uk Non Companies House paths
     public const string NonUkRoleInOrganisation = "nonuk-role-in-organisation";
 
-    //Non Companies House Partnership paths 
-    public const string NonCompaniesHousePartnershipInviteApprovedPerson = "non-companies-house-partnership-invite-approved-person";
+    // Non Companies House Partnership paths
+    // page 1 Which type of partners are in your partnership?
+    public const string NonCompaniesHousePartnershipType = "non-companies-house-partner-type";
+
+    // page 2 What are the names of all partners in your partnership?
+    public const string NonCompaniesHousePartnershipNamesOfPartners = "non-companies-house-partner-names";
+
+    public const string NonCompaniesHousePartnershipNamesOfPartnersDelete = "non-companies-house-partner-names/delete";
+
+    // page 3 Check corporate and individual partner names in your partnership
+    public const string NonCompaniesHousePartnershipCheckNamesOfPartners = "non-companies-house-check-partner-names";
+
+    public const string NonCompaniesHousePartnershipCheckNamesOfPartnersDelete = "non-companies-house-check-partner-names/delete";
+
+    // page 4 What role do you have within the partnership?
     public const string NonCompaniesHousePartnershipYourRole = "non-companies-house-your-partnership-role";
+
+    // page 5a Add an approved person
+    public const string NonCompaniesHousePartnershipAddApprovedPerson = "non-companies-house-partnership-add-approved-person";
+
+    // page 5b Add an approved person
+    public const string NonCompaniesHousePartnershipInviteApprovedPerson = "non-companies-house-partnership-invite-approved-person";
+
+    // page 6 What role do they have within the partnership?
+    public const string NonCompaniesHousePartnershipTheirRole = "non-companies-house-partnership-role";
+
+    public const string NonCompaniesHousePartnershipTheirRoleAdd = "non-companies-house-partnership-role/add";
+    public const string NonCompaniesHousePartnershipTheirRoleAddAnother = "non-companies-house-partnership-role/add-another";
+    public const string NonCompaniesHousePartnershipTheirRoleEdit = "non-companies-house-partnership-role/edit";
+
+    // page 7 What are their details?
+    public const string NonCompaniesHouseTeamMemberDetails = "non-companies-house-team-member-details";
+
+    public const string NonCompaniesHouseTeamMemberDetailsEdit = "non-companies-house-team-member-details/edit";
+
+    // page 8 Check invitation details
+    public const string NonCompaniesHouseTeamMemberCheckInvitationDetails = "non-companies-house-check-invitation-details";
+
+    public const string NonCompaniesHouseTeamMemberCheckInvitationDetailsDelete = "non-companies-house-check-invitation-details/delete";
+
+    public const string NonCompaniesHousePartnershipYouAreApprovedPerson = "non-companies-house-partnership-approved-person-confirmation";
 
     // Limited partnership paths
     public const string LimitedPartnershipNamesOfPartners = "organisation-enter-corporate-individual-partner-names";
@@ -111,12 +139,14 @@ public static class PagePath
 
     public const string LimitedPartnershipCheckNamesOfPartners = "organisation-check-corporate-individual-partner-names";
     public const string LimitedPartnershipCheckNamesOfPartnersDelete = "organisation-check-corporate-individual-partner-names/delete";
-    public const string WhatRoleDoTheyHaveWithinThePartnership = "what-role-do-they-have-within-the-partnership";
 
     public const string PartnershipType = "partnership-type";
     public const string LimitedPartnershipType = "organisation-partnership-type";
     public const string LimitedPartnershipRole = "organisation-your-role-in-limited-partnership";
     public const string LimitedLiabilityPartnership = "partner-you";
+
+    // Unincorporated paths
+    public const string UnincorporatedRoleInOrganisation = "unincorporated-role-in-organisation";
 
     // Non journey paths
     public const string Accessibility = "accessibility";
