@@ -89,46 +89,6 @@
                                     </dd>
                                 </div>
                             }
-
-                            @if (!Model.IsCompaniesHouseFlow)
-                            {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        @Localizer["CheckYourDetails.RegisteredInTheUK"]
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        @if (Model.IsNonUk)
-                                        {
-                                            @SharedLocalizer["No"]
-                                        }
-                                        else
-                                        {
-                                            @SharedLocalizer["Yes"]
-                                        }
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a href="~/re-ex/organisation/@PagePath.IsUkMainAddress" class="govuk-link govuk-link--no-visited-state">
-                                            @SharedLocalizer["Change"]
-                                            <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.RegisteredInTheUK"].Value.ToLower()</span>
-                                        </a>
-                                    </dd>
-                                </div>
-
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        @Localizer["CheckYourDetails.OrganisationName"]
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        @(Model.CompanyName)
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a href="~/re-ex/organisation/@PagePath.OrganisationName" class="govuk-link govuk-link--no-visited-state">
-                                            @SharedLocalizer["Change"]
-                                            <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.OrganisationName"].Value.ToLower()</span>
-                                        </a>
-                                    </dd>
-                                </div>
-                            }
                             else
                             {
                                 <div class="govuk-summary-list__row">
@@ -153,7 +113,7 @@
                                 </div>
                             }
 
-                                <div class="govuk-summary-list__row">
+                           <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         @Localizer["CheckYourDetails.DifferentTradingName"]
                                     </dt>
