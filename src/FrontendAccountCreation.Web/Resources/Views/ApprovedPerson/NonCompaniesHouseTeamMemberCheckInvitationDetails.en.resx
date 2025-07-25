@@ -174,7 +174,7 @@
   <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.PartnerCompanySecretary" xml:space="preserve">
     <value>Company secretary of a corporate partner within the partnership</value>
   </data>
-    <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.None" xml:space="preserve">
+  <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.None" xml:space="preserve">
     <value>None of the above</value>
   </data>
   <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.NoInviterContinueMsg" xml:space="preserve">
@@ -182,5 +182,8 @@
   </data>
   <data name="NonCompaniesHouseTeamMemberCheckInvitationDetails.NoInviterRemovedMsg" xml:space="preserve">
     <value>You have removed any invitations created for one or more approved persons.</value>
+  </data>
+  <data name="TeamMemberCheckInvitationDetails.Help" xml:space="preserve">
+    <value>Any invites created for one or more approved persons will be sent once the organisation is added.</value>
   </data>
 </root>
