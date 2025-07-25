@@ -1,3 +1,4 @@
+@using FrontendAccountCreation.Core.Sessions
 @using FrontendAccountCreation.Core.Sessions.ReEx
 @using FrontendAccountCreation.Web.Controllers.ReprocessorExporter
 @using FrontendAccountCreation.Web.ViewModels.ReExAccount
@@ -28,7 +29,6 @@
                             }
                             else
                             {
-
                                 @Localizer["CheckYourDetails.YourOrganisation"]
                             }
                         </h2>
@@ -98,6 +98,7 @@
                                     </dd>
                                 </div>
                             }
+
                             @if (!Model.IsUnincorporatedFlow)
                             {
                                 @if (Model.IsCompaniesHouseFlow)
@@ -145,29 +146,6 @@
                                         </dd>
                                     </div>
                                 }
-                            else
-{
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @Localizer["CheckYourDetails.CompaniesHouseNumber"]
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @Localizer[Model.CompaniesHouseNumber].Value
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @Localizer["CheckYourDetails.OrganisationDetails"]
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @{
-                RenderAddressParts(new[] { Model.CompanyName });
-                RenderAddressParts(Model?.BusinessAddress?.AddressFields);
-            }
-        </dd>
-        <dd class="govuk-summary-list__actions"></dd>
-    </div>
-}
 
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
@@ -185,6 +163,7 @@
                                 </div>
 
                             }
+
                             @if (Model.IsTradingNameDifferent.Value || Model.IsUnincorporatedFlow)
                             {
                                 <div class="govuk-summary-list__row">
@@ -220,24 +199,23 @@
                                     </dd>
                                 </div>
                             }
-                             @if (Model.IsManualInputFlow && !Model.IsNonUk)
- {
-     <div class="govuk-summary-list__row">
-         <dt class="govuk-summary-list__key">
-             @Localizer["CheckYourDetails.BusinessType"]
-         </dt>
-         <dd class="govuk-summary-list__value">
-             @Localizer[Model.TypeOfProducer].Value
-         </dd>
-         <dd class="govuk-summary-list__actions">
-             <a href="~/re-ex/organisation/@PagePath.TypeOfOrganisation" class="govuk-link govuk-link--no-visited-state">
-                 @SharedLocalizer["Change"]
-                 <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.BusinessType"].Value.ToLower()</span>
-             </a>
-         </dd>
-     </div>
- }
-
+                            @if (Model.IsManualInputFlow && !Model.IsNonUk)
+                            {
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @Localizer["CheckYourDetails.BusinessType"]
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @Localizer[Model.TypeOfProducer].Value
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a href="~/re-ex/organisation/@PagePath.TypeOfOrganisation" class="govuk-link govuk-link--no-visited-state">
+                                            @SharedLocalizer["Change"]
+                                            <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.BusinessType"].Value.ToLower()</span>
+                                        </a>
+                                    </dd>
+                                </div>
+                            }
                             @if (!Model.IsCompaniesHouseFlow)
                             {
                                 <div class="govuk-summary-list__row">
@@ -249,7 +227,7 @@
                                             RenderAddressParts(Model?.BusinessAddress?.AddressFields);
                                         }
                                     </dd>
-                                   <dd class="govuk-summary-list__actions">
+                                    <dd class="govuk-summary-list__actions">
                                         @if (Model.IsNonUk)
                                         {
                                             <a href="~/re-ex/organisation/@PagePath.AddressOverseas" class="govuk-link govuk-link--no-visited-state">
@@ -264,10 +242,9 @@
                                                 <span class="govuk-visually-hidden">@Localizer["CheckYourDetails.Address"].Value.ToLower()</span>
                                             </a>
                                         }
-                                        </dd>
+                                    </dd>
                                 </div>
                             }
-
                             <div class="govuk-summary-list__row">
                                 @if (!Model.IsNonUk)
                                 {
@@ -286,6 +263,7 @@
                                 }
                                 else
                                 {
+                                    string partnershipType = Model.IsLimitedLiabilityPartnership ? "CheckYourDetails.LimitedLiabilityPartnership" : "CheckYourDetails.LimitedPartnership";
                                     <dt class="govuk-summary-list__key">
                                         @Localizer["CheckYourDetails.Partnership"]
                                     </dt>
