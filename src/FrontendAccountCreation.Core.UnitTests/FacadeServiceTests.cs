@@ -772,12 +772,12 @@ public class FacadeServiceTests
     }
     
     [TestMethod]
-    public async Task GetUserAccount_WhenStatusCodeIsNotFound_ReturnsDefault()
+    public async Task GetUserAccount_WhenStatusCodeIsNoContent_ReturnsDefault()
     {
         // Arrange
         var httpTestHandler = new HttpResponseMessage
         {
-            StatusCode = HttpStatusCode.NotFound
+            StatusCode = HttpStatusCode.NoContent
         };
         
         _mockHandler.Protected()
