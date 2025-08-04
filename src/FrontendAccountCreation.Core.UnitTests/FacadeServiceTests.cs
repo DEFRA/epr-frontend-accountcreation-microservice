@@ -772,12 +772,12 @@ public class FacadeServiceTests
     }
     
     [TestMethod]
-    public async Task GetUserAccount_WhenStatusCodeIsNotFound_ReturnsDefault()
+    public async Task GetUserAccount_WhenStatusCodeIsNoContent_ReturnsDefault()
     {
         // Arrange
         var httpTestHandler = new HttpResponseMessage
         {
-            StatusCode = HttpStatusCode.NotFound
+            StatusCode = HttpStatusCode.NoContent
         };
         
         _mockHandler.Protected()
@@ -793,7 +793,30 @@ public class FacadeServiceTests
         // Assert
         response.Should().Be(default);
     }
-    
+
+    [TestMethod]
+    public async Task GetUserAccount_WhenStatusCodeIsNotFound_ReturnsDefault()
+    {
+        // Arrange
+        var httpTestHandler = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NotFound
+        };
+
+        _mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpTestHandler);
+
+        // Act
+        var response = await _facadeService.GetUserAccount();
+
+        // Assert
+        response.Should().Be(default);
+    }
+
     [TestMethod]
     public async Task GetUserAccount_WhenStatusCodeIsUnsuccessful_ThrowsException()
     {
