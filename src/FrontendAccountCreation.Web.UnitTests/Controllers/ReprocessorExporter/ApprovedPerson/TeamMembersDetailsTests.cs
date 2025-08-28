@@ -24,7 +24,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         {
             Journey =
             [
-                "PageBefore", //Todo: replace it when the page is implemented
+                "PageBefore", //To do: replace it when the page is implemented
                 PagePath.TeamMemberRoleInOrganisation
             ],
             ReExCompaniesHouseSession = new ReExCompaniesHouseSession

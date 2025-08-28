@@ -1,6 +1,5 @@
 ﻿using FrontendAccountCreation.Web.ViewModels.Shared.GovUK;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 
