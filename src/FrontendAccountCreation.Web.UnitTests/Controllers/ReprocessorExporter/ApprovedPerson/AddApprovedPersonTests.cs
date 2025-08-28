@@ -994,8 +994,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
             {
                 ProducerType = ProducerType.UnincorporatedBody
             };
-        };
-
+        }
 
         _sessionManagerMock
             .Setup(s => s.GetSessionAsync(It.IsAny<ISession>()))

@@ -169,7 +169,7 @@ namespace FrontendAccountCreation.IntegrationTests.Controllers
             // Act
             try
             {
-                var result = controller.UpdateAcceptance(returnUrl, cookieValue);
+                _ = controller.UpdateAcceptance(returnUrl, cookieValue);
             }
             catch (Exception)
             {

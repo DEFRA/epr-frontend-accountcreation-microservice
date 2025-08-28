@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation;
-using FrontendAccountCreation.Core.Extensions;
+﻿using FrontendAccountCreation.Core.Extensions;
 using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Extensions;

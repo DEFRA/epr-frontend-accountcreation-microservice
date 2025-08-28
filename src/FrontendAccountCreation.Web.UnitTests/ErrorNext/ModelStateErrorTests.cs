@@ -1,6 +1,5 @@
 using FluentAssertions;
 using FrontendAccountCreation.Web.ErrorNext;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FrontendAccountCreation.Web.UnitTests.ErrorNext;

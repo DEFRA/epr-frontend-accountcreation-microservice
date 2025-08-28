@@ -173,7 +173,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         _tempDataDictionaryMock.Setup(dictionary => dictionary["FocusId"]).Returns(_teamMemberId);
 
         // Act
-        var result = await _systemUnderTest.TeamMemberDetails();
+        _ = await _systemUnderTest.TeamMemberDetails();
 
         // Assert
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(It.IsAny<ISession>(), _orgSessionMock), Times.Once);
@@ -225,7 +225,7 @@ public class TeamMembersDetailsTests : ApprovedPersonTestBase
         ((RedirectToActionResult)result).ActionName.Should().Be(nameof(ApprovedPersonController.TeamMembersCheckInvitationDetails));
 
         _orgSessionMock.ReExCompaniesHouseSession.TeamMembers
-            .Any(x => x.LastName == "Ghost").Should().BeFalse();
+            .Exists(x => x.LastName == "Ghost").Should().BeFalse();
     }
 
     [TestMethod]
