@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace FrontendAccountCreation.Core.Sessions
+namespace FrontendAccountCreation.Core.Sessions;
+
+public enum PartnerType
 {
-    public enum PartnerType
-    {
-        [Description("Individual Partner")]
-        IndividualPartner = 1,
+    [Description("Individual Partner")]
+    IndividualPartner = 1,
 
-        [Description("Corporate Partner")]
-        CorporatePartner = 2,
-    }
+    [Description("Corporate Partner")]
+    CorporatePartner = 2,
 }

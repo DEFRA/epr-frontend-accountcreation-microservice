@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FrontendAccountCreation.Core.Sessions;
 
 namespace FrontendAccountCreation.Web.ViewModels.ReExAccount;
 

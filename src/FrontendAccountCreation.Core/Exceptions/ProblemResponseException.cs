@@ -1,11 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FrontendAccountCreation.Core.Exceptions;
 
-[Serializable]
 [ExcludeFromCodeCoverage]
 public class ProblemResponseException : Exception
 {
@@ -31,11 +29,6 @@ public class ProblemResponseException : Exception
 
     public ProblemResponseException(string message, Exception innerException) 
         : base(message, innerException)
-    {
-    }
-
-    protected ProblemResponseException(SerializationInfo info, StreamingContext context) 
-        : base(info, context)
     {
     }
 }

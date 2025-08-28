@@ -9,11 +9,11 @@
 
 @if (Model.IsLimitedPartnership)
 {
-    @Html.Partial("Partials/_LimitedPartnershipYouAreApprovedPerson")
+    <partial name = "Partials/_LimitedPartnershipYouAreApprovedPerson" />
 }
 else if (Model.IsLimitedLiabilityPartnership)
 {
-    @Html.Partial("Partials/_LimitedLiabilityPartnershipApprovedPerson")
+    <partial name="Partials/_LimitedLiabilityPartnershipApprovedPerson" />
 }
 else
 {

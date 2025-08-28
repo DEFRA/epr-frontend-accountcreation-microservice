@@ -3,7 +3,6 @@ using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
 using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
-using FrontendAccountCreation.Web.ViewModels;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -471,7 +470,7 @@ public class TeamMemberRoleInOrganisationTests : ApprovedPersonTestBase
         _sessionManagerMock.Verify(x => x.SaveSessionAsync(
                 It.IsAny<ISession>(),
                 It.Is<OrganisationSession>(s =>
-                    s.ReExCompaniesHouseSession.TeamMembers.All(x => x.Id != teamMemberId)
+                    s.ReExCompaniesHouseSession.TeamMembers.TrueForAll(x => x.Id != teamMemberId)
                 )),
             Times.Once);
     }

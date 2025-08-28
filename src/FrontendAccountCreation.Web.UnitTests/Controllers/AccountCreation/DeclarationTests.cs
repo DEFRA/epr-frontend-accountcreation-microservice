@@ -169,7 +169,7 @@ public class DeclarationTests : AccountCreationTestBase
                     TelephoneNumber = "76208-79620"
                 },
                 DeclarationFullName = expectedUsername,
-                DeclarationTimeStamp = new DateTime(2024, 01, 01)
+                DeclarationTimeStamp = new DateTime(2024, 01, 01, 0, 0, 0, DateTimeKind.Utc)
             });
 
         _facadeServiceMock.Setup(x => x.PostAccountDetailsAsync(It.IsAny<AccountModel>())).Returns(Task.CompletedTask);

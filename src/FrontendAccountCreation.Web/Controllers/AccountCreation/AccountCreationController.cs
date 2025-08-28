@@ -114,7 +114,6 @@ public class AccountCreationController : Controller
         });
     }
 
-    //todo: check if this is still working
     [HttpPost]
     [Route(PagePath.RegisteredAsCharity)]
     public async Task<IActionResult> RegisteredAsCharity(RegisteredAsCharityRequestViewModel model)

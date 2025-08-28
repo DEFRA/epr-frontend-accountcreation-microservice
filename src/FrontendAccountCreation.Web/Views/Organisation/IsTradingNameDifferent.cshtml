@@ -13,9 +13,9 @@
 
     var errorsViewModel = new ErrorsViewModel(ViewData.ModelState.ToErrorDictionary(), Localizer);
 
-    string questionResourceKey = Model.IsCompaniesHouseFlow == false
-       ? "IsTradingNameDifferent.NonUk.Question"
-       : "IsTradingNameDifferent.Question";
+    string questionResourceKey = Model.IsCompaniesHouseFlow
+       ? "IsTradingNameDifferent.Question"
+       : "IsTradingNameDifferent.NonUk.Question";
 }
 
 <div class="govuk-width-container">

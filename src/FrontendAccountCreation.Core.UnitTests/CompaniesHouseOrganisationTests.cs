@@ -7,6 +7,8 @@ namespace FrontendAccountCreation.Core.UnitTests;
 [TestClass]
 public class CompaniesHouseOrganisationTests
 {
+    private readonly JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web);
+
     [TestMethod]
     public void WhenValidOrganisationJsonIsDeserialized_ThenCompleteObjectIsCreated()
     {
@@ -39,7 +41,7 @@ public class CompaniesHouseOrganisationTests
             }
         }";
 
-        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var organisation = JsonSerializer.Deserialize<CompaniesHouseCompany>(json, jsonSerializerOptions);
 
         Assert.AreEqual("KAINOS SOFTWARE LIMITED",organisation.Organisation.Name);
         Assert.AreEqual("BT7 1NT",organisation.Organisation.RegisteredOffice.Postcode);

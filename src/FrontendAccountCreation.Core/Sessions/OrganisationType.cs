@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FrontendAccountCreation.Core.Sessions;
 
 public enum OrganisationType

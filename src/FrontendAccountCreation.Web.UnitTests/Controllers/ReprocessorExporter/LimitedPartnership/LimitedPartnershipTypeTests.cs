@@ -226,8 +226,8 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
                 s.ReExCompaniesHouseSession.Partnership != null &&
                 s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership &&
                 s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners == true &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners == false
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners &&
+                !s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners
             )),
             Times.Once);
     }
@@ -272,8 +272,8 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
                 s.ReExCompaniesHouseSession.Partnership != null &&
             s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership &&
                 s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners == true &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners == false
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners &&
+                !s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners
             )),
             Times.Once);
     }
@@ -302,8 +302,8 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
                 s.ReExCompaniesHouseSession.Partnership != null &&
             s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership &&
                 s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners == false &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners == true
+                !s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners &&
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners
             )),
             Times.Once);
     }
@@ -332,8 +332,8 @@ public class LimitedPartnershipTypeTests : LimitedPartnershipTestBase
                 s.ReExCompaniesHouseSession.Partnership != null &&
             s.ReExCompaniesHouseSession.Partnership.IsLimitedPartnership &&
                 s.ReExCompaniesHouseSession.Partnership.LimitedPartnership != null &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners == true &&
-                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners == true
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasIndividualPartners &&
+                s.ReExCompaniesHouseSession.Partnership.LimitedPartnership.HasCompanyPartners
             )),
             Times.Once);
     }

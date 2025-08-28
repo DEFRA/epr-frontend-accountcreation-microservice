@@ -1,5 +1,4 @@
-﻿using FrontendAccountCreation.Core.Addresses;
-using FrontendAccountCreation.Core.Sessions;
+﻿using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Web.ViewModels.AccountCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;

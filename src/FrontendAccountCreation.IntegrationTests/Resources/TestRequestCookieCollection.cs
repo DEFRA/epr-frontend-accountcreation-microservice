@@ -1,26 +1,22 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FrontendAccountCreation.IntegrationTests.Resources
+namespace FrontendAccountCreation.IntegrationTests.Resources;
+
+public class TestRequestCookieCollection : Dictionary<string, string>, IRequestCookieCollection
 {
-    public class TestRequestCookieCollection : Dictionary<string, string>, IRequestCookieCollection
+    public new ICollection<string> Keys => base.Keys;
+    public new string this[string key]
     {
-        public new ICollection<string> Keys => base.Keys;
-        public new string this[string key]
+        get
         {
-            get
-            {
-                TryGetValue(key, out var value);
-                return value;
-            }
-            set
-            {
-                base[key] = value;
-            }
+            TryGetValue(key, out var value);
+            return value;
+        }
+        set
+        {
+            base[key] = value;
         }
     }
 }

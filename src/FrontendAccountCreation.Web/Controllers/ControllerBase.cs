@@ -120,7 +120,7 @@ public abstract class ControllerBase<T>(ISessionManager<T> sessionManager) : Con
 
     protected void DeleteFocusId() => TempData?.Remove("FocusId");
 
-    private void AddPageToWhiteList(T session, string currentPagePath)
+    private static void AddPageToWhiteList(T session, string currentPagePath)
     {
         if (!string.IsNullOrEmpty(currentPagePath))
         {
