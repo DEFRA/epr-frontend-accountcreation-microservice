@@ -19,13 +19,13 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="PhaseBanner.Alpha" xml:space="preserve">
-        <value>walpha</value>
+        <value>wAlpha</value>
     </data>
     <data name="PhaseBanner.Beta" xml:space="preserve">
-        <value>wbeta</value>
+        <value>wBeta</value>
     </data>
     <data name="PhaseBanner.Live" xml:space="preserve">
-        <value>wlive</value>
+        <value>wLive</value>
     </data>
     <data name="PhaseBanner.ThisIsNewService" xml:space="preserve">
         <value>WThis is a new service – your</value>
