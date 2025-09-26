@@ -7,6 +7,8 @@ namespace FrontendAccountCreation.Core.UnitTests;
 [TestClass]
 public class AddressListTests
 {
+    private readonly JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web);
+
     [TestMethod]
     public void WhenValidAddressLookupResponseJsonIsDeserialized_ThenCompleteObjectIsCreated_ThenCreateAddressListWithTheResponse()
     {
@@ -63,8 +65,8 @@ public class AddressListTests
             }]
         }";
 
-        var addressResponse = JsonSerializer.Deserialize<AddressLookupResponse>(addressJson, new JsonSerializerOptions(JsonSerializerDefaults.Web));
-        AddressList addressList = new AddressList(addressResponse);
+        var addressResponse = JsonSerializer.Deserialize<AddressLookupResponse>(addressJson, jsonSerializerOptions);
+        AddressList addressList = new(addressResponse);
         Assert.AreEqual(true, addressList.Addresses.Count == 2);
 
     }
@@ -77,7 +79,7 @@ public class AddressListTests
         //Act
         try
         {
-            AddressList addressList = new AddressList(null);
+            _ = new AddressList(null);
         }
         catch (Exception e)
         {

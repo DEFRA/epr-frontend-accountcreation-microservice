@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Castle.DynamicProxy;
 using FluentAssertions;
 using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Services;
@@ -347,11 +346,13 @@ public class AccountMapperTests
             Postcode = "12345"
         };
 
+        string[] expected = { "SubBuilding", "Building", "123 Main St", "Town", "County", "12345" };
+
         // Act
         var addressFields = address.AddressFields;
 
         // Assert
-        addressFields.Should().BeEquivalentTo(["SubBuilding", "Building", "123 Main St", "Town", "County", "12345"]);
+        addressFields.Should().BeEquivalentTo(expected);
     }
 
     [TestMethod]
@@ -362,7 +363,7 @@ public class AccountMapperTests
         // Arrange
         var accountMapper = new AccountMapper();
         var declarationName = "my name";
-        var declarationTime = new DateTime(2024, 01, 01);
+        var declarationTime = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var mockSession = new Mock<AccountCreationSession>();
         mockSession.Object.IsApprovedUser = true;
         mockSession.Object.OrganisationType = OrganisationType.CompaniesHouseCompany;

@@ -10,7 +10,7 @@ public class ReExCompanyModel
 
     public OrganisationType? OrganisationType { get; set; }
 
-    //Type of producers for comapany house can be LP or LLP
+    // Type of producers for comapany house can be LP or LLP
     public string? ProducerType { get; set; }
 
     public string? CompaniesHouseNumber { get; set; }

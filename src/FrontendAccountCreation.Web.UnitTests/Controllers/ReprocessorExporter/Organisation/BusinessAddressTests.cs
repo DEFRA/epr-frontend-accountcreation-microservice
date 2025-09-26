@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Web.Constants;

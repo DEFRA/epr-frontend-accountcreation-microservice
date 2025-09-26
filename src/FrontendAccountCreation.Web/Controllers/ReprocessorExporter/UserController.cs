@@ -23,9 +23,7 @@ public class UserController : ControllerBase<ReExAccountCreationSession>
     private readonly ISessionManager<ReExAccountCreationSession> _sessionManager;
     private readonly IFacadeService _facadeService;
     private readonly IReExAccountMapper _reExAccountMapper;
-    private readonly ILogger<UserController> _logger;
     private readonly ServiceKeysOptions _serviceKeyOptions;
-    private readonly ExternalUrlsOptions _urlOptions;
 
     public UserController(
         ISessionManager<ReExAccountCreationSession> sessionManager,
@@ -38,9 +36,7 @@ public class UserController : ControllerBase<ReExAccountCreationSession>
         _sessionManager = sessionManager;
         _facadeService = facadeService;
         _reExAccountMapper = reExAccountMapper;
-        _urlOptions = urlOptions.Value;
         _serviceKeyOptions = serviceKeyOptions.Value;
-        _logger = logger;
     }
 
     [HttpGet]
