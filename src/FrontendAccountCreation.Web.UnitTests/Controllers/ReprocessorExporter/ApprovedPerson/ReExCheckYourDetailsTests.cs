@@ -4,7 +4,6 @@ using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Sessions;
 using FrontendAccountCreation.Core.Sessions.ReEx;
 using FrontendAccountCreation.Core.Sessions.ReEx.Partnership;
-using FrontendAccountCreation.Web.Configs;
 using FrontendAccountCreation.Web.Controllers.ReprocessorExporter;
 using FrontendAccountCreation.Web.ViewModels.ReExAccount;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +16,9 @@ namespace FrontendAccountCreation.Web.UnitTests.Controllers.ReprocessorExporter.
 public class ReExCheckYourDetailsTests : ApprovedPersonTestBase
 {
     private ReExCompaniesHouseSession _companiesHouseSession = null!;
-    private ReExManualInputSession _manualInputSession = null!;
     private Company _company = null!;
     private ReExCompanyTeamMember _teamMember = null!;
-    private string _tradingName = "Acme Ltd.";
+    private readonly string _tradingName = "Acme Ltd.";
     private ReExPartnership _partnership = new();
 
     [TestInitialize]

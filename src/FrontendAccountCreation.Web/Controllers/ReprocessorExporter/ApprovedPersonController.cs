@@ -62,21 +62,6 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             return View(model);
         }
 
-        private static bool IsEligibleToBeApprovedPerson(OrganisationSession session)
-        {
-            bool isEligibleToBeApprovedPerson = false;
-            if (session.ReExCompaniesHouseSession != null)
-            {
-                isEligibleToBeApprovedPerson = !session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson;
-            }
-            else if (session.ReExManualInputSession != null)
-            {
-                isEligibleToBeApprovedPerson = session.ReExManualInputSession.IsEligibleToBeApprovedPerson == true;
-            }
-
-            return isEligibleToBeApprovedPerson;
-        }
-
         [HttpPost]
         [Route(PagePath.AddAnApprovedPerson)]
         [OrganisationJourneyAccess(PagePath.AddAnApprovedPerson)]
@@ -1359,6 +1344,21 @@ namespace FrontendAccountCreation.Web.Controllers.ReprocessorExporter
             }
 
             return await SaveSessionAndRedirect(session, actionName, PagePath.AddAnApprovedPerson, nextPagePath);
+        }
+
+        private static bool IsEligibleToBeApprovedPerson(OrganisationSession session)
+        {
+            bool isEligibleToBeApprovedPerson = false;
+            if (session.ReExCompaniesHouseSession != null)
+            {
+                isEligibleToBeApprovedPerson = !session.ReExCompaniesHouseSession.IsInEligibleToBeApprovedPerson;
+            }
+            else if (session.ReExManualInputSession != null)
+            {
+                isEligibleToBeApprovedPerson = session.ReExManualInputSession.IsEligibleToBeApprovedPerson == true;
+            }
+
+            return isEligibleToBeApprovedPerson;
         }
     }
 }

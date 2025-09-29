@@ -1,3 +1,7 @@
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
 using FrontendAccountCreation.Core.Addresses;
 using FrontendAccountCreation.Core.Exceptions;
 using FrontendAccountCreation.Core.Services.Dto.Address;
@@ -7,10 +11,6 @@ using FrontendAccountCreation.Core.Services.FacadeModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json;
 using static Microsoft.Identity.Web.Constants;
 
 namespace FrontendAccountCreation.Core.Services;

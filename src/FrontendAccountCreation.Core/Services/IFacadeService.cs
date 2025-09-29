@@ -1,5 +1,4 @@
 using FrontendAccountCreation.Core.Addresses;
-using FrontendAccountCreation.Core.Services.Dto.CompaniesHouse;
 using FrontendAccountCreation.Core.Services.Dto.Company;
 using FrontendAccountCreation.Core.Services.FacadeModels;
 

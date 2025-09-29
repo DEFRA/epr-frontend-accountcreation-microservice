@@ -6,6 +6,8 @@ namespace FrontendAccountCreation.Core.UnitTests;
 [TestClass]
 public class AddressLookupResponseTests
 {
+    private readonly JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web);
+
     [TestMethod]
     public void WhenValidAddressLookupResponseJsonIsDeserialized_ThenCompleteObjectIsCreated()
     {
@@ -62,14 +64,14 @@ public class AddressLookupResponseTests
             }]
         }";
 
-        var addressResponse = JsonSerializer.Deserialize<AddressLookupResponse>(addressJson, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var addressResponse = JsonSerializer.Deserialize<AddressLookupResponse>(addressJson, jsonSerializerOptions);
         Assert.IsNotNull(addressResponse);
-        Assert.IsNotNull(addressResponse?.Results);
-        Assert.IsNotNull(addressResponse?.Header);
-        Assert.AreEqual(2,addressResponse?.Results.Length);
-        Assert.AreEqual("100",addressResponse?.Header.MaxResults);
-        Assert.AreEqual("2",addressResponse?.Header.TotalResults);
-        Assert.AreEqual("NORTHERN IRELAND",addressResponse?.Results[0].Address.Country);
+        Assert.IsNotNull(addressResponse.Results);
+        Assert.IsNotNull(addressResponse.Header);
+        Assert.AreEqual(2,addressResponse.Results.Length);
+        Assert.AreEqual("100",addressResponse.Header.MaxResults);
+        Assert.AreEqual("2",addressResponse.Header.TotalResults);
+        Assert.AreEqual("NORTHERN IRELAND",addressResponse.Results[0].Address.Country);
     }
 
 }

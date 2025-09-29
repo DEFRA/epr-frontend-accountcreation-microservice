@@ -339,7 +339,7 @@ public class NonCompaniesHouseTeamMemberDetailsTests : ApprovedPersonTestBase
             .Returns(Task.CompletedTask);
 
         // Act
-        var result = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
+        _ = await _systemUnderTest.NonCompaniesHouseTeamMemberDetails(model);
 
         // Assert
         var updated = session.ReExManualInputSession.TeamMembers.Single();

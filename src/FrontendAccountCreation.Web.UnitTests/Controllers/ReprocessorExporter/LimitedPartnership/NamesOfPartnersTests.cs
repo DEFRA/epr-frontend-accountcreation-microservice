@@ -238,12 +238,6 @@ public class NamesOfPartnersTests : LimitedPartnershipTestBase
         List<ReExPersonOrCompanyPartner> partners = [jack, jill];
         _orgSessionMock.ReExCompaniesHouseSession.Partnership.LimitedPartnership.Partners = partners;
 
-        PartnershipPartnersViewModel model = new()
-        {
-            ExpectsIndividualPartners = true,
-            Partners = partners.Select(item => (PartnershipPersonOrCompanyViewModel)item).ToList()
-        };
-
         // Act
         var result = await _systemUnderTest.NamesOfPartnersDelete(jack.Id);
 

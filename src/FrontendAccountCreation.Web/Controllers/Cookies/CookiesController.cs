@@ -1,10 +1,8 @@
-﻿using FrontendAccountCreation.Web.Configs;
-using FrontendAccountCreation.Web.Constants;
+﻿using FrontendAccountCreation.Web.Constants;
 using FrontendAccountCreation.Web.Cookies;
 using FrontendAccountCreation.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FrontendAccountCreation.Web.Controllers.Cookies;
