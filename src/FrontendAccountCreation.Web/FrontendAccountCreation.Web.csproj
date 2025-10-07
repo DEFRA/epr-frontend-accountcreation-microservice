@@ -160,6 +160,12 @@
 	    <Value>**/BusinessAddress.cshtml</Value>
 	  </SonarQubeSetting>
 	</ItemGroup>
+
+  <ItemGroup>
+		<SonarQubeSetting Include="sonar.exclusions">
+			<Value>Views/Shared/Partials/Govuk/_Footer.cshtml</Value>
+		</SonarQubeSetting>
+	</ItemGroup>
   
      <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">
        <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
