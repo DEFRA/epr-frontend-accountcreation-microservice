@@ -193,7 +193,7 @@ public class FacadeService : IFacadeService
         await PrepareAuthenticatedClient();
         var response = await _httpClient.GetAsync("/api/user-accounts");
 
-        if (response.StatusCode == HttpStatusCode.NotFound)
+        if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.NoContent)
         {
             return default;
         }
