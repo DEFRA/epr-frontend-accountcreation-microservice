@@ -15,7 +15,7 @@ public class PublicEmailAddressAttributeTests
     /// This test method checks a series of valid email addresses that should pass validation.
     /// </summary>
     /// <param name="email">A valid email address to test.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("test@example.com")]
     [DataRow("user.name@domain.co.uk")]     // Multi-part TLD
     [DataRow("user@sub.domain.net")]        // Subdomain
@@ -42,7 +42,7 @@ public class PublicEmailAddressAttributeTests
     /// This is the key test to ensure emails without a TLD are rejected.
     /// </summary>
     /// <param name="email">An invalid email address to test.</param>
-    [DataTestMethod]
+    [TestMethod]
     // Emails without a TLD
     [DataRow("test@localhost")]
     [DataRow("user@hostname")]
@@ -78,7 +78,7 @@ public class PublicEmailAddressAttributeTests
     /// This allows the [Required] attribute to handle these cases independently.
     /// </summary>
     /// <param name="email">The null or whitespace string to test.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(null)]
     [DataRow("")]
     [DataRow(" ")]

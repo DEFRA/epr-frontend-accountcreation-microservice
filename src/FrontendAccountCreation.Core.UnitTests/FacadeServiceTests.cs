@@ -102,7 +102,7 @@ public class FacadeServiceTests
 
         // Assert
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.Contains("StatusCode: 500"));
+        StringAssert.Contains(response, "StatusCode: 500");
         httpTestHandler.Dispose();
     }
 
@@ -292,7 +292,6 @@ public class FacadeServiceTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ProblemResponseException))]
     public async Task PostAccountDetails_WithUnsuccessfulCode_ThrowsExceptionWithProblemDetails()
     {
         // Arrange
@@ -339,11 +338,10 @@ public class FacadeServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpTestHandler);
 
-        // Act
-        await _facadeService.PostAccountDetailsAsync(account);
+        // Act & Assert
+        var ex = await Assert.ThrowsExactlyAsync<ProblemResponseException>(
+            () => _facadeService.PostAccountDetailsAsync(account));
         
-        // Assert
-        Assert.IsTrue(true);        
         httpTestHandler.Dispose();
     }
 
@@ -426,7 +424,7 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
+        var exception = await Assert.ThrowsExactlyAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
         Assert.IsNotNull(exception.ProblemDetails);
         Assert.AreEqual(apiResponse.Detail, exception.ProblemDetails.Detail);
         Assert.AreEqual(apiResponse.Type, exception.ProblemDetails.Type);
@@ -453,9 +451,9 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
+        var exception = await Assert.ThrowsExactlyAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
         Assert.IsNotNull(exception);
-        Assert.IsTrue(exception.StatusCode == HttpStatusCode.Conflict);
+        Assert.AreEqual(HttpStatusCode.Conflict, exception.StatusCode);
     }
 
     [TestMethod]
@@ -478,7 +476,7 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
+        var exception = await Assert.ThrowsExactlyAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterAccountAsync(account, ServiceKey));
         Assert.AreEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
@@ -557,7 +555,7 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(account, ServiceKey));
+        var exception = await Assert.ThrowsExactlyAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(account, ServiceKey));
         exception.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
 
@@ -586,7 +584,7 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey));
+        var exception = await Assert.ThrowsExactlyAsync<ProblemResponseException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey));
         Assert.IsNotNull(exception.ProblemDetails);
         Assert.AreEqual(apiResponse.Detail, exception.ProblemDetails.Detail);
         Assert.AreEqual(apiResponse.Type, exception.ProblemDetails.Type);
@@ -613,9 +611,9 @@ public class FacadeServiceTests
             }).Verifiable();
 
         // Act & Assert
-        var exception = await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey));
+        var exception = await Assert.ThrowsExactlyAsync<HttpRequestException>(async () => await _facadeService.PostReprocessorExporterCreateOrganisationAsync(orgModel, ServiceKey));
         Assert.IsNotNull(exception);
-        Assert.IsTrue(exception.StatusCode == HttpStatusCode.Conflict);
+        Assert.AreEqual(HttpStatusCode.Conflict, exception.StatusCode);
     }
 
     [TestMethod]
@@ -659,7 +657,6 @@ public class FacadeServiceTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(HttpRequestException))]
     public async Task PostEnrolInvitedUser_WithValidData_ReturnsUnsuccessfulCode()
     {
         // Arrange
@@ -682,11 +679,10 @@ public class FacadeServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpTestHandler);
 
-        // Act
-        await _facadeService.PostEnrolInvitedUserAsync(enrolInvitedUser);
-        
-        // Assert
-        Assert.IsTrue(true);
+        // Act & Assert
+        var ex = await Assert.ThrowsExactlyAsync<HttpRequestException>(
+            () => _facadeService.PostEnrolInvitedUserAsync(enrolInvitedUser));
+
         httpTestHandler.Dispose();
     }
 
@@ -710,7 +706,7 @@ public class FacadeServiceTests
         var response = await _facadeService.DoesAccountAlreadyExistAsync();
 
         // Assert
-        Assert.AreEqual(expected: false, actual: response);
+        Assert.IsFalse(response);
         httpTestHandler.Dispose();
     }
 
@@ -734,7 +730,7 @@ public class FacadeServiceTests
         var response = await _facadeService.DoesAccountAlreadyExistAsync();
 
         // Assert
-        Assert.AreEqual(expected: true, actual: response);
+        Assert.IsTrue(response);
         httpTestHandler.Dispose();
     }
     
@@ -1038,7 +1034,6 @@ public class FacadeServiceTests
     }
     
     [TestMethod]
-    [ExpectedException(typeof(ProblemResponseException))]
     public async Task PostApprovedUserAccountDetailsAsync_WithValidData_ReturnsUnsuccessful()
     {
         // Arrange
@@ -1100,11 +1095,10 @@ public class FacadeServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpTestHandler);
 
-        // Act
-        await _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser);
-        
-        // Assert
-        Assert.IsTrue(true);
+        // Act & Assert
+        var ex = await Assert.ThrowsExactlyAsync<ProblemResponseException>(
+            () => _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser));
+
         httpTestHandler.Dispose();
     }
 
