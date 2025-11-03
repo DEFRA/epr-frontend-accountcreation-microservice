@@ -102,7 +102,7 @@ public class FacadeServiceTests
 
         // Assert
         Assert.IsNotNull(response);
-        StringAssert.Contains(response, "StatusCode: 500");
+        Assert.Contains("StatusCode: 500", response);
         httpTestHandler.Dispose();
     }
 

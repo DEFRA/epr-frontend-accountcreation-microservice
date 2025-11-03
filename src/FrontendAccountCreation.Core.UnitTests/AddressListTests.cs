@@ -67,7 +67,7 @@ public class AddressListTests
 
         var addressResponse = JsonSerializer.Deserialize<AddressLookupResponse>(addressJson, jsonSerializerOptions);
         AddressList addressList = new(addressResponse);
-        Assert.IsTrue(addressList.Addresses.Count == 2);
+        Assert.AreEqual(2, addressList.Addresses.Count);
     }
 
     [TestMethod]
