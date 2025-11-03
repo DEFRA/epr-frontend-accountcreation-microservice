@@ -339,7 +339,7 @@ public class FacadeServiceTests
             .ReturnsAsync(httpTestHandler);
 
         // Act & Assert
-        var ex = await Assert.ThrowsExactlyAsync<ProblemResponseException>(
+        await Assert.ThrowsExactlyAsync<ProblemResponseException>(
             () => _facadeService.PostAccountDetailsAsync(account));
         
         httpTestHandler.Dispose();
@@ -680,7 +680,7 @@ public class FacadeServiceTests
             .ReturnsAsync(httpTestHandler);
 
         // Act & Assert
-        var ex = await Assert.ThrowsExactlyAsync<HttpRequestException>(
+        await Assert.ThrowsExactlyAsync<HttpRequestException>(
             () => _facadeService.PostEnrolInvitedUserAsync(enrolInvitedUser));
 
         httpTestHandler.Dispose();
@@ -1096,14 +1096,13 @@ public class FacadeServiceTests
             .ReturnsAsync(httpTestHandler);
 
         // Act & Assert
-        var ex = await Assert.ThrowsExactlyAsync<ProblemResponseException>(
+        await Assert.ThrowsExactlyAsync<ProblemResponseException>(
             () => _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser));
 
         httpTestHandler.Dispose();
     }
 
     [TestMethod]
-    [ExpectedException(typeof(HttpRequestException))]
     public async Task PostApprovedUserAccountDetailsAsync_Throws_HttpRequestException_When_ProblemDetails_IsNull()
     {
         // Arrange
@@ -1124,16 +1123,14 @@ public class FacadeServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpTestHandler);
 
-        // Act
-        await _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser);
+        // Act & Assert
+        await Assert.ThrowsExactlyAsync<HttpRequestException>(
+            () => _facadeService.PostApprovedUserAccountDetailsAsync(approvedUser));
 
-        // Assert
-        Assert.IsTrue(true);
         httpTestHandler.Dispose();
     }
 
     [TestMethod]
-    [ExpectedException(typeof(HttpRequestException))]
     public async Task PostAccountDetails_WithUnsuccessfulCode_Throws_HttpRequestException_When_ProblemDetailsIsNull()
     {
         // Arrange
@@ -1176,11 +1173,10 @@ public class FacadeServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpTestHandler);
 
-        // Act
-         await _facadeService.PostAccountDetailsAsync(account);
+        // Act & Assert
+        await Assert.ThrowsExactlyAsync<HttpRequestException>(
+            () => _facadeService.PostAccountDetailsAsync(account));
 
-        // Assert
-        Assert.IsTrue(true);        
         httpTestHandler.Dispose();
     }
 

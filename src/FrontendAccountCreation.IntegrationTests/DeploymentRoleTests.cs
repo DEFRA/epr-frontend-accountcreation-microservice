@@ -16,7 +16,6 @@ public class DeploymentRoleTests
     [DataRow("Anything except Regulator", "Report packaging data")]
     [DataRow("RRegulator", "Report packaging data")]
     [DataRow("Regulatorr", "Report packaging data")]
-    [DataRow("Anything except Regulator", "Report packaging data")]
     public async Task Returned_app_title_depends_on_deployment_role(string deploymentRole, string expectedApplication)
     {
         // Arrange
