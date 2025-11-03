@@ -34,7 +34,10 @@ public class IsTradingNameDifferentTests() : YesNoPageTestBase<IsTradingNameDiff
     protected override string RedirectActionNameOnYes => "";
     protected override string RedirectActionNameOnNo => "";
 
+#pragma warning disable S1607 // Tests should not be ignored
     [Ignore]
+#pragma warning restore S1607 // Tests should not be ignored
+    [TestMethod]
     public override Task POST_UserSelectsYesOrNo_UserIsRedirected(YesNoAnswer userAnswer)
     {
         // replaced with the specific implementation below

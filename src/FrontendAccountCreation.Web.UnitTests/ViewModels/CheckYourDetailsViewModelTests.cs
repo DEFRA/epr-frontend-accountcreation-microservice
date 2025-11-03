@@ -8,7 +8,7 @@ namespace FrontendAccountCreation.Web.UnitTests.ViewModels.AccountCreation;
 [TestClass]
 public class CheckYourDetailsViewModelTests
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(ProducerType.NonUkOrganisation, "CheckYourDetails.NonUkOrganisation")]
     [DataRow(ProducerType.Partnership, "CheckYourDetails.Partnership")]
     [DataRow(ProducerType.SoleTrader, "CheckYourDetails.SoleTrader")]
@@ -30,7 +30,7 @@ public class CheckYourDetailsViewModelTests
         result.Should().Be(expected);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(RoleInOrganisation.Director, "CheckYourDetails.Director")]
     [DataRow(RoleInOrganisation.CompanySecretary, "CheckYourDetails.CompanySecretary")]
     [DataRow(RoleInOrganisation.Partner, "CheckYourDetails.Partner")]
@@ -51,7 +51,7 @@ public class CheckYourDetailsViewModelTests
         result.Should().Be(expected);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(Nation.England, "CheckYourDetails.England")]
     [DataRow(Nation.Scotland, "CheckYourDetails.Scotland")]
     [DataRow(Nation.Wales, "CheckYourDetails.Wales")]

@@ -36,7 +36,7 @@ public class ErrorsViewModelTests
         var viewModel = new ErrorsViewModel(errors, localizerMock.Object, fieldOrder);
 
         // Assert
-        Assert.AreEqual(4, viewModel.Errors.Count);
+        Assert.HasCount(4, viewModel.Errors);
         Assert.AreEqual("address", viewModel.Errors[0].Key);
         Assert.AreEqual("Localized_AddressError", viewModel.Errors[0].Errors[0].Message);
         Assert.AreEqual("person[0].name", viewModel.Errors[1].Key);

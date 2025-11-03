@@ -28,7 +28,6 @@ public class TelephoneNumberValidatorTests
     
     [TestMethod]
     [DataRow("020 1212 121")]
-    [DataRow("020 1212 121")]
     [DataRow("078 1212 121A")]
     [DataRow("")]
     [DataRow("a")]

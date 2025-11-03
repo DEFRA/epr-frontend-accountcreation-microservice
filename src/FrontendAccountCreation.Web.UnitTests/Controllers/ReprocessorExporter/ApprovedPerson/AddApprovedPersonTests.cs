@@ -962,7 +962,7 @@ public class AddApprovedPersonTests : ApprovedPersonTestBase
         _systemUnderTest.GetFocusId().Should().BeNull();
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(true, false, false, "AddAnApprovedPerson.OptionError", DisplayName = "SoleTrader error")]
     [DataRow(false, true, true, "AddAnApprovedPerson.Unincorporated.Ineligible.OptionError", DisplayName = "NonUk and ineligible error")]
     [DataRow(false, true, false, "AddAnApprovedPerson.Unincorporated.OptionError", DisplayName = "NonUk and eligible error")]

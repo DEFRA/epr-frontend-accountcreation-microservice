@@ -20,7 +20,7 @@ public class IsTradingNameDifferentViewModelTests
         return viewModel.Validate(validationContext).ToList();
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(false, "IsTradingNameDifferent.ErrorMessage", "the standard error message should be shown for UK context")]
     [DataRow(true, "IsTradingNameDifferent.NonUk.ErrorMessage", "the specific non-UK error message should be shown for non-UK context")]
     public void Validate_WhenIsTradingNameDifferentIsNull_ReturnsCorrectError(bool isNonUk, string expectedErrorMessage, string because)
@@ -45,7 +45,7 @@ public class IsTradingNameDifferentViewModelTests
                 "because the error should always be associated with the correct property");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(YesNoAnswer.Yes, false)]
     [DataRow(YesNoAnswer.Yes, true)]
     [DataRow(YesNoAnswer.No, false)]

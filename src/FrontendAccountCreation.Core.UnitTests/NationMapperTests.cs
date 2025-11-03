@@ -6,7 +6,7 @@ namespace FrontendAccountCreation.Core.UnitTests
     [TestClass]
     public class NationMapperTests
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("England", Nation.England)]
         [DataRow("Scotland", Nation.Scotland)]
         [DataRow("Wales", Nation.Wales)]
@@ -28,7 +28,7 @@ namespace FrontendAccountCreation.Core.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("XYZ")]
         [DataRow("5")]
         [DataRow("5.50")]

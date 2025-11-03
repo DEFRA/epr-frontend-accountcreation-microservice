@@ -169,7 +169,6 @@ public class InvitationTests : AccountCreationTestBase
     [DataRow(EnrolmentStatus.Nominated)]
     [DataRow(EnrolmentStatus.Approved)]
     [DataRow(EnrolmentStatus.Pending)]
-    [DataRow(EnrolmentStatus.NotSet)]
     [DataRow(EnrolmentStatus.OnHold)]
     public async Task GetInviteeFullName_GivenUserEnrolmentStatusIsNotInvited_ThenRedirectsToReportDataUrl(string enrolmentStatus)
     {

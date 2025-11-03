@@ -209,17 +209,13 @@ public class AccountMapperTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void Constructor_ShouldThrowArgumentNullException_WhenOrganisationIsNull()
     {
         // Arrange
         CompaniesHouseCompany organisation = null;
 
-        // Act
-        new Company(organisation);
-
-        // Assert
-        // ExpectedException attribute will handle the assertion
+        // Act & Assert
+        Assert.ThrowsExactly<ArgumentException>(() => new Company(organisation));
     }
 
     [TestMethod]

@@ -34,7 +34,7 @@ public class ReExAccountFullNameTests : UserTestBase
     public void InjectError_ThrowsNotImplementedException()
     {
         // Act & Assert
-        Assert.ThrowsException<NotImplementedException>(() => _systemUnderTest.InjectError());
+        Assert.ThrowsExactly<NotImplementedException>(() => _systemUnderTest.InjectError());
     }
 
     [TestMethod]

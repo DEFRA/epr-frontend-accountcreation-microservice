@@ -21,8 +21,8 @@ public class ModelStateDictionaryTests
         
         // Act
         var result =  modelDictionary.ToErrorDictionary();
-        
+
         // Assert
-        Assert.AreEqual(expected: 2, result.Count);
+        Assert.HasCount(2, result);
     }
 }

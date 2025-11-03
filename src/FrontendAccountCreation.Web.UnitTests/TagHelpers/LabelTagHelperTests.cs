@@ -58,8 +58,8 @@ namespace FrontendAccountCreation.Web.UnitTests.TagHelpers
             labelTagHelper.Process(tagHelperContext, tagHelperOutput);
         
             Assert.AreEqual("", tagHelperOutput.Content.GetContent());
-            Assert.AreEqual(4, tagHelperOutput.Attributes.Count);
-            Assert.AreEqual(4, tagHelperOutput.Attributes.Count);
+            Assert.HasCount(4, tagHelperOutput.Attributes);
+            Assert.HasCount(4, tagHelperOutput.Attributes);
             Assert.AreEqual("ModelExp1-Test", tagHelperOutput.Attributes[3].Value);
 
         }
@@ -97,8 +97,7 @@ namespace FrontendAccountCreation.Web.UnitTests.TagHelpers
 
 
             Assert.AreEqual("", tagHelperOutput.Content.GetContent());
-            Assert.AreEqual(4, tagHelperOutput.Attributes.Count);
-            Assert.AreEqual(4, tagHelperOutput.Attributes.Count);
+            Assert.HasCount(4, tagHelperOutput.Attributes);
             Assert.AreEqual("ModelExp1", tagHelperOutput.Attributes[3].Value);
 
         }

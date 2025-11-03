@@ -7,7 +7,7 @@ namespace FrontendAccountCreation.Web.UnitTests.ViewModels
     [TestClass]
     public class BusinessAddressOverseasViewModelTests
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("Afghanistan")]
         [DataRow("Albania")]
         [DataRow("Algeria")]
@@ -225,7 +225,7 @@ namespace FrontendAccountCreation.Web.UnitTests.ViewModels
             validationResults.Should().BeEmpty();
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("Country123", "AddressOverseas.CountryInvalidError", "Contains numbers")]
         [DataRow("Country!", "AddressOverseas.CountryInvalidError", "Contains special character !")]
         [DataRow("Country@", "AddressOverseas.CountryInvalidError", "Contains special character @")]
