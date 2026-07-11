@@ -186,11 +186,8 @@ public static class ServiceProviderExtension
 
     private static void ConfigureAuthorization(IServiceCollection services)
     {
-        services.AddAuthorization(options =>
-        {
-            options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build();
-        });
+        services.AddAuthorizationBuilder()
+                .AddPolicy("FallbackPolicy", policy => policy.RequireAuthenticatedUser());
+
     }
 }
