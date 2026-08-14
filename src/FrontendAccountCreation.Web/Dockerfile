@@ -1,15 +1,15 @@
-﻿FROM defradigital/dotnetcore:dotnet10.0 AS base
+FROM defradigital/dotnetcore:dotnet10.0 AS base
 USER root
-ENV ASPNETCORE_URLS=http://*:8080
+ENV ASPNETCORE_URLS=http://*:8080 \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
 EXPOSE 8080
 
-RUN apk update && apk --no-cache add icu-libs icu-data-full libintl tzdata
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
+RUN apk add --no-cache icu-libs icu-data-full libintl tzdata
 
 FROM defradigital/dotnetcore-development:dotnet10.0 AS build
 USER root
 WORKDIR /src
-RUN apk update && apk --no-cache add nodejs npm
+RUN apk add --no-cache nodejs npm
 COPY ["FrontendAccountCreation.Web/FrontendAccountCreation.Web.csproj", "FrontendAccountCreation.Web/"]
 COPY ["FrontendAccountCreation.Core/FrontendAccountCreation.Core.csproj", "FrontendAccountCreation.Core/"]
 RUN dotnet restore "FrontendAccountCreation.Web/FrontendAccountCreation.Web.csproj"
@@ -17,13 +17,10 @@ RUN dotnet restore "FrontendAccountCreation.Web/FrontendAccountCreation.Web.cspr
 COPY FrontendAccountCreation.Web/. ./FrontendAccountCreation.Web/.
 COPY FrontendAccountCreation.Core/. ./FrontendAccountCreation.Core/.
 
-RUN chmod -R 755 ./FrontendAccountCreation.Web/ ./FrontendAccountCreation.Core/
-
 WORKDIR "/src/FrontendAccountCreation.Web"
-RUN dotnet build "FrontendAccountCreation.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "FrontendAccountCreation.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "FrontendAccountCreation.Web.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app
