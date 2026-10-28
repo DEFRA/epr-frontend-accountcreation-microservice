@@ -1,6 +1,12 @@
 variables:
-  azureSubscription: 'AZD-RWD-TST1'
-  docker.imageName: 'frontendaccountcreationregistry'
-  acr.azureContainerRegistryName: 'tstrwdinfac1401'
-  acr.repositoryName: 'frontendaccountcreationregistry'
-  serviceName: 'tstrwdwebwa1402'
+- group: ServiceConnections
+- name: azureSubscription
+  value: $(ServiceConnectionTST1)
+- name: docker.imageName
+  value: 'frontendaccountcreationregistry'
+- name: acr.azureContainerRegistryName
+  value: 'tstrwdinfac1401'
+- name: acr.repositoryName
+  value: 'frontendaccountcreationregistry'
+- name: serviceName
+  value: 'tstrwdwebwa1402'
